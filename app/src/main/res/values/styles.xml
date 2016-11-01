@@ -1,0 +1,40 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="actionBarStyle">@style/StyleActionBarTheme</item>
+        <item name="colorControlActivated">@color/colorPrimary</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/colorWhite</item>
+    </style>
+
+    <style name="StyleToolbarText" parent="@style/Base.TextAppearance.AppCompat.Title">
+        <item name="android:textSize">28sp</item>
+        <item name="android:textColor">@color/colorWhite</item>
+    </style>
+
+    <style name="StyleActionBarTheme" parent="Base.Widget.AppCompat.Light.ActionBar.Solid">
+        <item name="elevation">0dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?android:actionBarSize</item>
+        <item name="app:contentInsetStart">30dp</item>
+        <item name="android:fitsSystemWindows">true</item>
+        <item name="app:titleTextAppearance">@style/StyleToolbarText</item>
+    </style>
+
+    <style name="AwesomeIcon" parent="android:TextAppearance">
+        <item name="fontPath">fonts/fontawesome-webfont.ttf</item>
+    </style>
+
+    <style name="StyleRobotoTextView" parent="android:Widget.TextView">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+    <style name="StyleRobotoButton" parent="android:Widget.Holo.Button">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+</resources>
