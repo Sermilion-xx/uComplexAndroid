@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginTop="8dp"
+    android:orientation="horizontal">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardCornerRadius="0dp">
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/list_item_border_with_shadow">
+
+            <TextView
+                android:id="@+id/list_events_item_text"
+                android:paddingBottom="15dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="15dp"
+                android:text="Преподаватель Ялмаев Рустам Алиевич заполнил протокол занятия по дисциплине«Исследование социально-экономических и политических процессов»"
+                style="@style/StyleTextViewPrimary" />
+
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/list_events_item_image"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_below="@+id/list_events_item_text"
+                android:layout_marginStart="19dp"
+                android:layout_marginTop="18dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/ic_no_image" />
+
+            <View
+                style="@style/StyleListSeparator"
+                android:layout_alignEnd="@+id/list_events_item_text"
+                android:layout_alignStart="@+id/list_events_item_text"
+                android:layout_below="@+id/list_events_item_text"
+                />
+
+            <TextView
+                android:id="@+id/list_events_item_name"
+                android:layout_alignTop="@+id/list_events_item_image"
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@+id/list_events_item_image"
+                android:text="Имя Имявич"
+                style="@style/StyleTextViewSecondary"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/list_events_item_date"
+                android:layout_alignStart="@+id/list_events_item_name"
+                android:layout_below="@+id/list_events_item_name"
+                android:text="Сегодня в 15:36"
+                style="@style/StyleTextViewSecondary"
+                android:paddingBottom="20dp"/>
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+</LinearLayout>

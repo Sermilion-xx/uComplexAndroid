@@ -4,4 +4,10 @@
     <color name="colorPrimaryDark">#1db0ed</color>
     <color name="colorAccent">#7ac9e5</color>
     <color name="colorWhite">#ffffff</color>
+    <color name="colorBlack">#000000</color>
+    <color name="color_uc_ListTextColorPrimary">#222222</color>
+    <color name="color_uc_ListTextColorSecondary">#999999</color>
+    <color name="color_uc_ListSeparator">#f1f1f2</color>
+    <color name="color_uc_ListText">#989eae</color>
+    <color name="color_uc_menuHeader">#515765</color>
 </resources>

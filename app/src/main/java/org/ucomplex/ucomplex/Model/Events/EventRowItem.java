@@ -24,40 +24,41 @@ public class EventRowItem implements Serializable {
     private Bitmap eventImageBitmap;
     private String eventText;
 
-    public EventRowItem(){
+    public EventRowItem() {
 
     }
 
-    public EventRowItem id(int id){
+    public EventRowItem id(int id) {
         this.id = id;
         return this;
     }
 
-    public EventRowItem params(EventParams params){
+    public EventRowItem params(EventParams params) {
         this.params = params;
         return this;
     }
 
-    public EventRowItem type(int type){
+    public EventRowItem type(int type) {
         this.type = type;
         return this;
     }
 
-    public EventRowItem time(String time){
+    public EventRowItem time(String time) {
         this.time = time;
         return this;
     }
 
-    public EventRowItem seen(int seen){
+    public EventRowItem seen(int seen) {
         this.seen = seen;
         return this;
     }
-    public EventRowItem eventImageBitmap(Bitmap eventImageBitmap){
+
+    public EventRowItem eventImageBitmap(Bitmap eventImageBitmap) {
         this.eventImageBitmap = eventImageBitmap;
         return this;
     }
 
-    public EventRowItem eventText(String eventText){
+    public EventRowItem eventText(String eventText) {
         this.eventText = eventText;
         return this;
     }
@@ -67,7 +68,9 @@ public class EventRowItem implements Serializable {
         byte[] imageByteArray;
     }
 
-    /** Included for serialization - write this layer to the output stream. */
+    /**
+     * Included for serialization - write this layer to the output stream.
+     */
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.writeInt(this.id);
         out.writeObject(this.params);
@@ -76,7 +79,7 @@ public class EventRowItem implements Serializable {
         out.writeInt(this.seen);
         out.writeObject(this.eventText);
 
-        if(this.eventImageBitmap!=null){
+        if (this.eventImageBitmap != null) {
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             eventImageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
             BitmapDataObject bitmapDataObject = new BitmapDataObject();
@@ -85,8 +88,10 @@ public class EventRowItem implements Serializable {
         }
     }
 
-    /** Included for serialization - read this object from the supplied input stream. */
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException{
+    /**
+     * Included for serialization - read this object from the supplied input stream.
+     */
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         this.id = in.readInt();
         this.params = (EventParams) in.readObject();
         this.type = in.readInt();
@@ -94,10 +99,92 @@ public class EventRowItem implements Serializable {
         this.seen = in.readInt();
         this.eventText = (String) in.readObject();
 
-        if(this.eventImageBitmap!=null) {
+        if (this.eventImageBitmap != null) {
             BitmapDataObject bitmapDataObject = (BitmapDataObject) in.readObject();
             this.eventImageBitmap = BitmapFactory.decodeByteArray(bitmapDataObject.imageByteArray, 0, bitmapDataObject.imageByteArray.length);
         }
 
+    }
+
+    @Data
+    public class EventParams implements Serializable {
+
+        private String name;
+        private int id;
+        private int photo;
+        private String code;
+        private int gcourse;
+        private String courseName;
+        private int hourType;
+        private int type;
+
+        public EventParams() {
+
+        }
+
+        public EventParams id(int id) {
+            this.id = id;
+            return this;
+        }
+
+        public EventParams name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public EventParams photo(int photo) {
+            this.photo = photo;
+            return this;
+        }
+
+        public EventParams code(String code) {
+            this.code = code;
+            return this;
+        }
+
+        public EventParams gcourse(int gcourse) {
+            this.gcourse = gcourse;
+            return this;
+        }
+
+        public EventParams courseName(String courseName) {
+            this.courseName = courseName;
+            return this;
+        }
+
+        public EventParams hourType(int hourType) {
+            this.hourType = hourType;
+            return this;
+        }
+
+        public EventParams type(int type) {
+            this.type = type;
+            return this;
+        }
+
+        private void writeObject(ObjectOutputStream out) throws IOException {
+            out.writeObject(this.name);
+            out.writeObject(this.code);
+            out.writeObject(this.courseName);
+            out.writeInt(this.gcourse);
+            out.writeInt(this.hourType);
+            out.writeInt(this.id);
+            out.writeInt(this.photo);
+            out.writeInt(this.type);
+        }
+
+        /**
+         * Included for serialization - read this object from the supplied input stream.
+         */
+        private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+            this.name = (String) in.readObject();
+            this.code = (String) in.readObject();
+            this.courseName = (String) in.readObject();
+            this.gcourse = in.readInt();
+            this.hourType = in.readInt();
+            this.id = in.readInt();
+            this.photo = in.readInt();
+            this.type = in.readInt();
+        }
     }
 }

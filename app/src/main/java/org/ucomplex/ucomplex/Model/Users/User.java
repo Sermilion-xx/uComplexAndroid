@@ -21,6 +21,8 @@ public class User {
     private String password;
     private int role;
     private Bitmap photoBitmap;
+    private int type;
+    private String name;
 
     protected class BitmapDataObject implements Serializable {
         private static final long serialVersionUID = 111696345129311948L;

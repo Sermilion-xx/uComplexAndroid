@@ -1,3 +1,41 @@
 <resources>
     <string name="app_name">uComplex</string>
+    <string name="ucomplex">uComplex</string>
+    <string name="events">События</string>
+    <string name="disciplines">Дисциплины</string>
+    <string name="users">Пользователи</string>
+    <string name="materials">Материалы</string>
+    <string name="messages">Сообщения</string>
+    <string name="calendar">Календарь</string>
+    <string name="settings">Настройки</string>
+    <string name="logout">Выход</string>
+    <string name="info">Информация</string>
+    <string name="refresh">Обновить</string>
+    <string name="rename">Переименовать</string>
+    <string name="delete">Удалить</string>
+    <string name="add_file">Добавить файл</string>
+    <string name="add_folder">Добавить папку</string>
+    <string name="block">Заблокировать</string>
+    <string name="search">Поиск</string>
+
+
+    <string name="sotrudnik">Сотрудник</string>
+    <string name="administrator">Администратор</string>
+    <string name="sub_administrator">Суб-Администратор</string>
+    <string name="prepodvatel">Преподаватель</string>
+    <string name="student">Студент</string>
+    <string name="metodist_po_raspisaniyu">Методист по расписанию</string>
+    <string name="metodist_ko">Методист КО</string>
+    <string name="bibliotekar">Библиотекарь</string>
+    <string name="tehsekretar">Техсекретарь</string>
+    <string name="abiturient">Абитуриент</string>
+    <string name="uchebny_otdel">Учебный отдел</string>
+    <string name="rukovoditel">Руководитель</string>
+    <string name="monitoring">Мониторинг</string>
+    <string name="dekan">Декан</string>
+    <string name="otdel_kadrov">Отдел кадров</string>
+
+    <string name="drawer_open">open</string>
+    <string name="drawer_closed">closed</string>
+
 </resources>
