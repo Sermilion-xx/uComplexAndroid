@@ -7,8 +7,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.ucomplex.ucomplex.Interfaces.ClickListener;
-import org.ucomplex.ucomplex.Model.DrawerListItem;
 import org.ucomplex.ucomplex.R;
 
 import java.util.ArrayList;
@@ -21,7 +19,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder> {
 
-    private static ClickListener clickListener;
     private static int TYPE_0 = 0;
     private static int TYPE_1 = 1;
     private        ArrayList<DrawerListItem> mItems;

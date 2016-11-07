@@ -1,8 +1,6 @@
 package org.ucomplex.ucomplex.Activities.Login;
 
 
-import android.util.Log;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.ucomplex.ucomplex.Model.Users.User;
@@ -23,7 +21,7 @@ public class LoginModel implements MVP_Login.ProvidedModelOpsFromPresenter {
 
     // Presenter reference
     private MVP_Login.RequiredPresenterOpsToModel mPresenter;
-    private LoginData mDAO;
+    private LoginRepository mDAO;
 
     /**
      * Main constructor, called by Activity during MVP setup
@@ -32,7 +30,7 @@ public class LoginModel implements MVP_Login.ProvidedModelOpsFromPresenter {
      */
     public LoginModel(MVP_Login.RequiredPresenterOpsToModel presenter) {
         this.mPresenter = presenter;
-        mDAO = new LoginData(mPresenter.getAppContext());
+        mDAO = new LoginRepository(mPresenter.getAppContext());
     }
 
     /**
@@ -41,7 +39,7 @@ public class LoginModel implements MVP_Login.ProvidedModelOpsFromPresenter {
      * @param presenter Presenter instance
      * @param dao       DAO instance
      */
-    public LoginModel(MVP_Login.RequiredPresenterOpsToModel presenter, LoginData dao) {
+    public LoginModel(MVP_Login.RequiredPresenterOpsToModel presenter, LoginRepository dao) {
         this.mPresenter = presenter;
         mDAO = dao;
     }

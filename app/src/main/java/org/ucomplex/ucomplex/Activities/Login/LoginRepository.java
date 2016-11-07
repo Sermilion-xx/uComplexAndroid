@@ -31,11 +31,11 @@ import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
  * ---------------------------------------------------
  */
 
-public class LoginData {
+public class LoginRepository {
 
     private Context mContext;
 
-    public LoginData(Context context){
+    public LoginRepository(Context context){
         this.mContext = context;
     }
 

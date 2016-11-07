@@ -1,4 +1,4 @@
-package org.ucomplex.ucomplex.Model;
+package org.ucomplex.ucomplex.NavDrawer;
 
 import android.graphics.Bitmap;
 

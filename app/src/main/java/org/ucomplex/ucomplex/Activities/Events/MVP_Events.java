@@ -3,10 +3,7 @@ package org.ucomplex.ucomplex.Activities.Events;
 import android.content.Context;
 import android.support.v7.app.AlertDialog;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.Toast;
-
-import org.ucomplex.ucomplex.Model.Events.EventItem;
 
 /**
  * Holder interface that contains all interfaces

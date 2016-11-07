@@ -1,4 +1,4 @@
-package org.ucomplex.ucomplex.Model.Events;
+package org.ucomplex.ucomplex.Activities.Events;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

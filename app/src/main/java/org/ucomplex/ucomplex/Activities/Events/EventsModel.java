@@ -3,7 +3,6 @@ package org.ucomplex.ucomplex.Activities.Events;
 
 
 import org.json.JSONException;
-import org.ucomplex.ucomplex.Model.Events.EventItem;
 
 import java.util.ArrayList;
 
@@ -22,7 +21,7 @@ public class EventsModel implements MVP_Events.ProvidedModelOpsFromPresenter {
 
     // Presenter reference
     private MVP_Events.RequiredPresenterOpsToModel mPresenter;
-    private EventsData mDAO;
+    private EventsRepository mDAO;
     // Recycler data
     public ArrayList<EventItem> mEventItems;
 
@@ -32,7 +31,7 @@ public class EventsModel implements MVP_Events.ProvidedModelOpsFromPresenter {
      */
     public EventsModel(MVP_Events.RequiredPresenterOpsToModel presenter, int userType) {
         this.mPresenter = presenter;
-        mDAO = new EventsData(mPresenter.getAppContext(), userType);
+        mDAO = new EventsRepository(mPresenter.getAppContext(), userType);
     }
 
     /**
@@ -40,7 +39,7 @@ public class EventsModel implements MVP_Events.ProvidedModelOpsFromPresenter {
      * @param presenter Presenter instance
      * @param dao       DAO instance
      */
-    public EventsModel(MVP_Events.RequiredPresenterOpsToModel presenter, EventsData dao) {
+    public EventsModel(MVP_Events.RequiredPresenterOpsToModel presenter, EventsRepository dao) {
         this.mPresenter = presenter;
         mDAO = dao;
     }

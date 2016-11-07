@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import org.ucomplex.ucomplex.Model.Events.EventItem;
 import org.ucomplex.ucomplex.R;
 
 import java.lang.ref.WeakReference;

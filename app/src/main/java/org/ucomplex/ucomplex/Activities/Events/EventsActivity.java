@@ -8,7 +8,6 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 import org.ucomplex.ucomplex.Activities.BaseActivity;
-import org.ucomplex.ucomplex.Fragments.EventsFragment;
 import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 import org.ucomplex.ucomplex.R;
 

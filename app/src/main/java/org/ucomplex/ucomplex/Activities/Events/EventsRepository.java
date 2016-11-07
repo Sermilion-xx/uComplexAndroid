@@ -5,7 +5,6 @@ import android.content.Context;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.ucomplex.ucomplex.Model.Events.EventItem;
 import org.ucomplex.ucomplex.R;
 import org.ucomplex.ucomplex.Utility.FacadeCommon;
 import org.ucomplex.ucomplex.Utility.FacadePreferences;
@@ -23,12 +22,12 @@ import java.util.ArrayList;
  * ---------------------------------------------------
  */
 
-class EventsData {
+class EventsRepository {
 
     private Context appContext;
     private int userType;
 
-    public EventsData(Context appContext, int userType) {
+    public EventsRepository(Context appContext, int userType) {
         this.appContext = appContext;
         this.userType = userType;
     }
