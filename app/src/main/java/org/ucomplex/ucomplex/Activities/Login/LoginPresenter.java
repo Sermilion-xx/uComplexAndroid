@@ -1,12 +1,22 @@
 package org.ucomplex.ucomplex.Activities.Login;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
-import org.codehaus.jackson.map.ObjectMapper;
+import org.ucomplex.ucomplex.Activities.Events.EventsActivity;
 import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 import org.ucomplex.ucomplex.Model.Users.User;
+import org.ucomplex.ucomplex.R;
+import org.ucomplex.ucomplex.Utility.FacadePreferences;
+import org.ucomplex.ucomplex.Utility.HttpFactory;
 
 import java.lang.ref.WeakReference;
 
@@ -29,7 +39,8 @@ public class LoginPresenter implements MVP_Login.ProvidedPresenterOpsToView, MVP
 
     /**
      * Presenter Constructor
-     * @param view  MainActivity
+     *
+     * @param view MainActivity
      */
     public LoginPresenter(MVP_Login.RequiredViewOpsFromPresenter view) {
         mView = new WeakReference<>(view);
@@ -38,8 +49,9 @@ public class LoginPresenter implements MVP_Login.ProvidedPresenterOpsToView, MVP
 
     /**
      * Called by View every time it is destroyed.
-     * @param isChangingConfiguration   true: is changing configuration
-     *                                  and will be recreated
+     *
+     * @param isChangingConfiguration true: is changing configuration
+     *                                and will be recreated
      */
     @Override
     public void onDestroy(boolean isChangingConfiguration) {
@@ -48,7 +60,7 @@ public class LoginPresenter implements MVP_Login.ProvidedPresenterOpsToView, MVP
         // Inform Model about the event
         mModel.onDestroy(isChangingConfiguration);
         // Activity destroyed
-        if ( !isChangingConfiguration ) {
+        if (!isChangingConfiguration) {
             // Nulls Model when the Activity destruction is permanent
             mModel = null;
         }
@@ -58,11 +70,11 @@ public class LoginPresenter implements MVP_Login.ProvidedPresenterOpsToView, MVP
      * Return the View reference.
      * Could throw an exception if the View is unavailable.
      *
-     * @return  {@link MVP_Login.RequiredViewOpsFromPresenter}
+     * @return {@link MVP_Login.RequiredViewOpsFromPresenter}
      * @throws NullPointerException when View is unavailable
      */
-    private MVP_Login.RequiredViewOpsFromPresenter getView() throws NullPointerException{
-        if ( mView != null )
+    private MVP_Login.RequiredViewOpsFromPresenter getView() throws NullPointerException {
+        if (mView != null)
             return mView.get();
         else
             throw new NullPointerException("View is unavailable");
@@ -70,48 +82,33 @@ public class LoginPresenter implements MVP_Login.ProvidedPresenterOpsToView, MVP
 
     /**
      * Called by View during the reconstruction events
-     * @param view  Activity instance
-    */
+     *
+     * @param view Activity instance
+     */
     @Override
     public void setView(MVP_Login.RequiredViewOpsFromPresenter view) {
         mView = new WeakReference<>(view);
     }
 
     @Override
-    public void login(String login, String password) {
-        loadData(login, password);
-    }
-
-    /**
-     * Called by Activity during MVP setup. Only called once.
-     * @param model Model instance
-     */
-    public void setModel(MVP_Login.ProvidedModelOpsFromPresenter model) {
-        mModel = model;
-    }
-
-    /**
-     * Load data from Model in a AsyncTask
-     */
-    private void loadData(final String login, final String password) {
+    public void login(final String login, final String password) {
         try {
             getView().showProgress();
             new AsyncTask<Void, Void, User>() {
                 @Override
                 protected User doInBackground(Void... params) {
-                    // Load data from Model
                     return mModel.loadData(login, password);
                 }
+
                 @Override
                 protected void onPostExecute(User result) {
                     try {
                         getView().hideProgress();
-                        if (result == null) // Loading error
+                        if (result == null)
                             getView().showToast(makeToast("Error loading data."));
-                        else{
+                        else {
                             mTaskCompleteListener.onTaskComplete(this, result);
-                        } // success
-
+                        }
                     } catch (NullPointerException e) {
                         e.printStackTrace();
                     }
@@ -122,10 +119,61 @@ public class LoginPresenter implements MVP_Login.ProvidedPresenterOpsToView, MVP
         }
     }
 
+    @Override
+    public void restorePassword(final String login, final String password) {
+            LayoutInflater layoutInflater = LayoutInflater.from(getActivityContext());
+            View promptView = layoutInflater.inflate(R.layout.dialog_forgot_password, null);
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivityContext());
+            alertDialogBuilder.setView(promptView);
+            final EditText editText = (EditText) promptView.findViewById(R.id.edittext);
+            alertDialogBuilder.setCancelable(false)
+                    .setPositiveButton(getActivityContext().getString(R.string.reset_password_sent), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            if (HttpFactory.isNetworkConnected(getActivityContext())) {
+                                final String email = editText.getText().toString();
+                                new AsyncTask<Void, Void, String>() {
+                                    @Override
+                                    protected String doInBackground(Void... params) {
+                                        return mModel.sendResetRequest(login, password, email);
+                                    }
+                                    @Override
+                                    protected void onPostExecute(String result) {
+                                        super.onPostExecute(result);
+                                        if(result!=null){
+                                            makeToast(getActivityContext().getString(R.string.reset_password_sent));
+                                        }
+                                    }
+                                }.execute();
+                            } else {
+                                makeToast(getActivityContext().getString(R.string.check_internet));
+                            }
+                        }
+                    })
+                    .setNegativeButton(getActivityContext().getString(R.string.cancel),
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            });
+            AlertDialog alert = alertDialogBuilder.create();
+            alert.show();
+    }
+
+
+    /**
+     * Called by Activity during MVP setup. Only called once.
+     *
+     * @param model Model instance
+     */
+    public void setModel(MVP_Login.ProvidedModelOpsFromPresenter model) {
+        mModel = model;
+    }
+
     /**
      * Creat a Toast object with given message
-     * @param msg   Toast message
-     * @return      A Toast object
+     *
+     * @param msg Toast message
+     * @return A Toast object
      */
     private Toast makeToast(String msg) {
         return Toast.makeText(getView().getAppContext(), msg, Toast.LENGTH_SHORT);
@@ -133,7 +181,8 @@ public class LoginPresenter implements MVP_Login.ProvidedPresenterOpsToView, MVP
 
     /**
      * Retrieve Application Context
-     * @return  Application context
+     *
+     * @return Application context
      */
     @Override
     public Context getAppContext() {
@@ -146,7 +195,8 @@ public class LoginPresenter implements MVP_Login.ProvidedPresenterOpsToView, MVP
 
     /**
      * Retrieves Activity context
-     * @return  Activity context
+     *
+     * @return Activity context
      */
     @Override
     public Context getActivityContext() {
@@ -159,10 +209,14 @@ public class LoginPresenter implements MVP_Login.ProvidedPresenterOpsToView, MVP
 
     @Override
     public void onTaskComplete(AsyncTask task, Object... o) {
-        System.out.println(o);
-        ObjectMapper objectMapper = new ObjectMapper();
-//        User emp = objectMapper.readValue(jsonData, Employee.class);
-
-
+        Intent intent;
+        User user = (User) o[0];
+        FacadePreferences.setUserDataToPref(getAppContext(), user);
+        if (user.getRoles().size() > 1) {
+            intent = new Intent(getActivityContext(), RoleSelectActivity.class);
+        } else {
+            intent = new Intent(getActivityContext(), EventsActivity.class);
+        }
+        getActivityContext().startActivity(intent);
     }
 }

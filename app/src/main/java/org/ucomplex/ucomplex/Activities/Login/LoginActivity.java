@@ -1,10 +1,10 @@
 package org.ucomplex.ucomplex.Activities.Login;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -12,7 +12,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import org.ucomplex.ucomplex.Activities.BaseActivity;
-import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 import org.ucomplex.ucomplex.R;
 import org.ucomplex.ucomplex.Utility.StateMaintainer;
 
@@ -22,9 +21,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private AutoCompleteTextView mLoginView;
     private EditText mPasswordView;
     private View mProgressView;
-    private View mLoginFormView;
     private Button mForgotButton;
-    private Button mLoginSignInButton;
 
     private final StateMaintainer mStateMaintainer =
             new StateMaintainer(getFragmentManager(), LoginActivity.class.getName());
@@ -46,8 +43,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
         mLoginView = (AutoCompleteTextView) findViewById(R.id.email);
         mPasswordView = (EditText) findViewById(R.id.password);
-        mLoginSignInButton = (Button) findViewById(R.id.login_sign_in_button);
-        mLoginFormView = findViewById(R.id.login_form);
+        Button mLoginSignInButton = (Button) findViewById(R.id.login_sign_in_button);
         mProgressView = findViewById(R.id.login_progress);
         mForgotButton = (Button) findViewById(R.id.forgot_pass_button);
         mLoginSignInButton.setOnClickListener(this);
@@ -61,28 +57,15 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
      * using a dependency injection for example.
      */
     private void setupMVP() {
-        // Check if StateMaintainer has been created
         if (mStateMaintainer.firstTimeIn()) {
-            // Create the Presenter
             LoginPresenter presenter = new LoginPresenter(this);
-            // Create the Model
             LoginModel model = new LoginModel(presenter);
-            // Set Presenter model
             presenter.setModel(model);
-            // Add Presenter and Model to StateMaintainer
             mStateMaintainer.put(presenter);
             mStateMaintainer.put(model);
-
-            // Set the Presenter as a interface
-            // To limit the communication with it
             mPresenter = presenter;
-
-        }
-        // get the Presenter from StateMaintainer
-        else {
-            // Get the Presenter
+        } else {
             mPresenter = mStateMaintainer.get(LoginPresenter.class.getName());
-            // Updated the View in Presenter
             mPresenter.setView(this);
         }
     }
@@ -125,7 +108,34 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     public void proceedLogin() {
+        mLoginView.setError(null);
+        mPasswordView.setError(null);
 
+        String email = mLoginView.getText().toString();
+        String password = mPasswordView.getText().toString();
+
+        boolean cancel = false;
+
+        if (TextUtils.isEmpty(password)) {
+            mPasswordView.setError(getString(R.string.error_field_required));
+            cancel = true;
+        }else if (!isPasswordValid(password)) {
+            mPasswordView.setError(getString(R.string.error_incorrect_password));
+            cancel = true;
+        }
+
+        if (TextUtils.isEmpty(email)) {
+            mLoginView.setError(getString(R.string.error_field_required));
+            cancel = true;
+        }
+
+        if (!cancel) {
+            mPresenter.login(mLoginView.getText().toString(), mPasswordView.getText().toString());
+        }
+    }
+
+    private boolean isPasswordValid(String password) {
+        return password.length() > 3;
     }
 
     @Override
@@ -133,7 +143,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         int id = view.getId();
         switch (id) {
             case R.id.login_sign_in_button:
-                mPresenter.login(mLoginView.getText().toString(), mPasswordView.getText().toString());
+                proceedLogin();
+                break;
+            case R.id.forgot_pass_button:
+
                 break;
         }
     }

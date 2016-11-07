@@ -1,5 +1,7 @@
 package org.ucomplex.ucomplex.Utility;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
 import android.util.Base64;
 
@@ -35,6 +37,7 @@ public class HttpFactory {
     public  static final String MORE_EVENTS_URL    = BASE_URL+"user/events?mobile=1";
     public  static final String PROFILE_IMAGE_URL  = BASE_URL+"files/photos/";
     public  static final String AUTHENTICATIO_URL  = BASE_URL+"auth?mobile=1";
+    public  static final String RESTORE_PASSWORD_URL=BASE_URL+"public/password?mobile=1";
 
     public static void httpGetFile(@NonNull String url, @NonNull File destFile, String encodedAuth) {
         try {
@@ -129,6 +132,12 @@ public class HttpFactory {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public static boolean isNetworkConnected(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        return cm.getActiveNetworkInfo() != null;
     }
 
 }

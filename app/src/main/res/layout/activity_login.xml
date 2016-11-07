@@ -14,7 +14,6 @@
 
 
         <ScrollView
-            android:id="@+id/login_form"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
@@ -45,28 +44,23 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="100dp"
-                    android:foreground="#00ffffff"
-                    android:textColorHint="#ffffff">
+                    android:textColorHint="@color/colorWhite">
 
                     <AutoCompleteTextView
                         android:id="@+id/email"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/prompt_login"
-                        android:inputType="textEmailAddress"
+                        android:inputType="text"
                         android:maxLines="1"
-                        android:popupBackground="#ffffff"
-                        android:singleLine="true"
-                        android:textColor="#ffffff"
-                        android:textColorHint="#ffffff" />
+ />
 
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:foreground="#00ffffff"
-                    android:textColorHint="#ffffff">
+                    android:textColorHint="@color/colorWhite">
 
                     <EditText
                         android:id="@+id/password"
