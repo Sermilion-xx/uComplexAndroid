@@ -16,7 +16,7 @@ import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 import org.ucomplex.ucomplex.R;
 import org.ucomplex.ucomplex.Utility.StateMaintainer;
 
-public class LoginActivity extends BaseActivity implements OnTaskCompleteListener, View.OnClickListener, MVP_Login.RequiredViewOpsFromPresenter {
+public class LoginActivity extends BaseActivity implements View.OnClickListener, MVP_Login.RequiredViewOpsFromPresenter {
 
     private MVP_Login.ProvidedPresenterOpsToView mPresenter;
     private AutoCompleteTextView mLoginView;
@@ -64,7 +64,7 @@ public class LoginActivity extends BaseActivity implements OnTaskCompleteListene
         // Check if StateMaintainer has been created
         if (mStateMaintainer.firstTimeIn()) {
             // Create the Presenter
-            LoginPresenter presenter = new LoginPresenter(this, this);
+            LoginPresenter presenter = new LoginPresenter(this);
             // Create the Model
             LoginModel model = new LoginModel(presenter);
             // Set Presenter model
@@ -94,11 +94,6 @@ public class LoginActivity extends BaseActivity implements OnTaskCompleteListene
     }
 
     @Override
-    public void onTaskComplete(AsyncTask task, Object... o) {
-        System.out.println(task);
-    }
-
-    @Override
     public Context getAppContext() {
         return getApplicationContext();
     }
@@ -115,12 +110,12 @@ public class LoginActivity extends BaseActivity implements OnTaskCompleteListene
 
     @Override
     public void showProgress() {
-
+        mProgressView.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideProgress() {
-
+        mProgressView.setVisibility(View.GONE);
     }
 
     @Override

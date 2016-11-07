@@ -34,7 +34,11 @@ public class User {
     private int type;
     private String session;
     private String name;
-    private ArrayList<User> roles;
+    private ArrayList<Role> roles;
+
+    public void addRole(Role role){
+        roles.add(role);
+    }
 
     protected class BitmapDataObject implements Serializable {
         private static final long serialVersionUID = 111696345129311948L;

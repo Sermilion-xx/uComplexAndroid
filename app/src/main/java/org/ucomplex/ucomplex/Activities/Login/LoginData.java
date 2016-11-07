@@ -4,9 +4,13 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Environment;
 
+import com.google.gson.Gson;
+
+import org.codehaus.jackson.map.ObjectMapper;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.ucomplex.ucomplex.Model.Users.Role;
 import org.ucomplex.ucomplex.Model.Users.User;
 import org.ucomplex.ucomplex.Utility.FacadeMedia;
 import org.ucomplex.ucomplex.Utility.FacadePreferences;
@@ -68,46 +72,10 @@ public class LoginData {
     }
 
     private User getUserFromJson(String rolesJsonStr) throws JSONException {
-        ArrayList<User> userRoles = new ArrayList<>();
         JSONObject rolesJson = new JSONObject(rolesJsonStr);
-        JSONArray rolesArray = rolesJson.getJSONArray("roles");
-        User user = new User();
-
-        JSONObject roles;
-        for (int i = 0; i < rolesArray.length(); i++) {
-            roles = rolesArray.getJSONObject(i);
-            User userRole = new User();
-            userRole.setId(roles.getInt("id"));
-            userRole.setName(roles.getString("name"));
-            userRole.setPerson(roles.getInt("person"));
-            userRole.setType(roles.getInt("type"));
-            userRoles.add(userRole);
-        }
-
+        Gson gson = new Gson();
         JSONObject userSession = rolesJson.getJSONObject("session");
-        user.setPerson(userSession.getInt("person"));
-        user.setType(-1);
-        if(rolesArray.length()==1){
-            user.setType(rolesArray.getJSONObject(0).getInt("type"));
-            user.setId(userSession.getInt("person"));
-            user.setRole(rolesArray.getJSONObject(0).getInt("id"));
-        }
-//        for (int i = 0; i < rolesArray.length(); i++) {
-//            user.setType(rolesArray.getJSONObject(i).getInt("type"));
-//            user.setId(rolesArray.getJSONObject(i).getInt("id"));
-//        }
-        user.setPerson(userSession.getInt("person"));
-        user.setPhoto(userSession.getInt("photo"));
-        user.setCode(userSession.getString("code"));
-        user.setName(userSession.getString("name"));
-        user.setClient(userSession.getInt("client"));
-        user.setEmail(userSession.getString("email"));
-        user.setLogin(userSession.getString("login"));
-        user.setPassword(userSession.getString("pass"));
-        user.setPhone(userSession.getString("phone"));
-        user.setSession(userSession.getString("session"));
-        user.setRoles(userRoles);
-        return user;
+        return gson.fromJson(userSession.toString(), User.class);
     }
 
 }

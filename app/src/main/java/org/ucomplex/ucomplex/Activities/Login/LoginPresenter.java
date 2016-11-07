@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 import org.ucomplex.ucomplex.Model.Users.User;
 
@@ -19,7 +20,7 @@ import java.lang.ref.WeakReference;
  * ---------------------------------------------------
  */
 
-public class LoginPresenter implements MVP_Login.ProvidedPresenterOpsToView, MVP_Login.RequiredPresenterOpsToModel {
+public class LoginPresenter implements MVP_Login.ProvidedPresenterOpsToView, MVP_Login.RequiredPresenterOpsToModel, OnTaskCompleteListener {
 
     public final String TAG = LoginPresenter.class.getName();
     private WeakReference<MVP_Login.RequiredViewOpsFromPresenter> mView;
@@ -30,9 +31,9 @@ public class LoginPresenter implements MVP_Login.ProvidedPresenterOpsToView, MVP
      * Presenter Constructor
      * @param view  MainActivity
      */
-    public LoginPresenter(MVP_Login.RequiredViewOpsFromPresenter view, OnTaskCompleteListener listener) {
+    public LoginPresenter(MVP_Login.RequiredViewOpsFromPresenter view) {
         mView = new WeakReference<>(view);
-        mTaskCompleteListener = listener;
+        mTaskCompleteListener = this;
     }
 
     /**
@@ -154,5 +155,14 @@ public class LoginPresenter implements MVP_Login.ProvidedPresenterOpsToView, MVP
         } catch (NullPointerException e) {
             return null;
         }
+    }
+
+    @Override
+    public void onTaskComplete(AsyncTask task, Object... o) {
+        System.out.println(o);
+        ObjectMapper objectMapper = new ObjectMapper();
+//        User emp = objectMapper.readValue(jsonData, Employee.class);
+
+
     }
 }
