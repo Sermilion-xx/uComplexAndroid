@@ -57,4 +57,10 @@ public class FacadePreferences {
         editor.apply();
     }
 
+    public static void deleteFromPref(Context context, String typeStr) {
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        editor.remove(typeStr);
+        editor.apply();
+    }
+
 }

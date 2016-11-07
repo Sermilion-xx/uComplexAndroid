@@ -1,6 +1,5 @@
-package org.ucomplex.ucomplex.Adapters;
+package org.ucomplex.ucomplex.NavDrawer;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.ucomplex.ucomplex.Fragments.EventsFragment;
 import org.ucomplex.ucomplex.Interfaces.ClickListener;
 import org.ucomplex.ucomplex.Model.DrawerListItem;
 import org.ucomplex.ucomplex.R;

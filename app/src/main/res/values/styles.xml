@@ -67,4 +67,13 @@
         <item name="android:textSize">16sp</item>
     </style>
 
+    <style name="StyleTextMenu">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">2dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@drawable/menu_list_color_selector</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
 </resources>

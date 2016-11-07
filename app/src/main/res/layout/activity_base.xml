@@ -35,7 +35,8 @@
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/left_drawer"/>
+            android:id="@+id/left_drawer"
+            android:background="@color/color_uc_menuHeader"/>
 
     </android.support.design.widget.NavigationView>
 

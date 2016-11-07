@@ -2,12 +2,14 @@ package org.ucomplex.ucomplex.Model.Users;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import lombok.Data;
 
@@ -17,12 +19,22 @@ import lombok.Data;
 @Data
 public class User {
 
+    private int id;
     private String login;
     private String password;
+    private String email;
+    private String phone;
     private int role;
+    private int person;
     private Bitmap photoBitmap;
+    private Uri bitmapUri;
+    private int photo;
+    private String code;
+    private int client;
     private int type;
+    private String session;
     private String name;
+    private ArrayList<User> roles;
 
     protected class BitmapDataObject implements Serializable {
         private static final long serialVersionUID = 111696345129311948L;

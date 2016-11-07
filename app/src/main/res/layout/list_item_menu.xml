@@ -14,14 +14,9 @@
 
     <TextView
         android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:layout_marginTop="5dp"
-        android:padding="2dp"
-        android:text="sdfsdfsdfsdfsdfsdfsdf"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@drawable/menu_list_color_selector"
-        android:textSize="16sp" />
+        style="@style/StyleTextMenu"
+        />
 
 </LinearLayout>

@@ -28,13 +28,21 @@ import okio.Okio;
  */
 public class HttpFactory {
 
-    private static final String SCHEMA = "https://";
-    public static final String BASE_URL = SCHEMA+"ucomplex.org/";
+    private static final String SCHEMA             = "https://";
+    public  static final String BASE_URL           = SCHEMA+"ucomplex.org/";
+    public  static final String STUDENT_EVENTS_URL = BASE_URL+"student?mobile=1";
+    public  static final String TEACHER_EVENTS_URL = BASE_URL+"teacher?mobile=1";
+    public  static final String MORE_EVENTS_URL    = BASE_URL+"user/events?mobile=1";
+    public  static final String PROFILE_IMAGE_URL  = BASE_URL+"files/photos/";
+    public  static final String AUTHENTICATIO_URL  = BASE_URL+"auth?mobile=1";
 
-    public static void httpGetFile(@NonNull String url, @NonNull File destFile) {
+    public static void httpGetFile(@NonNull String url, @NonNull File destFile, String encodedAuth) {
         try {
             val okHttpClient = new OkHttpClient();
-            val request = new Request.Builder().url(url).build();
+            val request = new Request.Builder()
+                    .url(url)
+                    .addHeader("Authorization", "Basic " + encodedAuth)
+                    .build();
             val response = okHttpClient.newCall(request).execute();
             val body = response.body();
 //        val contentLength = body.contentLength()
@@ -61,7 +69,7 @@ public class HttpFactory {
         return "";
     }
 
-    private String encodeLoginData(String loginData){
+    public static String encodeLoginData(String loginData){
         byte[] authBytes = null;
         try {
             authBytes = loginData.getBytes("UTF-8");
@@ -91,7 +99,7 @@ public class HttpFactory {
                     .addHeader("Authorization", "Basic " + encodedAuth)
                     .build();
             Response response = client.newCall(request).execute();
-            response.body().string();
+            return response.body().string();
         }catch (IOException e){
             e.printStackTrace();
         }
@@ -121,22 +129,6 @@ public class HttpFactory {
             e.printStackTrace();
         }
         return false;
-    }
-
-    public static String getPostDataString(HashMap<String, String> params) throws UnsupportedEncodingException {
-        StringBuilder result = new StringBuilder();
-        boolean first = true;
-        for (Map.Entry<String, String> entry : params.entrySet()) {
-            if (first)
-                first = false;
-            else
-                result.append("&");
-            result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
-            result.append("=");
-            result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
-        }
-
-        return result.toString();
     }
 
 }

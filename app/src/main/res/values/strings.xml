@@ -38,4 +38,12 @@
     <string name="drawer_open">open</string>
     <string name="drawer_closed">closed</string>
 
+    <string name="wrong_user_type">Неверный тип пользователя.</string>
+    <string name="uc_description">Добро пожаловать\n в uComplex</string>
+    <string name="prompt_login">Логин</string>
+    <string name="prompt_password">Пароль</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="sign_in">Войти</string>
+    <string name="forgot_pass">Забыли пароль?</string>
+
 </resources>

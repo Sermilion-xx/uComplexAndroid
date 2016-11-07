@@ -15,7 +15,7 @@ import lombok.Data;
  * Created by Sermilion on 01/11/2016.
  */
 @Data
-public class EventRowItem implements Serializable {
+public class EventItem implements Serializable {
     private int id;
     private EventParams params;
     private int type;
@@ -24,41 +24,41 @@ public class EventRowItem implements Serializable {
     private Bitmap eventImageBitmap;
     private String eventText;
 
-    public EventRowItem() {
+    public EventItem() {
 
     }
 
-    public EventRowItem id(int id) {
+    public EventItem id(int id) {
         this.id = id;
         return this;
     }
 
-    public EventRowItem params(EventParams params) {
+    public EventItem params(EventParams params) {
         this.params = params;
         return this;
     }
 
-    public EventRowItem type(int type) {
+    public EventItem type(int type) {
         this.type = type;
         return this;
     }
 
-    public EventRowItem time(String time) {
+    public EventItem time(String time) {
         this.time = time;
         return this;
     }
 
-    public EventRowItem seen(int seen) {
+    public EventItem seen(int seen) {
         this.seen = seen;
         return this;
     }
 
-    public EventRowItem eventImageBitmap(Bitmap eventImageBitmap) {
+    public EventItem eventImageBitmap(Bitmap eventImageBitmap) {
         this.eventImageBitmap = eventImageBitmap;
         return this;
     }
 
-    public EventRowItem eventText(String eventText) {
+    public EventItem eventText(String eventText) {
         this.eventText = eventText;
         return this;
     }
