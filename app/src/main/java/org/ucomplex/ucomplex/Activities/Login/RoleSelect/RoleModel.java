@@ -1,5 +1,7 @@
 package org.ucomplex.ucomplex.Activities.Login.RoleSelect;
 
+import android.content.Intent;
+
 import org.ucomplex.ucomplex.Model.Users.User;
 
 import java.util.ArrayList;
@@ -18,17 +20,25 @@ public class RoleModel implements MVP_RoleSelect.ProvidedModelOpsFromPresenter {
 
     // Presenter reference
     private MVP_RoleSelect.RequiredPresenterOpsToModel mPresenter;
-    public ArrayList<RoleItem> mRoles;
+    private ArrayList<RoleItem> mRoles;
     private RoleRepository mRolesRepository;
+    private User user;
+    private static final String ROLE_MODEL_EXTRA_KEY = "user";
 
-    public RoleModel(MVP_RoleSelect.RequiredPresenterOpsToModel presenter){
+    public RoleModel(MVP_RoleSelect.RequiredPresenterOpsToModel presenter, Intent intent) {
+
         this.mPresenter = presenter;
-        mRolesRepository = new RoleRepository(mPresenter.getAppContext());
+        this.mRolesRepository = new RoleRepository(mPresenter.getAppContext());
+        if(intent.hasExtra(ROLE_MODEL_EXTRA_KEY)){
+            this.user = intent.getParcelableExtra(ROLE_MODEL_EXTRA_KEY);
+        }
+        System.out.println();
     }
 
-    public RoleModel(MVP_RoleSelect.RequiredPresenterOpsToModel presenter, RoleRepository repository){
+    public RoleModel(MVP_RoleSelect.RequiredPresenterOpsToModel presenter, RoleRepository repository, User user) {
         this.mPresenter = presenter;
         mRolesRepository = repository;
+        this.user = user;
     }
 
     @Override
@@ -41,8 +51,8 @@ public class RoleModel implements MVP_RoleSelect.ProvidedModelOpsFromPresenter {
 
     @Override
     public boolean loadData() {
-        mRoles = mRolesRepository.getAllRoleItems();
-        return mRoles!=null;
+        mRoles = mRolesRepository.getAllRoleItems(user);
+        return mRoles != null;
     }
 
     @Override

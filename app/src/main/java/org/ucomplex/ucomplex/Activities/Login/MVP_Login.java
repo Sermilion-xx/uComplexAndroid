@@ -39,6 +39,7 @@ public class MVP_Login {
         void hideProgress();
         void showAlert(AlertDialog dialog);
         void proceedLogin();
+        void successfulLogin(User user);
     }
     /**
      * Operations offered to View to communicate with Presenter.
@@ -66,8 +67,9 @@ public class MVP_Login {
      */
     interface ProvidedModelOpsFromPresenter {
         void onDestroy(boolean isChangingConfiguration);
-        User loadData(String login, String password);
+        boolean loadData(String login, String password);
         String sendResetRequest(String email);
+        User getUser();
     }
 
 }

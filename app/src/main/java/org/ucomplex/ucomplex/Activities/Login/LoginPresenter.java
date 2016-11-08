@@ -94,14 +94,13 @@ public class LoginPresenter implements MVP_Login.ProvidedPresenterOpsToView, MVP
     public void login(final String login, final String password) {
         try {
             getView().showProgress();
-            new AsyncTask<Void, Void, User>() {
+            new AsyncTask<Void, Void, Boolean>() {
                 @Override
-                protected User doInBackground(Void... params) {
+                protected Boolean doInBackground(Void... params) {
                     return mModel.loadData(login, password);
                 }
-
                 @Override
-                protected void onPostExecute(User result) {
+                protected void onPostExecute(Boolean result) {
                     try {
                         getView().hideProgress();
                         if (result == null)
@@ -207,14 +206,10 @@ public class LoginPresenter implements MVP_Login.ProvidedPresenterOpsToView, MVP
 
     @Override
     public void onTaskComplete(AsyncTask task, Object... o) {
-        Intent intent;
-        User user = (User) o[0];
-        FacadePreferences.setUserDataToPref(getAppContext(), user);
-        if (user.getRoles().size() > 1) {
-            intent = new Intent(getActivityContext(), RoleSelectActivity.class);
-        } else {
-            intent = new Intent(getActivityContext(), RoleSelectActivity.class);
+        boolean result = (boolean) o[0];
+        if(result){
+            getView().successfulLogin(mModel.getUser());
         }
-        getActivityContext().startActivity(intent);
+
     }
 }

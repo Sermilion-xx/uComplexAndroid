@@ -54,28 +54,6 @@ public class RolePresenter implements MVP_RoleSelect.ProvidedPresenterOpsToView,
 
     private void loadData() {
         mModel.loadData();
-//        try {
-//            new AsyncTask<Void, Void, Boolean>() {
-//                @Override
-//                protected Boolean doInBackground(Void... params) {
-//                    return mModel.loadData();
-//                }
-//
-//                @Override
-//                protected void onPostExecute(Boolean result) {
-//                    try {
-//                        if (!result)
-//                            getView().showToast(makeToast(getActivityContext().getString(R.string.error_loading_data)));
-//                        else
-//                            getView().notifyDataSetChanged();
-//                    } catch (NullPointerException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }.execute();
-//        } catch (NullPointerException e) {
-//            e.printStackTrace();
-//        }
     }
 
     private MVP_RoleSelect.RequiredViewOpsFromPresenter getView() throws NullPointerException {
@@ -94,7 +72,7 @@ public class RolePresenter implements MVP_RoleSelect.ProvidedPresenterOpsToView,
     public RoleViewHolder createViewHolder(ViewGroup parent, int viewType) {
         RoleViewHolder viewHolder;
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View viewTaskRow = inflater.inflate(R.layout.list_item_event, parent, false);
+        View viewTaskRow = inflater.inflate(R.layout.list_item_role, parent, false);
         viewHolder = new RoleViewHolder(viewTaskRow);
         return viewHolder;
     }

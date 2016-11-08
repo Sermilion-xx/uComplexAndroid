@@ -3,6 +3,8 @@ package org.ucomplex.ucomplex.Model.Users;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -18,7 +20,7 @@ import lombok.Data;
  * Created by Sermilion on 01/11/2016.
  */
 @Data
-public class User {
+public class User implements Parcelable{
 
     private int id;
     private String login;
@@ -37,8 +39,68 @@ public class User {
     private String name;
     private List<Role> roles;
 
+    public User(){
+
+    }
+
+    protected User(Parcel in) {
+        id = in.readInt();
+        login = in.readString();
+        password = in.readString();
+        email = in.readString();
+        phone = in.readString();
+        role = in.readInt();
+        person = in.readInt();
+        photoBitmap = in.readParcelable(Bitmap.class.getClassLoader());
+        bitmapUri = in.readParcelable(Uri.class.getClassLoader());
+        photo = in.readInt();
+        code = in.readString();
+        client = in.readInt();
+        type = in.readInt();
+        session = in.readString();
+        name = in.readString();
+        roles = in.createTypedArrayList(Role.CREATOR);
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
+
     public void addRole(Role role){
         roles.add(role);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(id);
+        parcel.writeString(login);
+        parcel.writeString(password);
+        parcel.writeString(email);
+        parcel.writeString(phone);
+        parcel.writeInt(role);
+        parcel.writeInt(person);
+        parcel.writeParcelable(photoBitmap, i);
+        parcel.writeParcelable(bitmapUri, i);
+        parcel.writeInt(photo);
+        parcel.writeString(code);
+        parcel.writeInt(client);
+        parcel.writeInt(type);
+        parcel.writeString(session);
+        parcel.writeString(name);
+        parcel.writeTypedList(roles);
     }
 
     protected class BitmapDataObject implements Serializable {

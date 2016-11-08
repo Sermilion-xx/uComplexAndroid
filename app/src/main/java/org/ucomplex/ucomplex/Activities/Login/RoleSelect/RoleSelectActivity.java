@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.ucomplex.ucomplex.Activities.BaseActivity;
+import org.ucomplex.ucomplex.Model.Users.User;
 import org.ucomplex.ucomplex.R;
 import org.ucomplex.ucomplex.Utility.StateMaintainer;
 
@@ -61,7 +62,7 @@ public class RoleSelectActivity extends BaseActivity implements MVP_RoleSelect.R
     private void setupMVP() {
         if (mStateMaintainer.firstTimeIn()) {
             RolePresenter presenter = new RolePresenter(this);
-            RoleModel model = new RoleModel(presenter);
+            RoleModel model = new RoleModel(presenter, getIntent());
             presenter.setModel(model);
             mStateMaintainer.put(presenter);
             mStateMaintainer.put(model);

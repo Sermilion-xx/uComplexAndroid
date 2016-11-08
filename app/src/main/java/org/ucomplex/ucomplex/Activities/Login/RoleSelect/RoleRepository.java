@@ -33,11 +33,10 @@ public class RoleRepository {
         this.mContext = appContext;
     }
 
-    ArrayList<RoleItem> getAllRoleItems() {
-        User user = FacadePreferences.getUserDataFromPref(mContext);
+    ArrayList<RoleItem> getAllRoleItems(User user) {
         ArrayList<RoleItem> roles = new ArrayList<>();
         Random random = new Random();
-        for (int i = 0; i < roles.size(); i++) {
+        for (int i = 0; i < user.getRoles().size(); i++) {
             Role role = user.getRoles().get(i);
             String roleStr = "";
             if (role.getType() == 3) {

@@ -1,6 +1,7 @@
 package org.ucomplex.ucomplex.Activities.Login;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -12,6 +13,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import org.ucomplex.ucomplex.Activities.BaseActivity;
+import org.ucomplex.ucomplex.Activities.Login.RoleSelect.RoleSelectActivity;
+import org.ucomplex.ucomplex.Model.Users.User;
 import org.ucomplex.ucomplex.R;
 import org.ucomplex.ucomplex.Utility.StateMaintainer;
 
@@ -133,6 +136,18 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         if (!cancel) {
             mPresenter.login(mLoginView.getText().toString(), mPasswordView.getText().toString());
         }
+    }
+
+    @Override
+    public void successfulLogin(User user) {
+        Intent intent;
+        if (user.getRoles().size() > 1) {
+            intent = new Intent(getActivityContext(), RoleSelectActivity.class);
+        } else {
+            intent = new Intent(getActivityContext(), RoleSelectActivity.class);
+        }
+        intent.putExtra("user", user);
+        getActivityContext().startActivity(intent);
     }
 
     private boolean isPasswordValid(String password) {

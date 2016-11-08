@@ -31,7 +31,7 @@ public class RoleViewHolder extends RecyclerView.ViewHolder {
 
     private void setupViews(View view) {
         roleName = (TextView) view.findViewById(R.id.roleTitle);
-        roleIcon = (CircleImageView) view.findViewById(R.id.toleIcon);
+        roleIcon = (CircleImageView) view.findViewById(R.id.roleIcon);
     }
 
 }

@@ -22,6 +22,7 @@ public class LoginModel implements MVP_Login.ProvidedModelOpsFromPresenter {
     // Presenter reference
     private MVP_Login.RequiredPresenterOpsToModel mPresenter;
     private LoginRepository mRepository;
+    private User user;
 
     /**
      * Main constructor, called by Activity during MVP setup
@@ -62,26 +63,30 @@ public class LoginModel implements MVP_Login.ProvidedModelOpsFromPresenter {
      * @return true with success
      */
     @Override
-    public User loadData(String login, String password) {
-        User user;
+    public boolean loadData(String login, String password) {
         String jsonData = mRepository.login(login, password);
         try {
             JSONObject jsonObject = new JSONObject(jsonData);
             if (jsonObject.getJSONArray("roles") == null) {
-                return null;
+                return false;
             }
         } catch (JSONException e) {
             e.printStackTrace();
-            return null;
+            return false;
         }
         user = mRepository.getUser(jsonData);
-        return user;
+        return true;
     }
 
     @Override
     public String sendResetRequest(String email) {
         String json = "\"email\":\""+email+"\"";
         return HttpFactory.httpPost(HttpFactory.RESTORE_PASSWORD_URL, "", json);
+    }
+
+    @Override
+    public User getUser() {
+        return user;
     }
 
 }
