@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -105,10 +104,9 @@ public class LoginPresenter implements MVP_Login.ProvidedPresenterOpsToView, MVP
                     try {
                         getView().hideProgress();
                         if (result == null)
-                            getView().showToast(makeToast("Error loading data."));
-                        else {
+                            getView().showToast(makeToast(getActivityContext().getString(R.string.error_login)));
+                        else
                             mTaskCompleteListener.onTaskComplete(this, result);
-                        }
                     } catch (NullPointerException e) {
                         e.printStackTrace();
                     }
@@ -120,21 +118,21 @@ public class LoginPresenter implements MVP_Login.ProvidedPresenterOpsToView, MVP
     }
 
     @Override
-    public void restorePassword(final String login, final String password) {
+    public void showRestorePasswordDialog() {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivityContext());
             View promptView = layoutInflater.inflate(R.layout.dialog_forgot_password, null);
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivityContext());
             alertDialogBuilder.setView(promptView);
             final EditText editText = (EditText) promptView.findViewById(R.id.edittext);
             alertDialogBuilder.setCancelable(false)
-                    .setPositiveButton(getActivityContext().getString(R.string.reset_password_sent), new DialogInterface.OnClickListener() {
+                    .setPositiveButton(getActivityContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             if (HttpFactory.isNetworkConnected(getActivityContext())) {
                                 final String email = editText.getText().toString();
                                 new AsyncTask<Void, Void, String>() {
                                     @Override
                                     protected String doInBackground(Void... params) {
-                                        return mModel.sendResetRequest(login, password, email);
+                                        return mModel.sendResetRequest(email);
                                     }
                                     @Override
                                     protected void onPostExecute(String result) {
@@ -145,7 +143,7 @@ public class LoginPresenter implements MVP_Login.ProvidedPresenterOpsToView, MVP
                                     }
                                 }.execute();
                             } else {
-                                makeToast(getActivityContext().getString(R.string.check_internet));
+                                makeToast(getActivityContext().getString(R.string.error_check_internet));
                             }
                         }
                     })
@@ -162,7 +160,6 @@ public class LoginPresenter implements MVP_Login.ProvidedPresenterOpsToView, MVP
 
     /**
      * Called by Activity during MVP setup. Only called once.
-     *
      * @param model Model instance
      */
     public void setModel(MVP_Login.ProvidedModelOpsFromPresenter model) {

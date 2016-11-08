@@ -47,6 +47,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         mProgressView = findViewById(R.id.login_progress);
         mForgotButton = (Button) findViewById(R.id.forgot_pass_button);
         mLoginSignInButton.setOnClickListener(this);
+        mForgotButton.setOnClickListener(this);
     }
 
     /**
@@ -146,7 +147,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 proceedLogin();
                 break;
             case R.id.forgot_pass_button:
-
+                mPresenter.showRestorePasswordDialog();
                 break;
         }
     }

@@ -21,7 +21,7 @@ public class LoginModel implements MVP_Login.ProvidedModelOpsFromPresenter {
 
     // Presenter reference
     private MVP_Login.RequiredPresenterOpsToModel mPresenter;
-    private LoginRepository mDAO;
+    private LoginRepository mRepository;
 
     /**
      * Main constructor, called by Activity during MVP setup
@@ -30,7 +30,7 @@ public class LoginModel implements MVP_Login.ProvidedModelOpsFromPresenter {
      */
     public LoginModel(MVP_Login.RequiredPresenterOpsToModel presenter) {
         this.mPresenter = presenter;
-        mDAO = new LoginRepository(mPresenter.getAppContext());
+        mRepository = new LoginRepository(mPresenter.getAppContext());
     }
 
     /**
@@ -41,7 +41,7 @@ public class LoginModel implements MVP_Login.ProvidedModelOpsFromPresenter {
      */
     public LoginModel(MVP_Login.RequiredPresenterOpsToModel presenter, LoginRepository dao) {
         this.mPresenter = presenter;
-        mDAO = dao;
+        mRepository = dao;
     }
 
     /**
@@ -53,7 +53,7 @@ public class LoginModel implements MVP_Login.ProvidedModelOpsFromPresenter {
     public void onDestroy(boolean isChangingConfiguration) {
         if (!isChangingConfiguration) {
             mPresenter = null;
-            mDAO = null;
+            mRepository = null;
         }
     }
 
@@ -65,25 +65,24 @@ public class LoginModel implements MVP_Login.ProvidedModelOpsFromPresenter {
     @Override
     public User loadData(String login, String password) {
         User user;
-        String jsonData = mDAO.login(login, password);
+        String jsonData = mRepository.login(login, password);
         try {
             JSONObject jsonObject = new JSONObject(jsonData);
-            if (jsonObject.getJSONObject("roles") == null) {
+            if (jsonObject.getJSONArray("roles") == null) {
                 return null;
             }
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
         }
-        user = mDAO.getUser(jsonData);
+        user = mRepository.getUser(jsonData);
         return user;
     }
 
     @Override
-    public String sendResetRequest(String login,String password, String email) {
-        String encodedAuth = HttpFactory.encodeLoginData( login+ ":" + password);
+    public String sendResetRequest(String email) {
         String json = "\"email\":\""+email+"\"";
-        return HttpFactory.httpPost(HttpFactory.RESTORE_PASSWORD_URL, encodedAuth, json);
+        return HttpFactory.httpPost(HttpFactory.RESTORE_PASSWORD_URL, "", json);
     }
 
 }

@@ -38,7 +38,6 @@
     <string name="drawer_open">open</string>
     <string name="drawer_closed">closed</string>
 
-    <string name="wrong_user_type">Неверный тип пользователя.</string>
     <string name="uc_description">Добро пожаловать\n в uComplex</string>
     <string name="prompt_login">Логин</string>
     <string name="prompt_password">Пароль</string>
@@ -46,14 +45,19 @@
     <string name="sign_in">Войти</string>
     <string name="forgot_pass">Забыли пароль?</string>
 
+    <string name="error_wrong_user_type">Неверный тип пользователя.</string>
     <string name="error_invalid_login">Неверные данные</string>
     <string name="error_invalid_email">Не валидный электронный адрес</string>
     <string name="error_invalid_password">Пароль слишком которткий</string>
     <string name="error_incorrect_password">Пароль должен состоять из 3 и более символов</string>
     <string name="error_field_required">Обязательное поле</string>
-    <string name="reset_password_sent">На указанный адрес отправленна ссылка для восстановления пароля.</string>
-    <string name="check_internet">Проверьте интернет соединение.</string>
+    <string name="error_check_internet">Проверьте интернет соединение.</string>
+    <string name="error_login">Неверные данные</string>
+
     <string name="ok">Готово</string>
     <string name="cancel">Отмена</string>
+    <string name="restore_password">Восстановление пароля</string>
+    <string name="email_address">Адрес электронной почты</string>
+    <string name="reset_password_sent">На указанный адрес отправленна ссылка для восстановления пароля.</string>
 
 </resources>

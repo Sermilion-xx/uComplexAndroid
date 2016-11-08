@@ -38,7 +38,7 @@ class EventsRepository {
         } else if (userType == 3) {
             return getAllTeacherEvents();
         } else
-            throw new IllegalArgumentException(appContext.getResources().getString(R.string.wrong_user_type));
+            throw new IllegalArgumentException(appContext.getResources().getString(R.string.error_wrong_user_type));
     }
 
     private ArrayList<EventItem> getAllStudentEvents() throws JSONException {

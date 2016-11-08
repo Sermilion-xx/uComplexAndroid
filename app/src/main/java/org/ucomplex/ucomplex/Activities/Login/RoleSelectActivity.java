@@ -3,6 +3,8 @@ package org.ucomplex.ucomplex.Activities.Login;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import org.ucomplex.ucomplex.R;
+
 public class RoleSelectActivity extends AppCompatActivity {
 
     @Override

@@ -49,7 +49,7 @@ public class MVP_Login {
         void onDestroy(boolean isChangingConfiguration);
         void setView(RequiredViewOpsFromPresenter view);
         void login(String login, String password);
-        void restorePassword(String login, String password);
+        void showRestorePasswordDialog();
     }
     /**
      * Required Presenter methods available to Model.
@@ -67,7 +67,7 @@ public class MVP_Login {
     interface ProvidedModelOpsFromPresenter {
         void onDestroy(boolean isChangingConfiguration);
         User loadData(String login, String password);
-        String sendResetRequest(String login,String password, String email);
+        String sendResetRequest(String email);
     }
 
 }

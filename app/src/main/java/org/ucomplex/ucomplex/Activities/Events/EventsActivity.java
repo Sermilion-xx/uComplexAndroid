@@ -27,7 +27,7 @@ public class EventsActivity extends BaseActivity implements OnTaskCompleteListen
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
         }
-        addFragment(R.id.container, new EventsFragment(), "EventsFragment");
+        addFragment(R.id.container, null, "EventsFragment");
     }
 
 
