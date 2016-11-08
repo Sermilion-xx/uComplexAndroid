@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import org.ucomplex.ucomplex.Activities.Events.EventsActivity;
+import org.ucomplex.ucomplex.Activities.Login.RoleSelect.RoleSelectActivity;
 import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 import org.ucomplex.ucomplex.Model.Users.User;
 import org.ucomplex.ucomplex.R;
@@ -212,7 +213,7 @@ public class LoginPresenter implements MVP_Login.ProvidedPresenterOpsToView, MVP
         if (user.getRoles().size() > 1) {
             intent = new Intent(getActivityContext(), RoleSelectActivity.class);
         } else {
-            intent = new Intent(getActivityContext(), EventsActivity.class);
+            intent = new Intent(getActivityContext(), RoleSelectActivity.class);
         }
         getActivityContext().startActivity(intent);
     }

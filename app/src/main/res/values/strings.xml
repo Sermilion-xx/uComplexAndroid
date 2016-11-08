@@ -59,5 +59,6 @@
     <string name="restore_password">Восстановление пароля</string>
     <string name="email_address">Адрес электронной почты</string>
     <string name="reset_password_sent">На указанный адрес отправленна ссылка для восстановления пароля.</string>
+    <string name="error_loading_data">Error loading data</string>
 
 </resources>

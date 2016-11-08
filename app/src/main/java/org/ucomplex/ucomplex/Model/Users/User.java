@@ -10,6 +10,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import lombok.Data;
 
@@ -34,7 +35,7 @@ public class User {
     private int type;
     private String session;
     private String name;
-    private ArrayList<Role> roles;
+    private List<Role> roles;
 
     public void addRole(Role role){
         roles.add(role);

@@ -58,8 +58,7 @@ public class LoginModel implements MVP_Login.ProvidedModelOpsFromPresenter {
     }
 
     /**
-     * Loads all Data, getting EventItems from DB
-     *
+     * Loads all Data, getting User
      * @return true with success
      */
     @Override
