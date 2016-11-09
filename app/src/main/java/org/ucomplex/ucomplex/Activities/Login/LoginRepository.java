@@ -6,18 +6,14 @@ import android.os.Environment;
 
 import com.google.gson.Gson;
 
-import org.codehaus.jackson.map.ObjectMapper;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.ucomplex.ucomplex.Model.Users.Role;
 import org.ucomplex.ucomplex.Model.Users.User;
 import org.ucomplex.ucomplex.Utility.FacadeMedia;
 import org.ucomplex.ucomplex.Utility.FacadePreferences;
 import org.ucomplex.ucomplex.Utility.HttpFactory;
 
 import java.io.File;
-import java.util.ArrayList;
 
 import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
 

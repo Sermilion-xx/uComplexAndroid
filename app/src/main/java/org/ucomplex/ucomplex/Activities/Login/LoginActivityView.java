@@ -14,20 +14,21 @@ import android.widget.Toast;
 
 import org.ucomplex.ucomplex.Activities.BaseActivity;
 import org.ucomplex.ucomplex.Activities.Login.RoleSelect.RoleSelectActivity;
+import org.ucomplex.ucomplex.Model.Users.LoginErrorType;
 import org.ucomplex.ucomplex.Model.Users.User;
 import org.ucomplex.ucomplex.R;
 import org.ucomplex.ucomplex.Utility.StateMaintainer;
 
-public class LoginActivity extends BaseActivity implements View.OnClickListener, MVP_Login.RequiredViewOpsFromPresenter {
+public class LoginActivityView extends BaseActivity implements View.OnClickListener, MVP_Login.ViewInterface {
 
-    private MVP_Login.ProvidedPresenterOpsToView mPresenter;
+    private MVP_Login.PresenterToViewInterface mPresenter;
     private AutoCompleteTextView mLoginView;
     private EditText mPasswordView;
     private View mProgressView;
     private Button mForgotButton;
 
     private final StateMaintainer mStateMaintainer =
-            new StateMaintainer(getFragmentManager(), LoginActivity.class.getName());
+            new StateMaintainer(getFragmentManager(), LoginActivityView.class.getName());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,31 +111,23 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         dialog.show();
     }
 
-    @Override
+
     public void proceedLogin() {
         mLoginView.setError(null);
         mPasswordView.setError(null);
 
-        String email = mLoginView.getText().toString();
+        String login = mLoginView.getText().toString();
         String password = mPasswordView.getText().toString();
 
-        boolean cancel = false;
+        LoginErrorType error = mPresenter.checkCredentials(login, password);
 
-        if (TextUtils.isEmpty(password)) {
+        if (error == LoginErrorType.PASSWORD_REQUIRED) {
             mPasswordView.setError(getString(R.string.error_field_required));
-            cancel = true;
-        }else if (!isPasswordValid(password)) {
+        }else if (error == LoginErrorType.INVALID_PASSWORD) {
             mPasswordView.setError(getString(R.string.error_incorrect_password));
-            cancel = true;
         }
-
-        if (TextUtils.isEmpty(email)) {
+        if (error == LoginErrorType.EMPTY_EMAIL) {
             mLoginView.setError(getString(R.string.error_field_required));
-            cancel = true;
-        }
-
-        if (!cancel) {
-            mPresenter.login(mLoginView.getText().toString(), mPasswordView.getText().toString());
         }
     }
 

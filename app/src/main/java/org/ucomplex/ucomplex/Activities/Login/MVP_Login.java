@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
+import org.ucomplex.ucomplex.Model.Users.LoginErrorType;
 import org.ucomplex.ucomplex.Model.Users.User;
 
 /**
@@ -11,9 +12,9 @@ import org.ucomplex.ucomplex.Model.Users.User;
  * responsible to maintain communication between
  * Model View Presenter layers.
  * Each layer implements its respective interface:
- *      View implements RequiredViewOpsFromPresenter
- *      Presenter implements ProvidedPresenterOpsToView, RequiredPresenterOpsToModel
- *      Model implements ProvidedModelOpsFromPresenter
+ *      View implements ViewInterface
+ *      Presenter implements PresenterToViewInterface, PresenterToModel
+ *      Model implements ModelInterface
  *
  * ---------------------------------------------------
  * Created by @Sermilion on 07/11/16.
@@ -31,14 +32,13 @@ public class MVP_Login {
      * and receive user interactions
      *      Presenter to View
      */
-    interface RequiredViewOpsFromPresenter {
+    interface ViewInterface {
         Context getAppContext();
         Context getActivityContext();
         void showToast(Toast toast);
         void showProgress();
         void hideProgress();
         void showAlert(AlertDialog dialog);
-        void proceedLogin();
         void successfulLogin(User user);
     }
     /**
@@ -46,17 +46,17 @@ public class MVP_Login {
      * Process user interaction, sends data requests to Model, etc.
      *      View to Presenter
      */
-    interface ProvidedPresenterOpsToView {
+    interface PresenterToViewInterface {
         void onDestroy(boolean isChangingConfiguration);
-        void setView(RequiredViewOpsFromPresenter view);
-        void login(String login, String password);
+        void setView(ViewInterface view);
         void showRestorePasswordDialog();
+        LoginErrorType checkCredentials(String login, String password);
     }
     /**
      * Required Presenter methods available to Model.
      *      Model to Presenter
      */
-    interface RequiredPresenterOpsToModel {
+    interface PresenterToModel {
         Context getAppContext();
         Context getActivityContext();
     }
@@ -65,7 +65,7 @@ public class MVP_Login {
      * Handles all data business logic.
      *      Presenter to Model
      */
-    interface ProvidedModelOpsFromPresenter {
+    interface ModelInterface {
         void onDestroy(boolean isChangingConfiguration);
         boolean loadData(String login, String password);
         String sendResetRequest(String email);

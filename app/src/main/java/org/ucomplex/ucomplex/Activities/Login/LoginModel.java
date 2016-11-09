@@ -17,10 +17,10 @@ import org.ucomplex.ucomplex.Utility.HttpFactory;
  * <a href="http://www.github.com/sermilion>github</a>
  * ---------------------------------------------------
  */
-public class LoginModel implements MVP_Login.ProvidedModelOpsFromPresenter {
+public class LoginModel implements MVP_Login.ModelInterface {
 
     // Presenter reference
-    private MVP_Login.RequiredPresenterOpsToModel mPresenter;
+    private MVP_Login.PresenterToModel mPresenter;
     private LoginRepository mRepository;
     private User user;
 
@@ -29,7 +29,7 @@ public class LoginModel implements MVP_Login.ProvidedModelOpsFromPresenter {
      *
      * @param presenter Presenter instance
      */
-    public LoginModel(MVP_Login.RequiredPresenterOpsToModel presenter) {
+    public LoginModel(MVP_Login.PresenterToModel presenter) {
         this.mPresenter = presenter;
         mRepository = new LoginRepository(mPresenter.getAppContext());
     }
@@ -40,7 +40,7 @@ public class LoginModel implements MVP_Login.ProvidedModelOpsFromPresenter {
      * @param presenter Presenter instance
      * @param dao       DAO instance
      */
-    public LoginModel(MVP_Login.RequiredPresenterOpsToModel presenter, LoginRepository dao) {
+    public LoginModel(MVP_Login.PresenterToModel presenter, LoginRepository dao) {
         this.mPresenter = presenter;
         mRepository = dao;
     }
@@ -60,6 +60,7 @@ public class LoginModel implements MVP_Login.ProvidedModelOpsFromPresenter {
 
     /**
      * Loads all Data, getting User
+     *
      * @return true with success
      */
     @Override
@@ -80,7 +81,7 @@ public class LoginModel implements MVP_Login.ProvidedModelOpsFromPresenter {
 
     @Override
     public String sendResetRequest(String email) {
-        String json = "\"email\":\""+email+"\"";
+        String json = "\"email\":\"" + email + "\"";
         return HttpFactory.httpPost(HttpFactory.RESTORE_PASSWORD_URL, "", json);
     }
 
@@ -88,5 +89,4 @@ public class LoginModel implements MVP_Login.ProvidedModelOpsFromPresenter {
     public User getUser() {
         return user;
     }
-
 }
