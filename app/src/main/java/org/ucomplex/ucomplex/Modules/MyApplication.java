@@ -4,6 +4,8 @@ import android.app.Application;
 
 import org.ucomplex.ucomplex.Modules.Login.LoginDagger.DaggerLoginDiComponent;
 import org.ucomplex.ucomplex.Modules.Login.LoginDagger.LoginDiComponent;
+import org.ucomplex.ucomplex.Modules.RoleSelect.RoleSelectDagger.DaggerRoleDiComponent;
+import org.ucomplex.ucomplex.Modules.RoleSelect.RoleSelectDagger.RoleDiComponent;
 
 /**
  * ---------------------------------------------------
@@ -16,15 +18,21 @@ import org.ucomplex.ucomplex.Modules.Login.LoginDagger.LoginDiComponent;
  */
 
 public class MyApplication extends Application{
-    LoginDiComponent component;
+    LoginDiComponent loginDiComponent;
+    RoleDiComponent roleDiComponent;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        component = DaggerLoginDiComponent.builder().build();
+        loginDiComponent = DaggerLoginDiComponent.builder().build();
+        roleDiComponent  = DaggerRoleDiComponent.builder().build();
     }
 
-    public LoginDiComponent getComponent() {
-        return component;
+    public LoginDiComponent getLoginDiComponent() {
+        return loginDiComponent;
+    }
+
+    public RoleDiComponent getRoleDiComponent() {
+        return roleDiComponent;
     }
 }

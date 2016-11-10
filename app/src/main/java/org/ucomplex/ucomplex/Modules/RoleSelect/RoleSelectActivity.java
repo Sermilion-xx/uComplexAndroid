@@ -7,23 +7,32 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.ucomplex.ucomplex.Modules.BaseActivity;
+import org.ucomplex.ucomplex.Modules.MyApplication;
 import org.ucomplex.ucomplex.R;
 import org.ucomplex.ucomplex.Utility.StateMaintainer;
 
-import de.hdodenhof.circleimageview.CircleImageView;
+import javax.inject.Inject;
 
 public class RoleSelectActivity extends BaseActivity implements MVP_RoleSelect.RequiredViewOpsFromPresenter  {
 
     private MVP_RoleSelect.ProvidedPresenterOpsToView mPresenter;
     private ListRolesAdapter mListAdapter;
-    private ProgressBar      mProgress;
-    private TextView         mTitle;
-    private CircleImageView  mIcon;
+    private RolePresenter presenter;
+    private RoleModel mModel;
+    private RoleRepository mRoleRepository;
+
+    @Inject public void setPresenter(RolePresenter presenter) {
+        this.presenter = presenter;
+    }
+    @Inject public void setModel(RoleModel model) {
+        this.mModel = model;
+    }
+    @Inject public void setRoleRepository(RoleRepository mRoleRepository) {
+        this.mRoleRepository = mRoleRepository;
+    }
 
     private final StateMaintainer mStateMaintainer =
             new StateMaintainer( getFragmentManager(), RoleSelectActivity.class.getName());
@@ -32,6 +41,7 @@ public class RoleSelectActivity extends BaseActivity implements MVP_RoleSelect.R
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_role_select);
+        ((MyApplication) getApplication()).getRoleDiComponent().inject(this);
         setupViews();
         setupMVP();
     }
@@ -45,14 +55,10 @@ public class RoleSelectActivity extends BaseActivity implements MVP_RoleSelect.R
     private void setupViews(){
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        mIcon = (CircleImageView) findViewById(R.id.roleImage);
         mListAdapter = new ListRolesAdapter();
-
         RecyclerView mList = (RecyclerView) findViewById(R.id.recyclerView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-
         mList.setLayoutManager(linearLayoutManager);
         mList.setAdapter(mListAdapter);
         mList.setItemAnimator(new DefaultItemAnimator());
@@ -60,11 +66,14 @@ public class RoleSelectActivity extends BaseActivity implements MVP_RoleSelect.R
 
     private void setupMVP() {
         if (mStateMaintainer.firstTimeIn()) {
-            RolePresenter presenter = new RolePresenter(this);
-            RoleModel model = new RoleModel(presenter, getIntent());
-            presenter.setModel(model);
+            presenter.setView(this);
+            mRoleRepository.setContext(presenter.getAppContext());
+            mModel.setPresenter(presenter);
+            mModel.setData(getIntent());
+            mModel.setRolesRepository(mRoleRepository);
+            presenter.setModel(mModel);
             mStateMaintainer.put(presenter);
-            mStateMaintainer.put(model);
+            mStateMaintainer.put(mModel);
             mPresenter = presenter;
         }
         else {

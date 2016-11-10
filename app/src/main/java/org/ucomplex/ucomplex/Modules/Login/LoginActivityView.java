@@ -61,7 +61,7 @@ public class LoginActivityView extends BaseActivity implements MVP_Login.ViewInt
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-        ((MyApplication) getApplication()).getComponent().inject(this);
+        ((MyApplication) getApplication()).getLoginDiComponent().inject(this);
         setupMVP();
     }
 

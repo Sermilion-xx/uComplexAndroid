@@ -31,6 +31,10 @@ public class RolePresenter implements MVP_RoleSelect.ProvidedPresenterOpsToView,
     public RolePresenter(MVP_RoleSelect.RequiredViewOpsFromPresenter view) {
         mView = new WeakReference<>(view);
     }
+    public RolePresenter() {
+
+    }
+
 
     @Override
     public void onDestroy(boolean isChangingConfiguration) {

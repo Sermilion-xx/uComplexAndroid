@@ -26,13 +26,28 @@ public class RoleModel implements MVP_RoleSelect.ProvidedModelOpsFromPresenter {
     private static final String ROLE_MODEL_EXTRA_KEY = "user";
 
     public RoleModel(MVP_RoleSelect.RequiredPresenterOpsToModel presenter, Intent intent) {
-
         this.mPresenter = presenter;
         this.mRolesRepository = new RoleRepository(mPresenter.getAppContext());
         if(intent.hasExtra(ROLE_MODEL_EXTRA_KEY)){
             this.user = intent.getParcelableExtra(ROLE_MODEL_EXTRA_KEY);
         }
-        System.out.println();
+    }
+
+    public RoleModel() {
+    }
+
+    public void setPresenter(MVP_RoleSelect.RequiredPresenterOpsToModel mPresenter) {
+        this.mPresenter = mPresenter;
+    }
+
+    public void setRolesRepository(RoleRepository mRolesRepository) {
+        this.mRolesRepository = mRolesRepository;
+    }
+
+    public void setData(Intent intent){
+        if(intent.hasExtra(ROLE_MODEL_EXTRA_KEY)){
+            this.user = intent.getParcelableExtra(ROLE_MODEL_EXTRA_KEY);
+        }
     }
 
     public RoleModel(MVP_RoleSelect.RequiredPresenterOpsToModel presenter, RoleRepository repository, User user) {
