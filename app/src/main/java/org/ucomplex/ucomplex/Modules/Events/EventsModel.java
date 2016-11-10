@@ -2,6 +2,8 @@ package org.ucomplex.ucomplex.Modules.Events;
 
 
 
+import android.widget.ImageView;
+
 import org.json.JSONException;
 
 import java.util.ArrayList;
@@ -19,11 +21,10 @@ import java.util.ArrayList;
  */
 public class EventsModel implements MVP_Events.ProvidedModelOpsFromPresenter {
 
-    // Presenter reference
     private MVP_Events.RequiredPresenterOpsToModel mPresenter;
-    private EventsRepository mDAO;
-    // Recycler data
-    public ArrayList<EventItem> mEventItems;
+    private EventsRepository mRepository;
+    private ArrayList<EventItem> mEventItems;
+    private int userType;
 
     /**
      * Main constructor, called by Activity during MVP setup
@@ -31,7 +32,19 @@ public class EventsModel implements MVP_Events.ProvidedModelOpsFromPresenter {
      */
     public EventsModel(MVP_Events.RequiredPresenterOpsToModel presenter, int userType) {
         this.mPresenter = presenter;
-        mDAO = new EventsRepository(mPresenter.getAppContext(), userType);
+        mRepository = new EventsRepository(mPresenter.getAppContext(), userType);
+    }
+
+    public EventsModel() {
+
+    }
+
+    public void setPresenter(MVP_Events.RequiredPresenterOpsToModel mPresenter) {
+        this.mPresenter = mPresenter;
+    }
+
+    public void setRepository(EventsRepository mRepository) {
+        this.mRepository = mRepository;
     }
 
     /**
@@ -41,7 +54,7 @@ public class EventsModel implements MVP_Events.ProvidedModelOpsFromPresenter {
      */
     public EventsModel(MVP_Events.RequiredPresenterOpsToModel presenter, EventsRepository dao) {
         this.mPresenter = presenter;
-        mDAO = dao;
+        mRepository = dao;
     }
 
     /**
@@ -52,7 +65,7 @@ public class EventsModel implements MVP_Events.ProvidedModelOpsFromPresenter {
     public void onDestroy(boolean isChangingConfiguration) {
         if (!isChangingConfiguration) {
             mPresenter = null;
-            mDAO = null;
+            mRepository = null;
             mEventItems = null;
         }
     }
@@ -64,11 +77,16 @@ public class EventsModel implements MVP_Events.ProvidedModelOpsFromPresenter {
     @Override
     public boolean loadData() {
         try {
-            mEventItems = mDAO.getAllEvents();
+            mEventItems = mRepository.getAllEvents();
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return mEventItems != null;
+    }
+
+    @Override
+    public void loadIcon(String code, ImageView imageView) {
+        mRepository.loadIcon(code, imageView);
     }
 
     /**

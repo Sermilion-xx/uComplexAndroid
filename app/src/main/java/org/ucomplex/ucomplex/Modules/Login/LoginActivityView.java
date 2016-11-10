@@ -20,6 +20,7 @@ import org.ucomplex.ucomplex.Modules.RoleSelect.RoleSelectActivity;
 import org.ucomplex.ucomplex.Model.Users.LoginErrorType;
 import org.ucomplex.ucomplex.Model.Users.User;
 import org.ucomplex.ucomplex.R;
+import org.ucomplex.ucomplex.Utility.Constants;
 import org.ucomplex.ucomplex.Utility.StateMaintainer;
 
 import java.util.ArrayList;
@@ -149,7 +150,7 @@ public class LoginActivityView extends BaseActivity implements MVP_Login.ViewInt
         } else {
             intent = new Intent(getActivityContext(), RoleSelectActivity.class);
         }
-        intent.putExtra("user", user);
+        intent.putExtra(Constants.EXTRA_KEY_USER, user);
         getActivityContext().startActivity(intent);
     }
 

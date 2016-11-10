@@ -36,11 +36,13 @@ public class RoleRepository {
 
     }
 
+
     public void setContext(Context mContext) {
         this.mContext = mContext;
     }
 
-    ArrayList<RoleItem> getAllRoleItems(User user) {
+    ArrayList<RoleItem> getAllRoleItems(Object data) {
+        User user = (User) data;
         ArrayList<RoleItem> roles = new ArrayList<>();
         Random random = new Random();
         for (int i = 0; i < user.getRoles().size(); i++) {

@@ -49,19 +49,20 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    apt "org.androidannotations:androidannotations:$AAVersion"
+    apt     "org.androidannotations:androidannotations:$AAVersion"
     compile "org.androidannotations:androidannotations-api:$AAVersion"
-    apt 'com.google.dagger:dagger-compiler:2.7'
+    apt     'com.google.dagger:dagger-compiler:2.7'
     compile 'com.google.dagger:dagger:2.7'
     provided 'javax.annotation:jsr250-api:1.0'
     compile 'com.google.dagger:dagger:2.4'
-    apt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
+    apt     "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
     provided 'javax.annotation:jsr250-api:1.0'
     compile 'javax.inject:javax.inject:1'
     testCompile "junit:junit:$JUNIT_VERSION"
     testApt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
     compile 'com.hannesdorfmann.fragmentargs:annotation:3.0.2'
     apt 'com.hannesdorfmann.fragmentargs:processor:3.0.2'
+    compile 'com.squareup.picasso:picasso:2.5.1'
 }
 
 

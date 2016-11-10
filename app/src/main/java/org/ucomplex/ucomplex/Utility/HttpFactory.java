@@ -38,6 +38,7 @@ public class HttpFactory {
     public  static final String PROFILE_IMAGE_URL  = BASE_URL+"files/photos/";
     public  static final String AUTHENTICATIO_URL  = BASE_URL+"auth?mobile=1";
     public  static final String RESTORE_PASSWORD_URL=BASE_URL+"public/password?mobile=1";
+    public  static final String LOAD_PROFILE_URL   = BASE_URL+"files/photos/";
 
     public static void httpGetFile(@NonNull String url, @NonNull File destFile, String encodedAuth) {
         try {

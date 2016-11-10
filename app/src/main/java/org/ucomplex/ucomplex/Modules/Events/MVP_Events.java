@@ -3,6 +3,7 @@ package org.ucomplex.ucomplex.Modules.Events;
 import android.content.Context;
 import android.support.v7.app.AlertDialog;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 /**
@@ -51,8 +52,8 @@ public class MVP_Events {
     interface ProvidedPresenterOpsToView {
         void onDestroy(boolean isChangingConfiguration);
         void setView(RequiredViewOpsFromPresenter view);
-        EventsViewHolder createViewHolder(ViewGroup parent, int viewType);
-        void bindViewHolder(EventsViewHolder holder, int position);
+        EventViewHolder createViewHolder(ViewGroup parent, int viewType);
+        void bindViewHolder(EventViewHolder holder, int position);
         int getEventsCount();
     }
     /**
@@ -71,6 +72,7 @@ public class MVP_Events {
     interface ProvidedModelOpsFromPresenter {
         void onDestroy(boolean isChangingConfiguration);
         boolean loadData();
+        void loadIcon(String code, ImageView imageView);
         EventItem getEvent(int position);
         int getEventsCount();
     }

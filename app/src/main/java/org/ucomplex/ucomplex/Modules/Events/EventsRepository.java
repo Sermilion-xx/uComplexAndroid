@@ -1,6 +1,9 @@
 package org.ucomplex.ucomplex.Modules.Events;
 
 import android.content.Context;
+import android.widget.ImageView;
+
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,39 +27,57 @@ import java.util.ArrayList;
 
 class EventsRepository {
 
-    private Context appContext;
+    private Context mContext;
     private int userType;
 
-    public EventsRepository(Context appContext, int userType) {
-        this.appContext = appContext;
+    EventsRepository(Context appContext, int userType) {
+        this.mContext = appContext;
         this.userType = userType;
     }
 
-    public ArrayList<EventItem> getAllEvents() throws JSONException {
+    EventsRepository(){
+
+    }
+
+    public void setUserType(int userType) {
+        this.userType = userType;
+    }
+
+    ArrayList<EventItem> getAllEvents() throws JSONException {
         if (userType == 4) {
             return getAllStudentEvents();
         } else if (userType == 3) {
             return getAllTeacherEvents();
         } else
-            throw new IllegalArgumentException(appContext.getResources().getString(R.string.error_wrong_user_type));
+            throw new IllegalArgumentException(mContext.getResources().getString(R.string.error_wrong_user_type));
+    }
+
+    public void setContext(Context mContext) {
+        this.mContext = mContext;
     }
 
     private ArrayList<EventItem> getAllStudentEvents() throws JSONException {
-        String stringResult = HttpFactory.httpPost(HttpFactory.STUDENT_EVENTS_URL, FacadePreferences.getLoginDataFromPref(appContext), "");
+        String stringResult = HttpFactory.httpPost(HttpFactory.STUDENT_EVENTS_URL, FacadePreferences.getLoginDataFromPref(mContext), "");
         if (stringResult != null) {
             JSONObject jsonObject = new JSONObject(stringResult);
         }
         return null;
     }
 
+    public void loadIcon(String code, ImageView imageView){
+        Picasso.with(mContext)
+                .load(HttpFactory.LOAD_PROFILE_URL+code+".jpg")
+                .into(imageView);
+    }
+
     private ArrayList<EventItem> getAllTeacherEvents() throws JSONException {
-        String stringResult = HttpFactory.httpPost(HttpFactory.STUDENT_EVENTS_URL, FacadePreferences.getLoginDataFromPref(appContext), "");
+        String stringResult = HttpFactory.httpPost(HttpFactory.STUDENT_EVENTS_URL, FacadePreferences.getLoginDataFromPref(mContext), "");
         return null;
     }
 
     ArrayList<EventItem> loadMoreEvents(int start, String params) throws JSONException {
 //        String jsonBody = "\"start\":\""+start+"\"";
-        String stringResult = HttpFactory.httpPost(HttpFactory.STUDENT_EVENTS_URL, FacadePreferences.getLoginDataFromPref(appContext), params);
+        String stringResult = HttpFactory.httpPost(HttpFactory.STUDENT_EVENTS_URL, FacadePreferences.getLoginDataFromPref(mContext), params);
         return null;
     }
 

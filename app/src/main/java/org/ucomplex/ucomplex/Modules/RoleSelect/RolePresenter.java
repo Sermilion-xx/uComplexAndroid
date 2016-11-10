@@ -8,8 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import org.ucomplex.ucomplex.Model.Users.User;
 import org.ucomplex.ucomplex.Modules.Events.EventsActivity;
 import org.ucomplex.ucomplex.R;
+import org.ucomplex.ucomplex.Utility.Constants;
 
 import java.lang.ref.WeakReference;
 
@@ -90,6 +92,7 @@ public class RolePresenter implements MVP_RoleSelect.ProvidedPresenterOpsToView,
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivityContext(), EventsActivity.class);
+                intent.putExtra(Constants.EXTRA_KEY_USER, (User) mModel.getmUser());
                 getActivityContext().startActivity(intent);
             }
         });

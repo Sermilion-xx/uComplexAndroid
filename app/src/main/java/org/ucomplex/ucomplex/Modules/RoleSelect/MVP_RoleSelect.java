@@ -1,8 +1,12 @@
 package org.ucomplex.ucomplex.Modules.RoleSelect;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
+
+import org.ucomplex.ucomplex.Model.Users.UserInterface;
 
 /**
  * ---------------------------------------------------
@@ -71,6 +75,7 @@ public interface MVP_RoleSelect {
      * Presenter to Model
      */
     interface ProvidedModelOpsFromPresenter {
+
         void onDestroy(boolean isChangingConfiguration);
 
         boolean loadData();
@@ -78,6 +83,10 @@ public interface MVP_RoleSelect {
         RoleItem getRole(int position);
 
         int getRolesCount();
+
+        void setUser(UserInterface user);
+
+        UserInterface getmUser();
     }
 
 }

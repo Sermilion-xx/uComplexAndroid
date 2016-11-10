@@ -83,11 +83,11 @@ public class EventsPresenter implements MVP_Events.ProvidedPresenterOpsToView, M
      * @return          Recycler ViewHolder
      */
     @Override
-    public EventsViewHolder createViewHolder(ViewGroup parent, int viewType) {
-        EventsViewHolder viewHolder;
+    public EventViewHolder createViewHolder(ViewGroup parent, int viewType) {
+        EventViewHolder viewHolder;
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View viewTaskRow = inflater.inflate(R.layout.list_item_event, parent, false);
-        viewHolder = new EventsViewHolder(viewTaskRow);
+        viewHolder = new EventViewHolder(viewTaskRow);
         return viewHolder;
     }
 
@@ -97,12 +97,13 @@ public class EventsPresenter implements MVP_Events.ProvidedPresenterOpsToView, M
      * @param position  Position on Recycler adapter
      */
     @Override
-    public void bindViewHolder(final EventsViewHolder holder, int position) {
+    public void bindViewHolder(final EventViewHolder holder, int position) {
         final EventItem event = mModel.getEvent(position);
         holder.eventPersonName.setText(event.getParams().getName());
         holder.eventTextView.setText(event.getEventText());
         holder.eventsImageView.setImageBitmap(event.getEventImageBitmap());
         holder.eventTime.setText(event.getTime());
+        mModel.loadIcon(event.getParams().getCode(), holder.eventsImageView);
         holder.eventPersonName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -117,7 +118,6 @@ public class EventsPresenter implements MVP_Events.ProvidedPresenterOpsToView, M
      */
     public void setModel(MVP_Events.ProvidedModelOpsFromPresenter model) {
         mModel = model;
-        // start to load data
         loadData();
     }
 

@@ -18,21 +18,12 @@ import javax.inject.Inject;
 
 public class RoleSelectActivity extends BaseActivity implements MVP_RoleSelect.RequiredViewOpsFromPresenter  {
 
-    private MVP_RoleSelect.ProvidedPresenterOpsToView mPresenter;
-    private ListRolesAdapter mListAdapter;
-    private RolePresenter presenter;
-    private RoleModel mModel;
-    private RoleRepository mRoleRepository;
+    MVP_RoleSelect.ProvidedPresenterOpsToView mPresenter;
+    ListRolesAdapter mListAdapter;
+    @Inject RolePresenter presenter;
+    @Inject RoleModel mModel;
+    @Inject RoleRepository mRoleRepository;
 
-    @Inject public void setPresenter(RolePresenter presenter) {
-        this.presenter = presenter;
-    }
-    @Inject public void setModel(RoleModel model) {
-        this.mModel = model;
-    }
-    @Inject public void setRoleRepository(RoleRepository mRoleRepository) {
-        this.mRoleRepository = mRoleRepository;
-    }
 
     private final StateMaintainer mStateMaintainer =
             new StateMaintainer( getFragmentManager(), RoleSelectActivity.class.getName());
@@ -69,7 +60,7 @@ public class RoleSelectActivity extends BaseActivity implements MVP_RoleSelect.R
             presenter.setView(this);
             mRoleRepository.setContext(presenter.getAppContext());
             mModel.setPresenter(presenter);
-            mModel.setData(getIntent());
+            mModel.setmUser(getIntent());
             mModel.setRolesRepository(mRoleRepository);
             presenter.setModel(mModel);
             mStateMaintainer.put(presenter);

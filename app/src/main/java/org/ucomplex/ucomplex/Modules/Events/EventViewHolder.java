@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.androidannotations.annotations.ViewById;
 import org.ucomplex.ucomplex.R;
 
 /**
@@ -16,18 +17,22 @@ import org.ucomplex.ucomplex.R;
  * <a href="http://www.github.com/sermilion>github</a>
  * ---------------------------------------------------
  */
-class EventsViewHolder extends RecyclerView.ViewHolder {
+class EventViewHolder extends RecyclerView.ViewHolder {
 
+    @ViewById(R.id.list_events_item_image)
    ImageView eventsImageView;
+    @ViewById(R.id.list_events_item_text)
    TextView eventTextView;
+    @ViewById(R.id.list_events_item_date)
    TextView eventTime;
+    @ViewById(R.id.list_events_item_name)
    TextView eventPersonName;
 
-    EventsViewHolder(View view){
+    EventViewHolder(View view){
         super(view);
-        eventsImageView = (ImageView) view.findViewById(R.id.list_events_item_image);
-        eventTextView = (TextView) view.findViewById(R.id.list_events_item_text);
-        eventTime = (TextView) view.findViewById(R.id.list_events_item_date);
-        eventPersonName = (TextView) view.findViewById(R.id.list_events_item_name);
+//        eventsImageView = (ImageView) view.findViewById(R.id.list_events_item_image);
+//        eventTextView = (TextView) view.findViewById(R.id.list_events_item_text);
+//        eventTime = (TextView) view.findViewById(R.id.list_events_item_date);
+//        eventPersonName = (TextView) view.findViewById(R.id.list_events_item_name);
     }
 }

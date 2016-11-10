@@ -2,7 +2,8 @@ package org.ucomplex.ucomplex.Modules.RoleSelect;
 
 import android.content.Intent;
 
-import org.ucomplex.ucomplex.Model.Users.User;
+import org.ucomplex.ucomplex.Model.Users.UserInterface;
+import org.ucomplex.ucomplex.Utility.Constants;
 
 import java.util.ArrayList;
 
@@ -22,15 +23,11 @@ public class RoleModel implements MVP_RoleSelect.ProvidedModelOpsFromPresenter {
     private MVP_RoleSelect.RequiredPresenterOpsToModel mPresenter;
     private ArrayList<RoleItem> mRoles;
     private RoleRepository mRolesRepository;
-    private User user;
-    private static final String ROLE_MODEL_EXTRA_KEY = "user";
+    private UserInterface mUser;
 
-    public RoleModel(MVP_RoleSelect.RequiredPresenterOpsToModel presenter, Intent intent) {
+    public RoleModel(MVP_RoleSelect.RequiredPresenterOpsToModel presenter) {
         this.mPresenter = presenter;
         this.mRolesRepository = new RoleRepository(mPresenter.getAppContext());
-        if(intent.hasExtra(ROLE_MODEL_EXTRA_KEY)){
-            this.user = intent.getParcelableExtra(ROLE_MODEL_EXTRA_KEY);
-        }
     }
 
     public RoleModel() {
@@ -44,16 +41,18 @@ public class RoleModel implements MVP_RoleSelect.ProvidedModelOpsFromPresenter {
         this.mRolesRepository = mRolesRepository;
     }
 
-    public void setData(Intent intent){
-        if(intent.hasExtra(ROLE_MODEL_EXTRA_KEY)){
-            this.user = intent.getParcelableExtra(ROLE_MODEL_EXTRA_KEY);
-        }
+    public void setUser(UserInterface user){
+        mUser = user;
     }
 
-    public RoleModel(MVP_RoleSelect.RequiredPresenterOpsToModel presenter, RoleRepository repository, User user) {
+    public UserInterface getmUser() {
+        return mUser;
+    }
+
+    public RoleModel(MVP_RoleSelect.RequiredPresenterOpsToModel presenter, RoleRepository repository, UserInterface user) {
         this.mPresenter = presenter;
         mRolesRepository = repository;
-        this.user = user;
+        this.mUser = user;
     }
 
     @Override
@@ -66,7 +65,7 @@ public class RoleModel implements MVP_RoleSelect.ProvidedModelOpsFromPresenter {
 
     @Override
     public boolean loadData() {
-        mRoles = mRolesRepository.getAllRoleItems(user);
+        mRoles = mRolesRepository.getAllRoleItems(mUser);
         return mRoles != null;
     }
 

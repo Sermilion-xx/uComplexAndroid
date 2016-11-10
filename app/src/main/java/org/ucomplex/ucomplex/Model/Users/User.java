@@ -20,7 +20,7 @@ import lombok.Data;
  * Created by Sermilion on 01/11/2016.
  */
 @Data
-public class User implements Parcelable{
+public class User implements UserInterface, Parcelable{
 
     private int id;
     private String login;
