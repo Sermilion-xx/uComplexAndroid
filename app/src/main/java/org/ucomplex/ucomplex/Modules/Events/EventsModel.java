@@ -1,4 +1,4 @@
-package org.ucomplex.ucomplex.Activities.Events;
+package org.ucomplex.ucomplex.Modules.Events;
 
 
 

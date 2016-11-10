@@ -1,15 +1,14 @@
-package org.ucomplex.ucomplex.Activities.Login.RoleSelect;
+package org.ucomplex.ucomplex.Modules.RoleSelect;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import org.ucomplex.ucomplex.Activities.Events.EventsActivity;
+import org.ucomplex.ucomplex.Modules.Events.EventsActivity;
 import org.ucomplex.ucomplex.R;
 
 import java.lang.ref.WeakReference;

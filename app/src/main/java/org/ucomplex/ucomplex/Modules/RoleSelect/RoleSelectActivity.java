@@ -1,4 +1,4 @@
-package org.ucomplex.ucomplex.Activities.Login.RoleSelect;
+package org.ucomplex.ucomplex.Modules.RoleSelect;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -11,8 +11,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.ucomplex.ucomplex.Activities.BaseActivity;
-import org.ucomplex.ucomplex.Model.Users.User;
+import org.ucomplex.ucomplex.Modules.BaseActivity;
 import org.ucomplex.ucomplex.R;
 import org.ucomplex.ucomplex.Utility.StateMaintainer;
 

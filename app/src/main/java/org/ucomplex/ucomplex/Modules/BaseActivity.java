@@ -1,4 +1,4 @@
-package org.ucomplex.ucomplex.Activities;
+package org.ucomplex.ucomplex.Modules;
 
 import android.annotation.TargetApi;
 

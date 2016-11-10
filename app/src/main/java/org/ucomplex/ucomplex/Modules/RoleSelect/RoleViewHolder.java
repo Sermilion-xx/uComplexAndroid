@@ -1,4 +1,4 @@
-package org.ucomplex.ucomplex.Activities.Login.RoleSelect;
+package org.ucomplex.ucomplex.Modules.RoleSelect;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

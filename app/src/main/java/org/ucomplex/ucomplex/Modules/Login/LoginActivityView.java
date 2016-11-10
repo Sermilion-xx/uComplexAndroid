@@ -1,31 +1,58 @@
-package org.ucomplex.ucomplex.Activities.Login;
+package org.ucomplex.ucomplex.Modules.Login;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.ucomplex.ucomplex.Activities.BaseActivity;
-import org.ucomplex.ucomplex.Activities.Login.RoleSelect.RoleSelectActivity;
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.ViewById;
+import org.ucomplex.ucomplex.Modules.BaseActivity;
+import org.ucomplex.ucomplex.Modules.MyApplication;
+import org.ucomplex.ucomplex.Modules.RoleSelect.RoleSelectActivity;
 import org.ucomplex.ucomplex.Model.Users.LoginErrorType;
 import org.ucomplex.ucomplex.Model.Users.User;
 import org.ucomplex.ucomplex.R;
 import org.ucomplex.ucomplex.Utility.StateMaintainer;
 
-public class LoginActivityView extends BaseActivity implements View.OnClickListener, MVP_Login.ViewInterface {
+import java.util.ArrayList;
 
-    private MVP_Login.PresenterToViewInterface mPresenter;
-    private AutoCompleteTextView mLoginView;
-    private EditText mPasswordView;
-    private View mProgressView;
-    private Button mForgotButton;
+import javax.inject.Inject;
+
+import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.EMPTY_EMAIL;
+import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.INVALID_PASSWORD;
+import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.PASSWORD_REQUIRED;
+
+@EActivity(R.layout.activity_login)
+public class LoginActivityView extends BaseActivity implements MVP_Login.ViewInterface {
+
+    MVP_Login.PresenterToViewInterface mPresenter;
+    @ViewById(R.id.login)
+    AutoCompleteTextView mLoginView;
+    @ViewById(R.id.password)
+    EditText mPasswordView;
+    @ViewById(R.id.login_progress)
+    View mProgressView;
+    @ViewById(R.id.forgot_pass_button)
+    Button mForgotButton;
+    @ViewById(R.id.login_sign_in_button)
+    Button mLoginSignInButton;
+    private LoginPresenter presenter;
+    private LoginModel model;
+
+    @Inject public void setPresenter(LoginPresenter presenter) {
+        this.presenter = presenter;
+    }
+    @Inject public void setModel(LoginModel model) {
+        this.model = model;
+    }
 
     private final StateMaintainer mStateMaintainer =
             new StateMaintainer(getFragmentManager(), LoginActivityView.class.getName());
@@ -33,38 +60,16 @@ public class LoginActivityView extends BaseActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        setupViews();
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        ((MyApplication) getApplication()).getComponent().inject(this);
         setupMVP();
     }
 
-    /**
-     * Setup the Views
-     */
-    private void setupViews() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        mLoginView = (AutoCompleteTextView) findViewById(R.id.email);
-        mPasswordView = (EditText) findViewById(R.id.password);
-        Button mLoginSignInButton = (Button) findViewById(R.id.login_sign_in_button);
-        mProgressView = findViewById(R.id.login_progress);
-        mForgotButton = (Button) findViewById(R.id.forgot_pass_button);
-        mLoginSignInButton.setOnClickListener(this);
-        mForgotButton.setOnClickListener(this);
-    }
-
-    /**
-     * Setup Model View Presenter pattern.
-     * Use a {@link StateMaintainer} to maintain the
-     * Presenter and Model instances between configuration changes.
-     * Could be done differently,
-     * using a dependency injection for example.
-     */
     private void setupMVP() {
         if (mStateMaintainer.firstTimeIn()) {
-            LoginPresenter presenter = new LoginPresenter(this);
-            LoginModel model = new LoginModel(presenter);
+            presenter.setView(this);
+            model.setPresenter(presenter);
             presenter.setModel(model);
             mStateMaintainer.put(presenter);
             mStateMaintainer.put(model);
@@ -111,22 +116,27 @@ public class LoginActivityView extends BaseActivity implements View.OnClickListe
         dialog.show();
     }
 
+    @Click
+    void forgot_pass_button() {
+        mPresenter.showRestorePasswordDialog();
+    }
 
-    public void proceedLogin() {
+    @Click
+    void login_sign_in_button() {
         mLoginView.setError(null);
         mPasswordView.setError(null);
 
         String login = mLoginView.getText().toString();
         String password = mPasswordView.getText().toString();
 
-        LoginErrorType error = mPresenter.checkCredentials(login, password);
+        ArrayList<LoginErrorType> error = mPresenter.checkCredentials(login, password);
 
-        if (error == LoginErrorType.PASSWORD_REQUIRED) {
+        if (error.contains(PASSWORD_REQUIRED)) {
             mPasswordView.setError(getString(R.string.error_field_required));
-        }else if (error == LoginErrorType.INVALID_PASSWORD) {
+        } else if (error.contains(INVALID_PASSWORD)) {
             mPasswordView.setError(getString(R.string.error_incorrect_password));
         }
-        if (error == LoginErrorType.EMPTY_EMAIL) {
+        if (error.contains(EMPTY_EMAIL)) {
             mLoginView.setError(getString(R.string.error_field_required));
         }
     }
@@ -143,20 +153,4 @@ public class LoginActivityView extends BaseActivity implements View.OnClickListe
         getActivityContext().startActivity(intent);
     }
 
-    private boolean isPasswordValid(String password) {
-        return password.length() > 3;
-    }
-
-    @Override
-    public void onClick(View view) {
-        int id = view.getId();
-        switch (id) {
-            case R.id.login_sign_in_button:
-                proceedLogin();
-                break;
-            case R.id.forgot_pass_button:
-                mPresenter.showRestorePasswordDialog();
-                break;
-        }
-    }
 }

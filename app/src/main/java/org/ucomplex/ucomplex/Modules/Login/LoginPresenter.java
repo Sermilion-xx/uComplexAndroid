@@ -1,4 +1,4 @@
-package org.ucomplex.ucomplex.Activities.Login;
+package org.ucomplex.ucomplex.Modules.Login;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -16,6 +16,9 @@ import org.ucomplex.ucomplex.R;
 import org.ucomplex.ucomplex.Utility.HttpFactory;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+
+import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.*;
 
 /**
  * ---------------------------------------------------
@@ -41,6 +44,10 @@ public class LoginPresenter implements MVP_Login.PresenterToViewInterface, MVP_L
      */
     public LoginPresenter(MVP_Login.ViewInterface view) {
         mView = new WeakReference<>(view);
+        mTaskCompleteListener = this;
+    }
+
+    public LoginPresenter() {
         mTaskCompleteListener = this;
     }
 
@@ -155,16 +162,20 @@ public class LoginPresenter implements MVP_Login.PresenterToViewInterface, MVP_L
 
 
 
-    private LoginErrorType runCheck(String login, String password) {
+    private ArrayList<LoginErrorType> runCheck(String login, String password) {
+        ArrayList<LoginErrorType> errors = new ArrayList<>();
         if (TextUtils.isEmpty(password)) {
-            return LoginErrorType.PASSWORD_REQUIRED;
+            errors.add(PASSWORD_REQUIRED);
         } else if (!isPasswordValid(password)) {
-            return LoginErrorType.INVALID_PASSWORD;
+            errors.add(INVALID_PASSWORD);
         }
         if (TextUtils.isEmpty(login)) {
-            return LoginErrorType.EMPTY_EMAIL;
+            errors.add(EMPTY_EMAIL);
         }
-        return LoginErrorType.NO_ERROR;
+        if(errors.size()==0){
+            errors.add(NO_ERROR);
+        }
+        return errors;
     }
 
     private boolean isPasswordValid(String password) {
@@ -172,9 +183,9 @@ public class LoginPresenter implements MVP_Login.PresenterToViewInterface, MVP_L
     }
 
     @Override
-    public LoginErrorType checkCredentials(String login, String password) {
-        LoginErrorType error = runCheck(login, password);
-        if (error == LoginErrorType.NO_ERROR) {
+    public ArrayList<LoginErrorType> checkCredentials(String login, String password) {
+        ArrayList<LoginErrorType> error = runCheck(login, password);
+        if (error.get(0)==NO_ERROR) {
             login(login, password);
         }
         return error;
@@ -216,7 +227,6 @@ public class LoginPresenter implements MVP_Login.PresenterToViewInterface, MVP_L
 
     /**
      * Retrieves Activity context
-     *
      * @return Activity context
      */
     @Override

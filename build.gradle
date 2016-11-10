@@ -3,6 +3,10 @@
 buildscript {
 
     ext.support_version = '25.0.0'
+    ext.JUNIT_VERSION = '4.12'
+    ext.DAGGER_VERSION ='2.4'
+    ext.AAVersion = '4.1.0'
+
 
     repositories {
         jcenter()

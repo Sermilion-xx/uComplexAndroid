@@ -1,4 +1,4 @@
-package org.ucomplex.ucomplex.Activities.Login;
+package org.ucomplex.ucomplex.Modules.Login;
 
 
 import org.json.JSONException;
@@ -31,6 +31,15 @@ public class LoginModel implements MVP_Login.ModelInterface {
      */
     public LoginModel(MVP_Login.PresenterToModel presenter) {
         this.mPresenter = presenter;
+        mRepository = new LoginRepository(mPresenter.getAppContext());
+    }
+
+    public LoginModel() {
+
+    }
+
+    public void setPresenter(MVP_Login.PresenterToModel mPresenter) {
+        this.mPresenter = mPresenter;
         mRepository = new LoginRepository(mPresenter.getAppContext());
     }
 

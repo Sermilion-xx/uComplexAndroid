@@ -1,4 +1,4 @@
-package org.ucomplex.ucomplex.Activities.Login;
+package org.ucomplex.ucomplex.Modules.Login;
 
 import android.content.Context;
 import android.support.v7.app.AlertDialog;
@@ -6,6 +6,8 @@ import android.widget.Toast;
 
 import org.ucomplex.ucomplex.Model.Users.LoginErrorType;
 import org.ucomplex.ucomplex.Model.Users.User;
+
+import java.util.ArrayList;
 
 /**
  * Holder interface that contains all interfaces
@@ -50,7 +52,7 @@ public class MVP_Login {
         void onDestroy(boolean isChangingConfiguration);
         void setView(ViewInterface view);
         void showRestorePasswordDialog();
-        LoginErrorType checkCredentials(String login, String password);
+        ArrayList<LoginErrorType> checkCredentials(String login, String password);
     }
     /**
      * Required Presenter methods available to Model.

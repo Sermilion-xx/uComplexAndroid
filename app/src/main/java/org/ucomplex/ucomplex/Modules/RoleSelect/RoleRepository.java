@@ -1,11 +1,10 @@
-package org.ucomplex.ucomplex.Activities.Login.RoleSelect;
+package org.ucomplex.ucomplex.Modules.RoleSelect;
 
 import android.content.Context;
 
 import org.ucomplex.ucomplex.Model.Users.Role;
 import org.ucomplex.ucomplex.Model.Users.User;
 import org.ucomplex.ucomplex.R;
-import org.ucomplex.ucomplex.Utility.FacadePreferences;
 
 import java.util.ArrayList;
 import java.util.Random;

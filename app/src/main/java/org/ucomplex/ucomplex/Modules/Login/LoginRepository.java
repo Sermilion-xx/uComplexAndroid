@@ -1,4 +1,4 @@
-package org.ucomplex.ucomplex.Activities.Login;
+package org.ucomplex.ucomplex.Modules.Login;
 
 import android.content.Context;
 import android.net.Uri;

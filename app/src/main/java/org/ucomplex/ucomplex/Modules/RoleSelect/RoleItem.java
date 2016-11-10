@@ -1,4 +1,4 @@
-package org.ucomplex.ucomplex.Activities.Login.RoleSelect;
+package org.ucomplex.ucomplex.Modules.RoleSelect;
 
 import lombok.Data;
 

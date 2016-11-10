@@ -1,4 +1,4 @@
-package org.ucomplex.ucomplex.Activities.Events;
+package org.ucomplex.ucomplex.Modules.Events;
 
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
-import org.ucomplex.ucomplex.Activities.BaseActivity;
+import org.ucomplex.ucomplex.Modules.BaseActivity;
 import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 import org.ucomplex.ucomplex.R;
 
