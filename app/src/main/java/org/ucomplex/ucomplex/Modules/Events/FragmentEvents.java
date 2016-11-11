@@ -63,7 +63,7 @@ public class FragmentEvents  extends BaseFragment implements MVP_Events.Required
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MyApplication) mContext.getApplication()).getEventsDiComponent().inject(mContext);
+        ((MyApplication) mContext.getApplication()).getEventsDiComponent().inject(this);
     }
 
     @Override

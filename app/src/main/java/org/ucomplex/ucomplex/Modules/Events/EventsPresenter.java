@@ -35,6 +35,10 @@ public class EventsPresenter implements MVP_Events.ProvidedPresenterOpsToView, M
         mView = new WeakReference<>(view);
     }
 
+    public EventsPresenter() {
+
+    }
+
     /**
      * Called by View every time it is destroyed.
      * @param isChangingConfiguration   true: is changing configuration

@@ -1,6 +1,7 @@
 package org.ucomplex.ucomplex.Modules.RoleSelect;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,9 +10,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import org.ucomplex.ucomplex.Model.Users.User;
 import org.ucomplex.ucomplex.Modules.BaseActivity;
 import org.ucomplex.ucomplex.Modules.MyApplication;
 import org.ucomplex.ucomplex.R;
+import org.ucomplex.ucomplex.Utility.Constants;
 import org.ucomplex.ucomplex.Utility.StateMaintainer;
 
 import javax.inject.Inject;
@@ -57,15 +60,19 @@ public class RoleSelectActivity extends BaseActivity implements MVP_RoleSelect.R
 
     private void setupMVP() {
         if (mStateMaintainer.firstTimeIn()) {
-            presenter.setView(this);
-            mRoleRepository.setContext(presenter.getAppContext());
-            mModel.setPresenter(presenter);
-            mModel.setmUser(getIntent());
-            mModel.setRolesRepository(mRoleRepository);
-            presenter.setModel(mModel);
-            mStateMaintainer.put(presenter);
-            mStateMaintainer.put(mModel);
-            mPresenter = presenter;
+            Intent intent = getIntent();
+            if(intent.hasExtra(Constants.EXTRA_KEY_USER)){
+                presenter.setView(this);
+                mRoleRepository.setContext(presenter.getAppContext());
+                mModel.setPresenter(presenter);
+                User user = intent.getParcelableExtra(Constants.EXTRA_KEY_USER);
+                mModel.setUser(user);
+                mModel.setRolesRepository(mRoleRepository);
+                presenter.setModel(mModel);
+                mStateMaintainer.put(presenter);
+                mStateMaintainer.put(mModel);
+                mPresenter = presenter;
+            }
         }
         else {
             mPresenter = mStateMaintainer.get(RolePresenter.class.getName());

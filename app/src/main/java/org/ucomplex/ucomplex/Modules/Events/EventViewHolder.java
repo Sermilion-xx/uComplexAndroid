@@ -19,20 +19,16 @@ import org.ucomplex.ucomplex.R;
  */
 class EventViewHolder extends RecyclerView.ViewHolder {
 
-    @ViewById(R.id.list_events_item_image)
    ImageView eventsImageView;
-    @ViewById(R.id.list_events_item_text)
    TextView eventTextView;
-    @ViewById(R.id.list_events_item_date)
    TextView eventTime;
-    @ViewById(R.id.list_events_item_name)
    TextView eventPersonName;
 
     EventViewHolder(View view){
         super(view);
-//        eventsImageView = (ImageView) view.findViewById(R.id.list_events_item_image);
-//        eventTextView = (TextView) view.findViewById(R.id.list_events_item_text);
-//        eventTime = (TextView) view.findViewById(R.id.list_events_item_date);
-//        eventPersonName = (TextView) view.findViewById(R.id.list_events_item_name);
+        eventsImageView = (ImageView) view.findViewById(R.id.list_events_item_image);
+        eventTextView = (TextView) view.findViewById(R.id.list_events_item_text);
+        eventTime = (TextView) view.findViewById(R.id.list_events_item_date);
+        eventPersonName = (TextView) view.findViewById(R.id.list_events_item_name);
     }
 }
