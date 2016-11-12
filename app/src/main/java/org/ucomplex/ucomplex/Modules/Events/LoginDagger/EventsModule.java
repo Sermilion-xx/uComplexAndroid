@@ -21,16 +21,16 @@ import dagger.Provides;
  */
 
 @Module
-public class EventsModule {
+class EventsModule {
     @Provides
     @Singleton
-    public EventsPresenter getEventsPresenter(){
+    EventsPresenter getEventsPresenter(){
         return new EventsPresenter();
     }
 
     @Provides
     @Singleton
-    public EventsModel getEventsModel(){
+    EventsModel getEventsModel(){
         return new EventsModel();
     }
 }

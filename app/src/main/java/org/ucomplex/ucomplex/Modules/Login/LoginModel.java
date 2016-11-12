@@ -7,7 +7,7 @@ import org.ucomplex.ucomplex.Model.Users.User;
 import org.ucomplex.ucomplex.Utility.HttpFactory;
 
 /**
- * Model layer on Model View Presenter Pattern
+ * Model layer on Model View PresenterToView Pattern
  * <p>
  * ---------------------------------------------------
  * Created by @Sermilion on 07/11/16.
@@ -19,17 +19,17 @@ import org.ucomplex.ucomplex.Utility.HttpFactory;
  */
 public class LoginModel implements MVP_Login.ModelInterface {
 
-    // Presenter reference
-    private MVP_Login.PresenterToModel mPresenter;
+    // PresenterToView reference
+    private MVP_Login.PresenterToModelInterface mPresenter;
     private LoginRepository mRepository;
     private User user;
 
     /**
      * Main constructor, called by Activity during MVP setup
      *
-     * @param presenter Presenter instance
+     * @param presenter PresenterToView instance
      */
-    public LoginModel(MVP_Login.PresenterToModel presenter) {
+    public LoginModel(MVP_Login.PresenterToModelInterface presenter) {
         this.mPresenter = presenter;
         mRepository = new LoginRepository(mPresenter.getAppContext());
     }
@@ -38,7 +38,7 @@ public class LoginModel implements MVP_Login.ModelInterface {
 
     }
 
-    public void setPresenter(MVP_Login.PresenterToModel mPresenter) {
+    public void setPresenter(MVP_Login.PresenterToModelInterface mPresenter) {
         this.mPresenter = mPresenter;
         mRepository = new LoginRepository(mPresenter.getAppContext());
     }
@@ -46,16 +46,16 @@ public class LoginModel implements MVP_Login.ModelInterface {
     /**
      * Test contructor. Called only during unit testing
      *
-     * @param presenter Presenter instance
+     * @param presenter PresenterToView instance
      * @param dao       DAO instance
      */
-    public LoginModel(MVP_Login.PresenterToModel presenter, LoginRepository dao) {
+    public LoginModel(MVP_Login.PresenterToModelInterface presenter, LoginRepository dao) {
         this.mPresenter = presenter;
         mRepository = dao;
     }
 
     /**
-     * Called by Presenter when View is destroyed
+     * Called by PresenterToView when View is destroyed
      *
      * @param isChangingConfiguration true configuration is changing
      */
@@ -73,8 +73,8 @@ public class LoginModel implements MVP_Login.ModelInterface {
      * @return true with success
      */
     @Override
-    public boolean loadData(String login, String password) {
-        String jsonData = mRepository.login(login, password);
+    public boolean loadData() {
+        String jsonData = mRepository.login(user.getLogin(), user.getPassword());
         try {
             JSONObject jsonObject = new JSONObject(jsonData);
             if (jsonObject.getJSONArray("roles") == null) {

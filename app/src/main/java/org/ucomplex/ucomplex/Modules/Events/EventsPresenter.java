@@ -28,7 +28,7 @@ public class EventsPresenter implements MVP_Events.ProvidedPresenterOpsToView, M
     private MVP_Events.ProvidedModelOpsFromPresenter mModel;
 
     /**
-     * Presenter Constructor
+     * PresenterToView Constructor
      * @param view  MainActivity
      */
     public EventsPresenter(MVP_Events.RequiredViewOpsFromPresenter view) {

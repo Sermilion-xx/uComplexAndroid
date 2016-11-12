@@ -3,6 +3,7 @@ package org.ucomplex.ucomplex.Modules;
 import android.app.Fragment;
 import android.os.Bundle;
 
+
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
 
 /**
@@ -15,7 +16,7 @@ import com.hannesdorfmann.fragmentargs.FragmentArgs;
  * ---------------------------------------------------
  */
 
-public class BaseFragment extends Fragment{
+public class BaseFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState){

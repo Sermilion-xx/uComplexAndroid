@@ -9,10 +9,10 @@ import android.widget.Toast;
 /**
  * Holder interface that contains all interfaces
  * responsible to maintain communication between
- * Model View Presenter layers.
+ * Model View PresenterToView layers.
  * Each layer implements its respective interface:
  *      View implements RequiredViewOpsFromPresenter
- *      Presenter implements ProvidedPresenterOpsToView, RequiredPresenterOpsToModel
+ *      PresenterToView implements ProvidedPresenterOpsToView, RequiredPresenterOpsToModel
  *      Model implements ProvidedModelOpsFromPresenter
  *
  * ---------------------------------------------------
@@ -26,10 +26,10 @@ import android.widget.Toast;
 
 public class MVP_Events {
     /**
-     * Required View methods available to Presenter.
+     * Required View methods available to PresenterToView.
      * A passive layer, responsible to show data
      * and receive user interactions
-     *      Presenter to View
+     *      PresenterToView to View
      */
     interface RequiredViewOpsFromPresenter {
         Context getAppContext();
@@ -45,9 +45,9 @@ public class MVP_Events {
         void goToCourse();
     }
     /**
-     * Operations offered to View to communicate with Presenter.
+     * Operations offered to View to communicate with PresenterToView.
      * Process user interaction, sends data requests to Model, etc.
-     *      View to Presenter
+     *      View to PresenterToView
      */
     interface ProvidedPresenterOpsToView {
         void onDestroy(boolean isChangingConfiguration);
@@ -57,17 +57,17 @@ public class MVP_Events {
         int getEventsCount();
     }
     /**
-     * Required Presenter methods available to Model.
-     *      Model to Presenter
+     * Required PresenterToView methods available to Model.
+     *      Model to PresenterToView
      */
     interface RequiredPresenterOpsToModel {
         Context getAppContext();
         Context getActivityContext();
     }
     /**
-     * Operations offered to Model to communicate with Presenter
+     * Operations offered to Model to communicate with PresenterToView
      * Handles all data business logic.
-     *      Presenter to Model
+     *      PresenterToView to Model
      */
     interface ProvidedModelOpsFromPresenter {
         void onDestroy(boolean isChangingConfiguration);

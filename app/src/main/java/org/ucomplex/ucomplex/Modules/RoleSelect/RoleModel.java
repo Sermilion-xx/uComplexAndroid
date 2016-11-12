@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 public class RoleModel implements MVP_RoleSelect.ProvidedModelOpsFromPresenter {
 
-    // Presenter reference
+    // PresenterToView reference
     private MVP_RoleSelect.RequiredPresenterOpsToModel mPresenter;
     private ArrayList<RoleItem> mRoles;
     private RoleRepository mRolesRepository;

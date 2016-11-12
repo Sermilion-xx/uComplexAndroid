@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import org.ucomplex.ucomplex.Model.Users.User;
 import org.ucomplex.ucomplex.Modules.BaseActivity;
+import org.ucomplex.ucomplex.Modules.Login.MVP_Login;
 import org.ucomplex.ucomplex.Modules.MyApplication;
 import org.ucomplex.ucomplex.R;
 import org.ucomplex.ucomplex.Utility.Constants;
@@ -35,8 +36,11 @@ public class RoleSelectActivity extends BaseActivity implements MVP_RoleSelect.R
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_role_select);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         ((MyApplication) getApplication()).getRoleDiComponent().inject(this);
-        setupViews();
+        setupRecyclerView();
         setupMVP();
     }
 
@@ -46,9 +50,7 @@ public class RoleSelectActivity extends BaseActivity implements MVP_RoleSelect.R
         mPresenter.onDestroy(isChangingConfigurations());
     }
 
-    private void setupViews(){
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+    private void setupRecyclerView(){
         mListAdapter = new ListRolesAdapter();
         RecyclerView mList = (RecyclerView) findViewById(R.id.recyclerView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -72,6 +74,7 @@ public class RoleSelectActivity extends BaseActivity implements MVP_RoleSelect.R
                 mStateMaintainer.put(presenter);
                 mStateMaintainer.put(mModel);
                 mPresenter = presenter;
+                mStateMaintainer.put(MVP_RoleSelect.RequiredViewOpsFromPresenter.class.getSimpleName(), mPresenter);
             }
         }
         else {

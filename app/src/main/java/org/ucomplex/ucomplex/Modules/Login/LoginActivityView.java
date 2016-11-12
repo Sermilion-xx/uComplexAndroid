@@ -32,8 +32,9 @@ import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.INVALID_PASSWORD;
 import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.PASSWORD_REQUIRED;
 
 @EActivity(R.layout.activity_login)
-public class LoginActivityView extends BaseActivity implements MVP_Login.ViewInterface {
+public class LoginActivityView extends BaseActivity implements MVP_Login.ViewToPresenterInterface {
 
+    static final String TAG = LoginActivityView.class.getName();
     MVP_Login.PresenterToViewInterface mPresenter;
     @ViewById(R.id.login)
     AutoCompleteTextView mLoginView;
@@ -75,6 +76,7 @@ public class LoginActivityView extends BaseActivity implements MVP_Login.ViewInt
             mStateMaintainer.put(presenter);
             mStateMaintainer.put(model);
             mPresenter = presenter;
+            mStateMaintainer.put(MVP_Login.PresenterToViewInterface.class.getName(), mPresenter);
         } else {
             mPresenter = mStateMaintainer.get(LoginPresenter.class.getName());
             mPresenter.setView(this);

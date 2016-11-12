@@ -4,6 +4,10 @@ import android.content.Context;
 import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
+import org.ucomplex.ucomplex.Interfaces.MVP.Model;
+import org.ucomplex.ucomplex.Interfaces.MVP.PresenterToModel;
+import org.ucomplex.ucomplex.Interfaces.MVP.PresenterToView;
+import org.ucomplex.ucomplex.Interfaces.MVP.ViewToPresenter;
 import org.ucomplex.ucomplex.Model.Users.LoginErrorType;
 import org.ucomplex.ucomplex.Model.Users.User;
 
@@ -12,10 +16,10 @@ import java.util.ArrayList;
 /**
  * Holder interface that contains all interfaces
  * responsible to maintain communication between
- * Model View Presenter layers.
+ * Model View PresenterToView layers.
  * Each layer implements its respective interface:
- *      View implements ViewInterface
- *      Presenter implements PresenterToViewInterface, PresenterToModel
+ *      View implements ViewToPresenterInterface
+ *      PresenterToView implements PresenterToViewInterface, PresenterToModelInterface
  *      Model implements ModelInterface
  *
  * ---------------------------------------------------
@@ -29,12 +33,12 @@ import java.util.ArrayList;
 
 public class MVP_Login {
     /**
-     * Required View methods available to Presenter.
+     * Required View methods available to PresenterToView.
      * A passive layer, responsible to show data
      * and receive user interactions
-     *      Presenter to View
+     *      PresenterToView to View
      */
-    interface ViewInterface {
+    interface ViewToPresenterInterface extends ViewToPresenter {
         Context getAppContext();
         Context getActivityContext();
         void showToast(Toast toast);
@@ -44,32 +48,29 @@ public class MVP_Login {
         void successfulLogin(User user);
     }
     /**
-     * Operations offered to View to communicate with Presenter.
+     * Operations offered to View to communicate with PresenterToView.
      * Process user interaction, sends data requests to Model, etc.
-     *      View to Presenter
+     *      View to PresenterToView
      */
-    interface PresenterToViewInterface {
+    interface PresenterToViewInterface extends PresenterToView {
         void onDestroy(boolean isChangingConfiguration);
-        void setView(ViewInterface view);
         void showRestorePasswordDialog();
         ArrayList<LoginErrorType> checkCredentials(String login, String password);
     }
     /**
-     * Required Presenter methods available to Model.
-     *      Model to Presenter
+     * Required PresenterToView methods available to Model.
+     *      Model to PresenterToView
      */
-    interface PresenterToModel {
-        Context getAppContext();
-        Context getActivityContext();
+    interface PresenterToModelInterface extends PresenterToModel {
+
     }
     /**
-     * Operations offered to Model to communicate with Presenter
+     * Operations offered to Model to communicate with PresenterToView
      * Handles all data business logic.
-     *      Presenter to Model
+     *      PresenterToView to Model
      */
-    interface ModelInterface {
-        void onDestroy(boolean isChangingConfiguration);
-        boolean loadData(String login, String password);
+    interface ModelInterface extends Model {
+        boolean loadData();
         String sendResetRequest(String email);
         User getUser();
     }

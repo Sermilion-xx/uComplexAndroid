@@ -21,10 +21,10 @@ import org.ucomplex.ucomplex.Model.Users.UserInterface;
 public interface MVP_RoleSelect {
 
     /**
-     * Required View methods available to Presenter.
+     * Required View methods available to PresenterToView.
      * A passive layer, responsible to show data
      * and receive user interactions
-     * Presenter to View
+     * PresenterToView to View
      */
     interface RequiredViewOpsFromPresenter {
         Context getAppContext();
@@ -43,9 +43,9 @@ public interface MVP_RoleSelect {
     }
 
     /**
-     * Operations offered to View to communicate with Presenter.
+     * Operations offered to View to communicate with PresenterToView.
      * Process user interaction, sends data requests to Model, etc.
-     * View to Presenter
+     * View to PresenterToView
      */
     interface ProvidedPresenterOpsToView {
         void onDestroy(boolean isChangingConfiguration);
@@ -60,8 +60,8 @@ public interface MVP_RoleSelect {
     }
 
     /**
-     * Required Presenter methods available to Model.
-     * Model to Presenter
+     * Required PresenterToView methods available to Model.
+     * Model to PresenterToView
      */
     interface RequiredPresenterOpsToModel {
         Context getAppContext();
@@ -70,9 +70,9 @@ public interface MVP_RoleSelect {
     }
 
     /**
-     * Operations offered to Model to communicate with Presenter
+     * Operations offered to Model to communicate with PresenterToView
      * Handles all data business logic.
-     * Presenter to Model
+     * PresenterToView to Model
      */
     interface ProvidedModelOpsFromPresenter {
 

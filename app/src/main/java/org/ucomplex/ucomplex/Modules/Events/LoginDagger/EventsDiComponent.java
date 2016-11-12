@@ -1,5 +1,6 @@
 package org.ucomplex.ucomplex.Modules.Events.LoginDagger;
 
+import org.ucomplex.ucomplex.Modules.Events.EventsActivity;
 import org.ucomplex.ucomplex.Modules.Events.FragmentEvents;
 import org.ucomplex.ucomplex.Modules.Login.LoginActivityView;
 
@@ -19,5 +20,5 @@ import dagger.Component;
 @Singleton
 @Component(modules = {EventsModule.class})
 public interface EventsDiComponent {
-    void inject(FragmentEvents fragment);
+    void inject(EventsActivity activity);
 }

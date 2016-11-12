@@ -22,13 +22,13 @@ import dagger.Provides;
 public class LoginModule {
     @Provides
     @Singleton
-    public LoginPresenter getLoginPresenter(){
+    LoginPresenter getLoginPresenter(){
         return new LoginPresenter();
     }
 
     @Provides
     @Singleton
-    public LoginModel getLoginModel(){
+    LoginModel getLoginModel(){
         return new LoginModel();
     }
 }

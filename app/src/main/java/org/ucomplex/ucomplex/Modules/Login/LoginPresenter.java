@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.ucomplex.ucomplex.Interfaces.MVP.ViewToPresenter;
 import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 import org.ucomplex.ucomplex.Model.Users.LoginErrorType;
 import org.ucomplex.ucomplex.R;
@@ -30,20 +31,20 @@ import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.*;
  * ---------------------------------------------------
  */
 
-public class LoginPresenter implements MVP_Login.PresenterToViewInterface, MVP_Login.PresenterToModel, OnTaskCompleteListener {
+public class LoginPresenter implements MVP_Login.PresenterToViewInterface, MVP_Login.PresenterToModelInterface, OnTaskCompleteListener {
 
     public final String TAG = LoginPresenter.class.getName();
-    private WeakReference<MVP_Login.ViewInterface> mView;
+    private WeakReference<MVP_Login.ViewToPresenterInterface> mView;
     private MVP_Login.ModelInterface mModel;
     private OnTaskCompleteListener mTaskCompleteListener = null;
 
     /**
-     * Presenter Constructor
+     * PresenterToView Constructor
      *
      * @param view MainActivity
      */
-    public LoginPresenter(MVP_Login.ViewInterface view) {
-        mView = new WeakReference<>(view);
+    public LoginPresenter(ViewToPresenter view) {
+        mView = new WeakReference<>((MVP_Login.ViewToPresenterInterface) view);
         mTaskCompleteListener = this;
     }
 
@@ -70,36 +71,32 @@ public class LoginPresenter implements MVP_Login.PresenterToViewInterface, MVP_L
         }
     }
 
+    @Override
+    public void setView(ViewToPresenter view) {
+        mView = new WeakReference<>((MVP_Login.ViewToPresenterInterface)view);
+    }
+
     /**
      * Return the View reference.
      * Could throw an exception if the View is unavailable.
      *
-     * @return {@link MVP_Login.ViewInterface}
+     * @return {@link MVP_Login.ViewToPresenterInterface}
      * @throws NullPointerException when View is unavailable
      */
-    private MVP_Login.ViewInterface getView() throws NullPointerException {
+    private MVP_Login.ViewToPresenterInterface getView() throws NullPointerException {
         if (mView != null)
             return mView.get();
         else
             throw new NullPointerException("View is unavailable");
     }
 
-    /**
-     * Called by View during the reconstruction events
-     * @param view Activity instance
-     */
-    @Override
-    public void setView(MVP_Login.ViewInterface view) {
-        mView = new WeakReference<>(view);
-    }
-
-    public void login(final String login, final String password) {
+    public void login() {
         try {
             getView().showProgress();
             new AsyncTask<Void, Void, Boolean>() {
                 @Override
                 protected Boolean doInBackground(Void... params) {
-                    return mModel.loadData(login, password);
+                    return mModel.loadData();
                 }
                 @Override
                 protected void onPostExecute(Boolean result) {
@@ -186,11 +183,16 @@ public class LoginPresenter implements MVP_Login.PresenterToViewInterface, MVP_L
     public ArrayList<LoginErrorType> checkCredentials(String login, String password) {
         ArrayList<LoginErrorType> error = runCheck(login, password);
         if (error.get(0)==NO_ERROR) {
-            login(login, password);
+            login();
         }
         return error;
     }
 
+
+    @Override
+    public void onConfigurationChanged(ViewToPresenter view) {
+        mView = new WeakReference<>((MVP_Login.ViewToPresenterInterface) view);
+    }
 
     /**
      * Called by Activity during MVP setup. Only called once.
