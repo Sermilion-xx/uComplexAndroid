@@ -21,17 +21,21 @@ import org.ucomplex.ucomplex.Utility.StateMaintainer;
 
 import javax.inject.Inject;
 
-//@EActivity(R.layout.activity_main)
-public class EventsActivity extends BaseActivity implements OnTaskCompleteListener, MVP_Events.RequiredViewOpsFromPresenter {
+@EActivity(R.layout.activity_main)
+public class EventsActivity extends BaseActivity implements OnTaskCompleteListener, MVP_Events.ViewToPresenterInterface {
 
-    FragmentEvents                                mFragmentEvents;
-    @Inject MVP_Events.ProvidedPresenterOpsToView mPresenter;
-    @Inject EventsPresenter                       presenter;
-    @Inject EventsModel                           mModel;
-    @Inject EventsRepository                      mEventsRepository;
+    private FragmentEvents mFragmentEvents;
 
-    private final StateMaintainer mStateMaintainer =
-            new StateMaintainer( getFragmentManager(), EventsActivity.class.getName());
+    @Inject public void setPresenter(EventsPresenter presenter) {
+        super.mPresenter = presenter;
+    }
+    @Inject public void setModel(EventsModel model) {
+        super.mModel = model;
+    }
+    @Inject public void setRepository(EventsRepository repository) {
+        super.mRepository = repository;
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +44,7 @@ public class EventsActivity extends BaseActivity implements OnTaskCompleteListen
         getLayoutInflater().inflate(R.layout.activity_main, contentFrameLayout);
         setUpToolbar("События");
         setSupportActionBar(mToolbar);
-//        ((MyApplication) getApplication()).getEventsDiComponent().inject(this);
+        ((MyApplication) getApplication()).getEventsDiComponent().inject(this);
 
         Intent intent = getIntent();
         UserInterface user;
@@ -50,37 +54,15 @@ public class EventsActivity extends BaseActivity implements OnTaskCompleteListen
             mFragmentEvents = new FragmentEvents();
             mFragmentEvents.setUser(user);
             mFragmentEvents.setContext(this);
-            setupMVP(user);
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
         }
-
         addFragment(R.id.container, mFragmentEvents, "EventsFragment");
     }
 
-
-
-    private void setupMVP(UserInterface user) {
-        if (mStateMaintainer.firstTimeIn()) {
-            presenter.setView(this);
-            mEventsRepository.setContext(presenter.getAppContext());
-            mEventsRepository.setUserType(user.getType());
-            mModel.setPresenter(presenter);
-            mModel.setRepository(mEventsRepository);
-            presenter.setModel(mModel);
-            mStateMaintainer.put(presenter);
-            mStateMaintainer.put(mModel);
-            mPresenter = presenter;
-            mStateMaintainer.put(MVP_Events.RequiredViewOpsFromPresenter.class.getName(), mPresenter);
-        }
-        else {
-            mPresenter = mStateMaintainer.get(EventsActivity.class.getName());
-            mPresenter.setView(this);
-        }
-    }
 
     @Override
     public void onDestroy() {
@@ -119,6 +101,11 @@ public class EventsActivity extends BaseActivity implements OnTaskCompleteListen
     }
 
     @Override
+    public void setupRecyclerView() {
+
+    }
+
+    @Override
     public void notifyItemRemoved(int position) {
 
     }
@@ -142,8 +129,6 @@ public class EventsActivity extends BaseActivity implements OnTaskCompleteListen
     public void goToCourse() {
 
     }
-
-
 
     @Override
     public void onTaskComplete(AsyncTask task, Object... o) {

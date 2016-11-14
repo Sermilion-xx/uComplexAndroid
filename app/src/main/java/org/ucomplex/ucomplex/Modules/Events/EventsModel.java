@@ -5,6 +5,8 @@ package org.ucomplex.ucomplex.Modules.Events;
 import android.widget.ImageView;
 
 import org.json.JSONException;
+import org.ucomplex.ucomplex.Interfaces.MVP.Presenter;
+import org.ucomplex.ucomplex.Interfaces.MVP.Repository;
 
 import java.util.ArrayList;
 
@@ -19,10 +21,10 @@ import java.util.ArrayList;
  * <a href="http://www.github.com/sermilion>github</a>
  * ---------------------------------------------------
  */
-public class EventsModel implements MVP_Events.ProvidedModelOpsFromPresenter {
+public class EventsModel implements MVP_Events.ModelInterface {
 
-    private MVP_Events.RequiredPresenterOpsToModel mPresenter;
-    private EventsRepository mRepository;
+    private Presenter mPresenter;
+    private Repository mRepository;
     private ArrayList<EventItem> mEventItems;
     private int userType;
 
@@ -30,7 +32,7 @@ public class EventsModel implements MVP_Events.ProvidedModelOpsFromPresenter {
      * Main constructor, called by Activity during MVP setup
      * @param presenter PresenterToViewInterface instance
      */
-    public EventsModel(MVP_Events.RequiredPresenterOpsToModel presenter, int userType) {
+    public EventsModel(Presenter presenter, int userType) {
         this.mPresenter = presenter;
         mRepository = new EventsRepository(mPresenter.getAppContext(), userType);
     }
@@ -39,8 +41,18 @@ public class EventsModel implements MVP_Events.ProvidedModelOpsFromPresenter {
 
     }
 
-    public void setPresenter(MVP_Events.RequiredPresenterOpsToModel mPresenter) {
+    public void setPresenter(Presenter mPresenter) {
         this.mPresenter = mPresenter;
+    }
+
+    @Override @SuppressWarnings("unchecked")
+    public void setData(Object data) {
+        mEventItems = (ArrayList<EventItem>) data;
+    }
+
+    @Override
+    public void setRepository(Repository repository) {
+        mRepository = repository;
     }
 
     public void setRepository(EventsRepository mRepository) {
@@ -52,7 +64,7 @@ public class EventsModel implements MVP_Events.ProvidedModelOpsFromPresenter {
      * @param presenter PresenterToViewInterface instance
      * @param dao       DAO instance
      */
-    public EventsModel(MVP_Events.RequiredPresenterOpsToModel presenter, EventsRepository dao) {
+    public EventsModel(Presenter presenter, EventsRepository dao) {
         this.mPresenter = presenter;
         mRepository = dao;
     }
@@ -74,19 +86,15 @@ public class EventsModel implements MVP_Events.ProvidedModelOpsFromPresenter {
      * Loads all Data, getting EventItems from DB
      * @return  true with success
      */
-    @Override
+    @Override @SuppressWarnings("unchecked")
     public boolean loadData() {
-        try {
-            mEventItems = mRepository.getAllEvents();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        mEventItems = (ArrayList<EventItem>) mRepository.loadData(userType);
         return mEventItems != null;
     }
 
     @Override
     public void loadIcon(String code, ImageView imageView) {
-        mRepository.loadIcon(code, imageView);
+        ((EventsRepository)mRepository).loadIcon(code, imageView);
     }
 
     /**

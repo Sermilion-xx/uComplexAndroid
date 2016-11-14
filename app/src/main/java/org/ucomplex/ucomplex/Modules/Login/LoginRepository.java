@@ -73,8 +73,9 @@ public class LoginRepository implements Repository {
                 }
                 return user;
             }
-        } catch (JSONException e) {
+        } catch (JSONException | NullPointerException e) {
             e.printStackTrace();
+            return null;
         }
         return user;
     }

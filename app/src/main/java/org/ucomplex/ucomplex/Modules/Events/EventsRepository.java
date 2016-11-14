@@ -8,6 +8,7 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.ucomplex.ucomplex.Interfaces.MVP.Repository;
 import org.ucomplex.ucomplex.R;
 import org.ucomplex.ucomplex.Utility.FacadeCommon;
 import org.ucomplex.ucomplex.Utility.FacadePreferences;
@@ -25,25 +26,19 @@ import java.util.ArrayList;
  * ---------------------------------------------------
  */
 
-class EventsRepository {
+class EventsRepository implements Repository {
 
     private Context mContext;
-    private int userType;
 
-    EventsRepository(Context appContext, int userType) {
+    EventsRepository(Context appContext) {
         this.mContext = appContext;
-        this.userType = userType;
     }
 
-    EventsRepository(){
+    EventsRepository() {
 
     }
 
-    public void setUserType(int userType) {
-        this.userType = userType;
-    }
-
-    ArrayList<EventItem> getAllEvents() throws JSONException {
+    ArrayList<EventItem> getAllEvents(int userType) throws JSONException {
         if (userType == 4) {
             return getAllStudentEvents();
         } else if (userType == 3) {
@@ -56,6 +51,23 @@ class EventsRepository {
         this.mContext = mContext;
     }
 
+    @Override
+    public Object loadData(Object... param) {
+        int userType = (int)param[0];
+        try {
+            if (userType == 4) {
+                return getAllStudentEvents();
+
+            } else if (userType == 3) {
+                return getAllTeacherEvents();
+            } else
+                throw new IllegalArgumentException(mContext.getResources().getString(R.string.error_wrong_user_type));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     private ArrayList<EventItem> getAllStudentEvents() throws JSONException {
         String stringResult = HttpFactory.httpPost(HttpFactory.STUDENT_EVENTS_URL, FacadePreferences.getLoginDataFromPref(mContext), "");
         if (stringResult != null) {
@@ -64,9 +76,9 @@ class EventsRepository {
         return null;
     }
 
-    public void loadIcon(String code, ImageView imageView){
+    public void loadIcon(String code, ImageView imageView) {
         Picasso.with(mContext)
-                .load(HttpFactory.LOAD_PROFILE_URL+code+".jpg")
+                .load(HttpFactory.LOAD_PROFILE_URL + code + ".jpg")
                 .into(imageView);
     }
 

@@ -8,6 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import org.ucomplex.ucomplex.Interfaces.MVP.Model;
+import org.ucomplex.ucomplex.Interfaces.MVP.ViewRecylerToPresenter;
+import org.ucomplex.ucomplex.Interfaces.MVP.ViewToPresenter;
 import org.ucomplex.ucomplex.R;
 
 import java.lang.ref.WeakReference;
@@ -22,16 +25,16 @@ import java.lang.ref.WeakReference;
  * ---------------------------------------------------
  */
 
-public class EventsPresenter implements MVP_Events.ProvidedPresenterOpsToView, MVP_Events.RequiredPresenterOpsToModel {
+public class EventsPresenter implements MVP_Events.PresenterInterface{
 
-    private WeakReference<MVP_Events.RequiredViewOpsFromPresenter> mView;
-    private MVP_Events.ProvidedModelOpsFromPresenter mModel;
+    private WeakReference<ViewRecylerToPresenter> mView;
+    private Model mModel;
 
     /**
      * PresenterToViewInterface Constructor
      * @param view  MainActivity
      */
-    public EventsPresenter(MVP_Events.RequiredViewOpsFromPresenter view) {
+    public EventsPresenter(ViewRecylerToPresenter view) {
         mView = new WeakReference<>(view);
     }
 
@@ -55,14 +58,24 @@ public class EventsPresenter implements MVP_Events.ProvidedPresenterOpsToView, M
         }
     }
 
+    @Override
+    public void onConfigurationChanged(ViewToPresenter view) {
+
+    }
+
+    @Override
+    public void setModel(Model models) {
+mModel = models;
+    }
+
     /**
      * Return the View reference.
      * Could throw an exception if the View is unavailable.
      *
-     * @return  {@link MVP_Events.RequiredViewOpsFromPresenter}
+     * @return  {@link MVP_Events.ViewToPresenterInterface}
      * @throws NullPointerException when View is unavailable
      */
-    private MVP_Events.RequiredViewOpsFromPresenter getView() throws NullPointerException{
+    private ViewRecylerToPresenter getView() throws NullPointerException{
         if ( mView != null )
             return mView.get();
         else
@@ -74,8 +87,8 @@ public class EventsPresenter implements MVP_Events.ProvidedPresenterOpsToView, M
      * @param view  Activity instance
      */
     @Override
-    public void setView(MVP_Events.RequiredViewOpsFromPresenter view) {
-        mView = new WeakReference<>(view);
+    public void setView(ViewToPresenter view) {
+        mView = new WeakReference<>((ViewRecylerToPresenter)view);
     }
 
     /**
@@ -100,12 +113,12 @@ public class EventsPresenter implements MVP_Events.ProvidedPresenterOpsToView, M
      */
     @Override
     public void bindViewHolder(final EventViewHolder holder, int position) {
-        final EventItem event = mModel.getEvent(position);
+        final EventItem event = ((EventsModel)mModel).getEvent(position);
         holder.eventPersonName.setText(event.getParams().getName());
         holder.eventTextView.setText(event.getEventText());
         holder.eventsImageView.setImageBitmap(event.getEventImageBitmap());
         holder.eventTime.setText(event.getTime());
-        mModel.loadIcon(event.getParams().getCode(), holder.eventsImageView);
+        ((EventsModel)mModel).loadIcon(event.getParams().getCode(), holder.eventsImageView);
         holder.eventPersonName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -118,7 +131,7 @@ public class EventsPresenter implements MVP_Events.ProvidedPresenterOpsToView, M
      * Called by Activity during MVP setup. Only called once.
      * @param model Model instance
      */
-    public void setModel(MVP_Events.ProvidedModelOpsFromPresenter model) {
+    public void setModel(MVP_Events.ModelInterface model) {
         mModel = model;
         loadData();
     }
@@ -168,7 +181,7 @@ public class EventsPresenter implements MVP_Events.ProvidedPresenterOpsToView, M
      */
     @Override
     public int getEventsCount() {
-        return mModel.getEventsCount();
+        return ((EventsModel)mModel).getEventsCount();
     }
 
     /**

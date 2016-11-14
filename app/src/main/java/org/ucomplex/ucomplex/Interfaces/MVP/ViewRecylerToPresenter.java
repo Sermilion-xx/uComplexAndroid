@@ -16,4 +16,5 @@ public interface ViewRecylerToPresenter extends ViewToPresenter {
     void notifyDataSetChanged();
     void notifyItemInserted(int layoutPosition);
     void notifyItemRangeChanged(int positionStart, int itemCount);
+
 }

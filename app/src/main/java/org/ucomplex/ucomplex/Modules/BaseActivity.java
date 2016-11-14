@@ -92,12 +92,9 @@ public class BaseActivity extends AppCompatActivity {
         mModel.setData(data);
     }
 
-
-
     protected void setStatusBarTranslucent(Boolean makeTranslucent) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             if (makeTranslucent) {
-
                 getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             } else {
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -132,12 +129,6 @@ public class BaseActivity extends AppCompatActivity {
     protected String getResourceString(int id) {
         return getResources().getString(id);
     }
-
-    @SuppressWarnings("unchecked")
-    protected <T extends View> T find(int id) {
-        return (T) findViewById(id);
-    }
-
 
     //=================Setup methods================//
     private ArrayList<DrawerListItem> setupDrawerArrayList(DrawerListItem header, int[] icons, String[] titles) {
@@ -181,12 +172,9 @@ public class BaseActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
                 switch (item.getItemId()) {
-
                     case R.id.menu_home:
-
                         mDrawer.closeDrawers();
                         break;
-
                 }
                 return false;
             }

@@ -6,6 +6,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import org.ucomplex.ucomplex.Interfaces.MVP.Model;
+import org.ucomplex.ucomplex.Interfaces.MVP.Presenter;
+import org.ucomplex.ucomplex.Interfaces.MVP.ViewRecylerToPresenter;
+
 /**
  * Holder interface that contains all interfaces
  * responsible to maintain communication between
@@ -13,7 +17,7 @@ import android.widget.Toast;
  * Each layer implements its respective interface:
  *      View implements ViewToPresenterInterface
  *      PresenterToViewInterface implements PresenterToViewInterface, PresenterToModelInterface
- *      Model implements ProvidedModelOpsFromPresenter
+ *      Model implements ModelInterface
  *
  * ---------------------------------------------------
  * Created by @Sermilion on 07/11/16.
@@ -24,57 +28,27 @@ import android.widget.Toast;
  * ---------------------------------------------------
  */
 
-public class MVP_Events {
-    /**
-     * Required View methods available to PresenterToViewInterface.
-     * A passive layer, responsible to show data
-     * and receive user interactions
-     *      PresenterToViewInterface to View
-     */
-    interface RequiredViewOpsFromPresenter {
+class MVP_Events {
+
+    interface ViewToPresenterInterface extends ViewRecylerToPresenter {
         Context getAppContext();
         Context getActivityContext();
         void showToast(Toast toast);
         void showProgress();
         void hideProgress();
         void showAlert(AlertDialog dialog);
-        void notifyItemRemoved(int position);
-        void notifyDataSetChanged();
-        void notifyItemInserted(int layoutPosition);
-        void notifyItemRangeChanged(int positionStart, int itemCount);
         void goToCourse();
     }
-    /**
-     * Operations offered to View to communicate with PresenterToViewInterface.
-     * Process user interaction, sends data requests to Model, etc.
-     *      View to PresenterToViewInterface
-     */
-    interface ProvidedPresenterOpsToView {
-        void onDestroy(boolean isChangingConfiguration);
-        void setView(RequiredViewOpsFromPresenter view);
+
+    interface PresenterInterface extends Presenter {
         EventViewHolder createViewHolder(ViewGroup parent, int viewType);
         void bindViewHolder(EventViewHolder holder, int position);
         int getEventsCount();
     }
-    /**
-     * Required PresenterToViewInterface methods available to Model.
-     *      Model to PresenterToViewInterface
-     */
-    interface RequiredPresenterOpsToModel {
-        Context getAppContext();
-        Context getActivityContext();
-    }
-    /**
-     * Operations offered to Model to communicate with PresenterToViewInterface
-     * Handles all data business logic.
-     *      PresenterToViewInterface to Model
-     */
-    interface ProvidedModelOpsFromPresenter {
-        void onDestroy(boolean isChangingConfiguration);
-        boolean loadData();
+
+    interface ModelInterface extends Model {
         void loadIcon(String code, ImageView imageView);
         EventItem getEvent(int position);
         int getEventsCount();
     }
-
 }
