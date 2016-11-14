@@ -28,7 +28,7 @@ public class EventsPresenter implements MVP_Events.ProvidedPresenterOpsToView, M
     private MVP_Events.ProvidedModelOpsFromPresenter mModel;
 
     /**
-     * PresenterToView Constructor
+     * PresenterToViewInterface Constructor
      * @param view  MainActivity
      */
     public EventsPresenter(MVP_Events.RequiredViewOpsFromPresenter view) {
@@ -46,9 +46,7 @@ public class EventsPresenter implements MVP_Events.ProvidedPresenterOpsToView, M
      */
     @Override
     public void onDestroy(boolean isChangingConfiguration) {
-        // View show be null every time onDestroy is called
         mView = null;
-        // Inform Model about the event
         mModel.onDestroy(isChangingConfiguration);
         // Activity destroyed
         if ( !isChangingConfiguration ) {

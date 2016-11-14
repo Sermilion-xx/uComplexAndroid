@@ -78,6 +78,7 @@ public class User implements UserInterface, Parcelable{
         roles.add(role);
     }
 
+
     @Override
     public int describeContents() {
         return 0;
@@ -102,6 +103,7 @@ public class User implements UserInterface, Parcelable{
         parcel.writeString(name);
         parcel.writeTypedList(roles);
     }
+
 
     protected class BitmapDataObject implements Serializable {
         private static final long serialVersionUID = 111696345129311948L;

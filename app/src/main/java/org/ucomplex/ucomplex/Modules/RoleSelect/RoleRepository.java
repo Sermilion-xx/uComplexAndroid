@@ -2,6 +2,7 @@ package org.ucomplex.ucomplex.Modules.RoleSelect;
 
 import android.content.Context;
 
+import org.ucomplex.ucomplex.Interfaces.MVP.Repository;
 import org.ucomplex.ucomplex.Model.Users.Role;
 import org.ucomplex.ucomplex.Model.Users.User;
 import org.ucomplex.ucomplex.R;
@@ -18,7 +19,7 @@ import java.util.Random;
  * <a href="http://www.github.com/sermilion>github</a>
  * ---------------------------------------------------
  */
-public class RoleRepository {
+public class RoleRepository implements Repository{
 
     private Context mContext;
     private int[] roleIcons = {
@@ -41,8 +42,10 @@ public class RoleRepository {
         this.mContext = mContext;
     }
 
-    ArrayList<RoleItem> getAllRoleItems(Object data) {
-        User user = (User) data;
+
+    @Override
+    public Object loadData(Object... data) {
+        User user = (User) data[0];
         ArrayList<RoleItem> roles = new ArrayList<>();
         Random random = new Random();
         for (int i = 0; i < user.getRoles().size(); i++) {

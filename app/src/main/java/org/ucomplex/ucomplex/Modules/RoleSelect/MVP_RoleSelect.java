@@ -1,11 +1,12 @@
 package org.ucomplex.ucomplex.Modules.RoleSelect;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.Toast;
 
+import org.ucomplex.ucomplex.Interfaces.MVP.Model;
+import org.ucomplex.ucomplex.Interfaces.MVP.Presenter;
+import org.ucomplex.ucomplex.Interfaces.MVP.ViewToPresenter;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 
 /**
@@ -21,12 +22,12 @@ import org.ucomplex.ucomplex.Model.Users.UserInterface;
 public interface MVP_RoleSelect {
 
     /**
-     * Required View methods available to PresenterToView.
+     * Required View methods available to PresenterToViewInterface.
      * A passive layer, responsible to show data
      * and receive user interactions
-     * PresenterToView to View
+     * PresenterToViewInterface to View
      */
-    interface RequiredViewOpsFromPresenter {
+    interface ViewToPresenterInterface extends ViewToPresenter {
         Context getAppContext();
 
         Context getActivityContext();
@@ -43,38 +44,23 @@ public interface MVP_RoleSelect {
     }
 
     /**
-     * Operations offered to View to communicate with PresenterToView.
+     * Operations offered to View to communicate with PresenterToViewInterface.
      * Process user interaction, sends data requests to Model, etc.
-     * View to PresenterToView
+     * View to PresenterToViewInterface
      */
-    interface ProvidedPresenterOpsToView {
-        void onDestroy(boolean isChangingConfiguration);
-
-        void setView(RequiredViewOpsFromPresenter view);
-
+    interface PresenterInterface extends Presenter{
         RoleViewHolder createViewHolder(ViewGroup parent, int viewType);
-
         void bindViewHolder(RoleViewHolder holder, int position);
-
         int getRolesCount();
+        void setView(ViewToPresenter view);
     }
 
     /**
-     * Required PresenterToView methods available to Model.
-     * Model to PresenterToView
-     */
-    interface RequiredPresenterOpsToModel {
-        Context getAppContext();
-
-        Context getActivityContext();
-    }
-
-    /**
-     * Operations offered to Model to communicate with PresenterToView
+     * Operations offered to Model to communicate with PresenterToViewInterface
      * Handles all data business logic.
-     * PresenterToView to Model
+     * PresenterToViewInterface to Model
      */
-    interface ProvidedModelOpsFromPresenter {
+    interface ModelInterface extends Model {
 
         void onDestroy(boolean isChangingConfiguration);
 
@@ -84,9 +70,7 @@ public interface MVP_RoleSelect {
 
         int getRolesCount();
 
-        void setUser(UserInterface user);
-
-        UserInterface getmUser();
+        UserInterface getUser();
     }
 
 }

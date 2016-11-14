@@ -1,8 +1,6 @@
-package org.ucomplex.ucomplex.Modules.Events.LoginDagger;
+package org.ucomplex.ucomplex.Modules.Events.EventsDagger;
 
 import org.ucomplex.ucomplex.Modules.Events.EventsActivity;
-import org.ucomplex.ucomplex.Modules.Events.FragmentEvents;
-import org.ucomplex.ucomplex.Modules.Login.LoginActivityView;
 
 import javax.inject.Singleton;
 
@@ -17,8 +15,8 @@ import dagger.Component;
  * <a href="http://www.github.com/sermilion>github</a>
  * ---------------------------------------------------
  */
-@Singleton
-@Component(modules = {EventsModule.class})
+//@Singleton
+//@Component(modules = {EventsModule.class})
 public interface EventsDiComponent {
-    void inject(EventsActivity activity);
+//    void inject(EventsActivity activity);
 }

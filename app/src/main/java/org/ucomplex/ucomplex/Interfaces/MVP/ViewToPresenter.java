@@ -14,10 +14,10 @@ import android.widget.Toast;
  * ---------------------------------------------------
  */
 /**
- * Required View methods available to PresenterToView.
+ * Required View methods available to PresenterToViewInterface.
  * A passive layer, responsible to show data
  * and receive user interactions
- *      PresenterToView to View
+ *      PresenterToViewInterface to View
  */
 public interface ViewToPresenter {
     Context getAppContext();

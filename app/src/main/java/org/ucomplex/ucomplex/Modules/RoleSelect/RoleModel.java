@@ -1,9 +1,8 @@
 package org.ucomplex.ucomplex.Modules.RoleSelect;
 
-import android.content.Intent;
-
+import org.ucomplex.ucomplex.Interfaces.MVP.Presenter;
+import org.ucomplex.ucomplex.Interfaces.MVP.Repository;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
-import org.ucomplex.ucomplex.Utility.Constants;
 
 import java.util.ArrayList;
 
@@ -17,15 +16,15 @@ import java.util.ArrayList;
  * ---------------------------------------------------
  */
 
-public class RoleModel implements MVP_RoleSelect.ProvidedModelOpsFromPresenter {
+public class RoleModel implements MVP_RoleSelect.ModelInterface {
 
-    // PresenterToView reference
-    private MVP_RoleSelect.RequiredPresenterOpsToModel mPresenter;
+    // PresenterToViewInterface reference
+    private Presenter mPresenter;
     private ArrayList<RoleItem> mRoles;
-    private RoleRepository mRolesRepository;
+    private Repository mRolesRepository;
     private UserInterface mUser;
 
-    public RoleModel(MVP_RoleSelect.RequiredPresenterOpsToModel presenter) {
+    public RoleModel(Presenter presenter) {
         this.mPresenter = presenter;
         this.mRolesRepository = new RoleRepository(mPresenter.getAppContext());
     }
@@ -33,23 +32,29 @@ public class RoleModel implements MVP_RoleSelect.ProvidedModelOpsFromPresenter {
     public RoleModel() {
     }
 
-    public void setPresenter(MVP_RoleSelect.RequiredPresenterOpsToModel mPresenter) {
+    public void setPresenter(Presenter mPresenter) {
         this.mPresenter = mPresenter;
+    }
+
+    @Override
+    public void setData(Object data) {
+        mUser = (UserInterface) data;
+    }
+
+    @Override
+    public void setRepository(Repository repository) {
+        this.mRolesRepository = repository;
     }
 
     public void setRolesRepository(RoleRepository mRolesRepository) {
         this.mRolesRepository = mRolesRepository;
     }
 
-    public void setUser(UserInterface user){
-        mUser = user;
-    }
-
-    public UserInterface getmUser() {
+    public UserInterface getUser() {
         return mUser;
     }
 
-    public RoleModel(MVP_RoleSelect.RequiredPresenterOpsToModel presenter, RoleRepository repository, UserInterface user) {
+    public RoleModel(Presenter presenter, RoleRepository repository, UserInterface user) {
         this.mPresenter = presenter;
         mRolesRepository = repository;
         this.mUser = user;
@@ -63,9 +68,9 @@ public class RoleModel implements MVP_RoleSelect.ProvidedModelOpsFromPresenter {
         }
     }
 
-    @Override
+    @Override @SuppressWarnings("unchecked")
     public boolean loadData() {
-        mRoles = mRolesRepository.getAllRoleItems(mUser);
+        mRoles = (ArrayList<RoleItem>) mRolesRepository.loadData(mUser);
         return mRoles != null;
     }
 

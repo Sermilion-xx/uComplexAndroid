@@ -1,9 +1,7 @@
-package org.ucomplex.ucomplex.Modules.Events.LoginDagger;
+package org.ucomplex.ucomplex.Modules.Events.EventsDagger;
 
 import org.ucomplex.ucomplex.Modules.Events.EventsModel;
 import org.ucomplex.ucomplex.Modules.Events.EventsPresenter;
-import org.ucomplex.ucomplex.Modules.Login.LoginModel;
-import org.ucomplex.ucomplex.Modules.Login.LoginPresenter;
 
 import javax.inject.Singleton;
 

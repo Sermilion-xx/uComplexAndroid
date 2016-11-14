@@ -9,7 +9,7 @@ import org.json.JSONException;
 import java.util.ArrayList;
 
 /**
- * Model layer on Model View PresenterToView Pattern
+ * Model layer on Model View PresenterToViewInterface Pattern
  *
  * ---------------------------------------------------
  * Created by @Sermilion on 07/11/16.
@@ -28,7 +28,7 @@ public class EventsModel implements MVP_Events.ProvidedModelOpsFromPresenter {
 
     /**
      * Main constructor, called by Activity during MVP setup
-     * @param presenter PresenterToView instance
+     * @param presenter PresenterToViewInterface instance
      */
     public EventsModel(MVP_Events.RequiredPresenterOpsToModel presenter, int userType) {
         this.mPresenter = presenter;
@@ -49,7 +49,7 @@ public class EventsModel implements MVP_Events.ProvidedModelOpsFromPresenter {
 
     /**
      * Test contructor. Called only during unit testing
-     * @param presenter PresenterToView instance
+     * @param presenter PresenterToViewInterface instance
      * @param dao       DAO instance
      */
     public EventsModel(MVP_Events.RequiredPresenterOpsToModel presenter, EventsRepository dao) {
@@ -58,7 +58,7 @@ public class EventsModel implements MVP_Events.ProvidedModelOpsFromPresenter {
     }
 
     /**
-     * Called by PresenterToView when View is destroyed
+     * Called by PresenterToViewInterface when View is destroyed
      * @param isChangingConfiguration   true configuration is changing
      */
     @Override

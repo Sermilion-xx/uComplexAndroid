@@ -5,11 +5,13 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.ucomplex.ucomplex.Interfaces.MVP.Model;
 import org.ucomplex.ucomplex.Interfaces.MVP.ViewToPresenter;
 import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 import org.ucomplex.ucomplex.Model.Users.LoginErrorType;
@@ -31,15 +33,15 @@ import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.*;
  * ---------------------------------------------------
  */
 
-public class LoginPresenter implements MVP_Login.PresenterToViewInterface, MVP_Login.PresenterToModelInterface, OnTaskCompleteListener {
+public class LoginPresenter implements MVP_Login.PresenterInterface, OnTaskCompleteListener {
 
     public final String TAG = LoginPresenter.class.getName();
     private WeakReference<MVP_Login.ViewToPresenterInterface> mView;
-    private MVP_Login.ModelInterface mModel;
+    private Model mModel;
     private OnTaskCompleteListener mTaskCompleteListener = null;
 
     /**
-     * PresenterToView Constructor
+     * PresenterToViewInterface Constructor
      *
      * @param view MainActivity
      */
@@ -60,13 +62,9 @@ public class LoginPresenter implements MVP_Login.PresenterToViewInterface, MVP_L
      */
     @Override
     public void onDestroy(boolean isChangingConfiguration) {
-        // View show be null every time onDestroy is called
         mView = null;
-        // Inform Model about the event
         mModel.onDestroy(isChangingConfiguration);
-        // Activity destroyed
         if (!isChangingConfiguration) {
-            // Nulls Model when the Activity destruction is permanent
             mModel = null;
         }
     }
@@ -100,6 +98,7 @@ public class LoginPresenter implements MVP_Login.PresenterToViewInterface, MVP_L
                 }
                 @Override
                 protected void onPostExecute(Boolean result) {
+                    super.onPostExecute(result);
                     try {
                         getView().hideProgress();
                         if (result == null)
@@ -131,7 +130,7 @@ public class LoginPresenter implements MVP_Login.PresenterToViewInterface, MVP_L
                             new AsyncTask<Void, Void, String>() {
                                 @Override
                                 protected String doInBackground(Void... params) {
-                                    return mModel.sendResetRequest(email);
+                                    return ((LoginModel)mModel).sendResetRequest(email);
                                 }
 
                                 @Override
@@ -196,16 +195,15 @@ public class LoginPresenter implements MVP_Login.PresenterToViewInterface, MVP_L
 
     /**
      * Called by Activity during MVP setup. Only called once.
-     *
      * @param model Model instance
      */
-    public void setModel(MVP_Login.ModelInterface model) {
+    @Override
+    public void setModel(Model model) {
         mModel = model;
     }
 
     /**
      * Creat a Toast object with given message
-     *
      * @param msg Toast message
      * @return A Toast object
      */
@@ -215,7 +213,6 @@ public class LoginPresenter implements MVP_Login.PresenterToViewInterface, MVP_L
 
     /**
      * Retrieve Application Context
-     *
      * @return Application context
      */
     @Override
@@ -240,12 +237,11 @@ public class LoginPresenter implements MVP_Login.PresenterToViewInterface, MVP_L
         }
     }
 
-
     @Override
     public void onTaskComplete(AsyncTask task, Object... o) {
         boolean result = (boolean) o[0];
         if (result) {
-            getView().successfulLogin(mModel.getUser());
+            getView().successfulLogin(((LoginModel)mModel).getUser());
         }
 
     }

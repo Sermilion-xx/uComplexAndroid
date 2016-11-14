@@ -2,32 +2,26 @@ package org.ucomplex.ucomplex.Modules.Events;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.hannesdorfmann.fragmentargs.annotation.Arg;
-
+import org.androidannotations.annotations.EActivity;
+import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.Modules.BaseActivity;
-import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 import org.ucomplex.ucomplex.Modules.MyApplication;
-import org.ucomplex.ucomplex.Modules.RoleSelect.RoleSelectActivity;
 import org.ucomplex.ucomplex.R;
 import org.ucomplex.ucomplex.Utility.Constants;
 import org.ucomplex.ucomplex.Utility.StateMaintainer;
 
 import javax.inject.Inject;
 
+//@EActivity(R.layout.activity_main)
 public class EventsActivity extends BaseActivity implements OnTaskCompleteListener, MVP_Events.RequiredViewOpsFromPresenter {
 
     FragmentEvents                                mFragmentEvents;
@@ -46,7 +40,7 @@ public class EventsActivity extends BaseActivity implements OnTaskCompleteListen
         getLayoutInflater().inflate(R.layout.activity_main, contentFrameLayout);
         setUpToolbar("События");
         setSupportActionBar(mToolbar);
-        ((MyApplication) getApplication()).getEventsDiComponent().inject(this);
+//        ((MyApplication) getApplication()).getEventsDiComponent().inject(this);
 
         Intent intent = getIntent();
         UserInterface user;

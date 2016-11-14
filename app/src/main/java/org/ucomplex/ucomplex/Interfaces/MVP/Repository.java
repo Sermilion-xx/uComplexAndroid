@@ -4,7 +4,7 @@ import android.content.Context;
 
 /**
  * ---------------------------------------------------
- * Created by Sermilion on 12/11/2016.
+ * Created by Sermilion on 14/11/2016.
  * Project: uComplex_v_2
  * ---------------------------------------------------
  * <a href="http://www.ucomplex.org">ucomplex.org</a>
@@ -12,7 +12,7 @@ import android.content.Context;
  * ---------------------------------------------------
  */
 
-public interface PresenterToModel {
-    Context getAppContext();
-    Context getActivityContext();
+public interface Repository {
+    void setContext(Context context);
+    Object loadData(Object...param);
 }

@@ -1,5 +1,9 @@
 package org.ucomplex.ucomplex.Model.Users;
 
+import android.net.Uri;
+
+import java.util.List;
+
 /**
  * ---------------------------------------------------
  * Created by Sermilion on 10/11/2016.
@@ -12,4 +16,12 @@ package org.ucomplex.ucomplex.Model.Users;
 
 public interface UserInterface {
     int getType();
+    String getLogin();
+    String getPassword();
+    List<Role> getRoles();
+    void setPassword(String password);
+    void setLogin(String login);
+    int getPhoto();
+    String getCode();
+    void setBitmapUri(Uri uri);
 }

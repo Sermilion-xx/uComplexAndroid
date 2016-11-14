@@ -9,10 +9,10 @@ import android.widget.Toast;
 /**
  * Holder interface that contains all interfaces
  * responsible to maintain communication between
- * Model View PresenterToView layers.
+ * Model View PresenterToViewInterface layers.
  * Each layer implements its respective interface:
- *      View implements RequiredViewOpsFromPresenter
- *      PresenterToView implements ProvidedPresenterOpsToView, RequiredPresenterOpsToModel
+ *      View implements ViewToPresenterInterface
+ *      PresenterToViewInterface implements PresenterToViewInterface, PresenterToModelInterface
  *      Model implements ProvidedModelOpsFromPresenter
  *
  * ---------------------------------------------------
@@ -26,10 +26,10 @@ import android.widget.Toast;
 
 public class MVP_Events {
     /**
-     * Required View methods available to PresenterToView.
+     * Required View methods available to PresenterToViewInterface.
      * A passive layer, responsible to show data
      * and receive user interactions
-     *      PresenterToView to View
+     *      PresenterToViewInterface to View
      */
     interface RequiredViewOpsFromPresenter {
         Context getAppContext();
@@ -45,9 +45,9 @@ public class MVP_Events {
         void goToCourse();
     }
     /**
-     * Operations offered to View to communicate with PresenterToView.
+     * Operations offered to View to communicate with PresenterToViewInterface.
      * Process user interaction, sends data requests to Model, etc.
-     *      View to PresenterToView
+     *      View to PresenterToViewInterface
      */
     interface ProvidedPresenterOpsToView {
         void onDestroy(boolean isChangingConfiguration);
@@ -57,17 +57,17 @@ public class MVP_Events {
         int getEventsCount();
     }
     /**
-     * Required PresenterToView methods available to Model.
-     *      Model to PresenterToView
+     * Required PresenterToViewInterface methods available to Model.
+     *      Model to PresenterToViewInterface
      */
     interface RequiredPresenterOpsToModel {
         Context getAppContext();
         Context getActivityContext();
     }
     /**
-     * Operations offered to Model to communicate with PresenterToView
+     * Operations offered to Model to communicate with PresenterToViewInterface
      * Handles all data business logic.
-     *      PresenterToView to Model
+     *      PresenterToViewInterface to Model
      */
     interface ProvidedModelOpsFromPresenter {
         void onDestroy(boolean isChangingConfiguration);

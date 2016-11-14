@@ -23,6 +23,10 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import org.javatuples.Pair;
+import org.ucomplex.ucomplex.Interfaces.MVP.Model;
+import org.ucomplex.ucomplex.Interfaces.MVP.Presenter;
+import org.ucomplex.ucomplex.Interfaces.MVP.Repository;
+import org.ucomplex.ucomplex.Interfaces.MVP.ViewToPresenter;
 import org.ucomplex.ucomplex.NavDrawer.FacadeDrawer;
 import org.ucomplex.ucomplex.NavDrawer.DrawerAdapter;
 import org.ucomplex.ucomplex.NavDrawer.DrawerListItem;
@@ -30,6 +34,7 @@ import org.ucomplex.ucomplex.Model.Users.User;
 import org.ucomplex.ucomplex.R;
 import org.ucomplex.ucomplex.Utility.FacadeCommon;
 import org.ucomplex.ucomplex.Utility.FacadePreferences;
+import org.ucomplex.ucomplex.Utility.StateMaintainer;
 
 import java.util.ArrayList;
 
@@ -41,6 +46,11 @@ public class BaseActivity extends AppCompatActivity {
     protected Toolbar               mToolbar;
     protected String[]              mDrawerTitles;
     protected int[]                 mDrawerIcons;
+
+    protected StateMaintainer mStateMaintainer;
+    protected Presenter mPresenter;
+    protected Model mModel;
+    protected Repository mRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +69,27 @@ public class BaseActivity extends AppCompatActivity {
                 FacadeCommon.getStringUserType(this, user.getType()));
         ArrayList<DrawerListItem> drawerListItems = setupDrawerArrayList(headerItem, mDrawerIcons, mDrawerTitles);
         setupDrawerView(drawerListItems);
+    }
+
+    protected void setupMVP(ViewToPresenter viewToPresenter, Class<?> type){
+        mStateMaintainer = new StateMaintainer(getFragmentManager(), type.getName());
+        if (mStateMaintainer.firstTimeIn()) {
+            mRepository.setContext(mPresenter.getAppContext());
+            mPresenter.setView(viewToPresenter);
+            mModel.setPresenter(mPresenter);
+            mModel.setRepository(mRepository);
+            mPresenter.setModel(mModel);
+            mStateMaintainer.put(mPresenter);
+            mStateMaintainer.put(mModel);
+            mStateMaintainer.put(type.getName(), mPresenter);
+        } else {
+            mPresenter = mStateMaintainer.get(type.getName());
+            mPresenter.setView(viewToPresenter);
+        }
+    }
+
+    protected void setModelData(Object data){
+        mModel.setData(data);
     }
 
 

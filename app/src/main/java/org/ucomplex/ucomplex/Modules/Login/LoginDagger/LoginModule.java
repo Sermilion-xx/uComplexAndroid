@@ -2,6 +2,7 @@ package org.ucomplex.ucomplex.Modules.Login.LoginDagger;
 
 import org.ucomplex.ucomplex.Modules.Login.LoginModel;
 import org.ucomplex.ucomplex.Modules.Login.LoginPresenter;
+import org.ucomplex.ucomplex.Modules.Login.LoginRepository;
 
 import javax.inject.Singleton;
 
@@ -30,5 +31,11 @@ public class LoginModule {
     @Singleton
     LoginModel getLoginModel(){
         return new LoginModel();
+    }
+
+    @Provides
+    @Singleton
+    LoginRepository getLoginRepository(){
+        return new LoginRepository();
     }
 }

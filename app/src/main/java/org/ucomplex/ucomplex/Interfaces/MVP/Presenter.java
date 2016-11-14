@@ -1,5 +1,7 @@
 package org.ucomplex.ucomplex.Interfaces.MVP;
 
+import android.content.Context;
+
 /**
  * ---------------------------------------------------
  * Created by Sermilion on 12/11/2016.
@@ -10,8 +12,11 @@ package org.ucomplex.ucomplex.Interfaces.MVP;
  * ---------------------------------------------------
  */
 
-public interface PresenterToView {
+public interface Presenter {
+    Context getAppContext();
+    Context getActivityContext();
     void onDestroy(boolean isChangingConfiguration);
     void setView(ViewToPresenter view);
     void onConfigurationChanged(ViewToPresenter view);
+    void setModel(Model models);
 }

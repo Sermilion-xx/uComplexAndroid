@@ -13,4 +13,7 @@ package org.ucomplex.ucomplex.Interfaces.MVP;
 public interface Model {
     void onDestroy(boolean isChangingConfiguration);
     boolean loadData();
+    void setPresenter(Presenter presenter);
+    void setData(Object data);
+    void setRepository(Repository repository);
 }

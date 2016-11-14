@@ -8,6 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import org.ucomplex.ucomplex.Interfaces.MVP.Model;
+import org.ucomplex.ucomplex.Interfaces.MVP.Presenter;
+import org.ucomplex.ucomplex.Interfaces.MVP.ViewRecylerToPresenter;
+import org.ucomplex.ucomplex.Interfaces.MVP.ViewToPresenter;
 import org.ucomplex.ucomplex.Model.Users.User;
 import org.ucomplex.ucomplex.Modules.Events.EventsActivity;
 import org.ucomplex.ucomplex.R;
@@ -25,12 +29,12 @@ import java.lang.ref.WeakReference;
  * ---------------------------------------------------
  */
 
-public class RolePresenter implements MVP_RoleSelect.ProvidedPresenterOpsToView, MVP_RoleSelect.RequiredPresenterOpsToModel {
+public class RolePresenter implements MVP_RoleSelect.PresenterInterface {
 
-    private WeakReference<MVP_RoleSelect.RequiredViewOpsFromPresenter> mView;
-    private MVP_RoleSelect.ProvidedModelOpsFromPresenter mModel;
+    private WeakReference<MVP_RoleSelect.ViewToPresenterInterface> mView;
+    private Model mModel;
 
-    public RolePresenter(MVP_RoleSelect.RequiredViewOpsFromPresenter view) {
+    public RolePresenter(MVP_RoleSelect.ViewToPresenterInterface view) {
         mView = new WeakReference<>(view);
     }
     public RolePresenter() {
@@ -47,30 +51,33 @@ public class RolePresenter implements MVP_RoleSelect.ProvidedPresenterOpsToView,
         }
     }
 
-    public void setModel(MVP_RoleSelect.ProvidedModelOpsFromPresenter model) {
+    @Override
+    public void setView(ViewToPresenter view) {
+        mView = new WeakReference<>((MVP_RoleSelect.ViewToPresenterInterface)view);
+    }
+
+    @Override
+    public void onConfigurationChanged(ViewToPresenter view) {
+        mView = new WeakReference<>((MVP_RoleSelect.ViewToPresenterInterface) view);
+    }
+
+
+@Override
+    public void setModel(Model model) {
         mModel = model;
-        // start to load data
         loadData();
     }
 
-    private Toast makeToast(String msg) {
-        return Toast.makeText(getView().getAppContext(), msg, Toast.LENGTH_SHORT);
-    }
 
     private void loadData() {
         mModel.loadData();
     }
 
-    private MVP_RoleSelect.RequiredViewOpsFromPresenter getView() throws NullPointerException {
+    private MVP_RoleSelect.ViewToPresenterInterface getView() throws NullPointerException {
         if (mView != null)
             return mView.get();
         else
             throw new NullPointerException("View is unavailable");
-    }
-
-    @Override
-    public void setView(MVP_RoleSelect.RequiredViewOpsFromPresenter view) {
-        mView = new WeakReference<>(view);
     }
 
     @Override
@@ -84,7 +91,7 @@ public class RolePresenter implements MVP_RoleSelect.ProvidedPresenterOpsToView,
 
     @Override
     public void bindViewHolder(RoleViewHolder holder, int position) {
-        final RoleItem role = mModel.getRole(position);
+        final RoleItem role = ((RoleModel)mModel).getRole(position);
         holder.roleName.setText(role.getRoleName());
         holder.roleIcon.setImageBitmap(BitmapFactory.decodeResource(getActivityContext().getResources(),
                 role.getRoleIcon()));
@@ -92,7 +99,7 @@ public class RolePresenter implements MVP_RoleSelect.ProvidedPresenterOpsToView,
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivityContext(), EventsActivity.class);
-                intent.putExtra(Constants.EXTRA_KEY_USER, (User) mModel.getmUser());
+                intent.putExtra(Constants.EXTRA_KEY_USER, (User) ((RoleModel)mModel).getUser());
                 getActivityContext().startActivity(intent);
             }
         });
@@ -100,7 +107,7 @@ public class RolePresenter implements MVP_RoleSelect.ProvidedPresenterOpsToView,
 
     @Override
     public int getRolesCount() {
-        return mModel.getRolesCount();
+        return ((RoleModel)mModel).getRolesCount();
     }
 
     @Override
