@@ -74,9 +74,9 @@ public class BaseActivity extends AppCompatActivity {
     protected void setupMVP(ViewToPresenter viewToPresenter, Class<?> type){
         mStateMaintainer = new StateMaintainer(getFragmentManager(), type.getName());
         if (mStateMaintainer.firstTimeIn()) {
-            mRepository.setContext(mPresenter.getAppContext());
             mPresenter.setView(viewToPresenter);
             mModel.setPresenter(mPresenter);
+            mRepository.setContext(mPresenter.getAppContext());
             mModel.setRepository(mRepository);
             mPresenter.setModel(mModel);
             mStateMaintainer.put(mPresenter);

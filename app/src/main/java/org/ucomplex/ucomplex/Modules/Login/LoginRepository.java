@@ -49,6 +49,7 @@ public class LoginRepository implements Repository {
     public UserInterface loadData(Object... params) {
         UserInterface user = (UserInterface) params[0];
         try {
+
             String jsonData = login(user.getLogin(), user.getPassword());
             JSONObject jsonObject = new JSONObject(jsonData);
             if (jsonObject.getJSONArray("roles") == null) {
@@ -72,9 +73,8 @@ public class LoginRepository implements Repository {
                 }
                 return user;
             }
-        } catch (JSONException | NullPointerException e) {
+        } catch (JSONException e) {
             e.printStackTrace();
-            return null;
         }
         return user;
     }
