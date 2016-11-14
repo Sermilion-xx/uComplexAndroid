@@ -34,7 +34,7 @@ public class EventsModel implements MVP_Events.ModelInterface {
      */
     public EventsModel(Presenter presenter, int userType) {
         this.mPresenter = presenter;
-        mRepository = new EventsRepository(mPresenter.getAppContext(), userType);
+        mRepository = new EventsRepository(mPresenter.getAppContext());
     }
 
     public EventsModel() {

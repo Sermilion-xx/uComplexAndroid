@@ -26,7 +26,7 @@ import java.util.ArrayList;
  * ---------------------------------------------------
  */
 
-class EventsRepository implements Repository {
+public class EventsRepository implements Repository {
 
     private Context mContext;
 
@@ -34,7 +34,7 @@ class EventsRepository implements Repository {
         this.mContext = appContext;
     }
 
-    EventsRepository() {
+    public EventsRepository() {
 
     }
 

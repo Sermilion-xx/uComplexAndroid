@@ -81,17 +81,20 @@ public class FragmentEvents  extends BaseFragment{
 
         @Override
         public int getItemCount() {
-            return mActivity.mPresenter.getEventsCount();
+            return 0;
+//            return mActivity.mPresenter.getEventsCount();
         }
+
 
         @Override
         public EventViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return mActivity.mPresenter.createViewHolder(parent, viewType);
+            return null;
+//            return mActivity.mPresenter.createViewHolder(parent, viewType);
         }
 
         @Override
         public void onBindViewHolder(EventViewHolder holder, int position) {
-            mActivity.mPresenter.bindViewHolder(holder, position);
+//            mActivity.mPresenter.bindViewHolder(holder, position);
         }
     }
 }

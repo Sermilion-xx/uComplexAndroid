@@ -5,6 +5,7 @@ import org.ucomplex.ucomplex.Modules.Events.EventsActivity;
 import javax.inject.Singleton;
 
 import dagger.Component;
+import dagger.Provides;
 
 /**
  * ---------------------------------------------------
@@ -17,6 +18,7 @@ import dagger.Component;
  */
 @Singleton
 @Component(modules = {EventsModule.class})
+
 public interface EventsDiComponent {
     void inject(EventsActivity activity);
 }

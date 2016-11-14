@@ -2,6 +2,7 @@ package org.ucomplex.ucomplex.Modules;
 
 import android.app.Application;
 
+import org.ucomplex.ucomplex.Modules.Events.EventsDagger.DaggerEventsDiComponent;
 import org.ucomplex.ucomplex.Modules.Events.EventsDagger.EventsDiComponent;
 import org.ucomplex.ucomplex.Modules.Login.LoginDagger.DaggerLoginDiComponent;
 import org.ucomplex.ucomplex.Modules.Login.LoginDagger.LoginDiComponent;
