@@ -52,6 +52,10 @@ public class BaseActivity extends AppCompatActivity {
     protected Model mModel;
     protected Repository mRepository;
 
+    public Presenter getPresenter() {
+        return mPresenter;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

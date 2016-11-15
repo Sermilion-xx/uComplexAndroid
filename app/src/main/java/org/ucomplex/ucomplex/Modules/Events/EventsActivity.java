@@ -3,21 +3,19 @@ package org.ucomplex.ucomplex.Modules.Events;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.ViewById;
 import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.Modules.BaseActivity;
 import org.ucomplex.ucomplex.Modules.MyApplication;
 import org.ucomplex.ucomplex.R;
 import org.ucomplex.ucomplex.Utility.Constants;
-import org.ucomplex.ucomplex.Utility.StateMaintainer;
 
 import javax.inject.Inject;
 
@@ -53,12 +51,7 @@ public class EventsActivity extends BaseActivity implements OnTaskCompleteListen
             user = getIntent().getParcelableExtra(Constants.EXTRA_KEY_USER);
             mFragmentEvents = new FragmentEvents();
             mFragmentEvents.setUser(user);
-            mFragmentEvents.setContext(this);
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
+            mFragmentEvents.setActivity(this);
         }
         addFragment(R.id.container, mFragmentEvents, "EventsFragment");
     }

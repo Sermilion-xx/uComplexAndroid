@@ -14,7 +14,6 @@ import com.hannesdorfmann.fragmentargs.annotation.Arg;
 
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.Modules.BaseFragment;
-import org.ucomplex.ucomplex.Modules.MyApplication;
 import org.ucomplex.ucomplex.R;
 
 import java.util.ArrayList;
@@ -31,46 +30,32 @@ import java.util.ArrayList;
 
 public class FragmentEvents  extends BaseFragment{
 
-    @Arg ArrayList<EventItem>                  mEventItems = null;
+    @Arg ArrayList<EventItem>                  mEventItems = new ArrayList<>();
     Button                                     mButtonLoadMore;
     @Arg FragmentEvents.ListEventsAdapter      mListAdapter;
-    @Arg EventsActivity                        mContext;
     MediaPlayer                                mAlert;
     @Arg UserInterface                         mUser;
-    @Arg EventsActivity                        mActivity;
+    EventsActivity                             mActivity;
 
     public void setActivity(EventsActivity mActivity) {
         this.mActivity = mActivity;
     }
-
     public void setUser(UserInterface mData) {
         this.mUser = mData;
-    }
-
-    public void setContext(EventsActivity mContext) {
-        this.mContext = mContext;
-    }
-
-
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_events, container, false);
-        mAlert = MediaPlayer.create(mContext, R.raw.alert);
+        mAlert = MediaPlayer.create(mActivity.getActivityContext(), R.raw.alert);
         setupViews(view);
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     private void setupViews(View view){
         mListAdapter = new FragmentEvents.ListEventsAdapter();
-        RecyclerView mList = (RecyclerView) view.findViewById(R.id.recyclerView);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
+        RecyclerView mList = (RecyclerView) view.findViewById(R.id.eventsRecyclerView);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity.getActivityContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mList.setLayoutManager(linearLayoutManager);
         mList.setAdapter(mListAdapter);
@@ -81,20 +66,18 @@ public class FragmentEvents  extends BaseFragment{
 
         @Override
         public int getItemCount() {
-            return 0;
-//            return mActivity.mPresenter.getEventsCount();
+            return ((MVP_Events.PresenterInterface)mActivity.getPresenter()).getEventsCount();
         }
 
 
         @Override
         public EventViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return null;
-//            return mActivity.mPresenter.createViewHolder(parent, viewType);
+            return ((MVP_Events.PresenterInterface)mActivity.getPresenter()).createViewHolder(parent, viewType);
         }
 
         @Override
         public void onBindViewHolder(EventViewHolder holder, int position) {
-//            mActivity.mPresenter.bindViewHolder(holder, position);
+            ((MVP_Events.PresenterInterface)mActivity.getPresenter()).bindViewHolder(holder, position);
         }
     }
 }
