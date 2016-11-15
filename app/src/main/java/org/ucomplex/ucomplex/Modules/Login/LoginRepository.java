@@ -48,9 +48,9 @@ public class LoginRepository implements Repository {
 
     public UserInterface loadData(Object... params) {
         UserInterface user = (UserInterface) params[0];
+        String password = user.getPassword();
         try {
-
-            String jsonData = login(user.getLogin(), user.getPassword());
+            String jsonData = login(user.getLogin(), password);
             JSONObject jsonObject = new JSONObject(jsonData);
             if (jsonObject.getJSONArray("roles") == null) {
                 return null;
@@ -71,6 +71,7 @@ public class LoginRepository implements Repository {
                 } else {
                     FacadePreferences.deleteFromPref(mContext, "profilePhoto");
                 }
+                user.setPassword(password);
                 return user;
             }
         } catch (JSONException | NullPointerException e) {

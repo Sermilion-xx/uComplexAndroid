@@ -57,7 +57,6 @@ public class EventsRepository implements Repository {
         try {
             if (userType == 4) {
                 return getAllStudentEvents();
-
             } else if (userType == 3) {
                 return getAllTeacherEvents();
             } else

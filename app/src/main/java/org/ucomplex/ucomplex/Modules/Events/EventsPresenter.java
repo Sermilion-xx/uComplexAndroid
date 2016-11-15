@@ -65,7 +65,8 @@ public class EventsPresenter implements MVP_Events.PresenterInterface{
 
     @Override
     public void setModel(Model models) {
-mModel = models;
+        mModel = models;
+        loadData();
     }
 
     /**
@@ -125,15 +126,6 @@ mModel = models;
                 Intent intent = new Intent(getActivityContext(), null);
             }
         });
-    }
-
-    /**
-     * Called by Activity during MVP setup. Only called once.
-     * @param model Model instance
-     */
-    public void setModel(MVP_Events.ModelInterface model) {
-        mModel = model;
-        loadData();
     }
 
     /**

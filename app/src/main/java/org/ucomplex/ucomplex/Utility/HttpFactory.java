@@ -74,7 +74,7 @@ public class HttpFactory {
     }
 
     public static String encodeLoginData(String loginData){
-        byte[] authBytes = null;
+        byte[] authBytes;
         try {
             authBytes = loginData.getBytes("UTF-8");
             int flags = Base64.NO_WRAP | Base64.URL_SAFE;

@@ -34,14 +34,10 @@ public class FragmentEvents  extends BaseFragment{
     Button                                     mButtonLoadMore;
     @Arg FragmentEvents.ListEventsAdapter      mListAdapter;
     MediaPlayer                                mAlert;
-    @Arg UserInterface                         mUser;
     EventsActivity                             mActivity;
 
     public void setActivity(EventsActivity mActivity) {
         this.mActivity = mActivity;
-    }
-    public void setUser(UserInterface mData) {
-        this.mUser = mData;
     }
 
     @Override
@@ -68,7 +64,6 @@ public class FragmentEvents  extends BaseFragment{
         public int getItemCount() {
             return ((MVP_Events.PresenterInterface)mActivity.getPresenter()).getEventsCount();
         }
-
 
         @Override
         public EventViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

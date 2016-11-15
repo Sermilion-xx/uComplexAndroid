@@ -9,7 +9,6 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.ViewById;
 import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.Modules.BaseActivity;
@@ -45,15 +44,15 @@ public class EventsActivity extends BaseActivity implements OnTaskCompleteListen
         ((MyApplication) getApplication()).getEventsDiComponent().inject(this);
 
         Intent intent = getIntent();
-        UserInterface user;
 
-        if(intent.hasExtra(Constants.EXTRA_KEY_USER)){
-            user = getIntent().getParcelableExtra(Constants.EXTRA_KEY_USER);
+        if(intent.hasExtra(Constants.EXTRA_KEY_USER_TYPE)){
+            int userType = getIntent().getIntExtra(Constants.EXTRA_KEY_USER_TYPE, -1);
+            super.setupMVP(this, EventsActivity.class);
+            super.setModelData(userType);
             mFragmentEvents = new FragmentEvents();
-            mFragmentEvents.setUser(user);
             mFragmentEvents.setActivity(this);
+            addFragment(R.id.container, mFragmentEvents, "EventsFragment");
         }
-        addFragment(R.id.container, mFragmentEvents, "EventsFragment");
     }
 
 

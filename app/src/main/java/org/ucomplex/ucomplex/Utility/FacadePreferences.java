@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import com.google.gson.Gson;
 
 import org.ucomplex.ucomplex.Model.Users.User;
+import org.ucomplex.ucomplex.Model.Users.UserInterface;
 
 /**
  * Created by Sermilion on 01/11/2016.
@@ -28,16 +29,12 @@ public class FacadePreferences {
 
     public static String getLoginDataFromPref(Context mContext) {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(mContext);
-        Gson gson = new Gson();
         String json = pref.getString("loginData", "");
         return json;
     }
 
-    public static void setLoginDataToPref(Context mContext, User user) {
+    public static void setLoginDataToPref(Context mContext, String loginData) {
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
-        Gson gson = new Gson();
-        String json = gson.toJson(user);
-        String loginData = user.getLogin() + ":" + user.getPassword() + ":" + user.getRole();
         editor.putString("loginData", loginData);
         editor.apply();
     }

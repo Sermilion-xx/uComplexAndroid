@@ -3,6 +3,7 @@ package org.ucomplex.ucomplex.Modules.RoleSelect;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +14,15 @@ import org.ucomplex.ucomplex.Interfaces.MVP.Presenter;
 import org.ucomplex.ucomplex.Interfaces.MVP.ViewRecylerToPresenter;
 import org.ucomplex.ucomplex.Interfaces.MVP.ViewToPresenter;
 import org.ucomplex.ucomplex.Model.Users.User;
+import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.Modules.Events.EventsActivity;
 import org.ucomplex.ucomplex.R;
 import org.ucomplex.ucomplex.Utility.Constants;
+import org.ucomplex.ucomplex.Utility.FacadePreferences;
 
 import java.lang.ref.WeakReference;
+
+import static org.ucomplex.ucomplex.Utility.HttpFactory.encodeLoginData;
 
 /**
  * ---------------------------------------------------
@@ -90,7 +95,7 @@ public class RolePresenter implements MVP_RoleSelect.PresenterInterface {
     }
 
     @Override
-    public void bindViewHolder(RoleViewHolder holder, int position) {
+    public void bindViewHolder(RoleViewHolder holder, final int position) {
         final RoleItem role = ((RoleModel)mModel).getRole(position);
         holder.roleName.setText(role.getRoleName());
         holder.roleIcon.setImageBitmap(BitmapFactory.decodeResource(getActivityContext().getResources(),
@@ -98,8 +103,20 @@ public class RolePresenter implements MVP_RoleSelect.PresenterInterface {
         holder.roleIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                final UserInterface user = ((RoleModel)mModel).getUser();
+                new AsyncTask<Void,Void,Void>(){
+                    @Override
+                    protected Void doInBackground(Void... voids) {
+                        String login = user.getLogin();
+                        String password = user.getPassword();
+                        String role = Integer.toString(user.getRoles().get(0).getType());
+                        String encodedAuth = encodeLoginData(login + ":" + password + ":" + role);
+                        FacadePreferences.setLoginDataToPref(getActivityContext(), encodedAuth);
+                    return null;
+                    }
+                }.execute();
                 Intent intent = new Intent(getActivityContext(), EventsActivity.class);
-                intent.putExtra(Constants.EXTRA_KEY_USER, (User) ((RoleModel)mModel).getUser());
+                intent.putExtra(Constants.EXTRA_KEY_USER_TYPE,  user.getRoles().get(position).getType());
                 getActivityContext().startActivity(intent);
             }
         });

@@ -34,6 +34,7 @@ public class EventsModel implements MVP_Events.ModelInterface {
      */
     public EventsModel(Presenter presenter, int userType) {
         this.mPresenter = presenter;
+        this.userType = userType;
         mRepository = new EventsRepository(mPresenter.getAppContext());
     }
 
@@ -47,7 +48,7 @@ public class EventsModel implements MVP_Events.ModelInterface {
 
     @Override @SuppressWarnings("unchecked")
     public void setData(Object data) {
-        mEventItems = (ArrayList<EventItem>) data;
+        userType = (int) data;
     }
 
     @Override
