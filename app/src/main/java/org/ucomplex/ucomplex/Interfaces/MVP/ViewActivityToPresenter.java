@@ -10,6 +10,6 @@ package org.ucomplex.ucomplex.Interfaces.MVP;
  * ---------------------------------------------------
  */
 
-public interface ViewActivityToPresenterInter extends ViewToPresenter {
+public interface ViewActivityToPresenter extends ViewToPresenter {
     void setupViews();
 }

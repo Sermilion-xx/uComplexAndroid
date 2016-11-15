@@ -105,7 +105,6 @@ public class StateMaintainer {
     @SuppressWarnings("unchecked")
     public <T> T get(String key)  {
         return mStateMaintainerFrag.get(key);
-
     }
 
     /**

@@ -1,5 +1,7 @@
 package org.ucomplex.ucomplex.Utility;
 
+import org.ucomplex.ucomplex.R;
+
 /**
  * ---------------------------------------------------
  * Created by Sermilion on 10/11/2016.
@@ -14,5 +16,13 @@ public class Constants {
 
     public static final String EXTRA_KEY_USER = "org.ucomplex.ucomplex.user";
     public static final String EXTRA_KEY_USER_TYPE = "org.ucomplex.ucomplex.userType";
+
+    public static final int[] colorsUserSelect = new int[]{
+            R.drawable.select_account_1,
+            R.drawable.select_account_2,
+            R.drawable.select_account_3,
+            R.drawable.select_account_4,
+            R.drawable.select_account_5
+    };
 
 }

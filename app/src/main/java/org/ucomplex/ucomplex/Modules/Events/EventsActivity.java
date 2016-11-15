@@ -10,7 +10,6 @@ import android.widget.Toast;
 
 import org.androidannotations.annotations.EActivity;
 import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
-import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.Modules.BaseActivity;
 import org.ucomplex.ucomplex.Modules.MyApplication;
 import org.ucomplex.ucomplex.R;

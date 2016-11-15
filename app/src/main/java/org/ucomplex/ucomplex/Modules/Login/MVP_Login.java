@@ -1,10 +1,8 @@
 package org.ucomplex.ucomplex.Modules.Login;
 
-import android.content.Context;
-
 import org.ucomplex.ucomplex.Interfaces.MVP.Model;
 import org.ucomplex.ucomplex.Interfaces.MVP.Presenter;
-import org.ucomplex.ucomplex.Interfaces.MVP.ViewActivityToPresenterInter;
+import org.ucomplex.ucomplex.Interfaces.MVP.ViewActivityToPresenter;
 import org.ucomplex.ucomplex.Model.Users.LoginErrorType;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 
@@ -30,7 +28,7 @@ import java.util.ArrayList;
 
 public class MVP_Login {
 
-    interface ViewToPresenterInterface extends ViewActivityToPresenterInter {
+    interface ViewToPresenterInterface extends ViewActivityToPresenter {
         void successfulLogin(UserInterface user);
     }
 

@@ -1,8 +1,6 @@
 package org.ucomplex.ucomplex.Modules.Login;
 
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.ucomplex.ucomplex.Interfaces.MVP.Presenter;
 import org.ucomplex.ucomplex.Interfaces.MVP.Repository;
 import org.ucomplex.ucomplex.Model.Users.User;

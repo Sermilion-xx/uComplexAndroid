@@ -38,37 +38,22 @@ public class EventsRepository implements Repository {
 
     }
 
-    ArrayList<EventItem> getAllEvents(int userType) throws JSONException {
-        if (userType == 4) {
-            return getAllStudentEvents();
-        } else if (userType == 3) {
-            return getAllTeacherEvents();
-        } else
-            throw new IllegalArgumentException(mContext.getResources().getString(R.string.error_wrong_user_type));
-    }
-
     public void setContext(Context mContext) {
         this.mContext = mContext;
     }
 
     @Override
     public Object loadData(Object... param) {
-        int userType = (int)param[0];
         try {
-            if (userType == 4) {
-                return getAllStudentEvents();
-            } else if (userType == 3) {
-                return getAllTeacherEvents();
-            } else
-                throw new IllegalArgumentException(mContext.getResources().getString(R.string.error_wrong_user_type));
+            return loadEvents();
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    private ArrayList<EventItem> getAllStudentEvents() throws JSONException {
-        String stringResult = HttpFactory.httpPost(HttpFactory.STUDENT_EVENTS_URL, FacadePreferences.getLoginDataFromPref(mContext), "");
+    private ArrayList<EventItem> loadEvents() throws JSONException {
+        String stringResult = HttpFactory.httpPost(HttpFactory.USER_EVENTS_URL, FacadePreferences.getLoginDataFromPref(mContext), "");
         if (stringResult != null) {
             JSONObject jsonObject = new JSONObject(stringResult);
         }
@@ -81,14 +66,9 @@ public class EventsRepository implements Repository {
                 .into(imageView);
     }
 
-    private ArrayList<EventItem> getAllTeacherEvents() throws JSONException {
-        String stringResult = HttpFactory.httpPost(HttpFactory.STUDENT_EVENTS_URL, FacadePreferences.getLoginDataFromPref(mContext), "");
-        return null;
-    }
-
     ArrayList<EventItem> loadMoreEvents(int start, String params) throws JSONException {
-//        String jsonBody = "\"start\":\""+start+"\"";
-        String stringResult = HttpFactory.httpPost(HttpFactory.STUDENT_EVENTS_URL, FacadePreferences.getLoginDataFromPref(mContext), params);
+        String jsonBody = "\"start\":\""+start+"\"";
+        String stringResult = HttpFactory.httpPost(HttpFactory.USER_EVENTS_URL, FacadePreferences.getLoginDataFromPref(mContext), params);
         return null;
     }
 

@@ -32,9 +32,7 @@ public class HttpFactory {
 
     private static final String SCHEMA             = "https://";
     public  static final String BASE_URL           = SCHEMA+"ucomplex.org/";
-    public  static final String STUDENT_EVENTS_URL = BASE_URL+"student?mobile=1";
-    public  static final String TEACHER_EVENTS_URL = BASE_URL+"teacher?mobile=1";
-    public  static final String MORE_EVENTS_URL    = BASE_URL+"user/events?mobile=1";
+    public  static final String USER_EVENTS_URL = BASE_URL+"user/events?mobile=1";
     public  static final String PROFILE_IMAGE_URL  = BASE_URL+"files/photos/";
     public  static final String AUTHENTICATIO_URL  = BASE_URL+"auth?mobile=1";
     public  static final String RESTORE_PASSWORD_URL=BASE_URL+"public/password?mobile=1";

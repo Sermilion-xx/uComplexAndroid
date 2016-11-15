@@ -125,6 +125,11 @@ public class RoleSelectActivity extends BaseActivity implements MVP_RoleSelect.V
         }
 
         @Override
+        public int getItemViewType(int position) {
+            return super.getItemViewType(position);
+        }
+
+        @Override
         public RoleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             return ((MVP_RoleSelect.PresenterInterface)mPresenter).createViewHolder(parent, viewType);
         }

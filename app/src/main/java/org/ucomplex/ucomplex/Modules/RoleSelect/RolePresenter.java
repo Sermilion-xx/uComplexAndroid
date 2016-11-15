@@ -3,6 +3,9 @@ package org.ucomplex.ucomplex.Modules.RoleSelect;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.StateListDrawable;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -90,12 +93,13 @@ public class RolePresenter implements MVP_RoleSelect.PresenterInterface {
         RoleViewHolder viewHolder;
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View viewTaskRow = inflater.inflate(R.layout.list_item_role, parent, false);
-        viewHolder = new RoleViewHolder(viewTaskRow);
+        viewHolder = new RoleViewHolder(viewTaskRow, getActivityContext());
         return viewHolder;
     }
 
     @Override
     public void bindViewHolder(RoleViewHolder holder, final int position) {
+        holder.setupSelector(position);
         final RoleItem role = ((RoleModel)mModel).getRole(position);
         holder.roleName.setText(role.getRoleName());
         holder.roleIcon.setImageBitmap(BitmapFactory.decodeResource(getActivityContext().getResources(),
@@ -109,7 +113,7 @@ public class RolePresenter implements MVP_RoleSelect.PresenterInterface {
                     protected Void doInBackground(Void... voids) {
                         String login = user.getLogin();
                         String password = user.getPassword();
-                        String role = Integer.toString(user.getRoles().get(0).getType());
+                        String role = Integer.toString(user.getRoles().get(0).getId());
                         String encodedAuth = encodeLoginData(login + ":" + password + ":" + role);
                         FacadePreferences.setLoginDataToPref(getActivityContext(), encodedAuth);
                     return null;
