@@ -3,13 +3,15 @@ package org.ucomplex.ucomplex.Modules.Events;
 import android.content.Context;
 import android.widget.ImageView;
 
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.ucomplex.ucomplex.Interfaces.MVP.Repository;
-import org.ucomplex.ucomplex.R;
+import org.ucomplex.ucomplex.Model.EventItem;
+import org.ucomplex.ucomplex.Model.Users.User;
 import org.ucomplex.ucomplex.Utility.FacadeCommon;
 import org.ucomplex.ucomplex.Utility.FacadePreferences;
 import org.ucomplex.ucomplex.Utility.HttpFactory;
@@ -28,6 +30,7 @@ import java.util.ArrayList;
 
 public class EventsRepository implements Repository {
 
+    private static final String KEY_JSON_EVENTS = "events";
     private Context mContext;
 
     EventsRepository(Context appContext) {
@@ -53,14 +56,16 @@ public class EventsRepository implements Repository {
     }
 
     private ArrayList<EventItem> loadEvents() throws JSONException {
-        String stringResult = HttpFactory.httpPost(HttpFactory.USER_EVENTS_URL, FacadePreferences.getLoginDataFromPref(mContext), "");
+        ArrayList<EventItem> eventsList;
+        String stringResult = HttpFactory.httpPost(HttpFactory.USER_EVENTS_URL, FacadePreferences.getLoginDataFromPref(mContext), "{}");
         if (stringResult != null) {
-            JSONObject jsonObject = new JSONObject(stringResult);
+            eventsList = getEventsDataFromJson(stringResult);
+            return eventsList;
         }
         return null;
     }
 
-    public void loadIcon(String code, ImageView imageView) {
+    void loadIcon(String code, ImageView imageView) {
         Picasso.with(mContext)
                 .load(HttpFactory.LOAD_PROFILE_URL + code + ".jpg")
                 .into(imageView);
@@ -75,9 +80,8 @@ public class EventsRepository implements Repository {
     private ArrayList<EventItem> getEventsDataFromJson(String eventsJsonStr)
             throws JSONException {
         ArrayList<EventItem> displayEventsArray = new ArrayList<>();
-
         JSONObject eventJson = new JSONObject(eventsJsonStr);
-        JSONArray eventsArray = eventJson.getJSONArray("events");
+        JSONArray eventsArray = eventJson.getJSONArray(KEY_JSON_EVENTS);
 
         for (int i = 0; i < eventsArray.length(); i++) {
             EventItem item = new EventItem();

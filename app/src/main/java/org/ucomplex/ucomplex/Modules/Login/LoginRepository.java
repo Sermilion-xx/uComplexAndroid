@@ -31,6 +31,9 @@ import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
 
 public class LoginRepository implements Repository {
 
+    private static final String JSON_SESSION_KEY = "session";
+    private static final String JSON_ROLES_KEY = "roles";
+
     private Context mContext;
 
     public LoginRepository(Context context) {
@@ -52,7 +55,7 @@ public class LoginRepository implements Repository {
         try {
             String jsonData = login(user.getLogin(), password);
             JSONObject jsonObject = new JSONObject(jsonData);
-            if (jsonObject.getJSONArray("roles") == null) {
+            if (jsonObject.getJSONArray(JSON_ROLES_KEY) == null) {
                 return null;
             }
             if (jsonData != null && !jsonData.equals("")) {
@@ -69,7 +72,7 @@ public class LoginRepository implements Repository {
                         throw new NullPointerException("Bitmap file is null");
                     }
                 } else {
-                    FacadePreferences.deleteFromPref(mContext, "profilePhoto");
+                    FacadePreferences.deleteFromPref(mContext, FacadePreferences.KEY_PREF_PROFILE_PHOTO);
                 }
                 user.setPassword(password);
                 return user;
@@ -85,7 +88,7 @@ public class LoginRepository implements Repository {
     private User getUserFromJson(String rolesJsonStr) throws JSONException {
         JSONObject rolesJson = new JSONObject(rolesJsonStr);
         Gson gson = new Gson();
-        JSONObject userSession = rolesJson.getJSONObject("session");
+        JSONObject userSession = rolesJson.getJSONObject(JSON_SESSION_KEY);
         return gson.fromJson(userSession.toString(), User.class);
     }
 

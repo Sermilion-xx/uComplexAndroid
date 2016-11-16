@@ -9,6 +9,7 @@ import android.widget.Toast;
 import org.ucomplex.ucomplex.Interfaces.MVP.Model;
 import org.ucomplex.ucomplex.Interfaces.MVP.Presenter;
 import org.ucomplex.ucomplex.Interfaces.MVP.ViewRecylerToPresenter;
+import org.ucomplex.ucomplex.Model.EventItem;
 
 /**
  * Holder interface that contains all interfaces

@@ -41,21 +41,6 @@ class RoleViewHolder extends RecyclerView.ViewHolder {
         mView = view;
     }
 
-    private BitmapDrawable createBitmapDrawbale(int position){
-        if(position>5){
-            position = 1;
-        }
-        return new BitmapDrawable(BitmapFactory.decodeResource(mContext.getResources(),
-                Constants.colorsUserSelect[position]));
-    }
-
-    void setupSelector(int position){
-        StateListDrawable states = new StateListDrawable();
-        states.addState(new int[] {android.R.attr.state_pressed}, createBitmapDrawbale(position));
-        states.addState(new int[] {android.R.attr.state_focused}, createBitmapDrawbale(position+1));
-        mView.setBackground(states);
-    }
-
     private void setupViews(View view) {
         roleName = (TextView) view.findViewById(R.id.roleTitle);
         roleIcon = (CircleImageView) view.findViewById(R.id.roleIcon);

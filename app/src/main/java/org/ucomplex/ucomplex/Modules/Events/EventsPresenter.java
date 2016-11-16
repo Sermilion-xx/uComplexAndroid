@@ -11,6 +11,7 @@ import android.widget.Toast;
 import org.ucomplex.ucomplex.Interfaces.MVP.Model;
 import org.ucomplex.ucomplex.Interfaces.MVP.ViewRecylerToPresenter;
 import org.ucomplex.ucomplex.Interfaces.MVP.ViewToPresenter;
+import org.ucomplex.ucomplex.Model.EventItem;
 import org.ucomplex.ucomplex.R;
 
 import java.lang.ref.WeakReference;

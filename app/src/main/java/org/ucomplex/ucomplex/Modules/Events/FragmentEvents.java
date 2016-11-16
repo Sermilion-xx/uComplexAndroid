@@ -12,7 +12,7 @@ import android.widget.Button;
 
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
 
-import org.ucomplex.ucomplex.Model.Users.UserInterface;
+import org.ucomplex.ucomplex.Model.EventItem;
 import org.ucomplex.ucomplex.Modules.BaseFragment;
 import org.ucomplex.ucomplex.R;
 

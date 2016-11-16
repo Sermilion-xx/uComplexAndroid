@@ -4,9 +4,9 @@ package org.ucomplex.ucomplex.Modules.Events;
 
 import android.widget.ImageView;
 
-import org.json.JSONException;
 import org.ucomplex.ucomplex.Interfaces.MVP.Presenter;
 import org.ucomplex.ucomplex.Interfaces.MVP.Repository;
+import org.ucomplex.ucomplex.Model.EventItem;
 
 import java.util.ArrayList;
 
@@ -89,7 +89,7 @@ public class EventsModel implements MVP_Events.ModelInterface {
      */
     @Override @SuppressWarnings("unchecked")
     public boolean loadData() {
-        mEventItems = (ArrayList<EventItem>) mRepository.loadData(userType);
+        mEventItems = (ArrayList<EventItem>) mRepository.loadData();
         return mEventItems != null;
     }
 

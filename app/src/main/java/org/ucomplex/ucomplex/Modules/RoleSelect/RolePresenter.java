@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.AsyncTask;
@@ -24,6 +25,7 @@ import org.ucomplex.ucomplex.Utility.Constants;
 import org.ucomplex.ucomplex.Utility.FacadePreferences;
 
 import java.lang.ref.WeakReference;
+import java.util.Random;
 
 import static org.ucomplex.ucomplex.Utility.HttpFactory.encodeLoginData;
 
@@ -93,17 +95,29 @@ public class RolePresenter implements MVP_RoleSelect.PresenterInterface {
         RoleViewHolder viewHolder;
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View viewTaskRow = inflater.inflate(R.layout.list_item_role, parent, false);
+        Random random = new Random();
+        int rand = random.nextInt(5);
+        StateListDrawable states = new StateListDrawable();
+        states.addState(new int[] {android.R.attr.state_pressed, android.R.attr.state_focused}, createBitmapDrawbale(rand));
+        states.addState(new int[] {android.R.attr.state_pressed, -android.R.attr.state_focused}, createBitmapDrawbale(rand+1));
+        viewTaskRow.setBackground(states);
         viewHolder = new RoleViewHolder(viewTaskRow, getActivityContext());
         return viewHolder;
+    }
+    private BitmapDrawable createBitmapDrawbale(int position){
+        if(position>4){
+            position = 1;
+        }
+        return new BitmapDrawable(BitmapFactory.decodeResource(getActivityContext().getResources(),
+                Constants.colorsUserSelect[position]));
     }
 
     @Override
     public void bindViewHolder(RoleViewHolder holder, final int position) {
-        holder.setupSelector(position);
         final RoleItem role = ((RoleModel)mModel).getRole(position);
         holder.roleName.setText(role.getRoleName());
-        holder.roleIcon.setImageBitmap(BitmapFactory.decodeResource(getActivityContext().getResources(),
-                role.getRoleIcon()));
+//        holder.roleIcon.setImageBitmap(BitmapFactory.decodeResource(getActivityContext().getResources(),
+//                role.getRoleIcon()));
         holder.roleIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -1,7 +1,9 @@
-package org.ucomplex.ucomplex.Modules.Events;
+package org.ucomplex.ucomplex.Model;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -15,7 +17,7 @@ import lombok.Data;
  * Created by Sermilion on 01/11/2016.
  */
 @Data
-public class EventItem implements Serializable {
+public class EventItem implements Parcelable {
     private int id;
     private EventParams params;
     private int type;
@@ -25,8 +27,29 @@ public class EventItem implements Serializable {
     private String eventText;
 
     public EventItem() {
-
+        params = new EventParams();
     }
+
+    protected EventItem(Parcel in) {
+        id = in.readInt();
+        type = in.readInt();
+        time = in.readString();
+        seen = in.readInt();
+        eventImageBitmap = in.readParcelable(Bitmap.class.getClassLoader());
+        eventText = in.readString();
+    }
+
+    public static final Creator<EventItem> CREATOR = new Creator<EventItem>() {
+        @Override
+        public EventItem createFromParcel(Parcel in) {
+            return new EventItem(in);
+        }
+
+        @Override
+        public EventItem[] newArray(int size) {
+            return new EventItem[size];
+        }
+    };
 
     public EventItem id(int id) {
         this.id = id;
@@ -61,6 +84,21 @@ public class EventItem implements Serializable {
     public EventItem eventText(String eventText) {
         this.eventText = eventText;
         return this;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(id);
+        parcel.writeInt(type);
+        parcel.writeString(time);
+        parcel.writeInt(seen);
+        parcel.writeParcelable(eventImageBitmap, i);
+        parcel.writeString(eventText);
     }
 
     private class BitmapDataObject implements Serializable {
@@ -107,8 +145,9 @@ public class EventItem implements Serializable {
     }
 
     @Data
-    public class EventParams implements Serializable {
+    public class EventParams implements Parcelable {
 
+        private String message;
         private String name;
         private int id;
         private int photo;
@@ -121,6 +160,30 @@ public class EventItem implements Serializable {
         public EventParams() {
 
         }
+
+        protected EventParams(Parcel in) {
+            message = in.readString();
+            name = in.readString();
+            id = in.readInt();
+            photo = in.readInt();
+            code = in.readString();
+            gcourse = in.readInt();
+            courseName = in.readString();
+            hourType = in.readInt();
+            type = in.readInt();
+        }
+
+        public final Creator<EventParams> CREATOR = new Creator<EventParams>() {
+            @Override
+            public EventParams createFromParcel(Parcel in) {
+                return new EventParams(in);
+            }
+
+            @Override
+            public EventParams[] newArray(int size) {
+                return new EventParams[size];
+            }
+        };
 
         public EventParams id(int id) {
             this.id = id;
@@ -185,6 +248,24 @@ public class EventItem implements Serializable {
             this.id = in.readInt();
             this.photo = in.readInt();
             this.type = in.readInt();
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel parcel, int i) {
+            parcel.writeString(message);
+            parcel.writeString(name);
+            parcel.writeInt(id);
+            parcel.writeInt(photo);
+            parcel.writeString(code);
+            parcel.writeInt(gcourse);
+            parcel.writeString(courseName);
+            parcel.writeInt(hourType);
+            parcel.writeInt(type);
         }
     }
 }
