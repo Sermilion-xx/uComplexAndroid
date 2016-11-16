@@ -51,7 +51,7 @@ public class FacadePreferences {
         return gson.fromJson(json, User.class);
     }
 
-    public static void setUserDataToPref(Context mContext, User user) {
+    public static void setUserDataToPref(Context mContext, UserInterface user) {
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
         Gson gson = new Gson();
         String json = gson.toJson(user);

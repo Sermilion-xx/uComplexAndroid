@@ -52,6 +52,8 @@ public class LoginPresenter implements MVP_Login.PresenterInterface, OnTaskCompl
         mTaskCompleteListener = this;
     }
 
+
+
     public LoginPresenter() {
         mTaskCompleteListener = this;
     }
@@ -202,6 +204,12 @@ public class LoginPresenter implements MVP_Login.PresenterInterface, OnTaskCompl
     @Override
     public void setModel(Model model) {
         mModel = model;
+        UserInterface user = FacadePreferences.getUserDataFromPref(getActivityContext());
+        if(user!=null){
+            mModel.setData(user);
+            //1 - has already been logged
+            onTaskComplete(null, true, 1);
+        }
     }
 
     /**
@@ -243,7 +251,9 @@ public class LoginPresenter implements MVP_Login.PresenterInterface, OnTaskCompl
     public void onTaskComplete(AsyncTask task, Object... o) {
         boolean result = (boolean) o[0];
         if (result) {
-            getView().successfulLogin(((LoginModel)mModel).getUser());
+            UserInterface user = ((LoginModel)mModel).getUser();
+            FacadePreferences.setUserDataToPref(getActivityContext(), user);
+            getView().successfulLogin(user, (int)o[1]);
         }
 
     }

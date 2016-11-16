@@ -1,5 +1,7 @@
 package org.ucomplex.ucomplex.Interfaces.MVP;
 
+import android.view.View;
+
 /**
  * ---------------------------------------------------
  * Created by Sermilion on 12/11/2016.
@@ -11,7 +13,7 @@ package org.ucomplex.ucomplex.Interfaces.MVP;
  */
 
 public interface ViewRecylerToPresenter extends ViewToPresenter {
-    void setupRecyclerView();
+    void setupRecyclerView(View view);
     void notifyItemRemoved(int position);
     void notifyDataSetChanged();
     void notifyItemInserted(int layoutPosition);

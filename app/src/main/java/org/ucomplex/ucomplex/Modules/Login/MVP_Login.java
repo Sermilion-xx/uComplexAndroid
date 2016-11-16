@@ -29,7 +29,7 @@ import java.util.ArrayList;
 public class MVP_Login {
 
     interface ViewToPresenterInterface extends ViewActivityToPresenter {
-        void successfulLogin(UserInterface user);
+        void successfulLogin(UserInterface user, int flag);
     }
 
     interface PresenterInterface extends Presenter {

@@ -1,15 +1,10 @@
 package org.ucomplex.ucomplex.Modules.Events;
 
-import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import org.androidannotations.annotations.EActivity;
-import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 import org.ucomplex.ucomplex.Modules.BaseActivity;
 import org.ucomplex.ucomplex.Modules.MyApplication;
 import org.ucomplex.ucomplex.R;
@@ -18,7 +13,7 @@ import org.ucomplex.ucomplex.Utility.Constants;
 import javax.inject.Inject;
 
 @EActivity(R.layout.activity_main)
-public class EventsActivity extends BaseActivity implements OnTaskCompleteListener, MVP_Events.ViewToPresenterInterface {
+public class EventsActivity extends BaseActivity{
 
     private FragmentEvents mFragmentEvents;
 
@@ -46,10 +41,10 @@ public class EventsActivity extends BaseActivity implements OnTaskCompleteListen
 
         if(intent.hasExtra(Constants.EXTRA_KEY_USER_TYPE)){
             int userType = getIntent().getIntExtra(Constants.EXTRA_KEY_USER_TYPE, -1);
-            super.setupMVP(this, EventsActivity.class);
-            super.setModelData(userType);
             mFragmentEvents = new FragmentEvents();
             mFragmentEvents.setActivity(this);
+            super.setupMVP(mFragmentEvents, EventsActivity.class);
+            super.setModelData(userType);
             addFragment(R.id.container, mFragmentEvents, "EventsFragment");
         }
     }
@@ -61,69 +56,5 @@ public class EventsActivity extends BaseActivity implements OnTaskCompleteListen
         mPresenter.onDestroy(isChangingConfigurations());
     }
 
-    @Override
-    public Context getAppContext() {
-        return this;
-    }
-
-    @Override
-    public Context getActivityContext() {
-        return getApplicationContext();
-    }
-
-    @Override
-    public void showToast(Toast toast) {
-
-    }
-
-    @Override
-    public void showProgress() {
-
-    }
-
-    @Override
-    public void hideProgress() {
-
-    }
-
-    @Override
-    public void showAlert(AlertDialog dialog) {
-
-    }
-
-    @Override
-    public void setupRecyclerView() {
-
-    }
-
-    @Override
-    public void notifyItemRemoved(int position) {
-
-    }
-
-    @Override
-    public void notifyDataSetChanged() {
-
-    }
-
-    @Override
-    public void notifyItemInserted(int layoutPosition) {
-
-    }
-
-    @Override
-    public void notifyItemRangeChanged(int positionStart, int itemCount) {
-
-    }
-
-    @Override
-    public void goToCourse() {
-
-    }
-
-    @Override
-    public void onTaskComplete(AsyncTask task, Object... o) {
-
-    }
 
 }

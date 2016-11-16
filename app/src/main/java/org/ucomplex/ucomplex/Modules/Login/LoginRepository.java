@@ -50,6 +50,7 @@ public class LoginRepository implements Repository {
 
 
     public UserInterface loadData(Object... params) {
+        //Dummy user with hust login and password
         UserInterface user = (UserInterface) params[0];
         String password = user.getPassword();
         try {

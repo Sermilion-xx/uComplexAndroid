@@ -52,9 +52,7 @@ public class EventsPresenter implements MVP_Events.PresenterInterface{
     public void onDestroy(boolean isChangingConfiguration) {
         mView = null;
         mModel.onDestroy(isChangingConfiguration);
-        // Activity destroyed
         if ( !isChangingConfiguration ) {
-            // Nulls Model when the Activity destruction is permanent
             mModel = null;
         }
     }

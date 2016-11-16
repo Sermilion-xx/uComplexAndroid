@@ -64,6 +64,7 @@ dependencies {
     compile 'com.hannesdorfmann.fragmentargs:annotation:3.0.2'
     apt 'com.hannesdorfmann.fragmentargs:processor:3.0.2'
     compile 'com.squareup.picasso:picasso:2.5.1'
+    compile 'uk.co.chrisjenx:calligraphy:2.2.0'
 }
 
 
