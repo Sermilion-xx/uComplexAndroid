@@ -10,4 +10,23 @@
     <color name="color_uc_ListSeparator">#f1f1f2</color>
     <color name="color_uc_ListText">#989eae</color>
     <color name="color_uc_menuHeader">#515765</color>
+    <color name="color_uc_activity_background">#f1f1f2</color>
+
+    <!-- Placeholder images colors-->
+    <color name="color_uc_placeholder1">#f6a6c1</color>
+    <color name="color_uc_placeholder2">#92d6eb</color>
+    <color name="color_uc_placeholder3">#4dd9e2</color>
+    <color name="color_uc_placeholder4">#68d9f0</color>
+    <color name="color_uc_placeholder5">#c69ad9</color>
+    <color name="color_uc_placeholder6">#ff83b6</color>
+    <color name="color_uc_placeholder7">#fda79d</color>
+    <color name="color_uc_placeholder8">#f8c092</color>
+    <color name="color_uc_placeholder9">#928fbf</color>
+    <color name="color_uc_placeholder10">#aa7aad</color>
+    <color name="color_uc_placeholder11">#e27193</color>
+    <color name="color_uc_placeholder12">#fb736d</color>
+    <color name="color_uc_placeholder13">#36add8</color>
+    <color name="color_uc_placeholder14">#ff6c76</color>
+    <color name="color_uc_placeholder15">#4dbcbb</color>
+    <color name="color_uc_placeholder16">#4da8b6</color>
 </resources>

@@ -1,13 +1,21 @@
 package org.ucomplex.ucomplex.Utility;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
+
+import com.amulyakhare.textdrawable.TextDrawable;
+
+import org.ucomplex.ucomplex.R;
 
 import java.io.File;
 import java.io.IOException;
@@ -90,6 +98,61 @@ public class FacadeMedia {
         if (input != null) {
             input.close();
         }
+        return bitmap;
+    }
+
+    public static Bitmap getBitmapResource(int resourceId, Context context){
+        return  BitmapFactory.decodeResource(context.getResources(),
+                resourceId);
+    }
+
+    public static Drawable getTextDrawable(int personId, String name, Context context){
+        final int colorsCount = 16;
+        final int number = (personId <= colorsCount) ? personId : personId % colorsCount;
+        char firstLetter = name.split("")[1].charAt(0);
+        return TextDrawable.builder().beginConfig()
+                .width(60)
+                .height(60)
+                .endConfig()
+                .buildRound(String.valueOf(firstLetter), context.getResources().getColor(getColor(number)));
+    }
+
+    private static int getColor(int index) {
+        int[] hexColors = {R.color.color_uc_placeholder1,
+                R.color.color_uc_placeholder2,
+                R.color.color_uc_placeholder3,
+                R.color.color_uc_placeholder4,
+                R.color.color_uc_placeholder5,
+                R.color.color_uc_placeholder6,
+                R.color.color_uc_placeholder7,
+                R.color.color_uc_placeholder8,
+                R.color.color_uc_placeholder9,
+                R.color.color_uc_placeholder10,
+                R.color.color_uc_placeholder11,
+                R.color.color_uc_placeholder12,
+                R.color.color_uc_placeholder13,
+                R.color.color_uc_placeholder14,
+                R.color.color_uc_placeholder15,
+                R.color.color_uc_placeholder16
+
+        };
+        return hexColors[index];
+    }
+
+    public static Bitmap drawableToBitmap (Drawable drawable) {
+        if (drawable instanceof BitmapDrawable) {
+            return ((BitmapDrawable)drawable).getBitmap();
+        }
+        int width = drawable.getIntrinsicWidth();
+        width = width > 0 ? width : 1;
+        int height = drawable.getIntrinsicHeight();
+        height = height > 0 ? height : 1;
+
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+
         return bitmap;
     }
 

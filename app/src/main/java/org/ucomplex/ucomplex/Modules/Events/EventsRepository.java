@@ -1,17 +1,12 @@
 package org.ucomplex.ucomplex.Modules.Events;
 
 import android.content.Context;
-import android.widget.ImageView;
-
-import com.google.gson.Gson;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.ucomplex.ucomplex.Interfaces.MVP.Repository;
 import org.ucomplex.ucomplex.Model.EventItem;
-import org.ucomplex.ucomplex.Model.Users.User;
 import org.ucomplex.ucomplex.Utility.FacadeCommon;
 import org.ucomplex.ucomplex.Utility.FacadePreferences;
 import org.ucomplex.ucomplex.Utility.HttpFactory;
@@ -63,12 +58,6 @@ public class EventsRepository implements Repository {
             return eventsList;
         }
         return null;
-    }
-
-    void loadIcon(String code, ImageView imageView) {
-        Picasso.with(mContext)
-                .load(HttpFactory.LOAD_PROFILE_URL + code + ".jpg")
-                .into(imageView);
     }
 
     ArrayList<EventItem> loadMoreEvents(int start, String params) throws JSONException {

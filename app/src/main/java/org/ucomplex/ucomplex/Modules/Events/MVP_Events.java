@@ -48,7 +48,6 @@ class MVP_Events {
     }
 
     interface ModelInterface extends Model {
-        void loadIcon(String code, ImageView imageView);
         EventItem getEvent(int position);
         int getEventsCount();
     }

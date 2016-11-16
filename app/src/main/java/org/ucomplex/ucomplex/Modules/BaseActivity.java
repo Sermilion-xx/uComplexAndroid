@@ -11,7 +11,9 @@ import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -51,6 +53,12 @@ public class BaseActivity extends AppCompatActivity {
     protected Presenter mPresenter;
     protected Model mModel;
     protected Repository mRepository;
+    protected String mTitle;
+
+    @Override
+    public void setTitle(CharSequence title) {
+        super.setTitle(title);
+    }
 
     public Presenter getPresenter() {
         return mPresenter;
@@ -61,8 +69,9 @@ public class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_base);
-        setUpToolbar("uComplex");
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+
+        setupToolbar(mTitle);
 
         User user = FacadePreferences.getUserDataFromPref(this);
         if(user == null){
@@ -73,6 +82,14 @@ public class BaseActivity extends AppCompatActivity {
                 FacadeCommon.getStringUserType(this, user.getType()));
         ArrayList<DrawerListItem> drawerListItems = setupDrawerArrayList(headerItem, mDrawerIcons, mDrawerTitles);
         setupDrawerView(drawerListItems);
+    }
+
+    protected void setupToolbar(String title) {
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar.setTitle(title);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
     }
 
     protected void setupMVP(ViewToPresenter viewToPresenter, Class<?> type){
@@ -91,6 +108,8 @@ public class BaseActivity extends AppCompatActivity {
             mPresenter.setView(viewToPresenter);
         }
     }
+
+
 
     protected void setModelData(Object data){
         mModel.setData(data);
@@ -155,11 +174,6 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
-    public void setUpToolbar(String title) {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(title);
-        setSupportActionBar(toolbar);
-    }
 
     private void setupDrawerView(ArrayList<DrawerListItem> drawerListItems) {
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -183,6 +197,28 @@ public class BaseActivity extends AppCompatActivity {
                 return false;
             }
         });
+        mDrawer.setDrawerListener(mActionBarDrawerToggle);
+        mActionBarDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (this.mDrawer.isDrawerOpen(GravityCompat.START)) {
+            this.mDrawer.closeDrawer(GravityCompat.START);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_refresh) {
+//            refresh();
+            return true;
+        }else if(id == android.R.id.home){
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private User setupTempUser() {

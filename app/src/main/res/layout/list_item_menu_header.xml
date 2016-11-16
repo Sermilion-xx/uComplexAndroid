@@ -19,7 +19,7 @@
 
     <TextView
         android:id="@+id/name"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/profileImage"
         android:layout_gravity="center"
@@ -28,7 +28,8 @@
         android:text="Akash Bangad"
         android:layout_marginStart="10dp"
         android:textColor="@color/colorWhite"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:layout_marginEnd="80dp" />
 
     <TextView
         android:id="@+id/role"

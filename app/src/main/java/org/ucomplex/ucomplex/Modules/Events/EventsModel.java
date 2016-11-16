@@ -93,11 +93,6 @@ public class EventsModel implements MVP_Events.ModelInterface {
         return mEventItems != null;
     }
 
-    @Override
-    public void loadIcon(String code, ImageView imageView) {
-        ((EventsRepository)mRepository).loadIcon(code, imageView);
-    }
-
     /**
      * Get a specific EventItem from EventItems list using its array postion
      * @param position    Array position

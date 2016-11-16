@@ -1,6 +1,14 @@
 package org.ucomplex.ucomplex.Utility;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
+
+import com.amulyakhare.textdrawable.TextDrawable;
 
 import org.ucomplex.ucomplex.R;
 
@@ -147,5 +155,7 @@ public class FacadeCommon {
         }
         return r;
     }
+
+
 
 }

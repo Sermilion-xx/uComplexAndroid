@@ -2,6 +2,7 @@ package org.ucomplex.ucomplex.Modules.Events;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.widget.FrameLayout;
 
 import org.androidannotations.annotations.EActivity;
@@ -30,11 +31,10 @@ public class EventsActivity extends BaseActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.setTitle("События");
         super.onCreate(savedInstanceState);
         FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame); //Remember this is the FrameLayout area within your activity_main.xml
         getLayoutInflater().inflate(R.layout.activity_main, contentFrameLayout);
-        setUpToolbar("События");
-        setSupportActionBar(mToolbar);
         ((MyApplication) getApplication()).getEventsDiComponent().inject(this);
 
         Intent intent = getIntent();
@@ -49,6 +49,10 @@ public class EventsActivity extends BaseActivity{
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 
     @Override
     public void onDestroy() {
