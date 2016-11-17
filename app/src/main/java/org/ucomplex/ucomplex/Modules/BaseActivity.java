@@ -31,11 +31,9 @@ import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.NavDrawer.FacadeDrawer;
 import org.ucomplex.ucomplex.NavDrawer.DrawerAdapter;
 import org.ucomplex.ucomplex.NavDrawer.DrawerListItem;
-import org.ucomplex.ucomplex.Model.Users.User;
 import org.ucomplex.ucomplex.R;
 import org.ucomplex.ucomplex.Utility.FacadeCommon;
 import org.ucomplex.ucomplex.Utility.FacadeMedia;
-import org.ucomplex.ucomplex.Utility.FacadePreferences;
 import org.ucomplex.ucomplex.Utility.StateMaintainer;
 
 import java.io.IOException;
@@ -82,11 +80,13 @@ public class BaseActivity extends AppCompatActivity {
         setContentView(R.layout.activity_base);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         setupToolbar(mTitle);
-        if(!noDrawer)
-            setupDrawerView(setupDrawerList());
     }
 
-    private ArrayList<DrawerListItem> setupDrawerList(){
+    protected void setupDrawer(){
+        setupDrawerView(setupDrawerListItems());
+    }
+
+    private ArrayList<DrawerListItem> setupDrawerListItems(){
         setupDrawerItemListForUser(mUser);
         Bitmap profileBitmap = null;
         try {
@@ -187,7 +187,7 @@ public class BaseActivity extends AppCompatActivity {
         mDrawerTitles = iconsAndItems.getValue1();
     }
 
-    private void setupDrawerView(ArrayList<DrawerListItem> drawerListItems) {
+    public void setupDrawerView(ArrayList<DrawerListItem> drawerListItems) {
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         DrawerAdapter mDrawerAdapter = new DrawerAdapter(drawerListItems, this);
         RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.left_drawer);

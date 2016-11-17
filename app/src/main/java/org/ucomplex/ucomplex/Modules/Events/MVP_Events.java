@@ -45,6 +45,7 @@ class MVP_Events {
         EventViewHolder createViewHolder(ViewGroup parent, int viewType);
         void bindViewHolder(EventViewHolder holder, int position);
         int getEventsCount();
+        void loadData();
     }
 
     interface ModelInterface extends Model {

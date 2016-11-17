@@ -13,6 +13,7 @@ import android.widget.TextView;
 import org.ucomplex.ucomplex.Modules.Events.EventsActivity;
 import org.ucomplex.ucomplex.Modules.Login.LoginActivityView_;
 import org.ucomplex.ucomplex.R;
+import org.ucomplex.ucomplex.Utility.Constants;
 import org.ucomplex.ucomplex.Utility.FacadeMedia;
 import org.ucomplex.ucomplex.Utility.FacadePreferences;
 
@@ -103,11 +104,11 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
 
         @Override
         public void onClick(View view) {
-            if(getAdapterPosition()+1==getItemCount()){
+            if(getAdapterPosition()==getItemCount()-1){
                 FacadePreferences.clearPref(mContext);
                 mContext.startActivity(new Intent(mContext, LoginActivityView_.class));
-            }else if(getAdapterPosition()+1==1){
-                mContext.startActivity(new Intent(mContext, EventsActivity.class));
+            }else if(getAdapterPosition()==1){
+                mContext.sendBroadcast(new Intent(Constants.REFRESH_EVENTS_BROADCAST));
             }
         }
 

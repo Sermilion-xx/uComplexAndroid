@@ -1,6 +1,9 @@
 package org.ucomplex.ucomplex.Modules.Events;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
@@ -39,25 +42,26 @@ public class EventsActivity extends BaseActivity {
         super.mRepository = repository;
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        UserInterface user;
         super.setTitle(getResourceString(R.string.events));
+        super.onCreate(savedInstanceState);
+        UserInterface user;
         Intent intent = getIntent();
         if (intent.hasExtra(Constants.EXTRA_KEY_USER)) {
             user = getIntent().getParcelableExtra(Constants.EXTRA_KEY_USER);
             super.setmUser(user);
-            super.onCreate(savedInstanceState);
+            super.setupDrawer();
+
             FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame); //Remember this is the FrameLayout area within your activity_main.xml
             getLayoutInflater().inflate(R.layout.activity_main, contentFrameLayout);
             mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
             ((MyApplication) getApplication()).getEventsDiComponent().inject(this);
-            int userType = user.getType();
+
             mFragmentEvents = new FragmentEvents();
             mFragmentEvents.setActivity(this);
             super.setupMVP(mFragmentEvents, EventsActivity.class);
-            super.setModelData(userType);
+            super.setModelData(user.getType());
             addFragment(R.id.container, mFragmentEvents, "EventsFragment");
         }
     }
@@ -72,6 +76,27 @@ public class EventsActivity extends BaseActivity {
         super.onDestroy();
         mPresenter.onDestroy(isChangingConfigurations());
     }
+
+    @Override
+    public void onResume() {
+        registerReceiver(mUpdateEventsReceiver, new IntentFilter(
+                Constants.REFRESH_EVENTS_BROADCAST));
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        unregisterReceiver(mUpdateEventsReceiver);
+        super.onPause();
+    }
+
+    private BroadcastReceiver mUpdateEventsReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            ((EventsPresenter)mPresenter).loadData();
+            onBackPressed();
+        }
+    };
 
 
 }

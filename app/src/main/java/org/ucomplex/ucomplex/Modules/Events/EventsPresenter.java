@@ -49,6 +49,8 @@ public class EventsPresenter implements MVP_Events.PresenterInterface {
 
     }
 
+
+
     /**
      * Called by View every time it is destroyed.
      * @param isChangingConfiguration true: is changing configuration
@@ -157,7 +159,7 @@ public class EventsPresenter implements MVP_Events.PresenterInterface {
     /**
      * Load data from Model in a AsyncTask
      */
-    private void loadData() {
+    public void loadData() {
         try {
             getView().showProgress();
             new AsyncTask<Void, Void, Boolean>() {
