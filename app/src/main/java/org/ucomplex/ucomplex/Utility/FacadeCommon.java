@@ -29,8 +29,6 @@ import java.util.Locale;
 
 public class FacadeCommon {
 
-    public static int USER_TYPE = -1;
-
     public static String getStringUserType(Context context, int type) {
         String typeStr = null;
         if (type == 0) {

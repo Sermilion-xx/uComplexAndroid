@@ -23,7 +23,6 @@ import org.ucomplex.ucomplex.Modules.RoleSelect.RoleSelectActivity;
 import org.ucomplex.ucomplex.Model.Users.LoginErrorType;
 import org.ucomplex.ucomplex.R;
 import org.ucomplex.ucomplex.Utility.Constants;
-import org.ucomplex.ucomplex.Utility.FacadeCommon;
 import org.ucomplex.ucomplex.Utility.FacadePreferences;
 
 import java.util.ArrayList;
@@ -33,6 +32,7 @@ import javax.inject.Inject;
 import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.EMPTY_EMAIL;
 import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.INVALID_PASSWORD;
 import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.PASSWORD_REQUIRED;
+import static org.ucomplex.ucomplex.Utility.HttpFactory.encodeLoginData;
 
 @EActivity(R.layout.activity_login)
 public class LoginActivityView extends BaseActivity implements MVP_Login.ViewToPresenterInterface {
@@ -136,11 +136,13 @@ public class LoginActivityView extends BaseActivity implements MVP_Login.ViewToP
     @Override
     public void successfulLogin(UserInterface user, int flag) {
         Intent intent;
-        if(flag==1 || user.getRoles().size() == 1){
+        if(flag == 1 || user.getRoles().size() == 1){
             intent = new Intent(getActivityContext(), EventsActivity.class);
             if(user.getRoles().size() == 1){
                 user.setType(user.getRoles().get(0).getType());
-                FacadeCommon.USER_TYPE = user.getType();
+                FacadePreferences.setUserDataToPref(getActivityContext(), user);
+                String loginData = encodeLoginData(user.getLogin()+":"+user.getPassword()+":"+user.getRoles().get(0).getId());
+                FacadePreferences.setLoginDataToPref(getActivityContext(), loginData);
             }
         }else {
             intent = new Intent(getActivityContext(), RoleSelectActivity.class);

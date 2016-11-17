@@ -1,6 +1,7 @@
 package org.ucomplex.ucomplex.Modules.Events;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,6 +51,7 @@ public class EventsRepository implements Repository {
         return null;
     }
 
+    @Nullable
     private ArrayList<EventItem> loadEvents() throws JSONException {
         ArrayList<EventItem> eventsList;
         String stringResult = HttpFactory.httpPost(HttpFactory.USER_EVENTS_URL, FacadePreferences.getLoginDataFromPref(mContext), "{}");

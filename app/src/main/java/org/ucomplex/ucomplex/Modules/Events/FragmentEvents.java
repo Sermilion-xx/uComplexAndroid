@@ -11,10 +11,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.hannesdorfmann.fragmentargs.annotation.Arg;
 
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.ViewById;
 import org.ucomplex.ucomplex.Interfaces.MVP.Presenter;
 import org.ucomplex.ucomplex.Interfaces.MVP.ViewRecylerToPresenter;
 import org.ucomplex.ucomplex.Model.EventItem;
@@ -32,7 +35,6 @@ import java.util.ArrayList;
  * <a href="http://www.github.com/sermilion>github</a>
  * ---------------------------------------------------
  */
-
 public class FragmentEvents  extends BaseFragment implements ViewRecylerToPresenter{
 
     Button                                     mButtonLoadMore;
@@ -40,6 +42,8 @@ public class FragmentEvents  extends BaseFragment implements ViewRecylerToPresen
     MediaPlayer                                mAlert;
     @Arg EventsActivity                        mActivity;
     @Arg Presenter                             mPresenter;
+
+
 
     public void setActivity(EventsActivity mActivity) {
         this.mActivity = mActivity;
@@ -102,12 +106,12 @@ public class FragmentEvents  extends BaseFragment implements ViewRecylerToPresen
 
     @Override
     public void showProgress() {
-
+        mActivity.mProgressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideProgress() {
-
+        mActivity.mProgressBar.setVisibility(View.GONE);
     }
 
     @Override

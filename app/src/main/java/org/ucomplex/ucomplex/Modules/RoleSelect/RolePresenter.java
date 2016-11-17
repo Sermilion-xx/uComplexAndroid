@@ -117,8 +117,6 @@ public class RolePresenter implements MVP_RoleSelect.PresenterInterface {
     public void bindViewHolder(RoleViewHolder holder, final int position) {
         final RoleItem role = ((RoleModel)mModel).getRole(position);
         holder.roleName.setText(role.getRoleName());
-//        holder.roleIcon.setImageBitmap(BitmapFactory.decodeResource(getActivityContext().getResources(),
-//                role.getRoleIcon()));
         holder.roleIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -129,10 +127,11 @@ public class RolePresenter implements MVP_RoleSelect.PresenterInterface {
                         String login = user.getLogin();
                         String password = user.getPassword();
                         int role = user.getRoles().get(position).getId();
-                        FacadeCommon.USER_TYPE = user.getRoles().get(position).getType();
-                        ((RoleModel)mModel).getUser().setType(FacadeCommon.USER_TYPE);
+                        user.setType(user.getRoles().get(position).getType());
+                        ((RoleModel)mModel).getUser().setType(user.getType());
                         String encodedAuth = encodeLoginData(login + ":" + password + ":" + role);
                         FacadePreferences.setLoginDataToPref(getActivityContext(), encodedAuth);
+                        FacadePreferences.setUserDataToPref(getActivityContext(), user);
                     return null;
                     }
                 }.execute();

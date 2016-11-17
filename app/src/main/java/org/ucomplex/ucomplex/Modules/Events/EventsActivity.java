@@ -3,8 +3,10 @@ package org.ucomplex.ucomplex.Modules.Events;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.ViewById;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.Modules.BaseActivity;
 import org.ucomplex.ucomplex.Modules.MyApplication;
@@ -17,6 +19,10 @@ import javax.inject.Inject;
 public class EventsActivity extends BaseActivity {
 
     private FragmentEvents mFragmentEvents;
+
+    ProgressBar mProgressBar;
+
+
 
     @Inject
     public void setPresenter(EventsPresenter presenter) {
@@ -45,8 +51,8 @@ public class EventsActivity extends BaseActivity {
             super.onCreate(savedInstanceState);
             FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame); //Remember this is the FrameLayout area within your activity_main.xml
             getLayoutInflater().inflate(R.layout.activity_main, contentFrameLayout);
+            mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
             ((MyApplication) getApplication()).getEventsDiComponent().inject(this);
-
             int userType = user.getType();
             mFragmentEvents = new FragmentEvents();
             mFragmentEvents.setActivity(this);

@@ -178,12 +178,9 @@ public class BaseActivity extends AppCompatActivity {
 
     private void setupDrawerItemListForUser(UserInterface user) {
         Pair<int[], String[]> iconsAndItems = null;
-        if (FacadeCommon.USER_TYPE == -1) {
-            FacadeCommon.USER_TYPE = user.getType();
-        }
-        if (FacadeCommon.USER_TYPE == 0) {
+        if (user.getType() == 0) {
             iconsAndItems = FacadeDrawer.getInstance(this).getDrawerItemsUser0();
-        }else if(FacadeCommon.USER_TYPE == 4){
+        }else if(user.getType() == 4){
             iconsAndItems = FacadeDrawer.getInstance(this).getDrawerItemsUser4();
         }
         mDrawerIcons = iconsAndItems.getValue0();
