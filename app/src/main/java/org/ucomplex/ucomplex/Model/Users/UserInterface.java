@@ -1,5 +1,6 @@
 package org.ucomplex.ucomplex.Model.Users;
 
+import android.graphics.Bitmap;
 import android.net.Uri;
 
 import java.util.List;
@@ -24,4 +25,9 @@ public interface UserInterface {
     int getPhoto();
     String getCode();
     void setBitmapUri(Uri uri);
+    Uri getBitmapUri();
+    String getName();
+    int getId();
+    void setType(int type);
+
 }

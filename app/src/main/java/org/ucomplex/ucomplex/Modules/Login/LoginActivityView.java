@@ -15,14 +15,12 @@ import android.widget.Toast;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
-import org.ucomplex.ucomplex.Model.EventItem;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.Modules.BaseActivity;
 import org.ucomplex.ucomplex.Modules.Events.EventsActivity;
 import org.ucomplex.ucomplex.Modules.MyApplication;
 import org.ucomplex.ucomplex.Modules.RoleSelect.RoleSelectActivity;
 import org.ucomplex.ucomplex.Model.Users.LoginErrorType;
-import org.ucomplex.ucomplex.Model.Users.User;
 import org.ucomplex.ucomplex.R;
 import org.ucomplex.ucomplex.Utility.Constants;
 import org.ucomplex.ucomplex.Utility.FacadePreferences;
@@ -62,6 +60,7 @@ public class LoginActivityView extends BaseActivity implements MVP_Login.ViewToP
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.setNoDrawer(true);
         super.onCreate(savedInstanceState);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         ((MyApplication) getApplication()).getLoginDiComponent().inject(this);
@@ -141,11 +140,7 @@ public class LoginActivityView extends BaseActivity implements MVP_Login.ViewToP
         }else {
             intent = new Intent(getActivityContext(), RoleSelectActivity.class);
         }
-        if(flag==1){
-            intent.putExtra(Constants.EXTRA_KEY_USER_TYPE, user.getType());
-        }else {
-            intent.putExtra(Constants.EXTRA_KEY_USER, (Parcelable) user);
-        }
+        intent.putExtra(Constants.EXTRA_KEY_USER, (Parcelable) user);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         getActivityContext().startActivity(intent);
         finish();

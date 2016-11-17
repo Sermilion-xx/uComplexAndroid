@@ -1,7 +1,6 @@
 package org.ucomplex.ucomplex.Modules.RoleSelect;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -11,16 +10,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import org.ucomplex.ucomplex.Interfaces.MVP.Presenter;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.Modules.BaseActivity;
-import org.ucomplex.ucomplex.Modules.Login.LoginModel;
-import org.ucomplex.ucomplex.Modules.Login.LoginPresenter;
-import org.ucomplex.ucomplex.Modules.Login.LoginRepository;
 import org.ucomplex.ucomplex.Modules.MyApplication;
 import org.ucomplex.ucomplex.R;
 import org.ucomplex.ucomplex.Utility.Constants;
-import org.ucomplex.ucomplex.Utility.StateMaintainer;
 
 import javax.inject.Inject;
 
@@ -40,6 +34,7 @@ public class RoleSelectActivity extends BaseActivity implements MVP_RoleSelect.V
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        super.setNoDrawer(true);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_role_select);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

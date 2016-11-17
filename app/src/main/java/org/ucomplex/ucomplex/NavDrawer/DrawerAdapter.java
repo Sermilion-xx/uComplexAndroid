@@ -1,5 +1,8 @@
 package org.ucomplex.ucomplex.NavDrawer;
 
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,7 +10,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.ucomplex.ucomplex.Modules.Login.LoginActivityView;
+import org.ucomplex.ucomplex.Modules.Login.LoginActivityView_;
 import org.ucomplex.ucomplex.R;
+import org.ucomplex.ucomplex.Utility.FacadeMedia;
+import org.ucomplex.ucomplex.Utility.FacadePreferences;
 
 import java.util.ArrayList;
 
@@ -19,19 +26,21 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder> {
 
-    private static int TYPE_0 = 0;
-    private static int TYPE_1 = 1;
-    private        ArrayList<DrawerListItem> mItems;
+    private static final int TYPE_0 = 0;
+    private static final int TYPE_1 = 1;
+    private ArrayList<DrawerListItem> mItems;
+    private Context mContext;
 
-    public DrawerAdapter(ArrayList<DrawerListItem> items) {
+    public DrawerAdapter(ArrayList<DrawerListItem> items, Context context) {
         mItems = items;
+        this.mContext = context;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         int layout = viewType == 0 ? R.layout.list_item_menu_header : R.layout.list_item_menu;
         View inflatedView = LayoutInflater.from(parent.getContext()) .inflate(layout, parent, false);
-        return new ViewHolder(inflatedView, viewType);
+        return new ViewHolder(inflatedView, viewType, mContext);
     }
 
     @Override
@@ -59,9 +68,11 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
         private TextView mTextView2;
         private CircleImageView mProfileImageView;
         private CircleImageView mRolesImageView;
+        private Context mContext;
 
-        public ViewHolder(View view, int viewType) {
+        ViewHolder(View view, int viewType, Context context) {
             super(view);
+            this.mContext = context;
             if(viewType == 0){
                 mTextView1 = (TextView) view.findViewById(R.id.name);
                 mTextView2 = (TextView) view.findViewById(R.id.role);
@@ -71,12 +82,18 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
                 mIconImageView = (ImageView) view.findViewById(R.id.icon);
                 mTextView1 = (TextView) view.findViewById(R.id.title);
             }
+            view.setOnClickListener(this);
+            view.setOnLongClickListener(this);
         }
 
-        public void bindListRow(DrawerListItem row) {
+        void bindListRow(DrawerListItem row) {
             if(getItemViewType() == 0){
                 mTextView1.setText(row.getTitle1());
                 mTextView2.setText(row.getTitle2());
+                if(row.getProfileBitmap() == null){
+                    Drawable textDrawable = FacadeMedia.getTextDrawable(row.getId(), row.getTitle1(), mContext);
+                    row.setProfileBitmap(FacadeMedia.drawableToBitmap(textDrawable));
+                }
                 mProfileImageView.setImageBitmap(row.getProfileBitmap());
             }else{
                 mTextView1.setText(row.getTitle1());
@@ -86,7 +103,10 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
 
         @Override
         public void onClick(View view) {
-
+            if(getAdapterPosition()+1==getItemCount()){
+                FacadePreferences.clearPref(mContext);
+                mContext.startActivity(new Intent(mContext, LoginActivityView_.class));
+            }
         }
 
         @Override

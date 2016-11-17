@@ -65,4 +65,13 @@ public class FacadePreferences {
         editor.apply();
     }
 
+    public static void clearPref(Context context){
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        editor.remove(KEY_PREF_USER_ROLE);
+        editor.remove(KEY_PREF_PROFILE_PHOTO);
+        editor.remove(KEY_PREF_LOGGED_USER);
+        editor.remove(KEY_PREF_LOGIN_DATA);
+        editor.apply();
+    }
+
 }

@@ -57,7 +57,7 @@ public class FacadeMedia {
         return mediaFile;
     }
 
-    public static int getPowerOfTwoForSampleRatio(Double ratio) {
+    static int getPowerOfTwoForSampleRatio(Double ratio) {
         int k = Integer.highestOneBit((int) Math.floor(ratio));
         if (k == 0)
             return 1;
@@ -66,39 +66,43 @@ public class FacadeMedia {
     }
 
     public static Bitmap getThumbnail(Uri uri, Activity activity, int ...thumbnail_size) throws IOException {
-        if(thumbnail_size[0]==0){
-            thumbnail_size[0] = 640;
-        }
-        InputStream input = activity.getContentResolver().openInputStream(uri);
+        if(uri!=null) {
 
-        BitmapFactory.Options onlyBoundsOptions = new BitmapFactory.Options();
-        onlyBoundsOptions.inJustDecodeBounds = true;
-        onlyBoundsOptions.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        BitmapFactory.decodeStream(input, null, onlyBoundsOptions);
-        input.close();
-        if (onlyBoundsOptions.outWidth == -1 || onlyBoundsOptions.outHeight == -1)
-            return null;
-        int originalSize;
-        if (onlyBoundsOptions.outHeight > onlyBoundsOptions.outWidth)
-            originalSize = onlyBoundsOptions.outHeight;
-        else
-            originalSize = onlyBoundsOptions.outWidth;
-
-        Double ratio;
-        if (originalSize > thumbnail_size[0])
-            ratio = (double) originalSize / thumbnail_size[0];
-        else
-            ratio = 1.0;
-
-        BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
-        bitmapOptions.inSampleSize = getPowerOfTwoForSampleRatio(ratio);
-        bitmapOptions.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        input = activity.getContentResolver().openInputStream(uri);
-        Bitmap bitmap = BitmapFactory.decodeStream(input, null, bitmapOptions);
-        if (input != null) {
+            if (thumbnail_size.length == 0) {
+                thumbnail_size = new int[1];
+                thumbnail_size[0] = 640;
+            }
+            InputStream input = activity.getContentResolver().openInputStream(uri);
+            BitmapFactory.Options onlyBoundsOptions = new BitmapFactory.Options();
+            onlyBoundsOptions.inJustDecodeBounds = true;
+            onlyBoundsOptions.inPreferredConfig = Bitmap.Config.ARGB_8888;
+            BitmapFactory.decodeStream(input, null, onlyBoundsOptions);
             input.close();
+            if (onlyBoundsOptions.outWidth == -1 || onlyBoundsOptions.outHeight == -1)
+                return null;
+            int originalSize;
+            if (onlyBoundsOptions.outHeight > onlyBoundsOptions.outWidth)
+                originalSize = onlyBoundsOptions.outHeight;
+            else
+                originalSize = onlyBoundsOptions.outWidth;
+
+            Double ratio;
+            if (originalSize > thumbnail_size[0])
+                ratio = (double) originalSize / thumbnail_size[0];
+            else
+                ratio = 1.0;
+
+            BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
+            bitmapOptions.inSampleSize = getPowerOfTwoForSampleRatio(ratio);
+            bitmapOptions.inPreferredConfig = Bitmap.Config.ARGB_8888;
+            input = activity.getContentResolver().openInputStream(uri);
+            Bitmap bitmap = BitmapFactory.decodeStream(input, null, bitmapOptions);
+            if (input != null) {
+                input.close();
+            }
+            return bitmap;
         }
-        return bitmap;
+        return null;
     }
 
     public static Bitmap getBitmapResource(int resourceId, Context context){

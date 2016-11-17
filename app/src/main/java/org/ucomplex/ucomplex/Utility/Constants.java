@@ -14,8 +14,9 @@ import org.ucomplex.ucomplex.R;
 
 public class Constants {
 
-    public static final String EXTRA_KEY_USER = "org.ucomplex.ucomplex.user";
-    public static final String EXTRA_KEY_USER_TYPE = "org.ucomplex.ucomplex.userType";
+    private static final String EXTRA_PREFIX = "org.ucomplex.ucomplex.";
+    public static final String EXTRA_KEY_USER = EXTRA_PREFIX+"user";
+    public static final String EXTRA_KEY_USER_TYPE = EXTRA_PREFIX+"userType";
 
     public static final int[] colorsUserSelect = new int[]{
             R.drawable.select_account_1,

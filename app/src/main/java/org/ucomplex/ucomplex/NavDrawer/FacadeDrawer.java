@@ -41,7 +41,7 @@ public class FacadeDrawer {
         return new Pair<>(icons, titles);
     }
 
-    public Pair<int[], String[]> getDrawerItemsUser1() {
+    public Pair<int[], String[]> getDrawerItemsUser4() {
         int[] icons = new int[]{
                 R.drawable.ic_menu_events,
                 R.drawable.ic_menu_subjects,

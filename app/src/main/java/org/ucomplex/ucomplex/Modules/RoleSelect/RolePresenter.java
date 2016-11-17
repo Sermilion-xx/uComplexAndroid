@@ -22,6 +22,7 @@ import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.Modules.Events.EventsActivity;
 import org.ucomplex.ucomplex.R;
 import org.ucomplex.ucomplex.Utility.Constants;
+import org.ucomplex.ucomplex.Utility.FacadeCommon;
 import org.ucomplex.ucomplex.Utility.FacadePreferences;
 
 import java.lang.ref.WeakReference;
@@ -127,7 +128,9 @@ public class RolePresenter implements MVP_RoleSelect.PresenterInterface {
                     protected Void doInBackground(Void... voids) {
                         String login = user.getLogin();
                         String password = user.getPassword();
-                        String role = Integer.toString(user.getRoles().get(0).getId());
+                        int role = user.getRoles().get(position).getId();
+                        FacadeCommon.USER_TYPE = user.getRoles().get(position).getType();
+                        ((RoleModel)mModel).getUser().setType(FacadeCommon.USER_TYPE);
                         String encodedAuth = encodeLoginData(login + ":" + password + ":" + role);
                         FacadePreferences.setLoginDataToPref(getActivityContext(), encodedAuth);
                     return null;

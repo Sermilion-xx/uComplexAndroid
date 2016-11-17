@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 
 import android.app.Fragment;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
@@ -13,7 +12,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,20 +27,22 @@ import org.ucomplex.ucomplex.Interfaces.MVP.Model;
 import org.ucomplex.ucomplex.Interfaces.MVP.Presenter;
 import org.ucomplex.ucomplex.Interfaces.MVP.Repository;
 import org.ucomplex.ucomplex.Interfaces.MVP.ViewToPresenter;
+import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.NavDrawer.FacadeDrawer;
 import org.ucomplex.ucomplex.NavDrawer.DrawerAdapter;
 import org.ucomplex.ucomplex.NavDrawer.DrawerListItem;
 import org.ucomplex.ucomplex.Model.Users.User;
 import org.ucomplex.ucomplex.R;
 import org.ucomplex.ucomplex.Utility.FacadeCommon;
+import org.ucomplex.ucomplex.Utility.FacadeMedia;
 import org.ucomplex.ucomplex.Utility.FacadePreferences;
 import org.ucomplex.ucomplex.Utility.StateMaintainer;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class BaseActivity extends AppCompatActivity {
 
-    protected static String INTENT_PARAM_PREFIX = "com.ucomplex.ucomplex.";
     protected DrawerLayout          mDrawer;
     protected ActionBarDrawerToggle mActionBarDrawerToggle;
     protected Toolbar               mToolbar;
@@ -54,6 +54,17 @@ public class BaseActivity extends AppCompatActivity {
     protected Model mModel;
     protected Repository mRepository;
     protected String mTitle;
+    private boolean noDrawer;
+    protected UserInterface mUser;
+
+
+    public void setmUser(UserInterface mUser) {
+        this.mUser = mUser;
+    }
+
+    public void setNoDrawer(boolean loginActivity) {
+        noDrawer = loginActivity;
+    }
 
     @Override
     public void setTitle(CharSequence title) {
@@ -70,18 +81,22 @@ public class BaseActivity extends AppCompatActivity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_base);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-
         setupToolbar(mTitle);
+        if(!noDrawer)
+            setupDrawerView(setupDrawerList());
+    }
 
-        User user = FacadePreferences.getUserDataFromPref(this);
-        if(user == null){
-            user = setupTempUser();
+    private ArrayList<DrawerListItem> setupDrawerList(){
+        setupDrawerItemListForUser(mUser);
+        Bitmap profileBitmap = null;
+        try {
+            profileBitmap = FacadeMedia.getThumbnail(mUser.getBitmapUri(), this);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        setupDrawerItemListForUser(user);
-        DrawerListItem headerItem = new DrawerListItem(user.getPhotoBitmap(), user.getName(),
-                FacadeCommon.getStringUserType(this, user.getType()));
-        ArrayList<DrawerListItem> drawerListItems = setupDrawerArrayList(headerItem, mDrawerIcons, mDrawerTitles);
-        setupDrawerView(drawerListItems);
+        DrawerListItem headerItem = new DrawerListItem(profileBitmap, mUser.getName().split(" ")[1],
+                FacadeCommon.getStringUserType(this, mUser.getType()), mUser.getId());
+        return setupDrawerArrayList(headerItem, mDrawerIcons, mDrawerTitles);
     }
 
     protected void setupToolbar(String title) {
@@ -108,8 +123,6 @@ public class BaseActivity extends AppCompatActivity {
             mPresenter.setView(viewToPresenter);
         }
     }
-
-
 
     protected void setModelData(Object data){
         mModel.setData(data);
@@ -163,21 +176,23 @@ public class BaseActivity extends AppCompatActivity {
         return drawerListItems;
     }
 
-    private void setupDrawerItemListForUser(User user) {
+    private void setupDrawerItemListForUser(UserInterface user) {
+        Pair<int[], String[]> iconsAndItems = null;
         if (FacadeCommon.USER_TYPE == -1) {
             FacadeCommon.USER_TYPE = user.getType();
         }
         if (FacadeCommon.USER_TYPE == 0) {
-            Pair<int[], String[]> iconsAndItems = FacadeDrawer.getInstance(this).getDrawerItemsUser0();
-            mDrawerIcons = iconsAndItems.getValue0();
-            mDrawerTitles = iconsAndItems.getValue1();
+            iconsAndItems = FacadeDrawer.getInstance(this).getDrawerItemsUser0();
+        }else if(FacadeCommon.USER_TYPE == 4){
+            iconsAndItems = FacadeDrawer.getInstance(this).getDrawerItemsUser0();
         }
+        mDrawerIcons = iconsAndItems.getValue0();
+        mDrawerTitles = iconsAndItems.getValue1();
     }
-
 
     private void setupDrawerView(ArrayList<DrawerListItem> drawerListItems) {
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        DrawerAdapter mDrawerAdapter = new DrawerAdapter(drawerListItems);
+        DrawerAdapter mDrawerAdapter = new DrawerAdapter(drawerListItems, this);
         RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.left_drawer);
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
@@ -219,16 +234,6 @@ public class BaseActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private User setupTempUser() {
-        User user = new User();
-        user.setName("Marshal Maters");
-        user.setRole(0);
-        user.setType(0);
-        Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_menu_user);
-        user.setPhotoBitmap(icon);
-        return user;
     }
 
 }

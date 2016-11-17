@@ -30,13 +30,13 @@ import okio.Okio;
  */
 public class HttpFactory {
 
-    private static final String SCHEMA             = "https://";
-    public  static final String BASE_URL           = SCHEMA+"ucomplex.org/";
-    public  static final String USER_EVENTS_URL = BASE_URL+"user/events?mobile=1";
-    public  static final String PROFILE_IMAGE_URL  = BASE_URL+"files/photos/";
-    public  static final String AUTHENTICATIO_URL  = BASE_URL+"login_screen?mobile=1";
-    public  static final String RESTORE_PASSWORD_URL=BASE_URL+"public/password?mobile=1";
-    public  static final String LOAD_PROFILE_URL   = BASE_URL+"files/photos/";
+    private static final String SCHEMA               = "https://";
+    public  static final String BASE_URL             = SCHEMA+"ucomplex.org/";
+    public  static final String USER_EVENTS_URL      = BASE_URL+"user/events?mobile=1";
+    public  static final String PROFILE_IMAGE_URL    = BASE_URL+"files/photos/";
+    public  static final String AUTHENTICATIO_URL    = BASE_URL+"auth?mobile=1";
+    public  static final String RESTORE_PASSWORD_URL = BASE_URL+"public/password?mobile=1";
+    public  static final String LOAD_PROFILE_URL     = BASE_URL+"files/photos/";
 
     public static void httpGetFile(@NonNull String url, @NonNull File destFile, String encodedAuth) {
         try {
@@ -91,6 +91,7 @@ public class HttpFactory {
      * @return json response from server
      */
     public static String httpPost(String url, String encodedAuth, String jsonBody) {
+        String result = "";
         try {
             final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
             OkHttpClient client = new OkHttpClient();
@@ -105,7 +106,7 @@ public class HttpFactory {
         }catch (IOException e){
             e.printStackTrace();
         }
-        return null;
+        return result;
     }
 
     public static boolean httpPostFile(String url, String encodedAuth, File file, String fileName) {

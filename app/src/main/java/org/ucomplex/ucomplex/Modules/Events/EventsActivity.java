@@ -6,6 +6,7 @@ import android.support.v7.widget.Toolbar;
 import android.widget.FrameLayout;
 
 import org.androidannotations.annotations.EActivity;
+import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.Modules.BaseActivity;
 import org.ucomplex.ucomplex.Modules.MyApplication;
 import org.ucomplex.ucomplex.R;
@@ -31,16 +32,21 @@ public class EventsActivity extends BaseActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.setTitle("События");
+        super.setTitle(getResourceString(R.string.events));
+        Intent intent = getIntent();
+        if(intent.hasExtra(Constants.EXTRA_KEY_USER)) {
+            UserInterface user = getIntent().getParcelableExtra(Constants.EXTRA_KEY_USER);
+            super.setmUser(user);
+        }
         super.onCreate(savedInstanceState);
         FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame); //Remember this is the FrameLayout area within your activity_main.xml
         getLayoutInflater().inflate(R.layout.activity_main, contentFrameLayout);
         ((MyApplication) getApplication()).getEventsDiComponent().inject(this);
 
-        Intent intent = getIntent();
 
-        if(intent.hasExtra(Constants.EXTRA_KEY_USER_TYPE)){
-            int userType = getIntent().getIntExtra(Constants.EXTRA_KEY_USER_TYPE, -1);
+
+        if(intent.hasExtra(Constants.EXTRA_KEY_USER)){
+            int userType = getIntent().getIntExtra(Constants.EXTRA_KEY_USER, -1);
             mFragmentEvents = new FragmentEvents();
             mFragmentEvents.setActivity(this);
             super.setupMVP(mFragmentEvents, EventsActivity.class);

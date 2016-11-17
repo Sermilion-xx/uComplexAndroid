@@ -108,7 +108,7 @@ public class LoginPresenter implements MVP_Login.PresenterInterface, OnTaskCompl
                         if (result == null)
                             getView().showToast(makeToast(getActivityContext().getString(R.string.error_login)));
                         else
-                            mTaskCompleteListener.onTaskComplete(this, result);
+                            mTaskCompleteListener.onTaskComplete(this, result, 0);
                     } catch (NullPointerException e) {
                         e.printStackTrace();
                     }
@@ -252,7 +252,6 @@ public class LoginPresenter implements MVP_Login.PresenterInterface, OnTaskCompl
         boolean result = (boolean) o[0];
         if (result) {
             UserInterface user = ((LoginModel)mModel).getUser();
-            FacadePreferences.setUserDataToPref(getActivityContext(), user);
             getView().successfulLogin(user, (int)o[1]);
         }
 
