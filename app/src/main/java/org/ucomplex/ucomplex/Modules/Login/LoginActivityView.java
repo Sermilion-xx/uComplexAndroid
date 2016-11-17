@@ -23,6 +23,7 @@ import org.ucomplex.ucomplex.Modules.RoleSelect.RoleSelectActivity;
 import org.ucomplex.ucomplex.Model.Users.LoginErrorType;
 import org.ucomplex.ucomplex.R;
 import org.ucomplex.ucomplex.Utility.Constants;
+import org.ucomplex.ucomplex.Utility.FacadeCommon;
 import org.ucomplex.ucomplex.Utility.FacadePreferences;
 
 import java.util.ArrayList;
@@ -137,6 +138,10 @@ public class LoginActivityView extends BaseActivity implements MVP_Login.ViewToP
         Intent intent;
         if(flag==1 || user.getRoles().size() == 1){
             intent = new Intent(getActivityContext(), EventsActivity.class);
+            if(user.getRoles().size() == 1){
+                user.setType(user.getRoles().get(0).getType());
+                FacadeCommon.USER_TYPE = user.getType();
+            }
         }else {
             intent = new Intent(getActivityContext(), RoleSelectActivity.class);
         }

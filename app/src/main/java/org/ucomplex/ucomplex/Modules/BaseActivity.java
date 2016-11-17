@@ -184,7 +184,7 @@ public class BaseActivity extends AppCompatActivity {
         if (FacadeCommon.USER_TYPE == 0) {
             iconsAndItems = FacadeDrawer.getInstance(this).getDrawerItemsUser0();
         }else if(FacadeCommon.USER_TYPE == 4){
-            iconsAndItems = FacadeDrawer.getInstance(this).getDrawerItemsUser0();
+            iconsAndItems = FacadeDrawer.getInstance(this).getDrawerItemsUser4();
         }
         mDrawerIcons = iconsAndItems.getValue0();
         mDrawerTitles = iconsAndItems.getValue1();
