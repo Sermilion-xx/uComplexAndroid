@@ -2,6 +2,8 @@ package org.ucomplex.ucomplex.Interfaces.MVP;
 
 import android.content.Context;
 
+import org.ucomplex.ucomplex.Model.Users.UserInterface;
+
 /**
  * ---------------------------------------------------
  * Created by Sermilion on 12/11/2016.
@@ -19,4 +21,5 @@ public interface Presenter {
     void setView(ViewToPresenter view);
     void onConfigurationChanged(ViewToPresenter view);
     void setModel(Model models);
+    UserInterface getUser();
 }

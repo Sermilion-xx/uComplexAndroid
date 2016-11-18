@@ -204,12 +204,28 @@ public class LoginPresenter implements MVP_Login.PresenterInterface, OnTaskCompl
     @Override
     public void setModel(Model model) {
         mModel = model;
-        UserInterface user = FacadePreferences.getUserDataFromPref(getActivityContext());
-        if(user!=null){
-            mModel.setData(user);
-            //1 - has already been logged
-            onTaskComplete(null, true, 1);
-        }
+        new AsyncTask<Void, Void, UserInterface>(){
+            @Override
+            protected UserInterface doInBackground(Void... voids) {
+                return getUser();
+            }
+            @Override
+            protected void onPostExecute(UserInterface user) {
+                super.onPostExecute(user);
+                if(user!=null){
+                    mModel.setData(user);
+                    //1 - has already been logged
+                    onTaskComplete(null, true, 1);
+                }
+            }
+        }.execute();
+
+
+    }
+
+    @Override
+    public UserInterface getUser() {
+        return FacadePreferences.getUserDataFromPref(getActivityContext());
     }
 
     /**
@@ -251,7 +267,7 @@ public class LoginPresenter implements MVP_Login.PresenterInterface, OnTaskCompl
     public void onTaskComplete(AsyncTask task, Object... o) {
         boolean result = (boolean) o[0];
         if (result) {
-            UserInterface user = ((LoginModel)mModel).getUser();
+            UserInterface user = mModel.getUser();
             getView().successfulLogin(user, (int)o[1]);
         }
 

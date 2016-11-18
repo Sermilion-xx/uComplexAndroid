@@ -51,23 +51,6 @@ public class BaseActivity extends AppCompatActivity {
     protected Presenter mPresenter;
     protected Model mModel;
     protected Repository mRepository;
-    protected String mTitle;
-    private boolean noDrawer;
-    protected UserInterface mUser;
-
-
-    public void setmUser(UserInterface mUser) {
-        this.mUser = mUser;
-    }
-
-    public void setNoDrawer(boolean loginActivity) {
-        noDrawer = loginActivity;
-    }
-
-    @Override
-    public void setTitle(CharSequence title) {
-        super.setTitle(title);
-    }
 
     public Presenter getPresenter() {
         return mPresenter;
@@ -79,7 +62,6 @@ public class BaseActivity extends AppCompatActivity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_base);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-        setupToolbar(mTitle);
     }
 
     protected void setupDrawer(){
@@ -87,15 +69,15 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     private ArrayList<DrawerListItem> setupDrawerListItems(){
-        setupDrawerItemListForUser(mUser);
+        setupDrawerItemListForUser(mPresenter.getUser());
         Bitmap profileBitmap = null;
         try {
-            profileBitmap = FacadeMedia.getThumbnail(mUser.getBitmapUri(), this);
+            profileBitmap = FacadeMedia.getThumbnail(mPresenter.getUser().getBitmapUri(), this);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        DrawerListItem headerItem = new DrawerListItem(profileBitmap, mUser.getName().split(" ")[1],
-                FacadeCommon.getStringUserType(this, mUser.getType()), mUser.getId());
+        DrawerListItem headerItem = new DrawerListItem(profileBitmap, mPresenter.getUser().getName().split(" ")[1],
+                FacadeCommon.getStringUserType(this, mPresenter.getUser().getType()), mPresenter.getUser().getId());
         return setupDrawerArrayList(headerItem, mDrawerIcons, mDrawerTitles);
     }
 
@@ -103,8 +85,10 @@ public class BaseActivity extends AppCompatActivity {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mToolbar.setTitle(title);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
+        if(getSupportActionBar()!=null){
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
     }
 
     protected void setupMVP(ViewToPresenter viewToPresenter, Class<?> type){
@@ -187,7 +171,7 @@ public class BaseActivity extends AppCompatActivity {
         mDrawerTitles = iconsAndItems.getValue1();
     }
 
-    public void setupDrawerView(ArrayList<DrawerListItem> drawerListItems) {
+    private void setupDrawerView(ArrayList<DrawerListItem> drawerListItems) {
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         DrawerAdapter mDrawerAdapter = new DrawerAdapter(drawerListItems, this);
         RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.left_drawer);

@@ -1,5 +1,7 @@
 package org.ucomplex.ucomplex.Interfaces.MVP;
 
+import org.ucomplex.ucomplex.Model.Users.UserInterface;
+
 /**
  * ---------------------------------------------------
  * Created by Sermilion on 12/11/2016.
@@ -16,4 +18,5 @@ public interface Model {
     void setPresenter(Presenter presenter);
     void setData(Object data);
     void setRepository(Repository repository);
+    UserInterface getUser();
 }

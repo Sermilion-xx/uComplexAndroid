@@ -79,6 +79,11 @@ public class RolePresenter implements MVP_RoleSelect.PresenterInterface {
         loadData();
     }
 
+    @Override
+    public UserInterface getUser() {
+        return mModel.getUser();
+    }
+
 
     private void loadData() {
         mModel.loadData();

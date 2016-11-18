@@ -61,9 +61,7 @@ public class LoginActivityView extends BaseActivity implements MVP_Login.ViewToP
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.setNoDrawer(true);
         super.onCreate(savedInstanceState);
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         ((MyApplication) getApplication()).getLoginDiComponent().inject(this);
         super.setupMVP(this, LoginActivityView.class);
     }

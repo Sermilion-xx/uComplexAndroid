@@ -34,15 +34,11 @@ public class RoleSelectActivity extends BaseActivity implements MVP_RoleSelect.V
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.setNoDrawer(true);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_role_select);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         ((MyApplication) getApplication()).getRoleDiComponent().inject(this);
         setupRecyclerView();
-        UserInterface user = getIntent().getParcelableExtra(Constants.EXTRA_KEY_USER);
-        super.setModelData(user);
+        super.setModelData(getIntent().getParcelableExtra(Constants.EXTRA_KEY_USER));
         super.setupMVP(this, RoleSelectActivity.class);
     }
 

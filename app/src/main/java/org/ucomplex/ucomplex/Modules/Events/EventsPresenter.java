@@ -15,6 +15,7 @@ import org.ucomplex.ucomplex.Interfaces.MVP.Model;
 import org.ucomplex.ucomplex.Interfaces.MVP.ViewRecylerToPresenter;
 import org.ucomplex.ucomplex.Interfaces.MVP.ViewToPresenter;
 import org.ucomplex.ucomplex.Model.EventItem;
+import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.R;
 import org.ucomplex.ucomplex.Utility.FacadeMedia;
 import org.ucomplex.ucomplex.Utility.HttpFactory;
@@ -49,7 +50,10 @@ public class EventsPresenter implements MVP_Events.PresenterInterface {
 
     }
 
-
+    @Override
+    public UserInterface getUser(){
+        return mModel.getUser();
+    }
 
     /**
      * Called by View every time it is destroyed.

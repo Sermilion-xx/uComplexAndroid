@@ -1,12 +1,10 @@
 package org.ucomplex.ucomplex.Modules.Events;
 
 
-
-import android.widget.ImageView;
-
 import org.ucomplex.ucomplex.Interfaces.MVP.Presenter;
 import org.ucomplex.ucomplex.Interfaces.MVP.Repository;
 import org.ucomplex.ucomplex.Model.EventItem;
+import org.ucomplex.ucomplex.Model.Users.UserInterface;
 
 import java.util.ArrayList;
 
@@ -26,20 +24,24 @@ public class EventsModel implements MVP_Events.ModelInterface {
     private Presenter mPresenter;
     private Repository mRepository;
     private ArrayList<EventItem> mEventItems;
-    private int userType;
+    private UserInterface user;
 
     /**
      * Main constructor, called by Activity during MVP setup
      * @param presenter PresenterToViewInterface instance
      */
-    public EventsModel(Presenter presenter, int userType) {
+    public EventsModel(Presenter presenter, UserInterface user) {
         this.mPresenter = presenter;
-        this.userType = userType;
+        this.user = user;
         mRepository = new EventsRepository(mPresenter.getAppContext());
     }
 
     public EventsModel() {
 
+    }
+
+    public UserInterface getUser() {
+        return user;
     }
 
     public void setPresenter(Presenter mPresenter) {
@@ -48,7 +50,7 @@ public class EventsModel implements MVP_Events.ModelInterface {
 
     @Override @SuppressWarnings("unchecked")
     public void setData(Object data) {
-        userType = (int) data;
+        this.user = (UserInterface) data;
     }
 
     @Override

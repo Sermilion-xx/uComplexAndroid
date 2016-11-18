@@ -44,14 +44,12 @@ public class EventsActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.setTitle(getResourceString(R.string.events));
         super.onCreate(savedInstanceState);
+        super.setupToolbar(getResourceString(R.string.events));
         UserInterface user;
         Intent intent = getIntent();
         if (intent.hasExtra(Constants.EXTRA_KEY_USER)) {
             user = getIntent().getParcelableExtra(Constants.EXTRA_KEY_USER);
-            super.setmUser(user);
-            super.setupDrawer();
 
             FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame); //Remember this is the FrameLayout area within your activity_main.xml
             getLayoutInflater().inflate(R.layout.activity_main, contentFrameLayout);
@@ -61,7 +59,8 @@ public class EventsActivity extends BaseActivity {
             mFragmentEvents = new FragmentEvents();
             mFragmentEvents.setActivity(this);
             super.setupMVP(mFragmentEvents, EventsActivity.class);
-            super.setModelData(user.getType());
+            super.setModelData(user);
+            super.setupDrawer();
             addFragment(R.id.container, mFragmentEvents, "EventsFragment");
         }
     }
@@ -97,6 +96,5 @@ public class EventsActivity extends BaseActivity {
             onBackPressed();
         }
     };
-
 
 }

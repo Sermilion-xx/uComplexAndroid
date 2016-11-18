@@ -10,6 +10,7 @@ import org.ucomplex.ucomplex.Interfaces.MVP.Model;
 import org.ucomplex.ucomplex.Interfaces.MVP.Presenter;
 import org.ucomplex.ucomplex.Interfaces.MVP.ViewRecylerToPresenter;
 import org.ucomplex.ucomplex.Model.EventItem;
+import org.ucomplex.ucomplex.Model.Users.UserInterface;
 
 /**
  * Holder interface that contains all interfaces
@@ -46,6 +47,7 @@ class MVP_Events {
         void bindViewHolder(EventViewHolder holder, int position);
         int getEventsCount();
         void loadData();
+
     }
 
     interface ModelInterface extends Model {
