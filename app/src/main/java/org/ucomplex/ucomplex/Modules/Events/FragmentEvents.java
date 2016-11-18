@@ -135,5 +135,10 @@ public class FragmentEvents  extends BaseFragment implements ViewRecylerToPresen
         public void onBindViewHolder(EventViewHolder holder, int position) {
             ((MVP_Events.PresenterInterface)mPresenter).bindViewHolder(holder, position);
         }
+
+        @Override
+        public int getItemViewType(int position) {
+            return ((MVP_Events.PresenterInterface)mPresenter).getItemViewType(position);
+        }
     }
 }

@@ -45,6 +45,7 @@ class MVP_Events {
     interface PresenterInterface extends Presenter {
         EventViewHolder createViewHolder(ViewGroup parent, int viewType);
         void bindViewHolder(EventViewHolder holder, int position);
+        int getItemViewType(int position);
         int getEventsCount();
         void loadData();
 

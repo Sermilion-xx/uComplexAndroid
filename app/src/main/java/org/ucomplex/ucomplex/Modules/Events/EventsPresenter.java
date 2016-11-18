@@ -37,6 +37,9 @@ public class EventsPresenter implements MVP_Events.PresenterInterface {
     private WeakReference<ViewRecylerToPresenter> mView;
     private Model mModel;
 
+    private static final int TYPE_COMMON = 0;
+    private static final int TYPE_FOOTER = 1;
+
     /**
      * PresenterToViewInterface Constructor
      *
@@ -104,6 +107,7 @@ public class EventsPresenter implements MVP_Events.PresenterInterface {
         mView = new WeakReference<>((ViewRecylerToPresenter) view);
     }
 
+
     /**
      * Create the RecyclerView holder and setup its view
      *
@@ -114,8 +118,9 @@ public class EventsPresenter implements MVP_Events.PresenterInterface {
     @Override
     public EventViewHolder createViewHolder(ViewGroup parent, int viewType) {
         EventViewHolder viewHolder;
+        int layout = viewType == 0 ? R.layout.list_item_event : R.layout.list_item_event_footer;
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View viewTaskRow = inflater.inflate(R.layout.list_item_event, parent, false);
+        View viewTaskRow = inflater.inflate(layout, parent, false);
         viewHolder = new EventViewHolder(viewTaskRow);
         return viewHolder;
     }
@@ -128,36 +133,43 @@ public class EventsPresenter implements MVP_Events.PresenterInterface {
      */
     @Override
     public void bindViewHolder(final EventViewHolder holder, int position) {
-        final EventItem event = ((EventsModel) mModel).getEvent(position);
-        String personName = event.getParams().getName();
-        if (personName == null || personName.equals("")) {
-            event.getParams().setName(getActivityContext().getResources().getString(R.string.ucomplex));
-        }
-        holder.eventPersonName.setText(event.getParams().getName());
-        holder.eventTextView.setText(event.getEventText());
-        holder.eventTime.setText(event.getTime());
-        int id = event.getParams().getId();
-        String name = event.getParams().getName();
-        Drawable textDrawable = FacadeMedia.getTextDrawable(id, name, getActivityContext());
-        holder.eventsImageView.setImageDrawable(textDrawable);
-        if (event.getEventImageBitmap() != null) {
-            holder.eventsImageView.setImageBitmap(event.getEventImageBitmap());
-        } else {
-            if (event.getParams().getCode() == null) {
-                holder.eventsImageView.setImageDrawable(textDrawable);
+        if(position!=getEventsCount()-1){
+            final EventItem event = ((EventsModel) mModel).getEvent(position);
+            String personName = event.getParams().getName();
+            if (personName == null || personName.equals("")) {
+                event.getParams().setName(getActivityContext().getResources().getString(R.string.ucomplex));
+            }
+            holder.eventPersonName.setText(event.getParams().getName());
+            holder.eventTextView.setText(event.getEventText());
+            holder.eventTime.setText(event.getTime());
+            int id = event.getParams().getId();
+            String name = event.getParams().getName();
+            Drawable textDrawable = FacadeMedia.getTextDrawable(id, name, getActivityContext());
+            holder.eventsImageView.setImageDrawable(textDrawable);
+            if (event.getEventImageBitmap() != null) {
+                holder.eventsImageView.setImageBitmap(event.getEventImageBitmap());
             } else {
-                Glide.with(getActivityContext())
-                        .load(HttpFactory.LOAD_PROFILE_URL + event.getParams().getCode() + ".jpg")
-                        .into(holder.eventsImageView);
+                if (event.getParams().getCode() == null) {
+                    holder.eventsImageView.setImageDrawable(textDrawable);
+                } else {
+                    Glide.with(getActivityContext())
+                            .load(HttpFactory.LOAD_PROFILE_URL + event.getParams().getCode() + ".jpg")
+                            .into(holder.eventsImageView);
+                }
             }
-        }
 
-        holder.eventPersonName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivityContext(), null);
-            }
-        });
+            holder.eventPersonName.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+//                    Intent intent = new Intent(getActivityContext(), null);
+                }
+            });
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position == ((EventsModel)mModel).getEventsCount()-1 ? TYPE_FOOTER : TYPE_COMMON;
     }
 
     /**

@@ -7,7 +7,6 @@
 
         <item name="actionBarStyle">@style/MyActionBarTheme</item>
         <item name="colorControlActivated">@color/colorPrimary</item>
-        <item name="android:windowBackground">@color/colorWhite</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="actionMenuTextColor">@color/color_uc_ListTextColorPrimary</item>
         <item name="android:textColorPrimary">@color/colorWhite</item>

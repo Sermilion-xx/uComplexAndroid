@@ -1,14 +1,10 @@
 package org.ucomplex.ucomplex.Modules;
 
-import android.annotation.TargetApi;
-
 import android.app.Fragment;
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -20,7 +16,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 
 import org.javatuples.Pair;
 import org.ucomplex.ucomplex.Interfaces.MVP.Model;
@@ -28,9 +23,9 @@ import org.ucomplex.ucomplex.Interfaces.MVP.Presenter;
 import org.ucomplex.ucomplex.Interfaces.MVP.Repository;
 import org.ucomplex.ucomplex.Interfaces.MVP.ViewToPresenter;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
-import org.ucomplex.ucomplex.NavDrawer.FacadeDrawer;
 import org.ucomplex.ucomplex.NavDrawer.DrawerAdapter;
 import org.ucomplex.ucomplex.NavDrawer.DrawerListItem;
+import org.ucomplex.ucomplex.NavDrawer.FacadeDrawer;
 import org.ucomplex.ucomplex.R;
 import org.ucomplex.ucomplex.Utility.FacadeCommon;
 import org.ucomplex.ucomplex.Utility.FacadeMedia;
@@ -47,10 +42,10 @@ public class BaseActivity extends AppCompatActivity {
     protected String[]              mDrawerTitles;
     protected int[]                 mDrawerIcons;
 
-    protected StateMaintainer mStateMaintainer;
-    protected Presenter mPresenter;
-    protected Model mModel;
-    protected Repository mRepository;
+    protected StateMaintainer       mStateMaintainer;
+    protected Presenter             mPresenter;
+    protected Model                 mModel;
+    protected Repository            mRepository;
 
     public Presenter getPresenter() {
         return mPresenter;
@@ -112,38 +107,11 @@ public class BaseActivity extends AppCompatActivity {
         mModel.setData(data);
     }
 
-    protected void setStatusBarTranslucent(Boolean makeTranslucent) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            if (makeTranslucent) {
-                getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            } else {
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            }
-        }
-    }
 
     protected void addFragment(@IdRes int containerViewId,
                                @NonNull Fragment fragment,
                                @NonNull String fragmentTag) {
         getFragmentManager().beginTransaction().add(containerViewId, fragment, fragmentTag).disallowAddToBackStack().commit();
-    }
-
-    protected void replaceFragment(@IdRes int containerViewId,
-                                   @NonNull Fragment fragment,
-                                   @NonNull String fragmentTag,
-                                   @Nullable String backStackStateName) {
-        getFragmentManager().beginTransaction().replace(containerViewId, fragment, fragmentTag).addToBackStack(backStackStateName).commit();
-    }
-
-    @TargetApi(19)
-    protected void setStatusBarTranslucent(boolean makeTranslucent) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            if (makeTranslucent) {
-                getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            } else {
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            }
-        }
     }
 
     protected String getResourceString(int id) {
@@ -161,11 +129,13 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     private void setupDrawerItemListForUser(UserInterface user) {
-        Pair<int[], String[]> iconsAndItems = null;
+        Pair<int[], String[]> iconsAndItems;
         if (user.getType() == 0) {
             iconsAndItems = FacadeDrawer.getInstance(this).getDrawerItemsUser0();
         }else if(user.getType() == 4){
             iconsAndItems = FacadeDrawer.getInstance(this).getDrawerItemsUser4();
+        }else{
+            iconsAndItems = FacadeDrawer.getInstance(this).getDrawerItemsUser0();
         }
         mDrawerIcons = iconsAndItems.getValue0();
         mDrawerTitles = iconsAndItems.getValue1();
