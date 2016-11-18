@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 /**
  * Model layer on Model View PresenterToViewInterface Pattern
- *
+ * <p>
  * ---------------------------------------------------
  * Created by @Sermilion on 07/11/16.
  * Project: UComplex
@@ -28,6 +28,7 @@ public class EventsModel implements MVP_Events.ModelInterface {
 
     /**
      * Main constructor, called by Activity during MVP setup
+     *
      * @param presenter PresenterToViewInterface instance
      */
     public EventsModel(Presenter presenter, UserInterface user) {
@@ -48,7 +49,8 @@ public class EventsModel implements MVP_Events.ModelInterface {
         this.mPresenter = mPresenter;
     }
 
-    @Override @SuppressWarnings("unchecked")
+    @Override
+    @SuppressWarnings("unchecked")
     public void setData(Object data) {
         this.user = (UserInterface) data;
     }
@@ -64,6 +66,7 @@ public class EventsModel implements MVP_Events.ModelInterface {
 
     /**
      * Test contructor. Called only during unit testing
+     *
      * @param presenter PresenterToViewInterface instance
      * @param dao       DAO instance
      */
@@ -74,7 +77,8 @@ public class EventsModel implements MVP_Events.ModelInterface {
 
     /**
      * Called by PresenterToViewInterface when View is destroyed
-     * @param isChangingConfiguration   true configuration is changing
+     *
+     * @param isChangingConfiguration true configuration is changing
      */
     @Override
     public void onDestroy(boolean isChangingConfiguration) {
@@ -87,25 +91,35 @@ public class EventsModel implements MVP_Events.ModelInterface {
 
     /**
      * Loads all Data, getting EventItems from DB
-     * @return  true with success
+     *
+     * @return true with success
      */
-    @Override @SuppressWarnings("unchecked")
+    @Override
+    @SuppressWarnings("unchecked")
     public boolean loadData() {
         mEventItems = (ArrayList<EventItem>) mRepository.loadData();
+        mEventItems.add(new EventItem());
         return mEventItems != null;
     }
 
     @Override
     public boolean loadMoreEvents(int start) {
-        ArrayList<EventItem> loadedEvents = ((EventsRepository)mRepository).loadMoreEvents(start);
-        mEventItems.addAll(loadedEvents);
-        return loadedEvents.size()!=0;
+        ArrayList<EventItem> loadedEvents = ((EventsRepository) mRepository).loadMoreEvents(start);
+        if (loadedEvents.size() != 0) {
+            mEventItems.remove(mEventItems.size()-1);
+            mEventItems.addAll(loadedEvents);
+            mEventItems.add(new EventItem());
+        }else{
+            mEventItems.remove(mEventItems.size()-1);
+        }
+        return loadedEvents.size() != 0;
     }
 
     /**
      * Get a specific EventItem from EventItems list using its array postion
-     * @param position    Array position
-     * @return            EventItem from list
+     *
+     * @param position Array position
+     * @return EventItem from list
      */
     @Override
     public EventItem getEvent(int position) {
@@ -114,12 +128,13 @@ public class EventsModel implements MVP_Events.ModelInterface {
 
     /**
      * Get EventItem's positon on ArrayList
-     * @param EventItem  EventItem to check
-     * @return      Positon on ArrayList
+     *
+     * @param EventItem EventItem to check
+     * @return Positon on ArrayList
      */
     public int getEventItemPosition(EventItem EventItem) {
-        for (int i=0; i<mEventItems.size(); i++){
-            if ( EventItem.getId() == mEventItems.get(i).getId())
+        for (int i = 0; i < mEventItems.size(); i++) {
+            if (EventItem.getId() == mEventItems.get(i).getId())
                 return i;
         }
         return -1;
@@ -128,11 +143,12 @@ public class EventsModel implements MVP_Events.ModelInterface {
 
     /**
      * Get ArrayList size
-     * @return  ArrayList size
+     *
+     * @return ArrayList size
      */
     @Override
     public int getEventsCount() {
-        if ( mEventItems != null )
+        if (mEventItems != null)
             return mEventItems.size();
         return 0;
     }

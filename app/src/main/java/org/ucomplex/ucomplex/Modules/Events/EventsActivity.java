@@ -4,11 +4,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
 import org.androidannotations.annotations.EActivity;
+import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.Modules.BaseActivity;
 import org.ucomplex.ucomplex.Modules.MyApplication;
@@ -18,12 +20,11 @@ import org.ucomplex.ucomplex.Utility.Constants;
 import javax.inject.Inject;
 
 @EActivity(R.layout.activity_main)
-public class EventsActivity extends BaseActivity {
+public class EventsActivity extends BaseActivity implements OnTaskCompleteListener {
 
     private FragmentEvents mFragmentEvents;
 
     ProgressBar mProgressBar;
-
 
 
     @Inject
@@ -60,6 +61,7 @@ public class EventsActivity extends BaseActivity {
             super.setupMVP(mFragmentEvents, EventsActivity.class);
             super.setModelData(user);
             super.setupDrawer();
+            ((EventsPresenter) super.mPresenter).setOnTaskCompleteListener(this);
             addFragment(R.id.container, mFragmentEvents, "EventsFragment");
         }
     }
@@ -94,8 +96,8 @@ public class EventsActivity extends BaseActivity {
     private BroadcastReceiver mUpdateEventsReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(intent.getAction().equals(Constants.EVENTS_REFRESH_BROADCAST)){
-                ((EventsPresenter)mPresenter).loadData();
+            if (intent.getAction().equals(Constants.EVENTS_REFRESH_BROADCAST)) {
+                ((EventsPresenter) mPresenter).loadData();
                 onBackPressed();
             }
         }
@@ -104,9 +106,14 @@ public class EventsActivity extends BaseActivity {
     private BroadcastReceiver mLoadMoreEventsReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(intent.getAction().equals(Constants.EVENTS_LOAD_MORE_BROADCAST)){
-                ((EventsPresenter)mPresenter).loadMoreEvents(((EventsPresenter) mPresenter).getEventsCount());
+            if (intent.getAction().equals(Constants.EVENTS_LOAD_MORE_BROADCAST)) {
+                ((EventsPresenter) mPresenter).loadMoreEvents(((EventsPresenter) mPresenter).getEventsCount());
             }
         }
     };
+
+    @Override
+    public void onTaskComplete(AsyncTask task, Object... o) {
+        ((EventsPresenter) mPresenter).setHasMoreEvents((boolean) o[0]);
+    }
 }

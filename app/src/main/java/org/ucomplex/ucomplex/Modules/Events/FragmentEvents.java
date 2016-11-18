@@ -37,7 +37,6 @@ import java.util.ArrayList;
  */
 public class FragmentEvents  extends BaseFragment implements ViewRecylerToPresenter{
 
-    Button                                     mButtonLoadMore;
     @Arg FragmentEvents.ListEventsAdapter      mListAdapter;
     MediaPlayer                                mAlert;
     @Arg EventsActivity                        mActivity;

@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -15,6 +14,7 @@ import com.bumptech.glide.Glide;
 import org.ucomplex.ucomplex.Interfaces.MVP.Model;
 import org.ucomplex.ucomplex.Interfaces.MVP.ViewRecylerToPresenter;
 import org.ucomplex.ucomplex.Interfaces.MVP.ViewToPresenter;
+import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 import org.ucomplex.ucomplex.Model.EventItem;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.R;
@@ -38,14 +38,12 @@ public class EventsPresenter implements MVP_Events.PresenterInterface {
 
     private WeakReference<ViewRecylerToPresenter> mView;
     private Model mModel;
+    private OnTaskCompleteListener onTaskCompleteListener;
+    private boolean hasMoreEvents = true;
 
     private static final int TYPE_COMMON = 0;
     private static final int TYPE_FOOTER = 1;
 
-    /**
-     * PresenterToViewInterface Constructor
-     * @param view MainActivity
-     */
     public EventsPresenter(ViewRecylerToPresenter view) {
         mView = new WeakReference<>(view);
     }
@@ -54,13 +52,23 @@ public class EventsPresenter implements MVP_Events.PresenterInterface {
 
     }
 
+    public void setHasMoreEvents(boolean hasMoreEvents) {
+        this.hasMoreEvents = hasMoreEvents;
+
+    }
+
+    void setOnTaskCompleteListener(OnTaskCompleteListener onTaskCompleteListener) {
+        this.onTaskCompleteListener = onTaskCompleteListener;
+    }
+
     @Override
-    public UserInterface getUser(){
+    public UserInterface getUser() {
         return mModel.getUser();
     }
 
     /**
      * Called by View every time it is destroyed.
+     *
      * @param isChangingConfiguration true: is changing configuration
      *                                and will be recreated
      */
@@ -128,7 +136,7 @@ public class EventsPresenter implements MVP_Events.PresenterInterface {
 
     @Override
     public void bindViewHolder(final EventViewHolder holder, int position) {
-        if(position!=getEventsCount()-1){
+        if (position != getEventsCount() - 1) {
             final EventItem event = ((EventsModel) mModel).getEvent(position);
             String personName = event.getParams().getName();
             if (personName == null || personName.equals("")) {
@@ -159,21 +167,22 @@ public class EventsPresenter implements MVP_Events.PresenterInterface {
 //                    Intent intent = new Intent(getActivityContext(), null);
                 }
             });
-        }else{
-            holder.loadMoreEventsButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    getActivityContext().sendBroadcast(new Intent(Constants.EVENTS_LOAD_MORE_BROADCAST));
-                }
-            });
+        } else {
+            if (hasMoreEvents) {
+                holder.loadMoreEventsButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        getActivityContext().sendBroadcast(new Intent(Constants.EVENTS_LOAD_MORE_BROADCAST));
+                    }
+                });
+            }
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-        return position == ((EventsModel)mModel).getEventsCount()-1 ? TYPE_FOOTER : TYPE_COMMON;
+        return position == ((EventsModel) mModel).getEventsCount() - 1 ? TYPE_FOOTER : TYPE_COMMON;
     }
-
 
 
     /**
@@ -214,18 +223,15 @@ public class EventsPresenter implements MVP_Events.PresenterInterface {
             new AsyncTask<Void, Void, Boolean>() {
                 @Override
                 protected Boolean doInBackground(Void... params) {
-                    // Load data from Model
-                    return ((EventsModel)mModel).loadMoreEvents(start);
+                    return ((EventsModel) mModel).loadMoreEvents(start);
                 }
 
                 @Override
                 protected void onPostExecute(Boolean result) {
                     try {
                         getView().hideProgress();
-                        if (!result) // Loading error
-                            getView().showToast(makeToast("Error loading data."));
-                        else // success
-                            getView().notifyDataSetChanged();
+                        onTaskCompleteListener.onTaskComplete(this, result);
+                        getView().notifyDataSetChanged();
                     } catch (NullPointerException e) {
                         e.printStackTrace();
                     }
