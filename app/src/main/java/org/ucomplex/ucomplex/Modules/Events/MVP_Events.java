@@ -48,11 +48,13 @@ class MVP_Events {
         int getItemViewType(int position);
         int getEventsCount();
         void loadData();
+        void loadMoreEvents(int start);
 
     }
 
     interface ModelInterface extends Model {
         EventItem getEvent(int position);
         int getEventsCount();
+        boolean loadMoreEvents(int start);
     }
 }

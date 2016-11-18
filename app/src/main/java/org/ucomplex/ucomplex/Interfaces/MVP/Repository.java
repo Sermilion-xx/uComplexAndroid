@@ -2,6 +2,10 @@ package org.ucomplex.ucomplex.Interfaces.MVP;
 
 import android.content.Context;
 
+import org.ucomplex.ucomplex.Model.EventItem;
+
+import java.util.ArrayList;
+
 /**
  * ---------------------------------------------------
  * Created by Sermilion on 14/11/2016.

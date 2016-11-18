@@ -62,9 +62,18 @@ public class EventsRepository implements Repository {
         return null;
     }
 
-    ArrayList<EventItem> loadMoreEvents(int start, String params) throws JSONException {
-        String jsonBody = "\"start\":\""+start+"\"";
-        String stringResult = HttpFactory.httpPost(HttpFactory.USER_EVENTS_URL, FacadePreferences.getLoginDataFromPref(mContext), params);
+    public ArrayList<EventItem> loadMoreEvents(int start){
+        ArrayList<EventItem> loadedEvents = new ArrayList<>();
+        String jsonBody = "{\"start\":\""+start+"\"}";
+        String stringResult = HttpFactory.httpPost(HttpFactory.USER_EVENTS_URL, FacadePreferences.getLoginDataFromPref(mContext), jsonBody);
+        if (stringResult != null) {
+            try {
+                loadedEvents = getEventsDataFromJson(stringResult);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return loadedEvents;
+        }
         return null;
     }
 

@@ -9,7 +9,6 @@ import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.ViewById;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.Modules.BaseActivity;
 import org.ucomplex.ucomplex.Modules.MyApplication;
@@ -79,22 +78,35 @@ public class EventsActivity extends BaseActivity {
     @Override
     public void onResume() {
         registerReceiver(mUpdateEventsReceiver, new IntentFilter(
-                Constants.REFRESH_EVENTS_BROADCAST));
+                Constants.EVENTS_REFRESH_BROADCAST));
+        registerReceiver(mLoadMoreEventsReceiver, new IntentFilter(
+                Constants.EVENTS_LOAD_MORE_BROADCAST));
         super.onResume();
     }
 
     @Override
     public void onPause() {
         unregisterReceiver(mUpdateEventsReceiver);
+        unregisterReceiver(mLoadMoreEventsReceiver);
         super.onPause();
     }
 
     private BroadcastReceiver mUpdateEventsReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            ((EventsPresenter)mPresenter).loadData();
-            onBackPressed();
+            if(intent.getAction().equals(Constants.EVENTS_REFRESH_BROADCAST)){
+                ((EventsPresenter)mPresenter).loadData();
+                onBackPressed();
+            }
         }
     };
 
+    private BroadcastReceiver mLoadMoreEventsReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(intent.getAction().equals(Constants.EVENTS_LOAD_MORE_BROADCAST)){
+                ((EventsPresenter)mPresenter).loadMoreEvents(((EventsPresenter) mPresenter).getEventsCount());
+            }
+        }
+    };
 }

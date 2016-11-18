@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -17,6 +18,7 @@ import org.ucomplex.ucomplex.Interfaces.MVP.ViewToPresenter;
 import org.ucomplex.ucomplex.Model.EventItem;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.R;
+import org.ucomplex.ucomplex.Utility.Constants;
 import org.ucomplex.ucomplex.Utility.FacadeMedia;
 import org.ucomplex.ucomplex.Utility.HttpFactory;
 
@@ -42,7 +44,6 @@ public class EventsPresenter implements MVP_Events.PresenterInterface {
 
     /**
      * PresenterToViewInterface Constructor
-     *
      * @param view MainActivity
      */
     public EventsPresenter(ViewRecylerToPresenter view) {
@@ -125,12 +126,6 @@ public class EventsPresenter implements MVP_Events.PresenterInterface {
         return viewHolder;
     }
 
-    /**
-     * Binds ViewHolder with RecyclerView
-     *
-     * @param holder   Holder to bind
-     * @param position Position on Recycler adapter
-     */
     @Override
     public void bindViewHolder(final EventViewHolder holder, int position) {
         if(position!=getEventsCount()-1){
@@ -158,10 +153,17 @@ public class EventsPresenter implements MVP_Events.PresenterInterface {
                 }
             }
 
-            holder.eventPersonName.setOnClickListener(new View.OnClickListener() {
+            holder.eventDetailsLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 //                    Intent intent = new Intent(getActivityContext(), null);
+                }
+            });
+        }else{
+            holder.loadMoreEventsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    getActivityContext().sendBroadcast(new Intent(Constants.EVENTS_LOAD_MORE_BROADCAST));
                 }
             });
         }
@@ -171,6 +173,8 @@ public class EventsPresenter implements MVP_Events.PresenterInterface {
     public int getItemViewType(int position) {
         return position == ((EventsModel)mModel).getEventsCount()-1 ? TYPE_FOOTER : TYPE_COMMON;
     }
+
+
 
     /**
      * Load data from Model in a AsyncTask
@@ -183,6 +187,35 @@ public class EventsPresenter implements MVP_Events.PresenterInterface {
                 protected Boolean doInBackground(Void... params) {
                     // Load data from Model
                     return mModel.loadData();
+                }
+
+                @Override
+                protected void onPostExecute(Boolean result) {
+                    try {
+                        getView().hideProgress();
+                        if (!result) // Loading error
+                            getView().showToast(makeToast("Error loading data."));
+                        else // success
+                            getView().notifyDataSetChanged();
+                    } catch (NullPointerException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }.execute();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void loadMoreEvents(final int start) {
+        try {
+            getView().showProgress();
+            new AsyncTask<Void, Void, Boolean>() {
+                @Override
+                protected Boolean doInBackground(Void... params) {
+                    // Load data from Model
+                    return ((EventsModel)mModel).loadMoreEvents(start);
                 }
 
                 @Override

@@ -1,12 +1,21 @@
-<Button android:layout_gravity="center"
-    android:layout_width="match_parent"
+<com.andexert.library.RippleView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="10dp"
-    android:textStyle="bold"
-    android:layout_margin="8dp"
-    android:background="@color/colorWhite"
-    android:textSize="20sp"
-    android:textColor="@color/color_uc_ListTextColorSecondary"
-    android:text="Загрузить еще"
-    android:id="@+id/textView2"
-    xmlns:android="http://schemas.android.com/apk/res/android" />
+    android:layout_below="@+id/list_events_item_text"
+    app:rv_color="@color/colorPrimary"
+    app:rv_ripplePadding="8dp">
+
+    <Button xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/loadMoreEventsButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="8dp"
+        android:background="@color/colorWhite"
+        android:padding="10dp"
+        android:text="@string/load_more"
+        android:textColor="@color/color_uc_ListTextColorSecondary"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+</com.andexert.library.RippleView>
