@@ -10,6 +10,7 @@ import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.Modules.Events.AsyncTasks.LoadEventsTask;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Model layer on Model View PresenterToViewInterface Pattern
@@ -87,6 +88,14 @@ public class EventsModel implements MVP_Events.ModelInterface {
             mContext = null;
             mRepository = null;
             mEventItems = null;
+            if(loadEventsTask!=null){
+                loadEventsTask.cancel(true);
+                try {
+                    loadEventsTask.get();
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
@@ -94,7 +103,6 @@ public class EventsModel implements MVP_Events.ModelInterface {
     @SuppressWarnings("unchecked")
     public boolean loadData() {
         loadEventsTask = new LoadEventsTask();
-
         return mEventItems != null;
     }
 

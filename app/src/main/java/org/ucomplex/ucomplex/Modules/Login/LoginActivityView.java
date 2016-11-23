@@ -34,19 +34,19 @@ import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.INVALID_PASSWORD;
 import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.PASSWORD_REQUIRED;
 import static org.ucomplex.ucomplex.Utility.HttpFactory.encodeLoginData;
 
-@EActivity(R.layout.activity_login)
+@EActivity(resName="R.layout.activity_login")
 public class LoginActivityView extends BaseActivity implements MVP_Login.ViewToPresenterInterface {
 
     static final String TAG = LoginActivityView.class.getName();
-    @ViewById(R.id.login)
+    @ViewById(resName="R.id.login")
     AutoCompleteTextView mLoginView;
-    @ViewById(R.id.password)
+    @ViewById(resName="R.id.password")
     EditText mPasswordView;
-    @ViewById(R.id.login_progress)
+    @ViewById(resName="R.id.login_progress")
     View mProgressView;
-    @ViewById(R.id.forgot_pass_button)
+    @ViewById(resName="R.id.forgot_pass_button")
     Button mForgotButton;
-    @ViewById(R.id.login_sign_in_button)
+    @ViewById(resName="R.id.login_sign_in_button")
     Button mLoginSignInButton;
 
     @Inject public void setPresenter(LoginPresenter presenter) {

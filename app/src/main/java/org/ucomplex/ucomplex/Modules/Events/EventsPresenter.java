@@ -133,20 +133,12 @@ public class EventsPresenter implements MVP_Events.PresenterInterface {
                 }
             }
 
-            holder.eventDetailsLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-//                    Intent intent = new Intent(getActivityContext(), null);
-                }
+            holder.eventDetailsLayout.setOnClickListener(view -> {
+//                Intent intent = new Intent(getActivityContext(), null);
             });
         } else {
             if (hasMoreEvents) {
-                holder.loadMoreEventsButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        getActivityContext().sendBroadcast(new Intent(Constants.EVENTS_LOAD_MORE_BROADCAST));
-                    }
-                });
+                holder.loadMoreEventsButton.setOnClickListener(view -> getActivityContext().sendBroadcast(new Intent(Constants.EVENTS_LOAD_MORE_BROADCAST)));
             }
         }
     }

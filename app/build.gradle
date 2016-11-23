@@ -1,4 +1,4 @@
-apply plugin: 'com.android.library'
+apply plugin: 'com.android.application'
 
 android {
 
@@ -14,6 +14,9 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        jackOptions{
+            enabled true
+        }
     }
 
     compileOptions {
@@ -51,7 +54,8 @@ dependencies {
     compile 'org.javatuples:javatuples:1.2'
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
+        exclude group: 'com.android.support',
+                module: 'support-annotations'
     })
     compile "org.androidannotations:androidannotations-api:$AAVersion"
     provided 'javax.annotation:jsr250-api:1.0'
@@ -64,6 +68,7 @@ dependencies {
     compile 'uk.co.chrisjenx:calligraphy:2.2.0'
     compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
     androidTestCompile "com.android.support:support-annotations:$support_version"
+    compile 'org.glassfish:javax.annotation:10.0-b28'
 }
 
 buildscript {

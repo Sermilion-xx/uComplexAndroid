@@ -10,6 +10,7 @@ import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.ViewById;
 import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.Modules.BaseActivity;
@@ -19,11 +20,12 @@ import org.ucomplex.ucomplex.Utility.Constants;
 
 import javax.inject.Inject;
 
-@EActivity(R.layout.activity_main)
+@EActivity(resName="R.layout.activity_main")
 public class EventsActivity extends BaseActivity implements OnTaskCompleteListener {
 
     private FragmentEvents mFragmentEvents;
 
+    @ViewById(resName="R.id.progressBar")
     ProgressBar mProgressBar;
 
 
@@ -60,12 +62,13 @@ public class EventsActivity extends BaseActivity implements OnTaskCompleteListen
 
             FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame); //Remember this is the FrameLayout area within your activity_main.xml
             getLayoutInflater().inflate(R.layout.activity_main, contentFrameLayout);
-            mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+
             ((MyApplication) getApplication()).getEventsDiComponent().inject(this);
 
             mFragmentEvents = new FragmentEvents();
             mFragmentEvents.setActivity(this);
             mFragmentEvents.setUser(user);
+
             ((EventsModel) super.mModel).setOnTaskCompleteListener(this);
             addFragment(R.id.container, mFragmentEvents, "EventsFragment");
         }

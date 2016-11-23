@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.ucomplex.ucomplex.Modules.Login.LoginActivityView_;
+import org.ucomplex.ucomplex.Modules.Login.LoginActivityView;
 import org.ucomplex.ucomplex.R;
 import org.ucomplex.ucomplex.Utility.Constants;
 import org.ucomplex.ucomplex.Utility.FacadeMedia;
@@ -105,7 +105,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
         public void onClick(View view) {
             if(getAdapterPosition()==getItemCount()-1){
                 FacadePreferences.clearPref(mContext);
-                mContext.startActivity(new Intent(mContext, LoginActivityView_.class));
+                mContext.startActivity(new Intent(mContext, LoginActivityView.class));
             }else if(getAdapterPosition()==1){
                 mContext.sendBroadcast(new Intent(Constants.EVENTS_REFRESH_BROADCAST));
             }

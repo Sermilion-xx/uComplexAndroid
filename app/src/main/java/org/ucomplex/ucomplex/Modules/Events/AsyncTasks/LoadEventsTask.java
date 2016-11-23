@@ -46,8 +46,11 @@ public class LoadEventsTask extends AsyncTask<Void, Void, ArrayList<EventItem>> 
 
     @Override @SuppressWarnings("unchecked")
     protected ArrayList<EventItem> doInBackground(Void... params) {
-        ArrayList<EventItem> eventItems = (ArrayList<EventItem>) mRepository.loadData();
-        eventItems.add(new EventItem());
+        ArrayList<EventItem> eventItems = new ArrayList<>();
+        if(!isCancelled()){
+            eventItems = (ArrayList<EventItem>) mRepository.loadData();
+            eventItems.add(new EventItem());
+        }
         return eventItems;
     }
 
