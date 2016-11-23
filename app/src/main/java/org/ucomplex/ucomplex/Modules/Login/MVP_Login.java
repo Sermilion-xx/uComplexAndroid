@@ -28,7 +28,7 @@ import java.util.ArrayList;
 
 public class MVP_Login {
 
-    interface ViewToPresenterInterface extends ViewActivityToPresenter {
+    public interface ViewToPresenterInterface extends ViewActivityToPresenter {
         void successfulLogin(UserInterface user, int flag);
     }
 

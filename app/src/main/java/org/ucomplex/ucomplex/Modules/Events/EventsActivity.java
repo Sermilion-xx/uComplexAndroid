@@ -42,6 +42,13 @@ public class EventsActivity extends BaseActivity implements OnTaskCompleteListen
         super.mRepository = repository;
     }
 
+
+    public void setupMVP(UserInterface user, FragmentEvents fragmentEvents){
+        super.setupMVP(fragmentEvents, EventsActivity.class);
+        super.setModelData(user);
+        super.setupDrawer();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,10 +65,8 @@ public class EventsActivity extends BaseActivity implements OnTaskCompleteListen
 
             mFragmentEvents = new FragmentEvents();
             mFragmentEvents.setActivity(this);
-            super.setupMVP(mFragmentEvents, EventsActivity.class);
-            super.setModelData(user);
-            super.setupDrawer();
-            ((EventsPresenter) super.mPresenter).setOnTaskCompleteListener(this);
+            mFragmentEvents.setUser(user);
+            ((EventsModel) super.mModel).setOnTaskCompleteListener(this);
             addFragment(R.id.container, mFragmentEvents, "EventsFragment");
         }
     }
@@ -111,6 +116,8 @@ public class EventsActivity extends BaseActivity implements OnTaskCompleteListen
             }
         }
     };
+
+
 
     @Override
     public void onTaskComplete(AsyncTask task, Object... o) {

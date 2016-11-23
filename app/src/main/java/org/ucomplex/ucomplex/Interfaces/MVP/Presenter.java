@@ -1,6 +1,7 @@
 package org.ucomplex.ucomplex.Interfaces.MVP;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 
@@ -19,7 +20,9 @@ public interface Presenter {
     Context getActivityContext();
     void onDestroy(boolean isChangingConfiguration);
     void setView(ViewToPresenter view);
+    ViewToPresenter getView();
     void onConfigurationChanged(ViewToPresenter view);
     void setModel(Model models);
     UserInterface getUser();
+
 }

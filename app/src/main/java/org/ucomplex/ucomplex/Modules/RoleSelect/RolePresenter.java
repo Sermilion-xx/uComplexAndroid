@@ -89,7 +89,8 @@ public class RolePresenter implements MVP_RoleSelect.PresenterInterface {
         mModel.loadData();
     }
 
-    private MVP_RoleSelect.ViewToPresenterInterface getView() throws NullPointerException {
+    @Override
+    public MVP_RoleSelect.ViewToPresenterInterface getView() throws NullPointerException {
         if (mView != null)
             return mView.get();
         else

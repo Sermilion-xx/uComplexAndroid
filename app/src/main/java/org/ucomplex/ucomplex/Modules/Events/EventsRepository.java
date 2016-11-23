@@ -41,6 +41,10 @@ public class EventsRepository implements Repository {
         this.mContext = mContext;
     }
 
+    public Context getContext() {
+        return mContext;
+    }
+
     @Override
     public Object loadData(Object... param) {
         try {

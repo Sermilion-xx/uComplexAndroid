@@ -1,5 +1,6 @@
 package org.ucomplex.ucomplex.Modules.Events.EventsDagger;
 
+import org.ucomplex.ucomplex.Modules.Events.AsyncTasks.LoadEventsTask;
 import org.ucomplex.ucomplex.Modules.Events.EventsModel;
 import org.ucomplex.ucomplex.Modules.Events.EventsPresenter;
 import org.ucomplex.ucomplex.Modules.Events.EventsRepository;
@@ -38,4 +39,5 @@ class EventsModule {
     EventsRepository getEventsRepository(){
         return new EventsRepository();
     }
+
 }

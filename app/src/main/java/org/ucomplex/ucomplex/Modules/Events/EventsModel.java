@@ -1,10 +1,13 @@
 package org.ucomplex.ucomplex.Modules.Events;
 
 
-import org.ucomplex.ucomplex.Interfaces.MVP.Presenter;
+import android.content.Context;
+
 import org.ucomplex.ucomplex.Interfaces.MVP.Repository;
+import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 import org.ucomplex.ucomplex.Model.EventItem;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
+import org.ucomplex.ucomplex.Modules.Events.AsyncTasks.LoadEventsTask;
 
 import java.util.ArrayList;
 
@@ -21,38 +24,52 @@ import java.util.ArrayList;
  */
 public class EventsModel implements MVP_Events.ModelInterface {
 
-    private Presenter mPresenter;
     private Repository mRepository;
     private ArrayList<EventItem> mEventItems;
+    private Context mContext;
     private UserInterface user;
+    private OnTaskCompleteListener onTaskCompleteListener;
+    private LoadEventsTask loadEventsTask;
 
-    /**
-     * Main constructor, called by Activity during MVP setup
-     *
-     * @param presenter PresenterToViewInterface instance
-     */
-    public EventsModel(Presenter presenter, UserInterface user) {
-        this.mPresenter = presenter;
+    public EventsModel(Context context, UserInterface user) {
+        this.mContext = context;
         this.user = user;
-        mRepository = new EventsRepository(mPresenter.getAppContext());
+        mRepository = new EventsRepository(mContext);
     }
 
     public EventsModel() {
 
     }
 
+
+    void setOnTaskCompleteListener(OnTaskCompleteListener onTaskCompleteListener) {
+        this.onTaskCompleteListener = onTaskCompleteListener;
+    }
+
+    public OnTaskCompleteListener getOnTaskCompleteListener() {
+        return onTaskCompleteListener;
+    }
+
     public UserInterface getUser() {
         return user;
     }
 
-    public void setPresenter(Presenter mPresenter) {
-        this.mPresenter = mPresenter;
+    public void setPresenter(Context context) {
+        this.mContext = context;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public void setData(Object data) {
-        this.user = (UserInterface) data;
+        if (data instanceof ArrayList)
+            this.mEventItems = (ArrayList<EventItem>) data;
+        else
+            this.user = (UserInterface) data;
+    }
+
+    @Override
+    public void setContext(Context context) {
+        mContext = context;
     }
 
     @Override
@@ -64,41 +81,20 @@ public class EventsModel implements MVP_Events.ModelInterface {
         this.mRepository = mRepository;
     }
 
-    /**
-     * Test contructor. Called only during unit testing
-     *
-     * @param presenter PresenterToViewInterface instance
-     * @param dao       DAO instance
-     */
-    public EventsModel(Presenter presenter, EventsRepository dao) {
-        this.mPresenter = presenter;
-        mRepository = dao;
-    }
-
-    /**
-     * Called by PresenterToViewInterface when View is destroyed
-     *
-     * @param isChangingConfiguration true configuration is changing
-     */
     @Override
     public void onDestroy(boolean isChangingConfiguration) {
         if (!isChangingConfiguration) {
-            mPresenter = null;
+            mContext = null;
             mRepository = null;
             mEventItems = null;
         }
     }
 
-    /**
-     * Loads all Data, getting EventItems from DB
-     *
-     * @return true with success
-     */
     @Override
     @SuppressWarnings("unchecked")
     public boolean loadData() {
-        mEventItems = (ArrayList<EventItem>) mRepository.loadData();
-        mEventItems.add(new EventItem());
+        loadEventsTask = new LoadEventsTask();
+
         return mEventItems != null;
     }
 
@@ -106,32 +102,21 @@ public class EventsModel implements MVP_Events.ModelInterface {
     public boolean loadMoreEvents(int start) {
         ArrayList<EventItem> loadedEvents = ((EventsRepository) mRepository).loadMoreEvents(start);
         if (loadedEvents.size() != 0) {
-            mEventItems.remove(mEventItems.size()-1);
+            mEventItems.remove(mEventItems.size() - 1);
             mEventItems.addAll(loadedEvents);
             mEventItems.add(new EventItem());
-        }else{
-            mEventItems.remove(mEventItems.size()-1);
         }
+//        else{
+//            mEventItems.remove(mEventItems.size());
+//        }
         return loadedEvents.size() != 0;
     }
 
-    /**
-     * Get a specific EventItem from EventItems list using its array postion
-     *
-     * @param position Array position
-     * @return EventItem from list
-     */
     @Override
     public EventItem getEvent(int position) {
         return mEventItems.get(position);
     }
 
-    /**
-     * Get EventItem's positon on ArrayList
-     *
-     * @param EventItem EventItem to check
-     * @return Positon on ArrayList
-     */
     public int getEventItemPosition(EventItem EventItem) {
         for (int i = 0; i < mEventItems.size(); i++) {
             if (EventItem.getId() == mEventItems.get(i).getId())
@@ -140,18 +125,11 @@ public class EventsModel implements MVP_Events.ModelInterface {
         return -1;
     }
 
-
-    /**
-     * Get ArrayList size
-     *
-     * @return ArrayList size
-     */
     @Override
     public int getEventsCount() {
         if (mEventItems != null)
             return mEventItems.size();
         return 0;
     }
-
 
 }

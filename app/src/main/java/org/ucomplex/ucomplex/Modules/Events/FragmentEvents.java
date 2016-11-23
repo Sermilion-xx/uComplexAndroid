@@ -21,6 +21,7 @@ import org.androidannotations.annotations.ViewById;
 import org.ucomplex.ucomplex.Interfaces.MVP.Presenter;
 import org.ucomplex.ucomplex.Interfaces.MVP.ViewRecylerToPresenter;
 import org.ucomplex.ucomplex.Model.EventItem;
+import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.Modules.BaseFragment;
 import org.ucomplex.ucomplex.R;
 
@@ -38,22 +39,29 @@ import java.util.ArrayList;
 public class FragmentEvents  extends BaseFragment implements ViewRecylerToPresenter{
 
     @Arg FragmentEvents.ListEventsAdapter      mListAdapter;
-    MediaPlayer                                mAlert;
+    private MediaPlayer                        mAlert;
     @Arg EventsActivity                        mActivity;
     @Arg Presenter                             mPresenter;
-
-
+    private ProgressBar                        mProgressBar;
+    private UserInterface                      mUser;
 
     public void setActivity(EventsActivity mActivity) {
         this.mActivity = mActivity;
         this.mPresenter = mActivity.getPresenter();
     }
 
+    public void setUser(UserInterface user){
+        mUser = user;
+    }
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_events, container, false);
         mAlert = MediaPlayer.create(getAppContext(), R.raw.alert);
+        mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         setupRecyclerView(view);
+        mActivity.setupMVP(mUser, this);
         return view;
     }
 
@@ -105,12 +113,12 @@ public class FragmentEvents  extends BaseFragment implements ViewRecylerToPresen
 
     @Override
     public void showProgress() {
-        mActivity.mProgressBar.setVisibility(View.VISIBLE);
+        mProgressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideProgress() {
-        mActivity.mProgressBar.setVisibility(View.GONE);
+        mProgressBar.setVisibility(View.GONE);
     }
 
     @Override

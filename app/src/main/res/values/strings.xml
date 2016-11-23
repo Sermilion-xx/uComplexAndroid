@@ -61,5 +61,6 @@
     <string name="reset_password_sent">На указанный адрес отправленна ссылка для восстановления пароля.</string>
     <string name="error_loading_data">Error loading data</string>
     <string name="load_more">Загрузить еще</string>
+    <string name="error_loadig_data">Ошибка при загрузке данных</string>
 
 </resources>

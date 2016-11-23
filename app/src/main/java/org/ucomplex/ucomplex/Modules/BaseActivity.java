@@ -90,8 +90,8 @@ public class BaseActivity extends AppCompatActivity {
         mStateMaintainer = new StateMaintainer(getFragmentManager(), type.getName());
         if (mStateMaintainer.firstTimeIn()) {
             mPresenter.setView(viewToPresenter);
-            mModel.setPresenter(mPresenter);
-            mRepository.setContext(mPresenter.getAppContext());
+            mModel.setContext(mPresenter.getActivityContext());
+            mRepository.setContext(mPresenter.getActivityContext());
             mModel.setRepository(mRepository);
             mPresenter.setModel(mModel);
             mStateMaintainer.put(mPresenter);

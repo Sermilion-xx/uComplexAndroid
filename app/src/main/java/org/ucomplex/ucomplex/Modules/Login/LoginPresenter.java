@@ -85,7 +85,8 @@ public class LoginPresenter implements MVP_Login.PresenterInterface, OnTaskCompl
      * @return {@link MVP_Login.ViewToPresenterInterface}
      * @throws NullPointerException when View is unavailable
      */
-    private MVP_Login.ViewToPresenterInterface getView() throws NullPointerException {
+    @Override
+    public MVP_Login.ViewToPresenterInterface getView() throws NullPointerException {
         if (mView != null)
             return mView.get();
         else
