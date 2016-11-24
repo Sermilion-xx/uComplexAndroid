@@ -1,6 +1,8 @@
 package org.ucomplex.ucomplex.Modules.Login;
 
 
+import android.content.Context;
+
 import org.ucomplex.ucomplex.Interfaces.MVP.Presenter;
 import org.ucomplex.ucomplex.Interfaces.MVP.Repository;
 import org.ucomplex.ucomplex.Model.Users.User;
@@ -21,27 +23,24 @@ import org.ucomplex.ucomplex.Utility.HttpFactory;
 public class LoginModel implements MVP_Login.ModelInterface {
 
     // PresenterToViewInterface reference
-    private Presenter mPresenter;
+    private Context mContext;
     private Repository mRepository;
     private UserInterface user = new User();
 
-    /**
-     * Main constructor, called by Activity during MVP setup
-     *
-     * @param presenter PresenterToViewInterface instance
-     */
-    public LoginModel(Presenter presenter) {
-        this.mPresenter = presenter;
-        mRepository = new LoginRepository(mPresenter.getAppContext());
+
+
+    public LoginModel(Context context, LoginRepository dao) {
+        this.mContext = context;
+        mRepository = dao;
     }
 
     public LoginModel() {
 
     }
 
-    public void setPresenter(Presenter mPresenter) {
-        this.mPresenter = mPresenter;
-        mRepository = new LoginRepository(mPresenter.getAppContext());
+    public void setPresenter(Context context) {
+        this.mContext = context;
+        mRepository = new LoginRepository(context);
     }
 
     @Override
@@ -54,15 +53,7 @@ public class LoginModel implements MVP_Login.ModelInterface {
         this.mRepository = repository;
     }
 
-    /**
-     * Test contructor. Called only during unit testing
-     * @param presenter PresenterToViewInterface instance
-     * @param dao       DAO instance
-     */
-    public LoginModel(Presenter presenter, LoginRepository dao) {
-        this.mPresenter = presenter;
-        mRepository = dao;
-    }
+
 
     /**
      * Called by PresenterToViewInterface when View is destroyed
@@ -71,7 +62,7 @@ public class LoginModel implements MVP_Login.ModelInterface {
     @Override
     public void onDestroy(boolean isChangingConfiguration) {
         if (!isChangingConfiguration) {
-            mPresenter = null;
+            mContext = null;
             mRepository = null;
         }
     }
@@ -84,6 +75,11 @@ public class LoginModel implements MVP_Login.ModelInterface {
     public boolean loadData() {
         user = (UserInterface) mRepository.loadData(user);
         return user.getRoles()!=null;
+    }
+
+    @Override
+    public void setContext(Context context) {
+        mContext = context;
     }
 
     @Override

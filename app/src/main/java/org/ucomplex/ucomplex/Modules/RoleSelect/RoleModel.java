@@ -1,5 +1,7 @@
 package org.ucomplex.ucomplex.Modules.RoleSelect;
 
+import android.content.Context;
+
 import org.ucomplex.ucomplex.Interfaces.MVP.Presenter;
 import org.ucomplex.ucomplex.Interfaces.MVP.Repository;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
@@ -19,21 +21,17 @@ import java.util.ArrayList;
 public class RoleModel implements MVP_RoleSelect.ModelInterface {
 
     // PresenterToViewInterface reference
-    private Presenter mPresenter;
+    private Context mContext;
     private ArrayList<RoleItem> mRoles;
     private Repository mRolesRepository;
     private UserInterface mUser;
 
-    public RoleModel(Presenter presenter) {
-        this.mPresenter = presenter;
-        this.mRolesRepository = new RoleRepository(mPresenter.getAppContext());
-    }
-
     public RoleModel() {
     }
 
-    public void setPresenter(Presenter mPresenter) {
-        this.mPresenter = mPresenter;
+    @Override
+    public void setContext(Context mContext) {
+        this.mContext = mContext;
     }
 
     @Override
@@ -54,8 +52,8 @@ public class RoleModel implements MVP_RoleSelect.ModelInterface {
         return mUser;
     }
 
-    public RoleModel(Presenter presenter, RoleRepository repository, UserInterface user) {
-        this.mPresenter = presenter;
+    public RoleModel(Context context, RoleRepository repository, UserInterface user) {
+        this.mContext = context;
         mRolesRepository = repository;
         this.mUser = user;
     }
@@ -63,7 +61,7 @@ public class RoleModel implements MVP_RoleSelect.ModelInterface {
     @Override
     public void onDestroy(boolean isChangingConfiguration) {
         if (!isChangingConfiguration) {
-            mPresenter = null;
+            mContext = null;
             mRoles = null;
         }
     }

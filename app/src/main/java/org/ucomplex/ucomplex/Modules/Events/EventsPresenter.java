@@ -3,6 +3,7 @@ package org.ucomplex.ucomplex.Modules.Events;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +35,7 @@ import java.lang.ref.WeakReference;
  * ---------------------------------------------------
  */
 
-public class EventsPresenter implements MVP_Events.PresenterInterface {
+public class EventsPresenter implements MVP_Events.PresenterInterface, OnTaskCompleteListener{
 
     private WeakReference<ViewRecylerToPresenter> mView;
     private Model mModel;
@@ -55,7 +56,6 @@ public class EventsPresenter implements MVP_Events.PresenterInterface {
 
     public void setHasMoreEvents(boolean hasMoreEvents) {
         this.hasMoreEvents = hasMoreEvents;
-
     }
 
     @Override
@@ -133,12 +133,19 @@ public class EventsPresenter implements MVP_Events.PresenterInterface {
                 }
             }
 
-            holder.eventDetailsLayout.setOnClickListener(view -> {
-//                Intent intent = new Intent(getActivityContext(), null);
-            });
+//            holder.eventDetailsLayout.setOnClickListener(view -> {
+////                Intent intent = new Intent(getActivityContext(), null);
+//            });
         } else {
             if (hasMoreEvents) {
-                holder.loadMoreEventsButton.setOnClickListener(view -> getActivityContext().sendBroadcast(new Intent(Constants.EVENTS_LOAD_MORE_BROADCAST)));
+                holder.loadMoreEventsButton.setOnClickListener(new View.OnClickListener() {
+                                                                   @Override
+                                                                   public void onClick(View view) {
+                                                                       getActivityContext().sendBroadcast(new Intent(Constants.EVENTS_LOAD_MORE_BROADCAST));
+                                                                   }
+                                                               }
+
+                );
             }
         }
     }
@@ -151,6 +158,12 @@ public class EventsPresenter implements MVP_Events.PresenterInterface {
     public void loadData() {
         try {
             getView().showProgress();
+
+            LoadEventsTask loadEventsTask = new LoadEventsTask(this);
+            loadEventsTask.setModel(mModel);
+            loadEventsTask.setPresenter(this);
+            ((EventsModel)mModel).setLoadEventsTask(loadEventsTask);
+
             mModel.loadData();
         } catch (NullPointerException e) {
             e.printStackTrace();
@@ -161,9 +174,7 @@ public class EventsPresenter implements MVP_Events.PresenterInterface {
     public void loadMoreEvents(final int start) {
         try {
             getView().showProgress();
-            if (loadMoreEventsTask == null) {
-                loadMoreEventsTask = new LoadMoreEventsTask(mModel, this);
-            }
+            loadMoreEventsTask = new LoadMoreEventsTask(mModel, this);
             loadMoreEventsTask.execute(start);
         } catch (NullPointerException e) {
             e.printStackTrace();
@@ -184,11 +195,6 @@ public class EventsPresenter implements MVP_Events.PresenterInterface {
         }
     }
 
-    /**
-     * Retrieves Activity context
-     *
-     * @return Activity context
-     */
     @Override
     public Context getActivityContext() {
         try {
@@ -198,8 +204,10 @@ public class EventsPresenter implements MVP_Events.PresenterInterface {
         }
     }
 
-
-
+    @Override
+    public void onTaskComplete(AsyncTask task, Object... o) {
+        this.setHasMoreEvents((boolean) o[0]);
+    }
 
 }
 

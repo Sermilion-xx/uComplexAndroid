@@ -21,7 +21,7 @@
         <activity android:name=".Modules.Events.EventsActivity" />
         <activity android:name=".Modules.BaseActivity" />
         <activity
-            android:name=".Modules.Login.LoginActivityView_"
+            android:name=".Modules.Login.LoginActivityView"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

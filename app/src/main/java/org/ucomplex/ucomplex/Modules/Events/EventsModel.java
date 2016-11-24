@@ -29,7 +29,6 @@ public class EventsModel implements MVP_Events.ModelInterface {
     private ArrayList<EventItem> mEventItems;
     private Context mContext;
     private UserInterface user;
-    private OnTaskCompleteListener onTaskCompleteListener;
     private LoadEventsTask loadEventsTask;
 
     public EventsModel(Context context, UserInterface user) {
@@ -42,13 +41,8 @@ public class EventsModel implements MVP_Events.ModelInterface {
 
     }
 
-
-    void setOnTaskCompleteListener(OnTaskCompleteListener onTaskCompleteListener) {
-        this.onTaskCompleteListener = onTaskCompleteListener;
-    }
-
-    public OnTaskCompleteListener getOnTaskCompleteListener() {
-        return onTaskCompleteListener;
+    public void setLoadEventsTask(LoadEventsTask loadEventsTask) {
+        this.loadEventsTask = loadEventsTask;
     }
 
     public UserInterface getUser() {
@@ -78,10 +72,6 @@ public class EventsModel implements MVP_Events.ModelInterface {
         mRepository = repository;
     }
 
-    public void setRepository(EventsRepository mRepository) {
-        this.mRepository = mRepository;
-    }
-
     @Override
     public void onDestroy(boolean isChangingConfiguration) {
         if (!isChangingConfiguration) {
@@ -102,7 +92,8 @@ public class EventsModel implements MVP_Events.ModelInterface {
     @Override
     @SuppressWarnings("unchecked")
     public boolean loadData() {
-        loadEventsTask = new LoadEventsTask();
+        loadEventsTask.setRepository(mRepository);
+        loadEventsTask.execute();
         return mEventItems != null;
     }
 

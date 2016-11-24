@@ -4,7 +4,9 @@ import android.os.AsyncTask;
 import android.widget.Toast;
 
 import org.ucomplex.ucomplex.Interfaces.MVP.Model;
+import org.ucomplex.ucomplex.Interfaces.MVP.Presenter;
 import org.ucomplex.ucomplex.Interfaces.MVP.Repository;
+import org.ucomplex.ucomplex.Interfaces.MVP.ViewRecylerToPresenter;
 import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 import org.ucomplex.ucomplex.Model.EventItem;
 import org.ucomplex.ucomplex.Modules.Events.EventsModel;
@@ -25,23 +27,25 @@ import java.util.function.Supplier;
 
 public class LoadEventsTask extends AsyncTask<Void, Void, ArrayList<EventItem>> {
 
-    private Repository mRepository;
-    private Model      mModel;
-    private OnTaskCompleteListener onTaskCompleteListener;
+    private Repository             mRepository;
+    private Model                  mModel;
+    private Presenter              mPresenter;
+    private OnTaskCompleteListener mOnTaskCompleteListener;
 
-    public LoadEventsTask(Repository repository, Model model){
-        mRepository = repository;
-        mModel = model;
-        setOnTaskCompleteListener(((EventsModel)mModel).getOnTaskCompleteListener());
-
+    public LoadEventsTask(OnTaskCompleteListener onTaskCompleteListener){
+        mOnTaskCompleteListener = onTaskCompleteListener;
     }
 
-    public LoadEventsTask(){
-        setOnTaskCompleteListener(((EventsModel)mModel).getOnTaskCompleteListener());
+    public void setModel(Model mModel) {
+        this.mModel = mModel;
     }
 
-    public void setOnTaskCompleteListener(OnTaskCompleteListener onTaskCompleteListener) {
-        this.onTaskCompleteListener = onTaskCompleteListener;
+    public void setPresenter(Presenter mPresenter) {
+        this.mPresenter = mPresenter;
+    }
+
+    public void setRepository(Repository mRepository) {
+        this.mRepository = mRepository;
     }
 
     @Override @SuppressWarnings("unchecked")
@@ -62,7 +66,9 @@ public class LoadEventsTask extends AsyncTask<Void, Void, ArrayList<EventItem>> 
     protected void onPostExecute(ArrayList<EventItem> result) {
         try {
             mModel.setData(result);
-            onTaskCompleteListener.onTaskComplete(this, true);
+            mPresenter.getView().hideProgress();
+            mOnTaskCompleteListener.onTaskComplete(this, true);
+            ((ViewRecylerToPresenter)mPresenter.getView()).notifyDataSetChanged();
         } catch (NullPointerException e) {
             e.printStackTrace();
         }

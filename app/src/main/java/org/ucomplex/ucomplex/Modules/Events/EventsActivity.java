@@ -1,17 +1,18 @@
 package org.ucomplex.ucomplex.Modules.Events;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ProgressBar;
+import android.widget.Toast;
 
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.ViewById;
-import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
+import org.ucomplex.ucomplex.Interfaces.MVP.ViewRecylerToPresenter;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.Modules.BaseActivity;
 import org.ucomplex.ucomplex.Modules.MyApplication;
@@ -20,14 +21,12 @@ import org.ucomplex.ucomplex.Utility.Constants;
 
 import javax.inject.Inject;
 
-@EActivity(resName="R.layout.activity_main")
-public class EventsActivity extends BaseActivity implements OnTaskCompleteListener {
+public class EventsActivity extends BaseActivity implements ViewRecylerToPresenter {
 
-    private FragmentEvents mFragmentEvents;
+    private FragmentEvents         mFragmentEvents;
+    private UserInterface          mUser;
 
-    @ViewById(resName="R.id.progressBar")
-    ProgressBar mProgressBar;
-
+    private static final String FRAGMENT_TAG ="EventsFragment";
 
     @Inject
     public void setPresenter(EventsPresenter presenter) {
@@ -45,38 +44,48 @@ public class EventsActivity extends BaseActivity implements OnTaskCompleteListen
     }
 
 
-    public void setupMVP(UserInterface user, FragmentEvents fragmentEvents){
-        super.setupMVP(fragmentEvents, EventsActivity.class);
-        super.setModelData(user);
-        super.setupDrawer();
+    public void setupMVP() {
+        setupMVP(this, EventsActivity.class, mUser);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        super.setupToolbar(getResourceString(R.string.events));
-        UserInterface user;
+        setupToolbar(getResourceString(R.string.events));
+
         Intent intent = getIntent();
         if (intent.hasExtra(Constants.EXTRA_KEY_USER)) {
-            user = getIntent().getParcelableExtra(Constants.EXTRA_KEY_USER);
+            mUser = getIntent().getParcelableExtra(Constants.EXTRA_KEY_USER);
 
             FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame); //Remember this is the FrameLayout area within your activity_main.xml
             getLayoutInflater().inflate(R.layout.activity_main, contentFrameLayout);
 
             ((MyApplication) getApplication()).getEventsDiComponent().inject(this);
 
-            mFragmentEvents = new FragmentEvents();
-            mFragmentEvents.setActivity(this);
-            mFragmentEvents.setUser(user);
+            FragmentManager fragmentManager = getFragmentManager();
 
-            ((EventsModel) super.mModel).setOnTaskCompleteListener(this);
-            addFragment(R.id.container, mFragmentEvents, "EventsFragment");
+
+            if(fragmentManager.findFragmentByTag(FRAGMENT_TAG) == null) {
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                mFragmentEvents = FragmentEvents.getInstance(this);
+                fragmentTransaction.add(R.id.container, mFragmentEvents, FRAGMENT_TAG);
+                fragmentTransaction.commit();
+            }else{
+                mFragmentEvents = (FragmentEvents) fragmentManager.findFragmentByTag(FRAGMENT_TAG);
+                mFragmentEvents.setActivity(this);
+            }
         }
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
+    public void setupDrawer(){
+        super.setupDrawer();
+    }
+
+
+    @Override
+    public void setupRecyclerView(View view) {
+
     }
 
     @Override
@@ -120,10 +129,53 @@ public class EventsActivity extends BaseActivity implements OnTaskCompleteListen
         }
     };
 
-
+    @Override
+    public void notifyItemRemoved(int position) {
+        mFragmentEvents.getListAdapter().notifyItemRemoved(position);
+    }
 
     @Override
-    public void onTaskComplete(AsyncTask task, Object... o) {
-        ((EventsPresenter) mPresenter).setHasMoreEvents((boolean) o[0]);
+    public void notifyDataSetChanged() {
+        mFragmentEvents.getListAdapter().notifyDataSetChanged();
     }
+
+    @Override
+    public void notifyItemInserted(int layoutPosition) {
+        mFragmentEvents.getListAdapter().notifyItemInserted(layoutPosition);
+    }
+
+    @Override
+    public void notifyItemRangeChanged(int positionStart, int itemCount) {
+    }
+
+    @Override
+    public Context getAppContext() {
+        return getApplicationContext();
+    }
+
+    @Override
+    public Context getActivityContext() {
+        return this;
+    }
+
+    @Override
+    public void showToast(Toast toast) {
+
+    }
+
+    @Override
+    public void showProgress() {
+        mFragmentEvents.showProgress();
+    }
+
+    @Override
+    public void hideProgress() {
+        mFragmentEvents.hideProgress();
+    }
+
+    @Override
+    public void showAlert(AlertDialog dialog) {
+
+    }
+
 }

@@ -14,15 +14,15 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        jackOptions{
-            enabled true
-        }
+//        jackOptions{
+//            enabled true
+//        }
     }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
+//    compileOptions {
+//        sourceCompatibility JavaVersion.VERSION_1_8
+//        targetCompatibility JavaVersion.VERSION_1_8
+//    }
 
     buildTypes {
         release {
@@ -62,6 +62,7 @@ dependencies {
     compile 'javax.inject:javax.inject:1'
     testCompile "junit:junit:$JUNIT_VERSION"
     compile "com.google.dagger:dagger:$DAGGER_VERSION"
+    annotationProcessor "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
     compile 'com.hannesdorfmann.fragmentargs:annotation:3.0.2'
     annotationProcessor 'com.hannesdorfmann.fragmentargs:processor:3.0.2'
     compile 'com.github.bumptech.glide:glide:3.7.0'
