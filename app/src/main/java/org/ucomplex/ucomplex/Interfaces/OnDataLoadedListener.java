@@ -1,10 +1,8 @@
-package org.ucomplex.ucomplex.Interfaces.MVP;
-
-import android.content.Context;
+package org.ucomplex.ucomplex.Interfaces;
 
 /**
  * ---------------------------------------------------
- * Created by Sermilion on 14/11/2016.
+ * Created by Sermilion on 27/11/2016.
  * Project: uComplex_v_2
  * ---------------------------------------------------
  * <a href="http://www.ucomplex.org">ucomplex.org</a>
@@ -12,7 +10,6 @@ import android.content.Context;
  * ---------------------------------------------------
  */
 
-public interface Repository {
-    void setContext(Context context);
-    void loadData(Object...param);
+public interface OnDataLoadedListener {
+    void dataLoaded(boolean loaded);
 }

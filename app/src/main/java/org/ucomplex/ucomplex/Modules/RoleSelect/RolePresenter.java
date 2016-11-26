@@ -3,26 +3,19 @@ package org.ucomplex.ucomplex.Modules.RoleSelect;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import org.ucomplex.ucomplex.Interfaces.MVP.Model;
-import org.ucomplex.ucomplex.Interfaces.MVP.Presenter;
-import org.ucomplex.ucomplex.Interfaces.MVP.ViewRecylerToPresenter;
 import org.ucomplex.ucomplex.Interfaces.MVP.ViewToPresenter;
-import org.ucomplex.ucomplex.Model.Users.User;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.Modules.Events.EventsActivity;
 import org.ucomplex.ucomplex.R;
 import org.ucomplex.ucomplex.Utility.Constants;
-import org.ucomplex.ucomplex.Utility.FacadeCommon;
 import org.ucomplex.ucomplex.Utility.FacadePreferences;
 
 import java.lang.ref.WeakReference;
@@ -81,7 +74,7 @@ public class RolePresenter implements MVP_RoleSelect.PresenterInterface {
 
     @Override
     public UserInterface getUser() {
-        return mModel.getUser();
+        return mModel.getmUser();
     }
 
 
@@ -126,7 +119,7 @@ public class RolePresenter implements MVP_RoleSelect.PresenterInterface {
         holder.roleIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final UserInterface user = ((RoleModel)mModel).getUser();
+                final UserInterface user = ((RoleModel)mModel).getmUser();
                 new AsyncTask<Void,Void,Void>(){
                     @Override
                     protected Void doInBackground(Void... voids) {
@@ -134,7 +127,7 @@ public class RolePresenter implements MVP_RoleSelect.PresenterInterface {
                         String password = user.getPassword();
                         int role = user.getRoles().get(position).getId();
                         user.setType(user.getRoles().get(position).getType());
-                        ((RoleModel)mModel).getUser().setType(user.getType());
+                        ((RoleModel)mModel).getmUser().setType(user.getType());
                         String encodedAuth = encodeLoginData(login + ":" + password + ":" + role);
                         FacadePreferences.setLoginDataToPref(getActivityContext(), encodedAuth);
                         FacadePreferences.setUserDataToPref(getActivityContext(), user);

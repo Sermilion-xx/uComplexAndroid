@@ -68,15 +68,16 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     private ArrayList<DrawerListItem> setupDrawerListItems(){
-        setupDrawerItemListForUser(mPresenter.getUser());
+        UserInterface user = mPresenter.getUser();
+        setupDrawerItemListForUser(user);
         Bitmap profileBitmap = null;
         try {
-            profileBitmap = FacadeMedia.getThumbnail(mPresenter.getUser().getBitmapUri(), this);
+            profileBitmap = FacadeMedia.getThumbnail(user.getBitmapUri(), this);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        DrawerListItem headerItem = new DrawerListItem(profileBitmap, mPresenter.getUser().getName().split(" ")[1],
-                FacadeCommon.getStringUserType(this, mPresenter.getUser().getType()), mPresenter.getUser().getId());
+        DrawerListItem headerItem = new DrawerListItem(profileBitmap, user.getName().split(" ")[1],
+                FacadeCommon.getStringUserType(this, user.getType()), user.getId());
         return setupDrawerArrayList(headerItem, mDrawerIcons, mDrawerTitles);
     }
 

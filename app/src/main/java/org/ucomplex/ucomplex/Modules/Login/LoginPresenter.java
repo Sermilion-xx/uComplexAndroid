@@ -5,19 +5,19 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import org.ucomplex.ucomplex.Interfaces.MVP.Model;
+import org.ucomplex.ucomplex.Interfaces.MVP.ViewActivityToPresenter;
 import org.ucomplex.ucomplex.Interfaces.MVP.ViewToPresenter;
+import org.ucomplex.ucomplex.Interfaces.OnDataLoadedListener;
 import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 import org.ucomplex.ucomplex.Model.Users.LoginErrorType;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.R;
-import org.ucomplex.ucomplex.Utility.FacadePreferences;
 import org.ucomplex.ucomplex.Utility.HttpFactory;
 
 import java.lang.ref.WeakReference;
@@ -35,35 +35,12 @@ import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.*;
  * ---------------------------------------------------
  */
 
-public class LoginPresenter implements MVP_Login.PresenterInterface, OnTaskCompleteListener {
+public class LoginPresenter implements MVP_Login.PresenterInterface, OnTaskCompleteListener, OnDataLoadedListener {
 
-    public final String TAG = LoginPresenter.class.getName();
-    private WeakReference<MVP_Login.ViewToPresenterInterface> mView;
+    private WeakReference<ViewActivityToPresenter> mView;
     private Model mModel;
     private OnTaskCompleteListener mTaskCompleteListener = null;
 
-    /**
-     * PresenterToViewInterface Constructor
-     *
-     * @param view MainActivity
-     */
-    public LoginPresenter(ViewToPresenter view) {
-        mView = new WeakReference<>((MVP_Login.ViewToPresenterInterface) view);
-        mTaskCompleteListener = this;
-    }
-
-
-
-    public LoginPresenter() {
-        mTaskCompleteListener = this;
-    }
-
-    /**
-     * Called by View every time it is destroyed.
-     *
-     * @param isChangingConfiguration true: is changing configuration
-     *                                and will be recreated
-     */
     @Override
     public void onDestroy(boolean isChangingConfiguration) {
         mView = null;
@@ -75,49 +52,29 @@ public class LoginPresenter implements MVP_Login.PresenterInterface, OnTaskCompl
 
     @Override
     public void setView(ViewToPresenter view) {
-        mView = new WeakReference<>((MVP_Login.ViewToPresenterInterface)view);
+        mView = new WeakReference<>((ViewActivityToPresenter)view);
     }
 
-    /**
-     * Return the View reference.
-     * Could throw an exception if the View is unavailable.
-     *
-     * @return {@link MVP_Login.ViewToPresenterInterface}
-     * @throws NullPointerException when View is unavailable
-     */
     @Override
-    public MVP_Login.ViewToPresenterInterface getView() throws NullPointerException {
+    public ViewActivityToPresenter getView() throws NullPointerException {
         if (mView != null)
             return mView.get();
         else
             throw new NullPointerException("View is unavailable");
     }
 
-    public void login() {
-        try {
-            getView().showProgress();
-            new AsyncTask<Void, Void, Boolean>() {
-                @Override
-                protected Boolean doInBackground(Void... params) {
-                    return mModel.loadData();
-                }
-                @Override
-                protected void onPostExecute(Boolean result) {
-                    super.onPostExecute(result);
-                    try {
-                        getView().hideProgress();
-                        if (result == null)
-                            getView().showToast(makeToast(getActivityContext().getString(R.string.error_login)));
-                        else
-                            mTaskCompleteListener.onTaskComplete(this, result, 0);
-                    } catch (NullPointerException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }.execute();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
+    @Override
+    public void dataLoaded(boolean loaded){
+        getView().hideProgress();
+        if(loaded)
+            ((LoginActivityView)getView()).successfulLogin(0);
+        else
+            getView().showToast(makeToast(getActivityContext().getString(R.string.error_login)));
+    }
+
+    public void loadUser() {
+        getView().showProgress();
+        mModel.loadData();
     }
 
     @Override
@@ -161,8 +118,6 @@ public class LoginPresenter implements MVP_Login.PresenterInterface, OnTaskCompl
         alert.show();
     }
 
-
-
     private ArrayList<LoginErrorType> runCheck(String login, String password) {
         ArrayList<LoginErrorType> errors = new ArrayList<>();
         if (TextUtils.isEmpty(password)) {
@@ -187,7 +142,7 @@ public class LoginPresenter implements MVP_Login.PresenterInterface, OnTaskCompl
     public ArrayList<LoginErrorType> checkCredentials(String login, String password) {
         ArrayList<LoginErrorType> error = runCheck(login, password);
         if (error.get(0)==NO_ERROR) {
-            login();
+            loadUser();
         }
         return error;
     }
@@ -195,16 +150,14 @@ public class LoginPresenter implements MVP_Login.PresenterInterface, OnTaskCompl
 
     @Override
     public void onConfigurationChanged(ViewToPresenter view) {
-        mView = new WeakReference<>((MVP_Login.ViewToPresenterInterface) view);
+        mView = new WeakReference<>((ViewActivityToPresenter) view);
     }
 
-    /**
-     * Called by Activity during MVP setup. Only called once.
-     * @param model Model instance
-     */
     @Override
     public void setModel(Model model) {
         mModel = model;
+        ((LoginModel)mModel).setOnDataLoadedListener(this);
+
         new AsyncTask<Void, Void, UserInterface>(){
             @Override
             protected UserInterface doInBackground(Void... voids) {
@@ -220,28 +173,17 @@ public class LoginPresenter implements MVP_Login.PresenterInterface, OnTaskCompl
                 }
             }
         }.execute();
-
-
     }
 
     @Override
     public UserInterface getUser() {
-        return FacadePreferences.getUserDataFromPref(getActivityContext());
+        return mModel.getUser();
     }
 
-    /**
-     * Creat a Toast object with given message
-     * @param msg Toast message
-     * @return A Toast object
-     */
     private Toast makeToast(String msg) {
         return Toast.makeText(getView().getAppContext(), msg, Toast.LENGTH_SHORT);
     }
 
-    /**
-     * Retrieve Application Context
-     * @return Application context
-     */
     @Override
     public Context getAppContext() {
         try {
@@ -251,10 +193,6 @@ public class LoginPresenter implements MVP_Login.PresenterInterface, OnTaskCompl
         }
     }
 
-    /**
-     * Retrieves Activity context
-     * @return Activity context
-     */
     @Override
     public Context getActivityContext() {
         try {
@@ -265,12 +203,11 @@ public class LoginPresenter implements MVP_Login.PresenterInterface, OnTaskCompl
     }
 
     @Override
-    public void onTaskComplete(AsyncTask task, Object... o) {
+    public void onTaskComplete(String requestType, Object... o) {
         boolean result = (boolean) o[0];
         if (result) {
             UserInterface user = mModel.getUser();
-            getView().successfulLogin(user, (int)o[1]);
+//            getView().successfulLogin(user, (int)o[1]);
         }
-
     }
 }

@@ -44,7 +44,7 @@ public class RoleRepository implements Repository{
 
 
     @Override
-    public Object loadData(Object... data) {
+    public void loadData(Object... data) {
         User user = (User) data[0];
         ArrayList<RoleItem> roles = new ArrayList<>();
         Random random = new Random();

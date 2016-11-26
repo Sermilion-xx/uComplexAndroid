@@ -160,4 +160,15 @@ public class FacadeMedia {
         return bitmap;
     }
 
+    public static Uri createFileForBitmap(String code) {
+        File bitmapFile = FacadeMedia.getOutputMediaFile(MEDIA_TYPE_IMAGE, Environment.DIRECTORY_PICTURES, Constants.UCOMPLEX_PROFILE);
+        if (bitmapFile != null) {
+            String url = HttpFactory.PROFILE_IMAGE_URL + code + Constants.IMAGE_FORMAT_JPG;
+            HttpFactory.httpGetFile(url, bitmapFile, "");
+            return Uri.fromFile(bitmapFile);
+        } else {
+            throw new NullPointerException("Bitmap file is null");
+        }
+    }
+
 }

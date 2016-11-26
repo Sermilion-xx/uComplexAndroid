@@ -1,23 +1,29 @@
 package org.ucomplex.ucomplex.Modules.Login;
 
 import android.content.Context;
-import android.net.Uri;
-import android.os.Environment;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.ucomplex.ucomplex.Interfaces.MVP.Repository;
+import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 import org.ucomplex.ucomplex.Model.Users.User;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
+import org.ucomplex.ucomplex.Utility.Constants;
 import org.ucomplex.ucomplex.Utility.FacadeMedia;
 import org.ucomplex.ucomplex.Utility.FacadePreferences;
 import org.ucomplex.ucomplex.Utility.HttpFactory;
 
-import java.io.File;
-
-import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * ---------------------------------------------------
@@ -35,43 +41,59 @@ public class LoginRepository implements Repository {
     private static final String JSON_ROLES_KEY = "roles";
 
     private Context mContext;
+    private OnTaskCompleteListener mModelTaskCompleteListener; //Model
 
-    public LoginRepository(Context context) {
+    void setTaskCompleteListener(OnTaskCompleteListener mTaskCompleteListener) {
+        this.mModelTaskCompleteListener = mTaskCompleteListener;
+    }
+
+
+    LoginRepository(Context context) {
         this.mContext = context;
     }
 
     public LoginRepository() {
     }
 
-    public String login(String login, String password) {
-        String encodedAuth = HttpFactory.encodeLoginData(login + ":" + password);
-        return HttpFactory.httpPost(HttpFactory.AUTHENTICATIO_URL, encodedAuth, "");
+    //TODO: test
+    private void loginRequest(final String login, final String password) {
+        final String encodedAuth = HttpFactory.encodeLoginData(login + ":" + password);
+        RequestQueue queue = Volley.newRequestQueue(mContext);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, HttpFactory.AUTHENTICATIO_URL,
+
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        UserInterface user = unpackUserFromJsonString(response, password);
+                        mModelTaskCompleteListener.onTaskComplete(Constants.REQUEST_LOGIN, user, 0);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String>  params = new HashMap<>();
+                params.put("Authorization", "Basic " + encodedAuth);
+                return params;
+            }
+        };
+        queue.add(stringRequest);
     }
 
-
-    public UserInterface loadData(Object... params) {
-        //Dummy user with just login and password
-        UserInterface user = (UserInterface) params[0];
-        String password = user.getPassword();
+    //TODO: test
+    private UserInterface unpackUserFromJsonString(String jsonData, String password){
+        UserInterface user;
         try {
-            String jsonData = login(user.getLogin(), password);
             JSONObject jsonObject = new JSONObject(jsonData);
             if (jsonObject.getJSONArray(JSON_ROLES_KEY) == null) {
                 return null;
-            }
-            if (jsonData != null && !jsonData.equals("")) {
+            } else {
                 user = getUserFromJson(jsonData);
                 if (user.getPhoto() == 1) {
-                    File bitmapFile = FacadeMedia.getOutputMediaFile(MEDIA_TYPE_IMAGE, Environment.DIRECTORY_PICTURES, "ucomplex_profile");
-                    if (bitmapFile != null) {
-                        String url = HttpFactory.PROFILE_IMAGE_URL + user.getCode() + ".jpg";
-                        HttpFactory.httpGetFile(url, bitmapFile, "");
-                        Uri bitmapUri = Uri.fromFile(bitmapFile);
-//                        Bitmap profileBitmap = FacadeMedia.getThumbnail(bitmapUri, mContext);
-                        user.setBitmapUri(bitmapUri);
-                    } else {
-                        throw new NullPointerException("Bitmap file is null");
-                    }
+                    user.setBitmapUri(FacadeMedia.createFileForBitmap(user.getCode()));
                 } else {
                     FacadePreferences.deleteFromPref(mContext, FacadePreferences.KEY_PREF_PROFILE_PHOTO);
                 }
@@ -82,7 +104,14 @@ public class LoginRepository implements Repository {
             e.printStackTrace();
             return null;
         }
-        return user;
+    }
+    //TODO: test
+    @Override
+    public void loadData(Object... params) {
+        //Dummy user with just loginRequest and password
+        UserInterface user = (UserInterface) params[0];
+        String password = user.getPassword();
+        loginRequest(user.getLogin(), password);
     }
 
 

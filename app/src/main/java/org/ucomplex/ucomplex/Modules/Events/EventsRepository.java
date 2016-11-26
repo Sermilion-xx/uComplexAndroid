@@ -46,7 +46,7 @@ public class EventsRepository implements Repository {
     }
 
     @Override
-    public Object loadData(Object... param) {
+    public void loadData(Object... param) {
         try {
             return loadEvents();
         } catch (JSONException e) {

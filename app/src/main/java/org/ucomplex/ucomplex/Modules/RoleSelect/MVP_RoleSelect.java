@@ -70,7 +70,7 @@ public interface MVP_RoleSelect {
 
         int getRolesCount();
 
-        UserInterface getUser();
+        UserInterface getmUser();
     }
 
 }

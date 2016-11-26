@@ -48,7 +48,7 @@ public class RoleModel implements MVP_RoleSelect.ModelInterface {
         this.mRolesRepository = mRolesRepository;
     }
 
-    public UserInterface getUser() {
+    public UserInterface getmUser() {
         return mUser;
     }
 

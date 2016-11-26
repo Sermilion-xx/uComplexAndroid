@@ -1,5 +1,6 @@
 package org.ucomplex.ucomplex.NavDrawer;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -29,9 +30,9 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
     private static final int TYPE_0 = 0;
     private static final int TYPE_1 = 1;
     private ArrayList<DrawerListItem> mItems;
-    private Context mContext;
+    private Activity mContext;
 
-    public DrawerAdapter(ArrayList<DrawerListItem> items, Context context) {
+    public DrawerAdapter(ArrayList<DrawerListItem> items, Activity context) {
         mItems = items;
         this.mContext = context;
     }
@@ -40,7 +41,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         int layout = viewType == 0 ? R.layout.list_item_menu_header : R.layout.list_item_menu;
         View inflatedView = LayoutInflater.from(parent.getContext()) .inflate(layout, parent, false);
-        return new ViewHolder(inflatedView, viewType, mContext);
+        return new ViewHolder(inflatedView, viewType);
     }
 
     @Override
@@ -68,11 +69,9 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
         private TextView mTextView2;
         private CircleImageView mProfileImageView;
         private CircleImageView mRolesImageView;
-        private Context mContext;
 
-        ViewHolder(View view, int viewType, Context context) {
+        ViewHolder(View view, int viewType) {
             super(view);
-            this.mContext = context;
             if(viewType == 0){
                 mTextView1 = (TextView) view.findViewById(R.id.name);
                 mTextView2 = (TextView) view.findViewById(R.id.role);
@@ -106,6 +105,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
             if(getAdapterPosition()==getItemCount()-1){
                 FacadePreferences.clearPref(mContext);
                 mContext.startActivity(new Intent(mContext, LoginActivityView.class));
+                mContext.finish();
             }else if(getAdapterPosition()==1){
                 mContext.sendBroadcast(new Intent(Constants.EVENTS_REFRESH_BROADCAST));
             }

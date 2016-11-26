@@ -16,7 +16,7 @@ import org.ucomplex.ucomplex.Model.Users.UserInterface;
 
 public interface Model {
     void onDestroy(boolean isChangingConfiguration);
-    boolean loadData();
+    void loadData();
     void setContext(Context context);
     void setData(Object data);
     void setRepository(Repository repository);

@@ -52,7 +52,7 @@ public class LoadEventsTask extends AsyncTask<Void, Void, ArrayList<EventItem>> 
     protected ArrayList<EventItem> doInBackground(Void... params) {
         ArrayList<EventItem> eventItems = new ArrayList<>();
         if(!isCancelled()){
-            eventItems = (ArrayList<EventItem>) mRepository.loadData();
+            mRepository.loadData();
             eventItems.add(new EventItem());
         }
         return eventItems;
@@ -67,7 +67,7 @@ public class LoadEventsTask extends AsyncTask<Void, Void, ArrayList<EventItem>> 
         try {
             mModel.setData(result);
             mPresenter.getView().hideProgress();
-            mOnTaskCompleteListener.onTaskComplete(this, true);
+//            mOnTaskCompleteListener.onTaskComplete(this, true);
             ((ViewRecylerToPresenter)mPresenter.getView()).notifyDataSetChanged();
         } catch (NullPointerException e) {
             e.printStackTrace();

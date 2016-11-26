@@ -19,6 +19,10 @@ public class Constants {
     public static final String EXTRA_KEY_USER_TYPE = EXTRA_PREFIX+"userType";
     public static final String EVENTS_REFRESH_BROADCAST = EXTRA_PREFIX+"EVENTS_REFRESH";
     public static final String EVENTS_LOAD_MORE_BROADCAST = EXTRA_PREFIX+"EVENTS_LOAD_MORE";
+    public static final String UCOMPLEX_PROFILE = "ucomplex_profile";
+    public static final String IMAGE_FORMAT_JPG = ".jpg";
+
+    public static final String REQUEST_LOGIN = "requestLogin";
 
     public static final int[] colorsUserSelect = new int[]{
             R.drawable.select_account_1,

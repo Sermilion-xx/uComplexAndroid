@@ -5,6 +5,8 @@ import android.content.Context;
 
 import org.ucomplex.ucomplex.Interfaces.MVP.Presenter;
 import org.ucomplex.ucomplex.Interfaces.MVP.Repository;
+import org.ucomplex.ucomplex.Interfaces.OnDataLoadedListener;
+import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 import org.ucomplex.ucomplex.Model.Users.User;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.Utility.HttpFactory;
@@ -20,66 +22,59 @@ import org.ucomplex.ucomplex.Utility.HttpFactory;
  * <a href="http://www.github.com/sermilion>github</a>
  * ---------------------------------------------------
  */
-public class LoginModel implements MVP_Login.ModelInterface {
+public class LoginModel implements MVP_Login.ModelInterface, OnTaskCompleteListener{
 
-    // PresenterToViewInterface reference
-    private Context mContext;
     private Repository mRepository;
-    private UserInterface user = new User();
+    private UserInterface mUser = new User();
+    private OnDataLoadedListener mOnDataLoadedListener;
 
-
-
-    public LoginModel(Context context, LoginRepository dao) {
-        this.mContext = context;
+    public LoginModel(LoginRepository dao) {
         mRepository = dao;
+        ((LoginRepository)mRepository).setTaskCompleteListener(this);
     }
 
-    public LoginModel() {
+    public LoginModel(){
+        ((LoginRepository)mRepository).setTaskCompleteListener(this);
+    }
 
+    public void setOnDataLoadedListener(OnDataLoadedListener mOnDataLoadedListener) {
+        this.mOnDataLoadedListener = mOnDataLoadedListener;
     }
 
     public void setPresenter(Context context) {
-        this.mContext = context;
+
         mRepository = new LoginRepository(context);
+        ((LoginRepository)mRepository).setTaskCompleteListener(this);
     }
 
     @Override
     public void setData(Object data) {
-        this.user = (UserInterface)data;
+        this.mUser = (UserInterface)data;
     }
 
     @Override
     public void setRepository(Repository repository) {
         this.mRepository = repository;
+        ((LoginRepository)mRepository).setTaskCompleteListener(this);
     }
 
-
-
-    /**
-     * Called by PresenterToViewInterface when View is destroyed
-     * @param isChangingConfiguration true configuration is changing
-     */
     @Override
     public void onDestroy(boolean isChangingConfiguration) {
         if (!isChangingConfiguration) {
-            mContext = null;
+
             mRepository = null;
         }
     }
 
-    /**
-     * Loads all Data, getting User
-     * @return true with success
-     */
     @Override
-    public boolean loadData() {
-        user = (UserInterface) mRepository.loadData(user);
-        return user.getRoles()!=null;
+    public void loadData() {
+        //User object with loadUser and password
+        mRepository.loadData(mUser);
     }
 
     @Override
     public void setContext(Context context) {
-        mContext = context;
+
     }
 
     @Override
@@ -90,6 +85,12 @@ public class LoginModel implements MVP_Login.ModelInterface {
 
     @Override
     public UserInterface getUser() {
-        return user;
+        return mUser;
+    }
+
+    @Override
+    public void onTaskComplete(String requestType, Object... o) {
+        mUser = (UserInterface) o[0];
+        mOnDataLoadedListener.dataLoaded(mUser!=null);
     }
 }

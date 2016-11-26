@@ -1,5 +1,6 @@
 package org.ucomplex.ucomplex.Modules.Login.LoginDagger;
 
+import org.ucomplex.ucomplex.Interfaces.MVP.Presenter;
 import org.ucomplex.ucomplex.Modules.Login.LoginActivityView;
 
 import javax.inject.Singleton;

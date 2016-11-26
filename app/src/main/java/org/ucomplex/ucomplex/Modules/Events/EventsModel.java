@@ -41,11 +41,11 @@ public class EventsModel implements MVP_Events.ModelInterface {
 
     }
 
-    public void setLoadEventsTask(LoadEventsTask loadEventsTask) {
+    void setLoadEventsTask(LoadEventsTask loadEventsTask) {
         this.loadEventsTask = loadEventsTask;
     }
 
-    public UserInterface getUser() {
+    public UserInterface getmUser() {
         return user;
     }
 
@@ -114,14 +114,6 @@ public class EventsModel implements MVP_Events.ModelInterface {
     @Override
     public EventItem getEvent(int position) {
         return mEventItems.get(position);
-    }
-
-    public int getEventItemPosition(EventItem EventItem) {
-        for (int i = 0; i < mEventItems.size(); i++) {
-            if (EventItem.getId() == mEventItems.get(i).getId())
-                return i;
-        }
-        return -1;
     }
 
     @Override

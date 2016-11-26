@@ -202,10 +202,10 @@ public class EventsPresenter implements MVP_Events.PresenterInterface, OnTaskCom
         }
     }
 
-    @Override
-    public void onTaskComplete(AsyncTask task, Object... o) {
-        this.setHasMoreEvents((boolean) o[0]);
-    }
 
+    @Override
+    public void onTaskComplete(String requestType, Object... o) {
+
+    }
 }
 

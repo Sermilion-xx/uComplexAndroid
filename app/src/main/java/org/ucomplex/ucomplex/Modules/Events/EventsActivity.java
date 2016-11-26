@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -40,7 +39,8 @@ public class EventsActivity extends BaseActivity implements ViewRecylerToPresent
     }
 
 
-    public void setupMVP() {
+    //Used in Fragment
+    public final void setupMVP() {
         setupMVP(this, EventsActivity.class, mUser);
     }
 
@@ -65,7 +65,7 @@ public class EventsActivity extends BaseActivity implements ViewRecylerToPresent
     }
 
     @Override
-    public void setupDrawer(){
+    public final void setupDrawer(){
         super.setupDrawer();
     }
 

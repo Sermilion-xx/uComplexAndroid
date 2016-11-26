@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -15,6 +14,8 @@ import android.widget.Toast;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
+import org.ucomplex.ucomplex.Interfaces.MVP.ViewActivityToPresenter;
+import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.Modules.BaseActivity;
 import org.ucomplex.ucomplex.Modules.Events.EventsActivity;
@@ -35,10 +36,10 @@ import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.PASSWORD_REQUIRED
 import static org.ucomplex.ucomplex.Utility.HttpFactory.encodeLoginData;
 
 @EActivity(resName="R.layout.activity_login")
-public class LoginActivityView extends BaseActivity implements MVP_Login.ViewToPresenterInterface {
+public class LoginActivityView extends BaseActivity implements ViewActivityToPresenter{
 
     static final String TAG = LoginActivityView.class.getName();
-    @ViewById(resName="R.id.login")
+    @ViewById(resName="R.id.loginRequest")
     AutoCompleteTextView mLoginView;
     @ViewById(resName="R.id.password")
     EditText mPasswordView;
@@ -115,7 +116,7 @@ public class LoginActivityView extends BaseActivity implements MVP_Login.ViewToP
         String login = mLoginView.getText().toString();
         String password = mPasswordView.getText().toString();
 
-        UserInterface user = ((LoginModel) mModel).getUser();
+        UserInterface user = mPresenter.getUser();
         user.setPassword(password);
         user.setLogin(login);
 
@@ -132,7 +133,12 @@ public class LoginActivityView extends BaseActivity implements MVP_Login.ViewToP
     }
 
     @Override
-    public void successfulLogin(UserInterface user, int flag) {
+    public void setupViews() {
+
+    }
+
+    public void successfulLogin(int flag) {
+        UserInterface user = mPresenter.getUser();
         Intent intent;
         if(flag == 1 || user.getRoles().size() == 1){
             intent = new Intent(getActivityContext(), EventsActivity.class);
@@ -149,10 +155,5 @@ public class LoginActivityView extends BaseActivity implements MVP_Login.ViewToP
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         getActivityContext().startActivity(intent);
         finish();
-    }
-
-    @Override
-    public void setupViews() {
-
     }
 }
