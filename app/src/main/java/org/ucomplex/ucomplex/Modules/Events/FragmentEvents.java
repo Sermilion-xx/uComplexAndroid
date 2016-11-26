@@ -1,5 +1,6 @@
 package org.ucomplex.ucomplex.Modules.Events;
 
+import android.app.Fragment;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -10,9 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import com.hannesdorfmann.fragmentargs.annotation.Arg;
-
-import org.ucomplex.ucomplex.Interfaces.MVP.Presenter;
+import org.ucomplex.ucomplex.Interfaces.IFragment;
 import org.ucomplex.ucomplex.Modules.BaseFragment;
 import org.ucomplex.ucomplex.R;
 
@@ -25,12 +24,24 @@ import org.ucomplex.ucomplex.R;
  * <a href="http://www.github.com/sermilion>github</a>
  * ---------------------------------------------------
  */
-public class FragmentEvents extends BaseFragment {
+public class FragmentEvents extends BaseFragment{
 
     private MediaPlayer mAlert;
     private ProgressBar mProgressBar;
     private EventsActivity mActivity;
     private ListEventsAdapter mListAdapter;
+
+
+    public static FragmentEvents getInstance(Object...params) {
+        FragmentEvents fragment =  new FragmentEvents();
+        fragment.setActivity((EventsActivity) params[0]);
+        return fragment;
+    }
+
+    @Override
+    public void setParams(Object params) {
+        mActivity = (EventsActivity)params;
+    }
 
     public ListEventsAdapter getListAdapter() {
         return mListAdapter;
@@ -40,12 +51,6 @@ public class FragmentEvents extends BaseFragment {
         this.mActivity = mActivity;
     }
 
-
-    public static FragmentEvents getInstance(EventsActivity activity){
-        FragmentEvents fragment =  new FragmentEvents();
-        fragment.setActivity(activity);
-        return fragment;
-    }
 
     @Override
     public void onDetach() {

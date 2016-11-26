@@ -1,6 +1,8 @@
 package org.ucomplex.ucomplex.Modules;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
@@ -18,6 +20,8 @@ import android.view.View;
 import android.view.Window;
 
 import org.javatuples.Pair;
+import org.ucomplex.ucomplex.FragmentFactory;
+import org.ucomplex.ucomplex.Interfaces.IFragment;
 import org.ucomplex.ucomplex.Interfaces.MVP.Model;
 import org.ucomplex.ucomplex.Interfaces.MVP.Presenter;
 import org.ucomplex.ucomplex.Interfaces.MVP.Repository;
@@ -103,6 +107,22 @@ public class BaseActivity extends AppCompatActivity {
             mPresenter = mStateMaintainer.get(type.getName());
             mPresenter.setView(viewToPresenter);
         }
+    }
+
+    protected IFragment setupFragment(FragmentManager fragmentManager, String name, Object...params) {
+        IFragment fragment;
+        if(fragmentManager.findFragmentByTag(name) == null) {
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragment = FragmentFactory.getFragmentWithName(name, params);
+            fragmentTransaction.add(R.id.container, (Fragment) fragment, name);
+            fragmentTransaction.commit();
+        }else{
+            fragment = (IFragment) fragmentManager.findFragmentByTag(name);
+            if(params.length>0){
+                fragment.setParams(params);
+            }
+        }
+        return fragment;
     }
 
     protected void setModelData(Object data){

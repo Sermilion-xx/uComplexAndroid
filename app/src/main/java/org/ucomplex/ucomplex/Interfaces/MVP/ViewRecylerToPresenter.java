@@ -13,7 +13,6 @@ import android.view.View;
  */
 
 public interface ViewRecylerToPresenter extends ViewToPresenter {
-    void setupRecyclerView(View view);
     void notifyItemRemoved(int position);
     void notifyDataSetChanged();
     void notifyItemInserted(int layoutPosition);

@@ -7,9 +7,11 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import org.ucomplex.ucomplex.Interfaces.MVP.ViewRecylerToPresenter;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.Modules.BaseActivity;
 import org.ucomplex.ucomplex.Modules.MyApplication;
@@ -18,7 +20,7 @@ import org.ucomplex.ucomplex.Utility.Constants;
 
 import javax.inject.Inject;
 
-public class RoleSelectActivity extends BaseActivity implements MVP_RoleSelect.ViewToPresenterInterface {
+public class RoleSelectActivity extends BaseActivity implements ViewRecylerToPresenter {
 
     private ListRolesAdapter mListAdapter;
 

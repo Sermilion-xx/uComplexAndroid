@@ -7,6 +7,8 @@ import android.app.Fragment;
 
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
 
+import org.ucomplex.ucomplex.Interfaces.IFragment;
+
 /**
  * ---------------------------------------------------
  * Created by Sermilion on 10/11/2016.
@@ -17,11 +19,16 @@ import com.hannesdorfmann.fragmentargs.FragmentArgs;
  * ---------------------------------------------------
  */
 
-public class BaseFragment extends Fragment {
+public class BaseFragment extends Fragment implements IFragment{
 
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         FragmentArgs.inject(this); // read @Arg fields
+    }
+
+    @Override
+    public void setParams(Object params) {
+
     }
 }

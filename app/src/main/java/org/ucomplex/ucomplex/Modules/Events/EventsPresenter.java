@@ -158,12 +158,10 @@ public class EventsPresenter implements MVP_Events.PresenterInterface, OnTaskCom
     public void loadData() {
         try {
             getView().showProgress();
-
             LoadEventsTask loadEventsTask = new LoadEventsTask(this);
             loadEventsTask.setModel(mModel);
             loadEventsTask.setPresenter(this);
             ((EventsModel)mModel).setLoadEventsTask(loadEventsTask);
-
             mModel.loadData();
         } catch (NullPointerException e) {
             e.printStackTrace();

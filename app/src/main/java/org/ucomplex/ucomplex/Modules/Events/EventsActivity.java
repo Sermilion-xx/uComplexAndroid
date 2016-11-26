@@ -1,7 +1,5 @@
 package org.ucomplex.ucomplex.Modules.Events;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -23,10 +21,8 @@ import javax.inject.Inject;
 
 public class EventsActivity extends BaseActivity implements ViewRecylerToPresenter {
 
-    private FragmentEvents         mFragmentEvents;
-    private UserInterface          mUser;
-
-    private static final String FRAGMENT_TAG ="EventsFragment";
+    private FragmentEvents mFragmentEvents;
+    private UserInterface  mUser;
 
     @Inject
     public void setPresenter(EventsPresenter presenter) {
@@ -62,30 +58,15 @@ public class EventsActivity extends BaseActivity implements ViewRecylerToPresent
 
             ((MyApplication) getApplication()).getEventsDiComponent().inject(this);
 
-            FragmentManager fragmentManager = getFragmentManager();
-
-
-            if(fragmentManager.findFragmentByTag(FRAGMENT_TAG) == null) {
-                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                mFragmentEvents = FragmentEvents.getInstance(this);
-                fragmentTransaction.add(R.id.container, mFragmentEvents, FRAGMENT_TAG);
-                fragmentTransaction.commit();
-            }else{
-                mFragmentEvents = (FragmentEvents) fragmentManager.findFragmentByTag(FRAGMENT_TAG);
-                mFragmentEvents.setActivity(this);
-            }
+            mFragmentEvents = (FragmentEvents) setupFragment(getFragmentManager(),
+                    FragmentEvents.class.getName(),
+                    this);
         }
     }
 
     @Override
     public void setupDrawer(){
         super.setupDrawer();
-    }
-
-
-    @Override
-    public void setupRecyclerView(View view) {
-
     }
 
     @Override
