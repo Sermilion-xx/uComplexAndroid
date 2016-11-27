@@ -4,7 +4,6 @@ package org.ucomplex.ucomplex.Modules.Events;
 import android.content.Context;
 
 import org.ucomplex.ucomplex.Interfaces.MVP.Repository;
-import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 import org.ucomplex.ucomplex.Model.EventItem;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.Modules.Events.AsyncTasks.LoadEventsTask;
@@ -45,9 +44,6 @@ public class EventsModel implements MVP_Events.ModelInterface {
         this.loadEventsTask = loadEventsTask;
     }
 
-    public UserInterface getmUser() {
-        return user;
-    }
 
     public void setPresenter(Context context) {
         this.mContext = context;
@@ -73,6 +69,11 @@ public class EventsModel implements MVP_Events.ModelInterface {
     }
 
     @Override
+    public UserInterface getUser() {
+        return this.user;
+    }
+
+    @Override
     public void onDestroy(boolean isChangingConfiguration) {
         if (!isChangingConfiguration) {
             mContext = null;
@@ -91,10 +92,10 @@ public class EventsModel implements MVP_Events.ModelInterface {
 
     @Override
     @SuppressWarnings("unchecked")
-    public boolean loadData() {
+    public void loadData() {
         loadEventsTask.setRepository(mRepository);
         loadEventsTask.execute();
-        return mEventItems != null;
+//        return mEventItems != null;
     }
 
     @Override

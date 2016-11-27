@@ -11,17 +11,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.androidannotations.annotations.Click;
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.ViewById;
 import org.ucomplex.ucomplex.Interfaces.MVP.ViewActivityToPresenter;
-import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
+import org.ucomplex.ucomplex.Model.Users.LoginErrorType;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.Modules.BaseActivity;
 import org.ucomplex.ucomplex.Modules.Events.EventsActivity;
 import org.ucomplex.ucomplex.Modules.MyApplication;
 import org.ucomplex.ucomplex.Modules.RoleSelect.RoleSelectActivity;
-import org.ucomplex.ucomplex.Model.Users.LoginErrorType;
 import org.ucomplex.ucomplex.R;
 import org.ucomplex.ucomplex.Utility.Constants;
 import org.ucomplex.ucomplex.Utility.FacadePreferences;
@@ -35,19 +31,13 @@ import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.INVALID_PASSWORD;
 import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.PASSWORD_REQUIRED;
 import static org.ucomplex.ucomplex.Utility.HttpFactory.encodeLoginData;
 
-@EActivity(resName="R.layout.activity_login")
-public class LoginActivityView extends BaseActivity implements ViewActivityToPresenter{
 
-    static final String TAG = LoginActivityView.class.getName();
-    @ViewById(resName="R.id.loginRequest")
+public class LoginActivityView extends BaseActivity implements ViewActivityToPresenter, View.OnClickListener{
+
     AutoCompleteTextView mLoginView;
-    @ViewById(resName="R.id.password")
     EditText mPasswordView;
-    @ViewById(resName="R.id.login_progress")
     View mProgressView;
-    @ViewById(resName="R.id.forgot_pass_button")
     Button mForgotButton;
-    @ViewById(resName="R.id.login_sign_in_button")
     Button mLoginSignInButton;
 
     @Inject public void setPresenter(LoginPresenter presenter) {
@@ -63,8 +53,21 @@ public class LoginActivityView extends BaseActivity implements ViewActivityToPre
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setupViews(R.layout.activity_login);
         ((MyApplication) getApplication()).getLoginDiComponent().inject(this);
         super.setupMVP(this, LoginActivityView.class);
+    }
+
+    @Override
+    public void setupViews(int layout) {
+        setContentView(layout);
+        this.mLoginView = ((AutoCompleteTextView) findViewById(R.id.login));
+        this.mPasswordView = find(R.id.password);
+        this.mProgressView = find(R.id.login_progress);
+        this.mForgotButton = find(R.id.forgot_pass_button);
+        this.mLoginSignInButton = find(R.id.login_sign_in_button);
+        mLoginSignInButton.setOnClickListener(this);
+        mForgotButton.setOnClickListener(this);
     }
 
     @Override
@@ -103,24 +106,22 @@ public class LoginActivityView extends BaseActivity implements ViewActivityToPre
         dialog.show();
     }
 
-    @Click
-    void forgot_pass_button() {
+    void clickForgotButton() {
         ((MVP_Login.PresenterInterface) mPresenter).showRestorePasswordDialog();
     }
 
-    @Click
-    void login_sign_in_button() {
+    void clickLoginButton() {
         mLoginView.setError(null);
         mPasswordView.setError(null);
 
         String login = mLoginView.getText().toString();
         String password = mPasswordView.getText().toString();
-
+        //set login data to User object from model through presenter
         UserInterface user = mPresenter.getUser();
         user.setPassword(password);
         user.setLogin(login);
 
-        ArrayList<LoginErrorType> error = ((MVP_Login.PresenterInterface) mPresenter).checkCredentials(login, password);
+        ArrayList<LoginErrorType> error = ((MVP_Login.PresenterInterface) mPresenter).checkCredentials();
 
         if (error.contains(PASSWORD_REQUIRED)) {
             mPasswordView.setError(getString(R.string.error_field_required));
@@ -130,11 +131,6 @@ public class LoginActivityView extends BaseActivity implements ViewActivityToPre
         if (error.contains(EMPTY_EMAIL)) {
             mLoginView.setError(getString(R.string.error_field_required));
         }
-    }
-
-    @Override
-    public void setupViews() {
-
     }
 
     public void successfulLogin(int flag) {
@@ -155,5 +151,18 @@ public class LoginActivityView extends BaseActivity implements ViewActivityToPre
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         getActivityContext().startActivity(intent);
         finish();
+    }
+
+    @Override
+    public void onClick(View view) {
+        int id = view.getId();
+        switch (id){
+            case R.id.login_sign_in_button:
+                clickLoginButton();
+                break;
+            case R.id.forgot_pass_button:
+                clickForgotButton();
+                break;
+        }
     }
 }

@@ -30,7 +30,7 @@ public class MVP_Login {
     interface PresenterInterface extends Presenter {
         void onDestroy(boolean isChangingConfiguration);
         void showRestorePasswordDialog();
-        ArrayList<LoginErrorType> checkCredentials(String login, String password);
+        ArrayList<LoginErrorType> checkCredentials();
     }
 
     interface ModelInterface extends Model {

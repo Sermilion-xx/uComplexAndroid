@@ -18,9 +18,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.ImageView;
 
 import org.javatuples.Pair;
 import org.ucomplex.ucomplex.FragmentFactory;
+import org.ucomplex.ucomplex.IViewExtensions;
 import org.ucomplex.ucomplex.Interfaces.IFragment;
 import org.ucomplex.ucomplex.Interfaces.MVP.Model;
 import org.ucomplex.ucomplex.Interfaces.MVP.Presenter;
@@ -38,7 +40,7 @@ import org.ucomplex.ucomplex.Utility.StateMaintainer;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class BaseActivity extends AppCompatActivity {
+public class BaseActivity extends AppCompatActivity implements IViewExtensions{
 
     protected DrawerLayout          mDrawer;
     protected ActionBarDrawerToggle mActionBarDrawerToggle;
@@ -101,7 +103,6 @@ public class BaseActivity extends AppCompatActivity {
             mRepository.setContext(mPresenter.getActivityContext());
             mModel.setRepository(mRepository);
             mPresenter.setModel(mModel);
-            mStateMaintainer.put(mPresenter);
             mStateMaintainer.put(mModel);
             mStateMaintainer.put(type.getName(), mPresenter);
         } else {
@@ -208,6 +209,11 @@ public class BaseActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override @SuppressWarnings("unchecked")
+    public  <T extends View> T find(int id){
+        return (T) findViewById(id);
     }
 
 }

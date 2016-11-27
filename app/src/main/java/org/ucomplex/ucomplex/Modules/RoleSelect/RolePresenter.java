@@ -74,7 +74,7 @@ public class RolePresenter implements MVP_RoleSelect.PresenterInterface {
 
     @Override
     public UserInterface getUser() {
-        return mModel.getmUser();
+        return mModel.getUser();
     }
 
 

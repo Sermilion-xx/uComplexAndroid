@@ -17,7 +17,6 @@
         android:theme="@style/AppTheme"
         android:name=".Modules.MyApplication">
 
-        <activity android:name=".Modules.Events.EventsActivity_" />
         <activity android:name=".Modules.Events.EventsActivity" />
         <activity android:name=".Modules.BaseActivity" />
         <activity

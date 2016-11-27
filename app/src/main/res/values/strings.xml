@@ -52,7 +52,7 @@
     <string name="error_incorrect_password">Пароль должен состоять из 3 и более символов</string>
     <string name="error_field_required">Обязательное поле</string>
     <string name="error_check_internet">Проверьте интернет соединение.</string>
-    <string name="error_login">Неверные данные</string>
+    <string name="error_login">Не удалось войти</string>
 
     <string name="ok">Готово</string>
     <string name="cancel">Отмена</string>

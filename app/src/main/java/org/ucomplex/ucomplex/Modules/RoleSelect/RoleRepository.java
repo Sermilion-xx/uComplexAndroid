@@ -63,6 +63,6 @@ public class RoleRepository implements Repository{
             int index = random.nextInt(5);
             roles.add(new RoleItem(roleIcons[index], roleStr));
         }
-        return roles;
+//        return roles;
     }
 }

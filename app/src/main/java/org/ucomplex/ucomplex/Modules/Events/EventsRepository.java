@@ -48,11 +48,10 @@ public class EventsRepository implements Repository {
     @Override
     public void loadData(Object... param) {
         try {
-            return loadEvents();
+            loadEvents();
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return null;
     }
 
     @Nullable

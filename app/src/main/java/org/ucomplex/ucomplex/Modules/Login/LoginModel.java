@@ -9,6 +9,7 @@ import org.ucomplex.ucomplex.Interfaces.OnDataLoadedListener;
 import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 import org.ucomplex.ucomplex.Model.Users.User;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
+import org.ucomplex.ucomplex.Utility.FacadePreferences;
 import org.ucomplex.ucomplex.Utility.HttpFactory;
 
 /**
@@ -30,19 +31,17 @@ public class LoginModel implements MVP_Login.ModelInterface, OnTaskCompleteListe
 
     public LoginModel(LoginRepository dao) {
         mRepository = dao;
-        ((LoginRepository)mRepository).setTaskCompleteListener(this);
     }
 
     public LoginModel(){
-        ((LoginRepository)mRepository).setTaskCompleteListener(this);
+
     }
 
-    public void setOnDataLoadedListener(OnDataLoadedListener mOnDataLoadedListener) {
+    void setOnDataLoadedListener(OnDataLoadedListener mOnDataLoadedListener) {
         this.mOnDataLoadedListener = mOnDataLoadedListener;
     }
 
     public void setPresenter(Context context) {
-
         mRepository = new LoginRepository(context);
         ((LoginRepository)mRepository).setTaskCompleteListener(this);
     }
@@ -61,7 +60,6 @@ public class LoginModel implements MVP_Login.ModelInterface, OnTaskCompleteListe
     @Override
     public void onDestroy(boolean isChangingConfiguration) {
         if (!isChangingConfiguration) {
-
             mRepository = null;
         }
     }
@@ -86,6 +84,10 @@ public class LoginModel implements MVP_Login.ModelInterface, OnTaskCompleteListe
     @Override
     public UserInterface getUser() {
         return mUser;
+    }
+
+    public UserInterface loadLoggedUser(){
+        return ((LoginRepository)mRepository).loadLoggedUser();
     }
 
     @Override

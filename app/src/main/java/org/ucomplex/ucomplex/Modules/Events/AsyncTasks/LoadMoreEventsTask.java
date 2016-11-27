@@ -43,7 +43,7 @@ public class LoadMoreEventsTask extends AsyncTask<Integer, Void, Boolean> {
     protected void onPostExecute(Boolean result) {
         try {
             mPresenter.getView().hideProgress();
-            onTaskCompleteListener.onTaskComplete(this, result);
+//            onTaskCompleteListener.onTaskComplete(this, result);
             ((ViewRecylerToPresenter)mPresenter.getView()).notifyDataSetChanged();
         } catch (NullPointerException e) {
             e.printStackTrace();

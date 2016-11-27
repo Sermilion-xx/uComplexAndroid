@@ -22,6 +22,7 @@ import org.ucomplex.ucomplex.Utility.FacadeMedia;
 import org.ucomplex.ucomplex.Utility.FacadePreferences;
 import org.ucomplex.ucomplex.Utility.HttpFactory;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -64,13 +65,20 @@ public class LoginRepository implements Repository {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        UserInterface user = unpackUserFromJsonString(response, password);
+                        String utf8String = "";
+                        try {
+                            utf8String = new String(response.getBytes("ISO-8859-1"), "UTF-8");
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
+                        UserInterface user = unpackUserFromJsonString(utf8String, password);
                         mModelTaskCompleteListener.onTaskComplete(Constants.REQUEST_LOGIN, user, 0);
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                error.printStackTrace();
+                mModelTaskCompleteListener.onTaskComplete(Constants.REQUEST_LOGIN, null, 0);
             }
         }){
             @Override
@@ -125,5 +133,9 @@ public class LoginRepository implements Repository {
     @Override
     public void setContext(Context context) {
         this.mContext = context;
+    }
+
+    public UserInterface loadLoggedUser() {
+        return FacadePreferences.getUserDataFromPref(mContext);
     }
 }

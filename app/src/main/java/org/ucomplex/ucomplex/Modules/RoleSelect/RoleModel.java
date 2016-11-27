@@ -44,6 +44,11 @@ public class RoleModel implements MVP_RoleSelect.ModelInterface {
         this.mRolesRepository = repository;
     }
 
+    @Override
+    public UserInterface getUser() {
+        return mUser;
+    }
+
     public void setRolesRepository(RoleRepository mRolesRepository) {
         this.mRolesRepository = mRolesRepository;
     }
@@ -67,9 +72,9 @@ public class RoleModel implements MVP_RoleSelect.ModelInterface {
     }
 
     @Override @SuppressWarnings("unchecked")
-    public boolean loadData() {
-        mRoles = (ArrayList<RoleItem>) mRolesRepository.loadData(mUser);
-        return mRoles != null;
+    public void loadData() {
+       mRolesRepository.loadData(mUser);
+
     }
 
     @Override

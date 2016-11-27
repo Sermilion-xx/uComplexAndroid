@@ -16,8 +16,10 @@ import org.ucomplex.ucomplex.Interfaces.MVP.ViewToPresenter;
 import org.ucomplex.ucomplex.Interfaces.OnDataLoadedListener;
 import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 import org.ucomplex.ucomplex.Model.Users.LoginErrorType;
+import org.ucomplex.ucomplex.Model.Users.User;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.R;
+import org.ucomplex.ucomplex.Utility.FacadePreferences;
 import org.ucomplex.ucomplex.Utility.HttpFactory;
 
 import java.lang.ref.WeakReference;
@@ -118,8 +120,10 @@ public class LoginPresenter implements MVP_Login.PresenterInterface, OnTaskCompl
         alert.show();
     }
 
-    private ArrayList<LoginErrorType> runCheck(String login, String password) {
+    private ArrayList<LoginErrorType> runCheck() {
         ArrayList<LoginErrorType> errors = new ArrayList<>();
+        String password = mModel.getUser().getPassword();
+        String login = mModel.getUser().getLogin();
         if (TextUtils.isEmpty(password)) {
             errors.add(PASSWORD_REQUIRED);
         } else if (!isPasswordValid(password)) {
@@ -139,8 +143,8 @@ public class LoginPresenter implements MVP_Login.PresenterInterface, OnTaskCompl
     }
 
     @Override
-    public ArrayList<LoginErrorType> checkCredentials(String login, String password) {
-        ArrayList<LoginErrorType> error = runCheck(login, password);
+    public ArrayList<LoginErrorType> checkCredentials() {
+        ArrayList<LoginErrorType> error = runCheck();
         if (error.get(0)==NO_ERROR) {
             loadUser();
         }
@@ -157,22 +161,12 @@ public class LoginPresenter implements MVP_Login.PresenterInterface, OnTaskCompl
     public void setModel(Model model) {
         mModel = model;
         ((LoginModel)mModel).setOnDataLoadedListener(this);
-
-        new AsyncTask<Void, Void, UserInterface>(){
-            @Override
-            protected UserInterface doInBackground(Void... voids) {
-                return getUser();
-            }
-            @Override
-            protected void onPostExecute(UserInterface user) {
-                super.onPostExecute(user);
-                if(user!=null){
-                    mModel.setData(user);
-                    //1 - has already been logged
-                    onTaskComplete(null, true, 1);
-                }
-            }
-        }.execute();
+        UserInterface user = ((LoginModel)mModel).loadLoggedUser();
+        if(user!=null){
+            mModel.setData(user);
+            //1 - has already been logged
+            onTaskComplete(null, true, 1);
+        }
     }
 
     @Override
@@ -206,8 +200,7 @@ public class LoginPresenter implements MVP_Login.PresenterInterface, OnTaskCompl
     public void onTaskComplete(String requestType, Object... o) {
         boolean result = (boolean) o[0];
         if (result) {
-            UserInterface user = mModel.getUser();
-//            getView().successfulLogin(user, (int)o[1]);
+            ((LoginActivityView)getView()).successfulLogin(1);
         }
     }
 }

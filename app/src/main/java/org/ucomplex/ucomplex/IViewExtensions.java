@@ -1,8 +1,10 @@
-package org.ucomplex.ucomplex.Interfaces.MVP;
+package org.ucomplex.ucomplex;
+
+import android.view.View;
 
 /**
  * ---------------------------------------------------
- * Created by Sermilion on 12/11/2016.
+ * Created by Sermilion on 27/11/2016.
  * Project: uComplex_v_2
  * ---------------------------------------------------
  * <a href="http://www.ucomplex.org">ucomplex.org</a>
@@ -10,6 +12,7 @@ package org.ucomplex.ucomplex.Interfaces.MVP;
  * ---------------------------------------------------
  */
 
-public interface ViewActivityToPresenter extends ViewToPresenter {
-    void setupViews(int layout);
+public interface IViewExtensions {
+
+    <T extends View> T find(int id);
 }

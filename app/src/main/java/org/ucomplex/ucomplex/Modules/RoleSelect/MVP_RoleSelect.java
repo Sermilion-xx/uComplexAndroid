@@ -64,8 +64,6 @@ public interface MVP_RoleSelect {
 
         void onDestroy(boolean isChangingConfiguration);
 
-        boolean loadData();
-
         RoleItem getRole(int position);
 
         int getRolesCount();
