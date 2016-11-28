@@ -5,5 +5,5 @@ package org.ucomplex.ucomplex.Interfaces;
  */
 
 public interface OnTaskCompleteListener {
-    void onTaskComplete(String requestType, Object ... o);
+    void onTaskComplete(int requestType, Object ... o);
 }

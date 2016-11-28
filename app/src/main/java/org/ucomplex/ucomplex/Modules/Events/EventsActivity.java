@@ -103,7 +103,7 @@ public class EventsActivity extends BaseActivity implements ViewRecylerToPresent
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(Constants.EVENTS_LOAD_MORE_BROADCAST)) {
-                ((EventsPresenter) mPresenter).loadMoreEvents(((EventsPresenter) mPresenter).getEventsCount());
+                ((EventsPresenter) mPresenter).loadMoreEvents(((EventsPresenter) mPresenter).getEventsCount()+1);
             }
         }
     };

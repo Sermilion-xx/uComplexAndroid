@@ -9,11 +9,11 @@ import org.ucomplex.ucomplex.Interfaces.OnDataLoadedListener;
 import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 import org.ucomplex.ucomplex.Model.EventItem;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
-import org.ucomplex.ucomplex.Modules.Events.AsyncTasks.LoadEventsTask;
+import org.ucomplex.ucomplex.Utility.Constants;
 import org.ucomplex.ucomplex.Utility.FacadeCommon;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
+
 
 /**
  * Model layer on Model View PresenterToViewInterface Pattern
@@ -102,17 +102,8 @@ public class EventsModel implements MVP_Events.ModelInterface, OnTaskCompleteLis
     }
 
     @Override
-    public boolean loadMoreEvents(int start) {
-        ArrayList<EventItem> loadedEvents = ((EventsRepository) mRepository).loadMoreEvents(start);
-        if (loadedEvents.size() != 0) {
-            mEventItems.remove(mEventItems.size() - 1);
-            mEventItems.addAll(loadedEvents);
-            mEventItems.add(new EventItem());
-        }
-//        else{
-//            mEventItems.remove(mEventItems.size());
-//        }
-        return loadedEvents.size() != 0;
+    public void loadMoreEvents(int start) {
+        mRepository.loadData(start);
     }
 
     @Override
@@ -128,11 +119,15 @@ public class EventsModel implements MVP_Events.ModelInterface, OnTaskCompleteLis
     }
 
     @Override
-    public void onTaskComplete(String requestType, Object... o) {
+    public void onTaskComplete(int requestType, Object... o) {
         try {
             String result = (String) o[0];
-            mEventItems = getEventsDataFromJson(result);
-            mOnDataLoadedListener.dataLoaded(result!=null);
+            if (requestType == Constants.REQUEST_MORE_EVENTS) {
+                mEventItems.addAll(getEventsDataFromJson(result));
+            } else {
+                mEventItems = getEventsDataFromJson(result);
+            }
+            mOnDataLoadedListener.dataLoaded(result != null);
         } catch (JSONException e) {
             e.printStackTrace();
         }

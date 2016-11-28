@@ -79,7 +79,7 @@ public class LoginModel implements MVP_Login.ModelInterface, OnTaskCompleteListe
     @Override
     public String sendResetRequest(String email) {
         String json = "\"email\":\"" + email + "\"";
-        return HttpFactory.httpPost(HttpFactory.RESTORE_PASSWORD_URL, "", json);
+        return null;
     }
 
     @Override
@@ -87,12 +87,12 @@ public class LoginModel implements MVP_Login.ModelInterface, OnTaskCompleteListe
         return mUser;
     }
 
-    public UserInterface loadLoggedUser() {
+    UserInterface loadLoggedUser() {
         return ((LoginRepository) mRepository).loadLoggedUser();
     }
 
     @Override
-    public void onTaskComplete(String requestType, Object... o) {
+    public void onTaskComplete(int requestType, Object... o) {
         //o[1] - password
         mUser = unpackUserFromJsonString((String) o[0]);
         if (mUser != null) {

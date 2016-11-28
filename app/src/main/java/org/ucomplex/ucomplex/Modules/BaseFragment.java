@@ -28,7 +28,7 @@ public class BaseFragment extends Fragment implements IFragment{
     }
 
     @Override
-    public void setParams(Object params) {
+    public void setParams(Object ... params) {
 
     }
 }

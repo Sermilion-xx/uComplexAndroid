@@ -22,8 +22,9 @@ public class Constants {
     public static final String UCOMPLEX_PROFILE = "ucomplex_profile";
     public static final String IMAGE_FORMAT_JPG = ".jpg";
 
-    public static final String REQUEST_LOGIN = "requestLogin";
-    public static final String REQUEST_EVENTS = "requestEvents";
+    public static final int REQUEST_LOGIN = 0;
+    public static final int REQUEST_EVENTS = 1;
+    public static final int REQUEST_MORE_EVENTS = 2;
 
     public static final int[] colorsUserSelect = new int[]{
             R.drawable.select_account_1,

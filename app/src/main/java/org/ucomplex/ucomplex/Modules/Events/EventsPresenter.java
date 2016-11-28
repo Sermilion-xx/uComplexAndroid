@@ -15,7 +15,6 @@ import org.ucomplex.ucomplex.Interfaces.MVP.ViewToPresenter;
 import org.ucomplex.ucomplex.Interfaces.OnDataLoadedListener;
 import org.ucomplex.ucomplex.Model.EventItem;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
-import org.ucomplex.ucomplex.Modules.Events.AsyncTasks.LoadMoreEventsTask;
 import org.ucomplex.ucomplex.R;
 import org.ucomplex.ucomplex.Utility.Constants;
 import org.ucomplex.ucomplex.Utility.FacadeMedia;
@@ -42,8 +41,6 @@ public class EventsPresenter implements MVP_Events.PresenterInterface, OnDataLoa
     private static final int TYPE_COMMON = 0;
     private static final int TYPE_FOOTER = 1;
 
-    private LoadMoreEventsTask loadMoreEventsTask;
-
     public EventsPresenter() {
 
     }
@@ -65,6 +62,7 @@ public class EventsPresenter implements MVP_Events.PresenterInterface, OnDataLoa
     public void onDestroy(boolean isChangingConfiguration) {
         mView = null;
         mModel.onDestroy(isChangingConfiguration);
+        HttpFactory.getInstance().cancel();
         if (!isChangingConfiguration) {
             mModel = null;
         }
@@ -78,7 +76,7 @@ public class EventsPresenter implements MVP_Events.PresenterInterface, OnDataLoa
     @Override
     public void setModel(Model models) {
         mModel = models;
-        ((EventsModel)mModel).setOnDataLoadedListener(this);
+        ((EventsModel) mModel).setOnDataLoadedListener(this);
         loadData();
     }
 
@@ -137,15 +135,15 @@ public class EventsPresenter implements MVP_Events.PresenterInterface, OnDataLoa
 //            });
         } else {
             if (hasMoreEvents) {
-                holder.loadMoreEventsButton.setOnClickListener(
-                        new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                getActivityContext().sendBroadcast(new Intent(Constants.EVENTS_LOAD_MORE_BROADCAST));
-                            }
-                        }
-
+                holder.loadMoreEventsButton.setOnClickListener(new View.OnClickListener() {
+                                                                   @Override
+                                                                   public void onClick(View view) {
+                                                                       getActivityContext().sendBroadcast(new Intent(Constants.EVENTS_LOAD_MORE_BROADCAST));
+                                                                   }
+                                                               }
                 );
+            } else {
+                holder.loadMoreEventsButton.setVisibility(View.GONE);
             }
         }
     }
@@ -168,8 +166,7 @@ public class EventsPresenter implements MVP_Events.PresenterInterface, OnDataLoa
     public void loadMoreEvents(final int start) {
         try {
             getView().showProgress();
-            loadMoreEventsTask = new LoadMoreEventsTask(mModel, this);
-            loadMoreEventsTask.execute(start);
+            ((EventsModel) mModel).loadMoreEvents(start);
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
@@ -203,6 +200,8 @@ public class EventsPresenter implements MVP_Events.PresenterInterface, OnDataLoa
         getView().hideProgress();
         if (loaded)
             ((ViewRecylerToPresenter) getView()).notifyDataSetChanged();
+        else
+            hasMoreEvents = false;
     }
 }
 

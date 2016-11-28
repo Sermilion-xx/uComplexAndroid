@@ -34,6 +34,25 @@ import okio.Okio;
  */
 public class HttpFactory {
 
+    private StringRequest stringRequest;
+    private static HttpFactory mInstance;
+
+    private HttpFactory(){
+
+    }
+
+
+    public static HttpFactory getInstance(){
+        if(mInstance == null){
+            mInstance = new HttpFactory();
+        }
+        return mInstance;
+    }
+
+    public void cancel(){
+        stringRequest.cancel();
+    }
+
     private static final String SCHEMA = "https://";
     public static final String BASE_URL = SCHEMA + "ucomplex.org/";
     public static final String USER_EVENTS_URL = BASE_URL + "user/events?mobile=1";
@@ -71,9 +90,6 @@ public class HttpFactory {
         }
     }
 
-    public String httpGet(String url) {
-        return "";
-    }
 
     public static String encodeLoginData(String loginData) {
         byte[] authBytes;
@@ -85,33 +101,6 @@ public class HttpFactory {
             e.printStackTrace();
         }
         return null;
-    }
-
-    /**
-     * Method to perform HTTP request
-     *
-     * @param url         - url of request
-     * @param encodedAuth - encoded authorization header
-     * @param jsonBody    json body
-     * @return json response from server
-     */
-    public static String httpPost(String url, String encodedAuth, String jsonBody) {
-        String result = "";
-        try {
-            final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-            OkHttpClient client = new OkHttpClient();
-            RequestBody body = RequestBody.create(JSON, jsonBody);
-            Request request = new Request.Builder()
-                    .url(url)
-                    .post(body)
-                    .addHeader("Authorization", "Basic " + encodedAuth)
-                    .build();
-            Response response = client.newCall(request).execute();
-            return response.body().string();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return result;
     }
 
     public static boolean httpPostFile(String url, String encodedAuth, File file, String fileName) {
@@ -141,17 +130,22 @@ public class HttpFactory {
 
     public static boolean isNetworkConnected(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-
         return cm.getActiveNetworkInfo() != null;
     }
 
-    public static void httpVolley(String url,
+    public void httpVolley(String url,
                                   final String encodedAuth,
                                   Context context,
                                   final OnTaskCompleteListener onTaskCompleteListener,
-                                  final String requestType, final Object...returnData) {
+                                  final int requestType, HashMap<String, String> params, final Object...returnData) {
+        if(params==null){
+            params = new HashMap<>();
+        }
+
+        final HashMap<String, String> finalParams = params;
         RequestQueue queue = Volley.newRequestQueue(context);
-        StringRequest stringRequest = new StringRequest(com.android.volley.Request.Method.GET, url,
+
+        stringRequest = new StringRequest(com.android.volley.Request.Method.POST, url,
                 new com.android.volley.Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -162,7 +156,7 @@ public class HttpFactory {
                             if(returnData.length>0){
                                 data = returnData[0];
                             }
-                            onTaskCompleteListener.onTaskComplete("", utf8String, data);
+                            onTaskCompleteListener.onTaskComplete(requestType, utf8String, data);
                         } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
                         }
@@ -174,11 +168,17 @@ public class HttpFactory {
                 onTaskCompleteListener.onTaskComplete(requestType, error, 0);
             }
         }) {
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                return finalParams;
+            }
+
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("Authorization", "Basic " + encodedAuth);
-                return params;
+                HashMap<String, String> header = new HashMap<>();
+                header.put("Authorization", "Basic " + encodedAuth);
+                return header;
             }
         };
         queue.add(stringRequest);

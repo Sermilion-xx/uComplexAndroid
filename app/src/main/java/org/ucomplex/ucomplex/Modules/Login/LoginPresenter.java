@@ -16,10 +16,9 @@ import org.ucomplex.ucomplex.Interfaces.MVP.ViewToPresenter;
 import org.ucomplex.ucomplex.Interfaces.OnDataLoadedListener;
 import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 import org.ucomplex.ucomplex.Model.Users.LoginErrorType;
-import org.ucomplex.ucomplex.Model.Users.User;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.R;
-import org.ucomplex.ucomplex.Utility.FacadePreferences;
+import org.ucomplex.ucomplex.Utility.Constants;
 import org.ucomplex.ucomplex.Utility.HttpFactory;
 
 import java.lang.ref.WeakReference;
@@ -45,6 +44,7 @@ public class LoginPresenter implements MVP_Login.PresenterInterface, OnTaskCompl
     @Override
     public void onDestroy(boolean isChangingConfiguration) {
         mView = null;
+        HttpFactory.getInstance().cancel();
         mModel.onDestroy(isChangingConfiguration);
         if (!isChangingConfiguration) {
             mModel = null;
@@ -164,7 +164,7 @@ public class LoginPresenter implements MVP_Login.PresenterInterface, OnTaskCompl
         if(user!=null){
             mModel.setData(user);
             //1 - has already been logged
-            onTaskComplete(null, true, 1);
+            onTaskComplete(Constants.REQUEST_LOGIN, true, 1);
         }
     }
 
@@ -196,7 +196,7 @@ public class LoginPresenter implements MVP_Login.PresenterInterface, OnTaskCompl
     }
 
     @Override
-    public void onTaskComplete(String requestType, Object... o) {
+    public void onTaskComplete(int requestType, Object... o) {
         boolean result = (boolean) o[0];
         if (result) {
             ((LoginActivityView)getView()).successfulLogin(1);

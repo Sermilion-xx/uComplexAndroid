@@ -2,29 +2,12 @@ package org.ucomplex.ucomplex.Modules.Login;
 
 import android.content.Context;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.google.gson.Gson;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.ucomplex.ucomplex.Interfaces.MVP.Repository;
 import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
-import org.ucomplex.ucomplex.Model.Users.User;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.Utility.Constants;
-import org.ucomplex.ucomplex.Utility.FacadeMedia;
 import org.ucomplex.ucomplex.Utility.FacadePreferences;
 import org.ucomplex.ucomplex.Utility.HttpFactory;
-
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * ---------------------------------------------------
@@ -56,7 +39,13 @@ public class LoginRepository implements Repository {
 
     private void loginRequest(final String login, final String password) {
         final String encodedAuth = HttpFactory.encodeLoginData(login + ":" + password);
-        HttpFactory.httpVolley(HttpFactory.AUTHENTICATIO_URL,encodedAuth,mContext,mModelTaskCompleteListener,Constants.REQUEST_LOGIN, password);
+        HttpFactory.getInstance().httpVolley(HttpFactory.AUTHENTICATIO_URL,
+                encodedAuth,
+                mContext,
+                mModelTaskCompleteListener,
+                Constants.REQUEST_LOGIN,
+                null,
+                password);
     }
 
     public Context getContext() {

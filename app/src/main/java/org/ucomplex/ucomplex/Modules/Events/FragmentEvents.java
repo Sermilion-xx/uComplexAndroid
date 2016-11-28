@@ -39,8 +39,8 @@ public class FragmentEvents extends BaseFragment{
     }
 
     @Override
-    public void setParams(Object params) {
-        mActivity = (EventsActivity)params;
+    public void setParams(Object ... params) {
+        mActivity = (EventsActivity)params[0];
     }
 
     public ListEventsAdapter getListAdapter() {

@@ -14,5 +14,5 @@ import android.app.Fragment;
 
 public interface IFragment {
 
-    void setParams(Object params);
+    void setParams(Object ... params);
 }
