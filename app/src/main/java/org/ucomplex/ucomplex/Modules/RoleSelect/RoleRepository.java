@@ -3,6 +3,7 @@ package org.ucomplex.ucomplex.Modules.RoleSelect;
 import android.content.Context;
 
 import org.ucomplex.ucomplex.Interfaces.MVP.Repository;
+import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 import org.ucomplex.ucomplex.Model.Users.Role;
 import org.ucomplex.ucomplex.Model.Users.User;
 import org.ucomplex.ucomplex.R;
@@ -64,5 +65,10 @@ public class RoleRepository implements Repository{
             roles.add(new RoleItem(roleIcons[index], roleStr));
         }
 //        return roles;
+    }
+
+    @Override
+    public void setTaskCompleteListener(OnTaskCompleteListener mTaskCompleteListener) {
+
     }
 }

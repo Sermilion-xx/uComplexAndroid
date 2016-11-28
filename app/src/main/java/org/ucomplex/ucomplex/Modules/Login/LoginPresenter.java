@@ -41,7 +41,6 @@ public class LoginPresenter implements MVP_Login.PresenterInterface, OnTaskCompl
 
     private WeakReference<ViewActivityToPresenter> mView;
     private Model mModel;
-    private OnTaskCompleteListener mTaskCompleteListener = null;
 
     @Override
     public void onDestroy(boolean isChangingConfiguration) {

@@ -38,12 +38,11 @@ import java.util.Map;
 
 public class LoginRepository implements Repository {
 
-
-
     private Context mContext;
     private OnTaskCompleteListener mModelTaskCompleteListener; //Model
 
-    void setTaskCompleteListener(OnTaskCompleteListener mTaskCompleteListener) {
+    @Override
+    public void setTaskCompleteListener(OnTaskCompleteListener mTaskCompleteListener) {
         this.mModelTaskCompleteListener = mTaskCompleteListener;
     }
 
@@ -64,7 +63,6 @@ public class LoginRepository implements Repository {
         return mContext;
     }
 
-    //TODO: test
     @Override
     public void loadData(Object... params) {
         //Dummy user with just loginRequest and password
@@ -72,8 +70,6 @@ public class LoginRepository implements Repository {
         String password = user.getPassword();
         loginRequest(user.getLogin(), password);
     }
-
-
 
 
     @Override

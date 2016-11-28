@@ -158,7 +158,11 @@ public class HttpFactory {
                         String utf8String;
                         try {
                             utf8String = new String(response.getBytes("ISO-8859-1"), "UTF-8");
-                            onTaskCompleteListener.onTaskComplete("", utf8String, returnData[0]);
+                            Object data = null;
+                            if(returnData.length>0){
+                                data = returnData[0];
+                            }
+                            onTaskCompleteListener.onTaskComplete("", utf8String, data);
                         } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
                         }

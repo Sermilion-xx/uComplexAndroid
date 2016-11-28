@@ -49,7 +49,7 @@ public class LoginModel implements MVP_Login.ModelInterface, OnTaskCompleteListe
 
     public void setPresenter(Context context) {
         mRepository = new LoginRepository(context);
-        ((LoginRepository) mRepository).setTaskCompleteListener(this);
+        mRepository.setTaskCompleteListener(this);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class LoginModel implements MVP_Login.ModelInterface, OnTaskCompleteListe
     @Override
     public void setRepository(Repository repository) {
         this.mRepository = repository;
-        ((LoginRepository) mRepository).setTaskCompleteListener(this);
+        mRepository.setTaskCompleteListener(this);
     }
 
     @Override

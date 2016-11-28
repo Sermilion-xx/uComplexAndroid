@@ -2,6 +2,8 @@ package org.ucomplex.ucomplex.Interfaces.MVP;
 
 import android.content.Context;
 
+import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
+
 /**
  * ---------------------------------------------------
  * Created by Sermilion on 14/11/2016.
@@ -15,4 +17,5 @@ import android.content.Context;
 public interface Repository {
     void setContext(Context context);
     void loadData(Object...param);
+    void setTaskCompleteListener(OnTaskCompleteListener mTaskCompleteListener);
 }

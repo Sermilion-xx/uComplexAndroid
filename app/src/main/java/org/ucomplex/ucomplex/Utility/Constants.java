@@ -33,4 +33,6 @@ public class Constants {
             R.drawable.select_account_5
     };
 
+    public static final String STRING_EMPTY = "";
+    public static final String IMAGE_FORMAT = ".jpg";
 }

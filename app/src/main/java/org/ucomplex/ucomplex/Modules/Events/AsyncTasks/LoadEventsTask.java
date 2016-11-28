@@ -52,7 +52,7 @@ public class LoadEventsTask extends AsyncTask<Void, Void, ArrayList<EventItem>> 
     protected ArrayList<EventItem> doInBackground(Void... params) {
         ArrayList<EventItem> eventItems = new ArrayList<>();
         if(!isCancelled()){
-            mRepository.loadData();
+
             eventItems.add(new EventItem());
         }
         return eventItems;

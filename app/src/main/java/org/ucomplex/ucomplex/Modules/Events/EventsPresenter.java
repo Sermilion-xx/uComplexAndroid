@@ -3,7 +3,6 @@ package org.ucomplex.ucomplex.Modules.Events;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +12,9 @@ import com.bumptech.glide.Glide;
 import org.ucomplex.ucomplex.Interfaces.MVP.Model;
 import org.ucomplex.ucomplex.Interfaces.MVP.ViewRecylerToPresenter;
 import org.ucomplex.ucomplex.Interfaces.MVP.ViewToPresenter;
-import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
+import org.ucomplex.ucomplex.Interfaces.OnDataLoadedListener;
 import org.ucomplex.ucomplex.Model.EventItem;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
-import org.ucomplex.ucomplex.Modules.Events.AsyncTasks.LoadEventsTask;
 import org.ucomplex.ucomplex.Modules.Events.AsyncTasks.LoadMoreEventsTask;
 import org.ucomplex.ucomplex.R;
 import org.ucomplex.ucomplex.Utility.Constants;
@@ -35,7 +33,7 @@ import java.lang.ref.WeakReference;
  * ---------------------------------------------------
  */
 
-public class EventsPresenter implements MVP_Events.PresenterInterface, OnTaskCompleteListener{
+public class EventsPresenter implements MVP_Events.PresenterInterface, OnDataLoadedListener {
 
     private WeakReference<ViewRecylerToPresenter> mView;
     private Model mModel;
@@ -46,12 +44,12 @@ public class EventsPresenter implements MVP_Events.PresenterInterface, OnTaskCom
 
     private LoadMoreEventsTask loadMoreEventsTask;
 
-    public EventsPresenter(ViewRecylerToPresenter view) {
-        mView = new WeakReference<>(view);
-    }
-
     public EventsPresenter() {
 
+    }
+
+    public EventsPresenter(ViewRecylerToPresenter view) {
+        mView = new WeakReference<>(view);
     }
 
     public void setHasMoreEvents(boolean hasMoreEvents) {
@@ -74,12 +72,13 @@ public class EventsPresenter implements MVP_Events.PresenterInterface, OnTaskCom
 
     @Override
     public void onConfigurationChanged(ViewToPresenter view) {
-        mView = new WeakReference<>((ViewRecylerToPresenter)view);
+        mView = new WeakReference<>((ViewRecylerToPresenter) view);
     }
 
     @Override
     public void setModel(Model models) {
         mModel = models;
+        ((EventsModel)mModel).setOnDataLoadedListener(this);
         loadData();
     }
 
@@ -111,7 +110,7 @@ public class EventsPresenter implements MVP_Events.PresenterInterface, OnTaskCom
         if (position != getEventsCount() - 1) {
             final EventItem event = ((EventsModel) mModel).getEvent(position);
             String personName = event.getParams().getName();
-            if (personName == null || personName.equals("")) {
+            if (personName == null || personName.equals(Constants.STRING_EMPTY)) {
                 event.getParams().setName(getActivityContext().getResources().getString(R.string.ucomplex));
             }
             holder.eventPersonName.setText(event.getParams().getName());
@@ -128,7 +127,7 @@ public class EventsPresenter implements MVP_Events.PresenterInterface, OnTaskCom
                     holder.eventsImageView.setImageDrawable(textDrawable);
                 } else {
                     Glide.with(getActivityContext())
-                            .load(HttpFactory.LOAD_PROFILE_URL + event.getParams().getCode() + ".jpg")
+                            .load(HttpFactory.LOAD_PROFILE_URL + event.getParams().getCode() + Constants.IMAGE_FORMAT)
                             .into(holder.eventsImageView);
                 }
             }
@@ -138,12 +137,13 @@ public class EventsPresenter implements MVP_Events.PresenterInterface, OnTaskCom
 //            });
         } else {
             if (hasMoreEvents) {
-                holder.loadMoreEventsButton.setOnClickListener(new View.OnClickListener() {
-                                                                   @Override
-                                                                   public void onClick(View view) {
-                                                                       getActivityContext().sendBroadcast(new Intent(Constants.EVENTS_LOAD_MORE_BROADCAST));
-                                                                   }
-                                                               }
+                holder.loadMoreEventsButton.setOnClickListener(
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                getActivityContext().sendBroadcast(new Intent(Constants.EVENTS_LOAD_MORE_BROADCAST));
+                            }
+                        }
 
                 );
             }
@@ -158,10 +158,6 @@ public class EventsPresenter implements MVP_Events.PresenterInterface, OnTaskCom
     public void loadData() {
         try {
             getView().showProgress();
-            LoadEventsTask loadEventsTask = new LoadEventsTask(this);
-            loadEventsTask.setModel(mModel);
-            loadEventsTask.setPresenter(this);
-            ((EventsModel)mModel).setLoadEventsTask(loadEventsTask);
             mModel.loadData();
         } catch (NullPointerException e) {
             e.printStackTrace();
@@ -202,10 +198,11 @@ public class EventsPresenter implements MVP_Events.PresenterInterface, OnTaskCom
         }
     }
 
-
     @Override
-    public void onTaskComplete(String requestType, Object... o) {
-
+    public void dataLoaded(boolean loaded) {
+        getView().hideProgress();
+        if (loaded)
+            ((ViewRecylerToPresenter) getView()).notifyDataSetChanged();
     }
 }
 

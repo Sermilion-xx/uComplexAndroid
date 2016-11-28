@@ -21,7 +21,7 @@ import javax.inject.Inject;
 public class EventsActivity extends BaseActivity implements ViewRecylerToPresenter {
 
     private FragmentEvents mFragmentEvents;
-    private UserInterface  mUser;
+    private UserInterface mUser;
 
     @Inject
     public void setPresenter(EventsPresenter presenter) {
@@ -51,15 +51,19 @@ public class EventsActivity extends BaseActivity implements ViewRecylerToPresent
         FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame);
         getLayoutInflater().inflate(R.layout.activity_main, contentFrameLayout);
 
-        ((MyApplication) getApplication()).getEventsDiComponent().inject(this);
+        Intent intent = getIntent();
+        if (intent.hasExtra(Constants.EXTRA_KEY_USER)) {
+            mUser = getIntent().getParcelableExtra(Constants.EXTRA_KEY_USER);
+            ((MyApplication) getApplication()).getEventsDiComponent().inject(this);
 
-        mFragmentEvents = (FragmentEvents) setupFragment(getFragmentManager(),
-                FragmentEvents.class.getName(),
-                this);
+            mFragmentEvents = (FragmentEvents) setupFragment(getFragmentManager(),
+                    FragmentEvents.class.getName(),
+                    this);
+        }
     }
 
     @Override
-    public final void setupDrawer(){
+    public final void setupDrawer() {
         super.setupDrawer();
     }
 
@@ -140,6 +144,7 @@ public class EventsActivity extends BaseActivity implements ViewRecylerToPresent
 
     @Override
     public void showAlert(AlertDialog dialog) {
+
     }
 
     @Override
