@@ -21,7 +21,6 @@ import java.util.ArrayList;
 public class RoleModel implements MVP_RoleSelect.ModelInterface {
 
     // PresenterToViewInterface reference
-    private Context mContext;
     private ArrayList<RoleItem> mRoles;
     private Repository mRolesRepository;
     private UserInterface mUser;
@@ -29,10 +28,6 @@ public class RoleModel implements MVP_RoleSelect.ModelInterface {
     public RoleModel() {
     }
 
-    @Override
-    public void setContext(Context mContext) {
-        this.mContext = mContext;
-    }
 
     @Override
     public void setData(Object data) {
@@ -58,7 +53,6 @@ public class RoleModel implements MVP_RoleSelect.ModelInterface {
     }
 
     public RoleModel(Context context, RoleRepository repository, UserInterface user) {
-        this.mContext = context;
         mRolesRepository = repository;
         this.mUser = user;
     }
@@ -66,7 +60,6 @@ public class RoleModel implements MVP_RoleSelect.ModelInterface {
     @Override
     public void onDestroy(boolean isChangingConfiguration) {
         if (!isChangingConfiguration) {
-            mContext = null;
             mRoles = null;
         }
     }

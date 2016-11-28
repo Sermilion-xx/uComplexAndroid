@@ -5,13 +5,17 @@ import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
 import android.util.Base64;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.android.volley.AuthFailureError;
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,13 +34,13 @@ import okio.Okio;
  */
 public class HttpFactory {
 
-    private static final String SCHEMA               = "https://";
-    public  static final String BASE_URL             = SCHEMA+"ucomplex.org/";
-    public  static final String USER_EVENTS_URL      = BASE_URL+"user/events?mobile=1";
-    public  static final String PROFILE_IMAGE_URL    = BASE_URL+"files/photos/";
-    public  static final String AUTHENTICATIO_URL    = BASE_URL+"auth?mobile=1";
-    public  static final String RESTORE_PASSWORD_URL = BASE_URL+"public/password?mobile=1";
-    public  static final String LOAD_PROFILE_URL     = BASE_URL+"files/photos/";
+    private static final String SCHEMA = "https://";
+    public static final String BASE_URL = SCHEMA + "ucomplex.org/";
+    public static final String USER_EVENTS_URL = BASE_URL + "user/events?mobile=1";
+    public static final String PROFILE_IMAGE_URL = BASE_URL + "files/photos/";
+    public static final String AUTHENTICATIO_URL = BASE_URL + "auth?mobile=1";
+    public static final String RESTORE_PASSWORD_URL = BASE_URL + "public/password?mobile=1";
+    public static final String LOAD_PROFILE_URL = BASE_URL + "files/photos/";
 
     public static void httpGetFile(@NonNull String url, @NonNull File destFile, String encodedAuth) {
         try {
@@ -62,16 +66,16 @@ public class HttpFactory {
 //            publishProgress(progress)
             }
             sink.flush();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public String httpGet(String url){
+    public String httpGet(String url) {
         return "";
     }
 
-    public static String encodeLoginData(String loginData){
+    public static String encodeLoginData(String loginData) {
         byte[] authBytes;
         try {
             authBytes = loginData.getBytes("UTF-8");
@@ -85,9 +89,10 @@ public class HttpFactory {
 
     /**
      * Method to perform HTTP request
-     * @param url - url of request
+     *
+     * @param url         - url of request
      * @param encodedAuth - encoded authorization header
-     * @param jsonBody json body
+     * @param jsonBody    json body
      * @return json response from server
      */
     public static String httpPost(String url, String encodedAuth, String jsonBody) {
@@ -103,7 +108,7 @@ public class HttpFactory {
                     .build();
             Response response = client.newCall(request).execute();
             return response.body().string();
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return result;
@@ -138,6 +143,41 @@ public class HttpFactory {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         return cm.getActiveNetworkInfo() != null;
+    }
+
+    public static void httpVolley(String url,
+                                  final String encodedAuth,
+                                  Context context,
+                                  final OnTaskCompleteListener onTaskCompleteListener,
+                                  final String requestType, final Object...returnData) {
+        RequestQueue queue = Volley.newRequestQueue(context);
+        StringRequest stringRequest = new StringRequest(com.android.volley.Request.Method.GET, url,
+                new com.android.volley.Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        String utf8String;
+                        try {
+                            utf8String = new String(response.getBytes("ISO-8859-1"), "UTF-8");
+                            onTaskCompleteListener.onTaskComplete("", utf8String, returnData[0]);
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                onTaskCompleteListener.onTaskComplete(requestType, error, 0);
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("Authorization", "Basic " + encodedAuth);
+                return params;
+            }
+        };
+        queue.add(stringRequest);
     }
 
 }

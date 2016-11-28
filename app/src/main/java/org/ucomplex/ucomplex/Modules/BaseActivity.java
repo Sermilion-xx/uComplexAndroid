@@ -97,7 +97,6 @@ public class BaseActivity extends AppCompatActivity implements IViewExtensions{
         mStateMaintainer = new StateMaintainer(getFragmentManager(), type.getName());
         if (mStateMaintainer.firstTimeIn()) {
             mPresenter.setView(viewToPresenter);
-            mModel.setContext(mPresenter.getActivityContext());
             if(data.length>0)
                 mModel.setData(data[0]);
             mRepository.setContext(mPresenter.getActivityContext());

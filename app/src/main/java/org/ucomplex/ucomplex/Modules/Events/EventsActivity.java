@@ -48,20 +48,14 @@ public class EventsActivity extends BaseActivity implements ViewRecylerToPresent
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupToolbar(getResourceString(R.string.events));
+        FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame);
+        getLayoutInflater().inflate(R.layout.activity_main, contentFrameLayout);
 
-        Intent intent = getIntent();
-        if (intent.hasExtra(Constants.EXTRA_KEY_USER)) {
-            mUser = getIntent().getParcelableExtra(Constants.EXTRA_KEY_USER);
+        ((MyApplication) getApplication()).getEventsDiComponent().inject(this);
 
-            FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame); //Remember this is the FrameLayout area within your activity_main.xml
-            getLayoutInflater().inflate(R.layout.activity_main, contentFrameLayout);
-
-            ((MyApplication) getApplication()).getEventsDiComponent().inject(this);
-
-            mFragmentEvents = (FragmentEvents) setupFragment(getFragmentManager(),
-                    FragmentEvents.class.getName(),
-                    this);
-        }
+        mFragmentEvents = (FragmentEvents) setupFragment(getFragmentManager(),
+                FragmentEvents.class.getName(),
+                this);
     }
 
     @Override
@@ -145,6 +139,10 @@ public class EventsActivity extends BaseActivity implements ViewRecylerToPresent
     }
 
     @Override
+    public void showAlert(AlertDialog dialog) {
+    }
+
+    @Override
     public void showProgress() {
         mFragmentEvents.showProgress();
     }
@@ -152,11 +150,6 @@ public class EventsActivity extends BaseActivity implements ViewRecylerToPresent
     @Override
     public void hideProgress() {
         mFragmentEvents.hideProgress();
-    }
-
-    @Override
-    public void showAlert(AlertDialog dialog) {
-
     }
 
 }

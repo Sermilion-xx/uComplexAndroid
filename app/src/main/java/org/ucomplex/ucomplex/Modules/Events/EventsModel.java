@@ -26,14 +26,12 @@ public class EventsModel implements MVP_Events.ModelInterface {
 
     private Repository mRepository;
     private ArrayList<EventItem> mEventItems;
-    private Context mContext;
     private UserInterface user;
     private LoadEventsTask loadEventsTask;
 
-    public EventsModel(Context context, UserInterface user) {
-        this.mContext = context;
+    public EventsModel(UserInterface user) {
         this.user = user;
-        mRepository = new EventsRepository(mContext);
+        mRepository = new EventsRepository();
     }
 
     public EventsModel() {
@@ -45,10 +43,6 @@ public class EventsModel implements MVP_Events.ModelInterface {
     }
 
 
-    public void setPresenter(Context context) {
-        this.mContext = context;
-    }
-
     @Override
     @SuppressWarnings("unchecked")
     public void setData(Object data) {
@@ -56,11 +50,6 @@ public class EventsModel implements MVP_Events.ModelInterface {
             this.mEventItems = (ArrayList<EventItem>) data;
         else
             this.user = (UserInterface) data;
-    }
-
-    @Override
-    public void setContext(Context context) {
-        mContext = context;
     }
 
     @Override
@@ -76,7 +65,6 @@ public class EventsModel implements MVP_Events.ModelInterface {
     @Override
     public void onDestroy(boolean isChangingConfiguration) {
         if (!isChangingConfiguration) {
-            mContext = null;
             mRepository = null;
             mEventItems = null;
             if(loadEventsTask!=null){

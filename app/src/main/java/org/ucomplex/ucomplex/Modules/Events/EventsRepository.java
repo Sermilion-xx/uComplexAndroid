@@ -3,16 +3,30 @@ package org.ucomplex.ucomplex.Modules.Events;
 import android.content.Context;
 import android.support.annotation.Nullable;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.ucomplex.ucomplex.Interfaces.MVP.Repository;
+import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 import org.ucomplex.ucomplex.Model.EventItem;
+import org.ucomplex.ucomplex.Model.Users.UserInterface;
+import org.ucomplex.ucomplex.Utility.Constants;
 import org.ucomplex.ucomplex.Utility.FacadeCommon;
 import org.ucomplex.ucomplex.Utility.FacadePreferences;
 import org.ucomplex.ucomplex.Utility.HttpFactory;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * ---------------------------------------------------
@@ -28,6 +42,7 @@ public class EventsRepository implements Repository {
 
     private static final String KEY_JSON_EVENTS = "events";
     private Context mContext;
+    private OnTaskCompleteListener mOnTaskCompleteListener;
 
     EventsRepository(Context appContext) {
         this.mContext = appContext;
@@ -35,6 +50,10 @@ public class EventsRepository implements Repository {
 
     public EventsRepository() {
 
+    }
+
+    public void setmOnTaskCompleteListener(OnTaskCompleteListener mOnTaskCompleteListener) {
+        this.mOnTaskCompleteListener = mOnTaskCompleteListener;
     }
 
     public void setContext(Context mContext) {
@@ -54,18 +73,16 @@ public class EventsRepository implements Repository {
         }
     }
 
-    @Nullable
-    private ArrayList<EventItem> loadEvents() throws JSONException {
-        ArrayList<EventItem> eventsList;
-        String stringResult = HttpFactory.httpPost(HttpFactory.USER_EVENTS_URL, FacadePreferences.getLoginDataFromPref(mContext), "{}");
-        if (stringResult != null) {
-            eventsList = getEventsDataFromJson(stringResult);
-            return eventsList;
-        }
-        return null;
+    private void loadEvents() throws JSONException {
+        final String encodedAuth = FacadePreferences.getLoginDataFromPref(mContext);
+        HttpFactory.httpVolley(HttpFactory.USER_EVENTS_URL,
+                encodedAuth,
+                mContext,
+                mOnTaskCompleteListener,
+                Constants.REQUEST_EVENTS);
     }
 
-    public ArrayList<EventItem> loadMoreEvents(int start){
+    ArrayList<EventItem> loadMoreEvents(int start){
         ArrayList<EventItem> loadedEvents = new ArrayList<>();
         String jsonBody = "{\"start\":\""+start+"\"}";
         String stringResult = HttpFactory.httpPost(HttpFactory.USER_EVENTS_URL, FacadePreferences.getLoginDataFromPref(mContext), jsonBody);

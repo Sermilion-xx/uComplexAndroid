@@ -23,6 +23,7 @@ public class Constants {
     public static final String IMAGE_FORMAT_JPG = ".jpg";
 
     public static final String REQUEST_LOGIN = "requestLogin";
+    public static final String REQUEST_EVENTS = "requestEvents";
 
     public static final int[] colorsUserSelect = new int[]{
             R.drawable.select_account_1,

@@ -38,8 +38,7 @@ import java.util.Map;
 
 public class LoginRepository implements Repository {
 
-    private static final String JSON_SESSION_KEY = "session";
-    private static final String JSON_ROLES_KEY = "roles";
+
 
     private Context mContext;
     private OnTaskCompleteListener mModelTaskCompleteListener; //Model
@@ -56,63 +55,15 @@ public class LoginRepository implements Repository {
     public LoginRepository() {
     }
 
-    //TODO: test
     private void loginRequest(final String login, final String password) {
         final String encodedAuth = HttpFactory.encodeLoginData(login + ":" + password);
-        RequestQueue queue = Volley.newRequestQueue(mContext);
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, HttpFactory.AUTHENTICATIO_URL,
-
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        String utf8String = "";
-                        try {
-                            utf8String = new String(response.getBytes("ISO-8859-1"), "UTF-8");
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                        }
-                        UserInterface user = unpackUserFromJsonString(utf8String, password);
-                        mModelTaskCompleteListener.onTaskComplete(Constants.REQUEST_LOGIN, user, 0);
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-                mModelTaskCompleteListener.onTaskComplete(Constants.REQUEST_LOGIN, null, 0);
-            }
-        }){
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String>  params = new HashMap<>();
-                params.put("Authorization", "Basic " + encodedAuth);
-                return params;
-            }
-        };
-        queue.add(stringRequest);
+        HttpFactory.httpVolley(HttpFactory.AUTHENTICATIO_URL,encodedAuth,mContext,mModelTaskCompleteListener,Constants.REQUEST_LOGIN, password);
     }
 
-    //TODO: test
-    private UserInterface unpackUserFromJsonString(String jsonData, String password){
-        UserInterface user;
-        try {
-            JSONObject jsonObject = new JSONObject(jsonData);
-            if (jsonObject.getJSONArray(JSON_ROLES_KEY) == null) {
-                return null;
-            } else {
-                user = getUserFromJson(jsonData);
-                if (user.getPhoto() == 1) {
-                    user.setBitmapUri(FacadeMedia.createFileForBitmap(user.getCode()));
-                } else {
-                    FacadePreferences.deleteFromPref(mContext, FacadePreferences.KEY_PREF_PROFILE_PHOTO);
-                }
-                user.setPassword(password);
-                return user;
-            }
-        } catch (JSONException | NullPointerException e) {
-            e.printStackTrace();
-            return null;
-        }
+    public Context getContext() {
+        return mContext;
     }
+
     //TODO: test
     @Override
     public void loadData(Object... params) {
@@ -123,12 +74,7 @@ public class LoginRepository implements Repository {
     }
 
 
-    private User getUserFromJson(String rolesJsonStr) throws JSONException {
-        JSONObject rolesJson = new JSONObject(rolesJsonStr);
-        Gson gson = new Gson();
-        JSONObject userSession = rolesJson.getJSONObject(JSON_SESSION_KEY);
-        return gson.fromJson(userSession.toString(), User.class);
-    }
+
 
     @Override
     public void setContext(Context context) {

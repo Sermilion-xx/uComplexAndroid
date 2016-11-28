@@ -3,12 +3,16 @@ package org.ucomplex.ucomplex.Modules.Login;
 
 import android.content.Context;
 
-import org.ucomplex.ucomplex.Interfaces.MVP.Presenter;
+import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.ucomplex.ucomplex.Interfaces.MVP.Repository;
 import org.ucomplex.ucomplex.Interfaces.OnDataLoadedListener;
 import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 import org.ucomplex.ucomplex.Model.Users.User;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
+import org.ucomplex.ucomplex.Utility.FacadeMedia;
 import org.ucomplex.ucomplex.Utility.FacadePreferences;
 import org.ucomplex.ucomplex.Utility.HttpFactory;
 
@@ -23,8 +27,10 @@ import org.ucomplex.ucomplex.Utility.HttpFactory;
  * <a href="http://www.github.com/sermilion>github</a>
  * ---------------------------------------------------
  */
-public class LoginModel implements MVP_Login.ModelInterface, OnTaskCompleteListener{
+public class LoginModel implements MVP_Login.ModelInterface, OnTaskCompleteListener {
 
+    private static final String JSON_SESSION_KEY = "session";
+    private static final String JSON_ROLES_KEY = "roles";
     private Repository mRepository;
     private UserInterface mUser = new User();
     private OnDataLoadedListener mOnDataLoadedListener;
@@ -33,7 +39,7 @@ public class LoginModel implements MVP_Login.ModelInterface, OnTaskCompleteListe
         mRepository = dao;
     }
 
-    public LoginModel(){
+    public LoginModel() {
 
     }
 
@@ -43,18 +49,18 @@ public class LoginModel implements MVP_Login.ModelInterface, OnTaskCompleteListe
 
     public void setPresenter(Context context) {
         mRepository = new LoginRepository(context);
-        ((LoginRepository)mRepository).setTaskCompleteListener(this);
+        ((LoginRepository) mRepository).setTaskCompleteListener(this);
     }
 
     @Override
     public void setData(Object data) {
-        this.mUser = (UserInterface)data;
+        this.mUser = (UserInterface) data;
     }
 
     @Override
     public void setRepository(Repository repository) {
         this.mRepository = repository;
-        ((LoginRepository)mRepository).setTaskCompleteListener(this);
+        ((LoginRepository) mRepository).setTaskCompleteListener(this);
     }
 
     @Override
@@ -71,11 +77,6 @@ public class LoginModel implements MVP_Login.ModelInterface, OnTaskCompleteListe
     }
 
     @Override
-    public void setContext(Context context) {
-
-    }
-
-    @Override
     public String sendResetRequest(String email) {
         String json = "\"email\":\"" + email + "\"";
         return HttpFactory.httpPost(HttpFactory.RESTORE_PASSWORD_URL, "", json);
@@ -86,13 +87,45 @@ public class LoginModel implements MVP_Login.ModelInterface, OnTaskCompleteListe
         return mUser;
     }
 
-    public UserInterface loadLoggedUser(){
-        return ((LoginRepository)mRepository).loadLoggedUser();
+    public UserInterface loadLoggedUser() {
+        return ((LoginRepository) mRepository).loadLoggedUser();
     }
 
     @Override
     public void onTaskComplete(String requestType, Object... o) {
-        mUser = (UserInterface) o[0];
-        mOnDataLoadedListener.dataLoaded(mUser!=null);
+        //o[1] - password
+        mUser = unpackUserFromJsonString((String) o[0]);
+        if (mUser != null) {
+            mUser.setPassword((String) o[1]);
+        }
+        mOnDataLoadedListener.dataLoaded(mUser != null);
+    }
+
+    private UserInterface unpackUserFromJsonString(String jsonData) {
+        UserInterface user;
+        try {
+            JSONObject jsonObject = new JSONObject(jsonData);
+            if (jsonObject.getJSONArray(JSON_ROLES_KEY) == null) {
+                return null;
+            } else {
+                user = getUserFromJson(jsonData);
+                if (user.getPhoto() == 1) {
+                    user.setBitmapUri(FacadeMedia.createFileForBitmap(user.getCode()));
+                } else {
+                    FacadePreferences.deleteFromPref(((LoginRepository) mRepository).getContext(), FacadePreferences.KEY_PREF_PROFILE_PHOTO);
+                }
+                return user;
+            }
+        } catch (JSONException | NullPointerException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private User getUserFromJson(String rolesJsonStr) throws JSONException {
+        JSONObject rolesJson = new JSONObject(rolesJsonStr);
+        Gson gson = new Gson();
+        JSONObject userSession = rolesJson.getJSONObject(JSON_SESSION_KEY);
+        return gson.fromJson(userSession.toString(), User.class);
     }
 }
