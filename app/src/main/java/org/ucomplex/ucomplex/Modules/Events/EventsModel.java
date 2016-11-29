@@ -122,12 +122,16 @@ public class EventsModel implements MVP_Events.ModelInterface, OnTaskCompleteLis
     public void onTaskComplete(int requestType, Object... o) {
         try {
             String result = (String) o[0];
+            ArrayList<EventItem> newItems = getEventsDataFromJson(result);
+            int start;
             if (requestType == Constants.REQUEST_MORE_EVENTS) {
-                mEventItems.addAll(getEventsDataFromJson(result));
+                start = mEventItems.size();
+                mEventItems.addAll(newItems);
             } else {
-                mEventItems = getEventsDataFromJson(result);
+                start = 0;
+                mEventItems = newItems;
             }
-            mOnDataLoadedListener.dataLoaded(result != null);
+            mOnDataLoadedListener.dataLoaded(result != null, start, mEventItems.size());
         } catch (JSONException e) {
             e.printStackTrace();
         }

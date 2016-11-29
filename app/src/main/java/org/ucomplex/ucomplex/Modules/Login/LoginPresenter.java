@@ -65,7 +65,7 @@ public class LoginPresenter implements MVP_Login.PresenterInterface, OnTaskCompl
     }
 
     @Override
-    public void dataLoaded(boolean loaded){
+    public void dataLoaded(boolean loaded, int start, int end){
         getView().hideProgress();
         if(loaded)
             ((LoginActivityView)getView()).successfulLogin(0);

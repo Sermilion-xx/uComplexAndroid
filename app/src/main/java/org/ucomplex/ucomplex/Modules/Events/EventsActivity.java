@@ -119,6 +119,11 @@ public class EventsActivity extends BaseActivity implements ViewRecylerToPresent
     }
 
     @Override
+    public void notifyItemRangeInserted(int start, int end) {
+        mFragmentEvents.getListAdapter().notifyItemRangeInserted(start, end);
+    }
+
+    @Override
     public void notifyItemInserted(int layoutPosition) {
         mFragmentEvents.getListAdapter().notifyItemInserted(layoutPosition);
     }

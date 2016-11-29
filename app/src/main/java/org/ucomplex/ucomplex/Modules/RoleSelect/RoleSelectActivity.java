@@ -101,6 +101,11 @@ public class RoleSelectActivity extends BaseActivity implements ViewRecylerToPre
     }
 
     @Override
+    public void notifyItemRangeInserted(int start, int end) {
+        mListAdapter.notifyItemRangeInserted(start, end);
+    }
+
+    @Override
     public void notifyItemInserted(int layoutPosition) {
         mListAdapter.notifyItemInserted(layoutPosition);
     }

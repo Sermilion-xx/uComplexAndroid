@@ -196,10 +196,10 @@ public class EventsPresenter implements MVP_Events.PresenterInterface, OnDataLoa
     }
 
     @Override
-    public void dataLoaded(boolean loaded) {
+    public void dataLoaded(boolean loaded, int start, int end) {
         getView().hideProgress();
         if (loaded)
-            ((ViewRecylerToPresenter) getView()).notifyDataSetChanged();
+            ((ViewRecylerToPresenter) getView()).notifyItemRangeInserted(start, end);
         else
             hasMoreEvents = false;
     }

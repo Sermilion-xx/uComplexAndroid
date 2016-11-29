@@ -11,5 +11,5 @@ package org.ucomplex.ucomplex.Interfaces;
  */
 
 public interface OnDataLoadedListener {
-    void dataLoaded(boolean loaded);
+    void dataLoaded(boolean loaded, int start, int end);
 }

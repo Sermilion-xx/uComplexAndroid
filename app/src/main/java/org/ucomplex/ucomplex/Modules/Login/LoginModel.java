@@ -98,7 +98,7 @@ public class LoginModel implements MVP_Login.ModelInterface, OnTaskCompleteListe
         if (mUser != null) {
             mUser.setPassword((String) o[1]);
         }
-        mOnDataLoadedListener.dataLoaded(mUser != null);
+        mOnDataLoadedListener.dataLoaded(mUser != null, 0, 0);
     }
 
     private UserInterface unpackUserFromJsonString(String jsonData) {
