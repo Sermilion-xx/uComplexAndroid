@@ -37,20 +37,21 @@ public class HttpFactory {
     private StringRequest stringRequest;
     private static HttpFactory mInstance;
 
-    private HttpFactory(){
+    private HttpFactory() {
 
     }
 
 
-    public static HttpFactory getInstance(){
-        if(mInstance == null){
+    public static HttpFactory getInstance() {
+        if (mInstance == null) {
             mInstance = new HttpFactory();
         }
         return mInstance;
     }
 
-    public void cancel(){
-        stringRequest.cancel();
+    public void cancel() {
+        if (stringRequest != null)
+            stringRequest.cancel();
     }
 
     private static final String SCHEMA = "https://";
@@ -134,11 +135,11 @@ public class HttpFactory {
     }
 
     public void httpVolley(String url,
-                                  final String encodedAuth,
-                                  Context context,
-                                  final OnTaskCompleteListener onTaskCompleteListener,
-                                  final int requestType, HashMap<String, String> params, final Object...returnData) {
-        if(params==null){
+                           final String encodedAuth,
+                           Context context,
+                           final OnTaskCompleteListener onTaskCompleteListener,
+                           final int requestType, HashMap<String, String> params, final Object... returnData) {
+        if (params == null) {
             params = new HashMap<>();
         }
 
@@ -153,7 +154,7 @@ public class HttpFactory {
                         try {
                             utf8String = new String(response.getBytes("ISO-8859-1"), "UTF-8");
                             Object data = null;
-                            if(returnData.length>0){
+                            if (returnData.length > 0) {
                                 data = returnData[0];
                             }
                             onTaskCompleteListener.onTaskComplete(requestType, utf8String, data);

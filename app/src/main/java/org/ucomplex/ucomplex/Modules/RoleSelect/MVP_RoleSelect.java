@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import org.ucomplex.ucomplex.Interfaces.MVP.Model;
 import org.ucomplex.ucomplex.Interfaces.MVP.Presenter;
+import org.ucomplex.ucomplex.Interfaces.MVP.ViewRecylerToPresenter;
 import org.ucomplex.ucomplex.Interfaces.MVP.ViewToPresenter;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 
@@ -27,7 +28,7 @@ public interface MVP_RoleSelect {
      * and receive user interactions
      * PresenterToViewInterface to View
      */
-    interface ViewToPresenterInterface extends ViewToPresenter {
+    interface ViewToPresenterInterface extends ViewRecylerToPresenter {
         Context getAppContext();
 
         Context getActivityContext();

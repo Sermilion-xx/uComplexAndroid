@@ -6,13 +6,10 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import org.ucomplex.ucomplex.Interfaces.MVP.ViewRecylerToPresenter;
-import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.Modules.BaseActivity;
 import org.ucomplex.ucomplex.Modules.MyApplication;
 import org.ucomplex.ucomplex.R;
@@ -24,13 +21,18 @@ public class RoleSelectActivity extends BaseActivity implements ViewRecylerToPre
 
     private ListRolesAdapter mListAdapter;
 
-    @Inject public void setPresenter(RolePresenter presenter) {
+    @Inject
+    public void setPresenter(RolePresenter presenter) {
         super.mPresenter = presenter;
     }
-    @Inject public void setModel(RoleModel model) {
+
+    @Inject
+    public void setModel(RoleModel model) {
         super.mModel = model;
     }
-    @Inject public void setRepository(RoleRepository repository) {
+
+    @Inject
+    public void setRepository(RoleRepository repository) {
         super.mRepository = repository;
     }
 
@@ -39,7 +41,6 @@ public class RoleSelectActivity extends BaseActivity implements ViewRecylerToPre
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_role_select);
         ((MyApplication) getApplication()).getRoleDiComponent().inject(this);
-        setupRecyclerView();
         super.setModelData(getIntent().getParcelableExtra(Constants.EXTRA_KEY_USER));
         super.setupMVP(this, RoleSelectActivity.class);
     }
@@ -50,7 +51,7 @@ public class RoleSelectActivity extends BaseActivity implements ViewRecylerToPre
         mPresenter.onDestroy(isChangingConfigurations());
     }
 
-    private void setupRecyclerView(){
+    private void setupRecyclerView() {
         mListAdapter = new ListRolesAdapter();
         RecyclerView mList = (RecyclerView) findViewById(R.id.recyclerView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -106,6 +107,11 @@ public class RoleSelectActivity extends BaseActivity implements ViewRecylerToPre
     }
 
     @Override
+    public void notifyItemRangeRemoved(int start, int end) {
+        mListAdapter.notifyItemRangeRemoved(start, end);
+    }
+
+    @Override
     public void notifyItemInserted(int layoutPosition) {
         mListAdapter.notifyItemInserted(layoutPosition);
     }
@@ -119,7 +125,7 @@ public class RoleSelectActivity extends BaseActivity implements ViewRecylerToPre
 
         @Override
         public int getItemCount() {
-            return ((MVP_RoleSelect.PresenterInterface)mPresenter).getRolesCount();
+            return ((MVP_RoleSelect.PresenterInterface) mPresenter).getRolesCount();
         }
 
         @Override
@@ -129,13 +135,18 @@ public class RoleSelectActivity extends BaseActivity implements ViewRecylerToPre
 
         @Override
         public RoleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return ((MVP_RoleSelect.PresenterInterface)mPresenter).createViewHolder(parent, viewType);
+            return ((MVP_RoleSelect.PresenterInterface) mPresenter).createViewHolder(parent, viewType);
         }
 
         @Override
         public void onBindViewHolder(RoleViewHolder holder, int position) {
-            ((MVP_RoleSelect.PresenterInterface)mPresenter).bindViewHolder(holder, position);
+            ((MVP_RoleSelect.PresenterInterface) mPresenter).bindViewHolder(holder, position);
         }
+    }
+
+    public void rolesLoaded(boolean loaded) {
+        if (loaded)
+            setupRecyclerView();
     }
 
 }

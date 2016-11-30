@@ -6,14 +6,20 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.AsyncTask;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import org.ucomplex.ucomplex.Interfaces.MVP.Model;
+import org.ucomplex.ucomplex.Interfaces.MVP.ViewRecylerToPresenter;
 import org.ucomplex.ucomplex.Interfaces.MVP.ViewToPresenter;
+import org.ucomplex.ucomplex.Interfaces.OnDataLoadedListener;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.Modules.Events.EventsActivity;
+import org.ucomplex.ucomplex.Modules.Events.EventsModel;
+import org.ucomplex.ucomplex.Modules.Login.LoginActivityView;
 import org.ucomplex.ucomplex.R;
 import org.ucomplex.ucomplex.Utility.Constants;
 import org.ucomplex.ucomplex.Utility.FacadePreferences;
@@ -33,12 +39,12 @@ import static org.ucomplex.ucomplex.Utility.HttpFactory.encodeLoginData;
  * ---------------------------------------------------
  */
 
-public class RolePresenter implements MVP_RoleSelect.PresenterInterface {
+public class RolePresenter implements MVP_RoleSelect.PresenterInterface, OnDataLoadedListener {
 
-    private WeakReference<MVP_RoleSelect.ViewToPresenterInterface> mView;
+    private WeakReference<ViewRecylerToPresenter> mView;
     private Model mModel;
 
-    public RolePresenter(MVP_RoleSelect.ViewToPresenterInterface view) {
+    public RolePresenter(ViewRecylerToPresenter view) {
         mView = new WeakReference<>(view);
     }
     public RolePresenter() {
@@ -57,18 +63,19 @@ public class RolePresenter implements MVP_RoleSelect.PresenterInterface {
 
     @Override
     public void setView(ViewToPresenter view) {
-        mView = new WeakReference<>((MVP_RoleSelect.ViewToPresenterInterface)view);
+        mView = new WeakReference<>((ViewRecylerToPresenter)view);
     }
 
     @Override
     public void onConfigurationChanged(ViewToPresenter view) {
-        mView = new WeakReference<>((MVP_RoleSelect.ViewToPresenterInterface) view);
+        mView = new WeakReference<>((ViewRecylerToPresenter) view);
     }
 
 
 @Override
     public void setModel(Model model) {
         mModel = model;
+    ((RoleModel) mModel).setOnDataLoadedListener(this);
         loadData();
     }
 
@@ -83,7 +90,7 @@ public class RolePresenter implements MVP_RoleSelect.PresenterInterface {
     }
 
     @Override
-    public MVP_RoleSelect.ViewToPresenterInterface getView() throws NullPointerException {
+    public ViewRecylerToPresenter getView() throws NullPointerException {
         if (mView != null)
             return mView.get();
         else
@@ -116,6 +123,7 @@ public class RolePresenter implements MVP_RoleSelect.PresenterInterface {
     public void bindViewHolder(RoleViewHolder holder, final int position) {
         final RoleItem role = ((RoleModel)mModel).getRole(position);
         holder.roleName.setText(role.getRoleName());
+        holder.roleIcon.setImageResource(role.getRoleIcon());
         holder.roleIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -135,7 +143,7 @@ public class RolePresenter implements MVP_RoleSelect.PresenterInterface {
                     }
                 }.execute();
                 Intent intent = new Intent(getActivityContext(), EventsActivity.class);
-                intent.putExtra(Constants.EXTRA_KEY_USER_TYPE,  user.getRoles().get(position).getType());
+                intent.putExtra(Constants.EXTRA_KEY_USER,  (Parcelable) user);
                 getActivityContext().startActivity(intent);
             }
         });
@@ -162,5 +170,18 @@ public class RolePresenter implements MVP_RoleSelect.PresenterInterface {
         } catch (NullPointerException e) {
             return null;
         }
+    }
+
+    private Toast makeToast(String msg) {
+        return Toast.makeText(getView().getAppContext(), msg, Toast.LENGTH_SHORT);
+    }
+
+    @Override
+    public void dataLoaded(boolean loaded, int start, int end) {
+        getView().hideProgress();
+        if(loaded)
+            ((RoleSelectActivity)getView()).rolesLoaded(loaded);
+        else
+            getView().showToast(makeToast(getActivityContext().getString(R.string.error_loading_data)));
     }
 }

@@ -25,6 +25,7 @@ public class Constants {
     public static final int REQUEST_LOGIN = 0;
     public static final int REQUEST_EVENTS = 1;
     public static final int REQUEST_MORE_EVENTS = 2;
+    public static final int REQUEST_LOAD_ROLES = 3;
 
     public static final int[] colorsUserSelect = new int[]{
             R.drawable.select_account_1,

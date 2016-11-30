@@ -2,8 +2,9 @@ package org.ucomplex.ucomplex.Modules.RoleSelect;
 
 import android.content.Context;
 
-import org.ucomplex.ucomplex.Interfaces.MVP.Presenter;
 import org.ucomplex.ucomplex.Interfaces.MVP.Repository;
+import org.ucomplex.ucomplex.Interfaces.OnDataLoadedListener;
+import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 
 import java.util.ArrayList;
@@ -18,16 +19,20 @@ import java.util.ArrayList;
  * ---------------------------------------------------
  */
 
-public class RoleModel implements MVP_RoleSelect.ModelInterface {
+public class RoleModel implements MVP_RoleSelect.ModelInterface, OnTaskCompleteListener {
 
     // PresenterToViewInterface reference
     private ArrayList<RoleItem> mRoles;
-    private Repository mRolesRepository;
+    private Repository mRepository;
     private UserInterface mUser;
+    private OnDataLoadedListener mOnDataLoadedListener;
 
     public RoleModel() {
     }
 
+    public void setOnDataLoadedListener(OnDataLoadedListener mOnDataLoadedListener) {
+        this.mOnDataLoadedListener = mOnDataLoadedListener;
+    }
 
     @Override
     public void setData(Object data) {
@@ -36,7 +41,8 @@ public class RoleModel implements MVP_RoleSelect.ModelInterface {
 
     @Override
     public void setRepository(Repository repository) {
-        this.mRolesRepository = repository;
+        this.mRepository = repository;
+        mRepository.setTaskCompleteListener(this);
     }
 
     @Override
@@ -44,16 +50,13 @@ public class RoleModel implements MVP_RoleSelect.ModelInterface {
         return mUser;
     }
 
-    public void setRolesRepository(RoleRepository mRolesRepository) {
-        this.mRolesRepository = mRolesRepository;
-    }
 
     public UserInterface getmUser() {
         return mUser;
     }
 
     public RoleModel(Context context, RoleRepository repository, UserInterface user) {
-        mRolesRepository = repository;
+        mRepository = repository;
         this.mUser = user;
     }
 
@@ -66,8 +69,7 @@ public class RoleModel implements MVP_RoleSelect.ModelInterface {
 
     @Override @SuppressWarnings("unchecked")
     public void loadData() {
-       mRolesRepository.loadData(mUser);
-
+       mRepository.loadData(mUser);
     }
 
     @Override
@@ -82,5 +84,13 @@ public class RoleModel implements MVP_RoleSelect.ModelInterface {
     @Override
     public int getRolesCount() {
         return mRoles.size();
+    }
+
+    @Override @SuppressWarnings("unchecked")
+    public void onTaskComplete(int requestType, Object... o) {
+        if(o.length>0){
+            mRoles = (ArrayList<RoleItem>) o[0];
+        }
+        mOnDataLoadedListener.dataLoaded(o.length>0, 0, 0);
     }
 }

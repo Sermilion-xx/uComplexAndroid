@@ -187,7 +187,13 @@ public class BaseActivity extends AppCompatActivity implements IViewExtensions{
             }
         });
         mDrawer.setDrawerListener(mActionBarDrawerToggle);
-        mActionBarDrawerToggle.syncState();
+        mDrawer.post(new Runnable() {
+            @Override
+            public void run() {
+                mActionBarDrawerToggle.syncState();
+            }
+        });
+
     }
 
     @Override

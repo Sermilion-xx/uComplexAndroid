@@ -11,6 +11,8 @@ import org.ucomplex.ucomplex.R;
 import java.util.ArrayList;
 import java.util.Random;
 
+import static org.ucomplex.ucomplex.Utility.Constants.REQUEST_LOAD_ROLES;
+
 /**
  * ---------------------------------------------------
  * Created by Sermilion on 08/11/2016.
@@ -22,6 +24,7 @@ import java.util.Random;
  */
 public class RoleRepository implements Repository{
 
+    private OnTaskCompleteListener mModelTaskCompleteListener;
     private Context mContext;
     private int[] roleIcons = {
             R.drawable.role_select_1,
@@ -36,6 +39,11 @@ public class RoleRepository implements Repository{
 
     public RoleRepository() {
 
+    }
+
+    @Override
+    public void setTaskCompleteListener(OnTaskCompleteListener mTaskCompleteListener) {
+        this.mModelTaskCompleteListener = mTaskCompleteListener;
     }
 
 
@@ -64,11 +72,6 @@ public class RoleRepository implements Repository{
             int index = random.nextInt(5);
             roles.add(new RoleItem(roleIcons[index], roleStr));
         }
-//        return roles;
-    }
-
-    @Override
-    public void setTaskCompleteListener(OnTaskCompleteListener mTaskCompleteListener) {
-
+        mModelTaskCompleteListener.onTaskComplete(REQUEST_LOAD_ROLES, roles);
     }
 }
