@@ -1,15 +1,11 @@
 package org.ucomplex.ucomplex.Modules.Login;
 
 
-import android.content.Context;
-
 import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Repository;
-import org.ucomplex.ucomplex.Interfaces.OnDataLoadedListener;
-import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
+import org.ucomplex.ucomplex.AbstractClasses.AbstractModel;
 import org.ucomplex.ucomplex.Model.Users.User;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.Utility.FacadeMedia;
@@ -26,29 +22,13 @@ import org.ucomplex.ucomplex.Utility.FacadePreferences;
  * <a href="http://www.github.com/sermilion>github</a>
  * ---------------------------------------------------
  */
-public class LoginModel implements MVP_Login.ModelInterface, OnTaskCompleteListener {
+public class LoginModel extends AbstractModel implements MVP_Login.ModelInterface{
 
     private static final String JSON_SESSION_KEY = "session";
     private static final String JSON_ROLES_KEY = "roles";
-    private Repository mRepository;
-    private UserInterface mUser = new User();
-    private OnDataLoadedListener mOnDataLoadedListener;
-
-    public LoginModel(LoginRepository dao) {
-        mRepository = dao;
-    }
 
     public LoginModel() {
 
-    }
-
-    void setOnDataLoadedListener(OnDataLoadedListener mOnDataLoadedListener) {
-        this.mOnDataLoadedListener = mOnDataLoadedListener;
-    }
-
-    public void setPresenter(Context context) {
-        mRepository = new LoginRepository(context);
-        mRepository.setTaskCompleteListener(this);
     }
 
     @Override
@@ -56,18 +36,6 @@ public class LoginModel implements MVP_Login.ModelInterface, OnTaskCompleteListe
         this.mUser = (UserInterface) data;
     }
 
-    @Override
-    public void setRepository(Repository repository) {
-        this.mRepository = repository;
-        mRepository.setTaskCompleteListener(this);
-    }
-
-    @Override
-    public void onDestroy(boolean isChangingConfiguration) {
-        if (!isChangingConfiguration) {
-            mRepository = null;
-        }
-    }
 
     @Override
     public void loadData() {

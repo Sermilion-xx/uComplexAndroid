@@ -2,6 +2,7 @@ package org.ucomplex.ucomplex.Modules.RoleSelect;
 
 import android.content.Context;
 
+import org.ucomplex.ucomplex.AbstractClasses.AbstractModel;
 import org.ucomplex.ucomplex.Interfaces.IRecyclerItem;
 import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Repository;
 import org.ucomplex.ucomplex.Interfaces.MVP.ModelRecycler;
@@ -21,19 +22,11 @@ import java.util.ArrayList;
  * ---------------------------------------------------
  */
 
-public class RoleModel implements ModelRecycler, OnTaskCompleteListener {
+public class RoleModel extends AbstractModel implements ModelRecycler {
 
-    // PresenterToViewInterface reference
     private ArrayList<RoleItem> mRoles;
-    private Repository mRepository;
-    private UserInterface mUser;
-    private OnDataLoadedListener mOnDataLoadedListener;
 
     public RoleModel() {
-    }
-
-    public void setOnDataLoadedListener(OnDataLoadedListener mOnDataLoadedListener) {
-        this.mOnDataLoadedListener = mOnDataLoadedListener;
     }
 
     @Override
@@ -42,28 +35,13 @@ public class RoleModel implements ModelRecycler, OnTaskCompleteListener {
     }
 
     @Override
-    public void setRepository(Repository repository) {
-        this.mRepository = repository;
-        mRepository.setTaskCompleteListener(this);
-    }
-
-    @Override
     public UserInterface getUser() {
         return mUser;
     }
 
-
-    public UserInterface getmUser() {
-        return mUser;
-    }
-
-    public RoleModel(Context context, RoleRepository repository, UserInterface user) {
-        mRepository = repository;
-        this.mUser = user;
-    }
-
     @Override
     public void onDestroy(boolean isChangingConfiguration) {
+        super.onDestroy(isChangingConfiguration);
         if (!isChangingConfiguration) {
             mRoles = null;
         }

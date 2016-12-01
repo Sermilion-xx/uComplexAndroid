@@ -1,5 +1,6 @@
 package org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP;
 
+import org.ucomplex.ucomplex.Interfaces.OnDataLoadedListener;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 
 /**
@@ -18,4 +19,5 @@ public interface Model {
     void setData(Object data);
     void setRepository(Repository repository);
     UserInterface getUser();
+    void setOnDataLoadedListener(OnDataLoadedListener onDataLoadListener);
 }

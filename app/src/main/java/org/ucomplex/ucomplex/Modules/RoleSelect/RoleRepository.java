@@ -2,6 +2,7 @@ package org.ucomplex.ucomplex.Modules.RoleSelect;
 
 import android.content.Context;
 
+import org.ucomplex.ucomplex.AbstractClasses.AbstractRepository;
 import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Repository;
 import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 import org.ucomplex.ucomplex.Model.Users.Role;
@@ -22,10 +23,8 @@ import static org.ucomplex.ucomplex.Utility.Constants.REQUEST_LOAD_ROLES;
  * <a href="http://www.github.com/sermilion>github</a>
  * ---------------------------------------------------
  */
-public class RoleRepository implements Repository{
+public class RoleRepository extends AbstractRepository {
 
-    private OnTaskCompleteListener mModelTaskCompleteListener;
-    private Context mContext;
     private int[] roleIcons = {
             R.drawable.role_select_1,
             R.drawable.role_select_2,
@@ -33,24 +32,10 @@ public class RoleRepository implements Repository{
             R.drawable.role_select_4,
             R.drawable.role_select_5};
 
-    public RoleRepository(Context appContext) {
-        this.mContext = appContext;
-    }
 
     public RoleRepository() {
 
     }
-
-    @Override
-    public void setTaskCompleteListener(OnTaskCompleteListener mTaskCompleteListener) {
-        this.mModelTaskCompleteListener = mTaskCompleteListener;
-    }
-
-
-    public void setContext(Context mContext) {
-        this.mContext = mContext;
-    }
-
 
     @Override
     public void loadData(Object... data) {
@@ -72,6 +57,6 @@ public class RoleRepository implements Repository{
             int index = random.nextInt(5);
             roles.add(new RoleItem(roleIcons[index], roleStr));
         }
-        mModelTaskCompleteListener.onTaskComplete(REQUEST_LOAD_ROLES, roles);
+        mOnTaskCompleteListener.onTaskComplete(REQUEST_LOAD_ROLES, roles);
     }
 }

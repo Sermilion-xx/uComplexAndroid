@@ -3,6 +3,7 @@ package org.ucomplex.ucomplex.Modules.Events;
 import android.content.Context;
 
 import org.json.JSONException;
+import org.ucomplex.ucomplex.AbstractClasses.AbstractRepository;
 import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Repository;
 import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 import org.ucomplex.ucomplex.Utility.Constants;
@@ -21,31 +22,11 @@ import java.util.HashMap;
  * ---------------------------------------------------
  */
 
-public class EventsRepository implements Repository {
+public class EventsRepository extends AbstractRepository {
 
     private static final String EVENTS_START = "start";
-    private Context mContext;
-    private OnTaskCompleteListener mOnTaskCompleteListener;
-
-    EventsRepository(Context appContext) {
-        this.mContext = appContext;
-    }
-
     public EventsRepository() {
 
-    }
-
-    @Override
-    public void setTaskCompleteListener(OnTaskCompleteListener mOnTaskCompleteListener) {
-        this.mOnTaskCompleteListener = mOnTaskCompleteListener;
-    }
-
-    public void setContext(Context mContext) {
-        this.mContext = mContext;
-    }
-
-    public Context getContext() {
-        return mContext;
     }
 
     @Override

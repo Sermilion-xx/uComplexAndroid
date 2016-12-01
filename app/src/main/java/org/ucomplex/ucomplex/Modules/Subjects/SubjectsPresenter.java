@@ -1,10 +1,8 @@
-package org.ucomplex.ucomplex;
-
-import android.view.View;
+package org.ucomplex.ucomplex.Modules.Subjects;
 
 /**
  * ---------------------------------------------------
- * Created by Sermilion on 27/11/2016.
+ * Created by Sermilion on 01/12/2016.
  * Project: uComplex_v_2
  * ---------------------------------------------------
  * <a href="http://www.ucomplex.org">ucomplex.org</a>
@@ -12,7 +10,5 @@ import android.view.View;
  * ---------------------------------------------------
  */
 
-public interface IViewExtensions {
-
-    <T extends View> T find(int id);
+public class SubjectsPresenter {
 }

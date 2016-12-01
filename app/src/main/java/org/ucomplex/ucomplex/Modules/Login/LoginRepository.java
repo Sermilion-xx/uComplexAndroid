@@ -2,6 +2,7 @@ package org.ucomplex.ucomplex.Modules.Login;
 
 import android.content.Context;
 
+import org.ucomplex.ucomplex.AbstractClasses.AbstractRepository;
 import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Repository;
 import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
@@ -19,16 +20,7 @@ import org.ucomplex.ucomplex.Utility.HttpFactory;
  * ---------------------------------------------------
  */
 
-public class LoginRepository implements Repository {
-
-    private Context mContext;
-    private OnTaskCompleteListener mModelTaskCompleteListener; //Model
-
-    @Override
-    public void setTaskCompleteListener(OnTaskCompleteListener mTaskCompleteListener) {
-        this.mModelTaskCompleteListener = mTaskCompleteListener;
-    }
-
+public class LoginRepository extends AbstractRepository {
 
     LoginRepository(Context context) {
         this.mContext = context;
@@ -42,7 +34,7 @@ public class LoginRepository implements Repository {
         HttpFactory.getInstance().httpVolley(HttpFactory.AUTHENTICATIO_URL,
                 encodedAuth,
                 mContext,
-                mModelTaskCompleteListener,
+                mOnTaskCompleteListener,
                 Constants.REQUEST_LOGIN,
                 null,
                 password);
@@ -58,12 +50,6 @@ public class LoginRepository implements Repository {
         UserInterface user = (UserInterface) params[0];
         String password = user.getPassword();
         loginRequest(user.getLogin(), password);
-    }
-
-
-    @Override
-    public void setContext(Context context) {
-        this.mContext = context;
     }
 
     public UserInterface loadLoggedUser() {

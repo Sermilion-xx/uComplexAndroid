@@ -1,6 +1,5 @@
 package org.ucomplex.ucomplex.Modules.RoleSelect;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -13,19 +12,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Model;
+import org.ucomplex.ucomplex.AbstractClasses.AbstractPresenter;
 import org.ucomplex.ucomplex.Interfaces.MVP.ModelRecycler;
 import org.ucomplex.ucomplex.Interfaces.MVP.PresenterRecycler;
-import org.ucomplex.ucomplex.Interfaces.MVP.ViewToPresenterRecycler;
-import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.ViewToPresenter;
-import org.ucomplex.ucomplex.Interfaces.OnDataLoadedListener;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.Modules.Events.EventsActivity;
 import org.ucomplex.ucomplex.R;
 import org.ucomplex.ucomplex.Utility.Constants;
 import org.ucomplex.ucomplex.Utility.FacadePreferences;
 
-import java.lang.ref.WeakReference;
 import java.util.Random;
 
 import static org.ucomplex.ucomplex.Utility.HttpFactory.encodeLoginData;
@@ -40,63 +35,10 @@ import static org.ucomplex.ucomplex.Utility.HttpFactory.encodeLoginData;
  * ---------------------------------------------------
  */
 
-public class RolePresenter implements PresenterRecycler, OnDataLoadedListener {
-
-    private WeakReference<ViewToPresenterRecycler> mView;
-    private ModelRecycler mModel;
-
-    public RolePresenter(ViewToPresenterRecycler view) {
-        mView = new WeakReference<>(view);
-    }
+public class RolePresenter extends AbstractPresenter implements PresenterRecycler {
 
     public RolePresenter() {
 
-    }
-
-
-    @Override
-    public void onDestroy(boolean isChangingConfiguration) {
-        mView = null;
-        mModel.onDestroy(isChangingConfiguration);
-        if (!isChangingConfiguration) {
-            mModel = null;
-        }
-    }
-
-    @Override
-    public void setView(ViewToPresenter view) {
-        mView = new WeakReference<>((ViewToPresenterRecycler) view);
-    }
-
-    @Override
-    public void onConfigurationChanged(ViewToPresenter view) {
-        mView = new WeakReference<>((ViewToPresenterRecycler) view);
-    }
-
-
-    @Override
-    public void setModel(Model model) {
-        mModel = (ModelRecycler) model;
-        ((RoleModel) mModel).setOnDataLoadedListener(this);
-        loadData();
-    }
-
-    @Override
-    public UserInterface getUser() {
-        return mModel.getUser();
-    }
-
-    @Override
-    public void loadData() {
-        mModel.loadData();
-    }
-
-    @Override
-    public ViewToPresenterRecycler getView() throws NullPointerException {
-        if (mView != null)
-            return mView.get();
-        else
-            throw new NullPointerException("View is unavailable");
     }
 
     @Override
@@ -125,13 +67,13 @@ public class RolePresenter implements PresenterRecycler, OnDataLoadedListener {
     @Override
     public void bindViewHolder(RecyclerView.ViewHolder aHolder, final int position) {
         RoleViewHolder holder = (RoleViewHolder) aHolder;
-        final RoleItem role = (RoleItem) mModel.getItem(position);
+        final RoleItem role = (RoleItem) ((ModelRecycler)mModel).getItem(position);
         holder.roleName.setText(role.getRoleName());
         holder.roleIcon.setImageResource(role.getRoleIcon());
         holder.roleIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final UserInterface user = ((RoleModel) mModel).getmUser();
+                final UserInterface user = mModel.getUser();
                 new AsyncTask<Void, Void, Void>() {
                     @Override
                     protected Void doInBackground(Void... voids) {
@@ -139,7 +81,7 @@ public class RolePresenter implements PresenterRecycler, OnDataLoadedListener {
                         String password = user.getPassword();
                         int role = user.getRoles().get(position).getId();
                         user.setType(user.getRoles().get(position).getType());
-                        ((RoleModel) mModel).getmUser().setType(user.getType());
+                        mModel.getUser().setType(user.getType());
                         String encodedAuth = encodeLoginData(login + ":" + password + ":" + role);
                         FacadePreferences.setLoginDataToPref(getActivityContext(), encodedAuth);
                         FacadePreferences.setUserDataToPref(getActivityContext(), user);
@@ -160,25 +102,7 @@ public class RolePresenter implements PresenterRecycler, OnDataLoadedListener {
 
     @Override
     public int getItemCount() {
-        return mModel.getItemCount();
-    }
-
-    @Override
-    public Context getAppContext() {
-        try {
-            return getView().getAppContext();
-        } catch (NullPointerException e) {
-            return null;
-        }
-    }
-
-    @Override
-    public Context getActivityContext() {
-        try {
-            return getView().getActivityContext();
-        } catch (NullPointerException e) {
-            return null;
-        }
+        return ((ModelRecycler)mModel).getItemCount();
     }
 
     private Toast makeToast(String msg) {

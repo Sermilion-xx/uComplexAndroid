@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.ucomplex.ucomplex.AbstractClasses.AbstractPresenter;
 import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Model;
 import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.ViewToPresenter;
 import org.ucomplex.ucomplex.Interfaces.OnDataLoadedListener;
@@ -35,25 +36,8 @@ import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.*;
  * ---------------------------------------------------
  */
 
-public class LoginPresenter implements MVP_Login.PresenterInterface, OnTaskCompleteListener, OnDataLoadedListener {
+public class LoginPresenter extends AbstractPresenter implements MVP_Login.PresenterInterface, OnTaskCompleteListener {
 
-    private WeakReference<ViewToPresenter> mView;
-    private Model mModel;
-
-
-
-    @Override
-    public void setView(ViewToPresenter view) {
-        mView = new WeakReference<>(view);
-    }
-
-    @Override
-    public ViewToPresenter getView() throws NullPointerException {
-        if (mView != null)
-            return mView.get();
-        else
-            throw new NullPointerException("View is unavailable");
-    }
 
     @Override
     public void dataLoaded(boolean loaded, int start, int end){
@@ -64,11 +48,6 @@ public class LoginPresenter implements MVP_Login.PresenterInterface, OnTaskCompl
             getView().showToast(makeToast(getActivityContext().getString(R.string.error_login)));
     }
 
-    @Override
-    public void loadData() {
-        getView().showProgress();
-        mModel.loadData();
-    }
 
     @Override
     public void showRestorePasswordDialog() {
@@ -142,16 +121,11 @@ public class LoginPresenter implements MVP_Login.PresenterInterface, OnTaskCompl
         return error;
     }
 
-
-    @Override
-    public void onConfigurationChanged(ViewToPresenter view) {
-        mView = new WeakReference<>((ViewToPresenter) view);
-    }
-
     @Override
     public void setModel(Model model) {
         mModel = model;
-        ((LoginModel)mModel).setOnDataLoadedListener(this);
+        mModel.setOnDataLoadedListener(this);
+
         UserInterface user = ((LoginModel)mModel).loadLoggedUser();
         if(user!=null){
             mModel.setData(user);
@@ -160,41 +134,12 @@ public class LoginPresenter implements MVP_Login.PresenterInterface, OnTaskCompl
         }
     }
 
-    @Override
-    public UserInterface getUser() {
-        return mModel.getUser();
+    public void setUser(UserInterface user){
+        mModel.setData(user);
     }
 
     private Toast makeToast(String msg) {
         return Toast.makeText(getView().getAppContext(), msg, Toast.LENGTH_SHORT);
-    }
-
-    @Override
-    public Context getAppContext() {
-        try {
-            return getView().getAppContext();
-        } catch (NullPointerException e) {
-            return null;
-        }
-    }
-
-    @Override
-    public Context getActivityContext() {
-        try {
-            return getView().getActivityContext();
-        } catch (NullPointerException e) {
-            return null;
-        }
-    }
-
-    @Override
-    public void onDestroy(boolean isChangingConfiguration) {
-        mView = null;
-        HttpFactory.getInstance().cancel();
-        mModel.onDestroy(isChangingConfiguration);
-        if (!isChangingConfiguration) {
-            mModel = null;
-        }
     }
 
     @Override

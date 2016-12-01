@@ -21,7 +21,7 @@ import android.view.Window;
 
 import org.javatuples.Pair;
 import org.ucomplex.ucomplex.FragmentFactory;
-import org.ucomplex.ucomplex.IViewExtensions;
+import org.ucomplex.ucomplex.Interfaces.IViewExtensions;
 import org.ucomplex.ucomplex.Interfaces.IFragment;
 import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Model;
 import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Presenter;

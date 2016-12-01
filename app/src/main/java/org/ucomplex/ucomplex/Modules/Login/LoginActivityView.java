@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.ViewToPresenter;
 import org.ucomplex.ucomplex.Model.Users.LoginErrorType;
+import org.ucomplex.ucomplex.Model.Users.User;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.Modules.BaseActivity;
 import org.ucomplex.ucomplex.Modules.Events.EventsActivity;
@@ -123,9 +124,10 @@ public class LoginActivityView extends BaseActivity implements ViewToPresenter, 
         String login = mLoginView.getText().toString();
         String password = mPasswordView.getText().toString();
         //set login data to User object from model through presenter
-        UserInterface user = mPresenter.getUser();
+        UserInterface user = new User();
         user.setPassword(password);
         user.setLogin(login);
+        ((LoginPresenter)mPresenter).setUser(user);
 
         ArrayList<LoginErrorType> error = ((MVP_Login.PresenterInterface) mPresenter).checkCredentials();
 

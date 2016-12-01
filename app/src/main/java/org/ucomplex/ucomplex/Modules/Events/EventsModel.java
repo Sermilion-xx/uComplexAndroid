@@ -4,9 +4,7 @@ package org.ucomplex.ucomplex.Modules.Events;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Repository;
-import org.ucomplex.ucomplex.Interfaces.OnDataLoadedListener;
-import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
+import org.ucomplex.ucomplex.AbstractClasses.AbstractModel;
 import org.ucomplex.ucomplex.Model.EventItem;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.Utility.Constants;
@@ -26,7 +24,7 @@ import java.util.ArrayList;
  * <a href="http://www.github.com/sermilion>github</a>
  * ---------------------------------------------------
  */
-public class EventsModel implements MVP_Events.ModelInterface, OnTaskCompleteListener {
+public class EventsModel extends AbstractModel implements MVP_Events.ModelInterface {
 
     private static final String KEY_JSON_EVENTS = "events";
     private static final String EVENT_PARAMS = "params";
@@ -49,22 +47,9 @@ public class EventsModel implements MVP_Events.ModelInterface, OnTaskCompleteLis
     private static final String EVENT_SEMESTER = "semester";
     private static final String EVENT_YEAR = "year";
 
-    private Repository mRepository;
     private ArrayList<EventItem> mEventItems;
-    private UserInterface user;
-    private OnDataLoadedListener mOnDataLoadedListener;
-
-    public EventsModel(UserInterface user) {
-        this.user = user;
-        mRepository = new EventsRepository();
-    }
 
     public EventsModel() {
-
-    }
-
-    public void setOnDataLoadedListener(OnDataLoadedListener mOnDataLoadedListener) {
-        this.mOnDataLoadedListener = mOnDataLoadedListener;
     }
 
     @Override
@@ -73,24 +58,18 @@ public class EventsModel implements MVP_Events.ModelInterface, OnTaskCompleteLis
         if (data instanceof ArrayList)
             this.mEventItems = (ArrayList<EventItem>) data;
         else
-            this.user = (UserInterface) data;
-    }
-
-    @Override
-    public void setRepository(Repository repository) {
-        mRepository = repository;
-        mRepository.setTaskCompleteListener(this);
+            this.mUser = (UserInterface) data;
     }
 
     @Override
     public UserInterface getUser() {
-        return this.user;
+        return this.mUser;
     }
 
     @Override
     public void onDestroy(boolean isChangingConfiguration) {
+        super.onDestroy(isChangingConfiguration);
         if (!isChangingConfiguration) {
-            mRepository = null;
             mEventItems = null;
         }
     }

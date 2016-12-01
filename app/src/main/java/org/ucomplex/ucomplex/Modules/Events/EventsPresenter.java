@@ -1,6 +1,5 @@
 package org.ucomplex.ucomplex.Modules.Events;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
@@ -10,18 +9,14 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 
-import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Model;
+import org.ucomplex.ucomplex.AbstractClasses.AbstractPresenter;
 import org.ucomplex.ucomplex.Interfaces.MVP.ViewToPresenterRecycler;
-import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.ViewToPresenter;
-import org.ucomplex.ucomplex.Interfaces.OnDataLoadedListener;
 import org.ucomplex.ucomplex.Model.EventItem;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.R;
 import org.ucomplex.ucomplex.Utility.Constants;
 import org.ucomplex.ucomplex.Utility.FacadeMedia;
 import org.ucomplex.ucomplex.Utility.HttpFactory;
-
-import java.lang.ref.WeakReference;
 
 /**
  * ---------------------------------------------------
@@ -33,61 +28,14 @@ import java.lang.ref.WeakReference;
  * ---------------------------------------------------
  */
 
-public class EventsPresenter implements MVP_Events.PresenterInterface, OnDataLoadedListener {
+public class EventsPresenter extends AbstractPresenter implements MVP_Events.PresenterInterface {
 
-    private WeakReference<ViewToPresenterRecycler> mView;
-    private Model mModel;
     private boolean hasMoreEvents = true;
-
     private static final int TYPE_COMMON = 0;
     private static final int TYPE_FOOTER = 1;
 
     public EventsPresenter() {
 
-    }
-
-    public EventsPresenter(ViewToPresenterRecycler view) {
-        mView = new WeakReference<>(view);
-    }
-
-    @Override
-    public UserInterface getUser() {
-        return mModel.getUser();
-    }
-
-    @Override
-    public void onDestroy(boolean isChangingConfiguration) {
-        mView = null;
-        mModel.onDestroy(isChangingConfiguration);
-        HttpFactory.getInstance().cancel();
-        if (!isChangingConfiguration) {
-            mModel = null;
-        }
-    }
-
-    @Override
-    public void onConfigurationChanged(ViewToPresenter view) {
-        mView = new WeakReference<>((ViewToPresenterRecycler) view);
-    }
-
-    @Override
-    public void setModel(Model models) {
-        mModel = models;
-        ((EventsModel) mModel).setOnDataLoadedListener(this);
-        loadData();
-    }
-
-    @Override
-    public ViewToPresenter getView() throws NullPointerException {
-        if (mView != null)
-            return mView.get();
-        else
-            throw new NullPointerException("View is unavailable");
-    }
-
-    @Override
-    public void setView(ViewToPresenter view) {
-        mView = new WeakReference<>((ViewToPresenterRecycler) view);
     }
 
     @Override
@@ -99,7 +47,6 @@ public class EventsPresenter implements MVP_Events.PresenterInterface, OnDataLoa
         viewHolder = new EventViewHolder(viewTaskRow);
         return viewHolder;
     }
-
 
     @Override
     public void bindViewHolder(final RecyclerView.ViewHolder aHolder, int position) {
@@ -152,15 +99,6 @@ public class EventsPresenter implements MVP_Events.PresenterInterface, OnDataLoa
         return position == ((EventsModel) mModel).getItemCount() - 1 ? TYPE_FOOTER : TYPE_COMMON;
     }
 
-    public void loadData() {
-        try {
-            getView().showProgress();
-            mModel.loadData();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
-    }
-
     @Override
     public void loadMoreEvents(final int start) {
         try {
@@ -177,30 +115,12 @@ public class EventsPresenter implements MVP_Events.PresenterInterface, OnDataLoa
     }
 
     @Override
-    public Context getAppContext() {
-        try {
-            return getView().getAppContext();
-        } catch (NullPointerException e) {
-            return null;
-        }
-    }
-
-    @Override
-    public Context getActivityContext() {
-        try {
-            return getView().getActivityContext();
-        } catch (NullPointerException e) {
-            return null;
-        }
-    }
-
-    @Override
     public void dataLoaded(boolean loaded, int start, int end) {
         getView().hideProgress();
         if (loaded) {
             ((ViewToPresenterRecycler) getView()).notifyItemRangeRemoved(start, end);
             ((ViewToPresenterRecycler) getView()).notifyItemRangeInserted(start, end);
-        }else
+        } else
             hasMoreEvents = false;
     }
 }
