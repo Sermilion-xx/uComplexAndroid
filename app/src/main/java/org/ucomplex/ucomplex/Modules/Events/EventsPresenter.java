@@ -9,10 +9,9 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 
-import org.ucomplex.ucomplex.AbstractClasses.AbstractPresenter;
-import org.ucomplex.ucomplex.Interfaces.MVP.ViewToPresenterRecycler;
+import org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP.AbstractPresenter;
+import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.ViewToPresenterRecycler;
 import org.ucomplex.ucomplex.Model.EventItem;
-import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.R;
 import org.ucomplex.ucomplex.Utility.Constants;
 import org.ucomplex.ucomplex.Utility.FacadeMedia;
@@ -82,11 +81,11 @@ public class EventsPresenter extends AbstractPresenter implements MVP_Events.Pre
         } else {
             if (hasMoreEvents) {
                 holder.loadMoreEventsButton.setOnClickListener(new View.OnClickListener() {
-                                                                   @Override
-                                                                   public void onClick(View view) {
-                                                                       getActivityContext().sendBroadcast(new Intent(Constants.EVENTS_LOAD_MORE_BROADCAST));
-                                                                   }
-                                                               }
+                    @Override
+                    public void onClick(View view) {
+                        getActivityContext().sendBroadcast(new Intent(Constants.EVENTS_LOAD_MORE_BROADCAST));
+                    }
+                }
                 );
             } else {
                 holder.loadMoreEventsButton.setVisibility(View.GONE);
@@ -118,7 +117,9 @@ public class EventsPresenter extends AbstractPresenter implements MVP_Events.Pre
     public void dataLoaded(boolean loaded, int start, int end) {
         getView().hideProgress();
         if (loaded) {
-            ((ViewToPresenterRecycler) getView()).notifyItemRangeRemoved(start, end);
+            if(start==0){
+                ((ViewToPresenterRecycler) getView()).notifyItemRangeRemoved(start, end);
+            }
             ((ViewToPresenterRecycler) getView()).notifyItemRangeInserted(start, end);
         } else
             hasMoreEvents = false;

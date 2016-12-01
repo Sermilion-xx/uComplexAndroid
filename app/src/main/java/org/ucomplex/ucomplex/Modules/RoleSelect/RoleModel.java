@@ -1,13 +1,8 @@
 package org.ucomplex.ucomplex.Modules.RoleSelect;
 
-import android.content.Context;
-
-import org.ucomplex.ucomplex.AbstractClasses.AbstractModel;
+import org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP.AbstractModel;
 import org.ucomplex.ucomplex.Interfaces.IRecyclerItem;
-import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Repository;
-import org.ucomplex.ucomplex.Interfaces.MVP.ModelRecycler;
-import org.ucomplex.ucomplex.Interfaces.OnDataLoadedListener;
-import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
+import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.ModelRecycler;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 
 import java.util.ArrayList;

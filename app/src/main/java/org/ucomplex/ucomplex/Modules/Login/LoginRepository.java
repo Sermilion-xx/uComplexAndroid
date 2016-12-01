@@ -2,9 +2,7 @@ package org.ucomplex.ucomplex.Modules.Login;
 
 import android.content.Context;
 
-import org.ucomplex.ucomplex.AbstractClasses.AbstractRepository;
-import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Repository;
-import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
+import org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP.AbstractRepository;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.Utility.Constants;
 import org.ucomplex.ucomplex.Utility.FacadePreferences;

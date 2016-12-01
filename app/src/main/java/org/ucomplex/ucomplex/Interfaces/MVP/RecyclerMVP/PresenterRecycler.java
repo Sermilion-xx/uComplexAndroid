@@ -1,4 +1,4 @@
-package org.ucomplex.ucomplex.Interfaces.MVP;
+package org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;

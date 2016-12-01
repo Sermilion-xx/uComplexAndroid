@@ -12,9 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import org.ucomplex.ucomplex.AbstractClasses.AbstractPresenter;
-import org.ucomplex.ucomplex.Interfaces.MVP.ModelRecycler;
-import org.ucomplex.ucomplex.Interfaces.MVP.PresenterRecycler;
+import org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP.AbstractPresenter;
+import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.ModelRecycler;
+import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.PresenterRecycler;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.Modules.Events.EventsActivity;
 import org.ucomplex.ucomplex.R;

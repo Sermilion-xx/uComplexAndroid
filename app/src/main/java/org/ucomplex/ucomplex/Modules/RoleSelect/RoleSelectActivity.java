@@ -10,8 +10,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import org.ucomplex.ucomplex.Interfaces.MVP.PresenterRecycler;
-import org.ucomplex.ucomplex.Interfaces.MVP.ViewToPresenterRecycler;
+import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.PresenterRecycler;
+import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.ViewToPresenterRecycler;
 import org.ucomplex.ucomplex.Modules.BaseActivity;
 import org.ucomplex.ucomplex.Modules.MyApplication;
 import org.ucomplex.ucomplex.R;

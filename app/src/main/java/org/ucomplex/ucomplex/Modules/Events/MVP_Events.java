@@ -1,10 +1,7 @@
 package org.ucomplex.ucomplex.Modules.Events;
 
-import org.ucomplex.ucomplex.Interfaces.IRecyclerItem;
-import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Model;
-import org.ucomplex.ucomplex.Interfaces.MVP.ModelRecycler;
-import org.ucomplex.ucomplex.Interfaces.MVP.PresenterRecycler;
-import org.ucomplex.ucomplex.Model.EventItem;
+import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.ModelRecycler;
+import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.PresenterRecycler;
 
 /**
  * Holder interface that contains all interfaces

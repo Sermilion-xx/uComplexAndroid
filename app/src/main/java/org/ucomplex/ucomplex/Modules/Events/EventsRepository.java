@@ -1,11 +1,7 @@
 package org.ucomplex.ucomplex.Modules.Events;
 
-import android.content.Context;
-
 import org.json.JSONException;
-import org.ucomplex.ucomplex.AbstractClasses.AbstractRepository;
-import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Repository;
-import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
+import org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP.AbstractRepository;
 import org.ucomplex.ucomplex.Utility.Constants;
 import org.ucomplex.ucomplex.Utility.FacadePreferences;
 import org.ucomplex.ucomplex.Utility.HttpFactory;

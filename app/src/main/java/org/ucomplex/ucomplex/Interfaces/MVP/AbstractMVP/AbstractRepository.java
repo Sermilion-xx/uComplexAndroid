@@ -1,4 +1,4 @@
-package org.ucomplex.ucomplex.AbstractClasses;
+package org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP;
 
 import android.content.Context;
 

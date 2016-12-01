@@ -10,7 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import org.ucomplex.ucomplex.Interfaces.MVP.ViewToPresenterRecycler;
+import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.ViewToPresenterRecycler;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.Modules.BaseActivity;
 import org.ucomplex.ucomplex.Modules.MyApplication;
@@ -100,7 +100,7 @@ public class EventsActivity extends BaseActivity implements ViewToPresenterRecyc
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(Constants.EVENTS_REFRESH_BROADCAST)) {
-                ((EventsPresenter) mPresenter).loadData();
+                mPresenter.loadData();
                 onBackPressed();
             }
         }
@@ -143,6 +143,7 @@ public class EventsActivity extends BaseActivity implements ViewToPresenterRecyc
     @Override
     public void notifyItemRangeChanged(int positionStart, int itemCount) {
     }
+
 
     @Override
     public Context getAppContext() {

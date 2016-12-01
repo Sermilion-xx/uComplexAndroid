@@ -1,6 +1,5 @@
 package org.ucomplex.ucomplex.Modules.Events;
 
-import android.app.Fragment;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -11,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import org.ucomplex.ucomplex.Interfaces.IFragment;
 import org.ucomplex.ucomplex.Modules.BaseFragment;
 import org.ucomplex.ucomplex.R;
 
@@ -30,6 +28,7 @@ public class FragmentEvents extends BaseFragment{
     private ProgressBar mProgressBar;
     private EventsActivity mActivity;
     private ListEventsAdapter mListAdapter;
+    private RecyclerView mRecyclerView;
 
 
     public static FragmentEvents getInstance(Object...params) {
@@ -51,6 +50,9 @@ public class FragmentEvents extends BaseFragment{
         this.mActivity = mActivity;
     }
 
+    public RecyclerView getRecyclerView() {
+        return mRecyclerView;
+    }
 
     @Override
     public void onDetach() {
@@ -70,12 +72,12 @@ public class FragmentEvents extends BaseFragment{
 
     public void setupRecyclerView(View view) {
         mListAdapter = new ListEventsAdapter(mActivity.getPresenter());
-        RecyclerView mList = (RecyclerView) view.findViewById(R.id.eventsRecyclerView);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.eventsRecyclerView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mList.setLayoutManager(linearLayoutManager);
-        mList.setAdapter(mListAdapter);
-        mList.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.setLayoutManager(linearLayoutManager);
+        mRecyclerView.setAdapter(mListAdapter);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
     public void showProgress() {

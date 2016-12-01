@@ -1,11 +1,12 @@
 package org.ucomplex.ucomplex.Modules.Login;
 
 
+import com.android.volley.AuthFailureError;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.ucomplex.ucomplex.AbstractClasses.AbstractModel;
+import org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP.AbstractModel;
 import org.ucomplex.ucomplex.Model.Users.User;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.Utility.FacadeMedia;
@@ -61,11 +62,15 @@ public class LoginModel extends AbstractModel implements MVP_Login.ModelInterfac
     @Override
     public void onTaskComplete(int requestType, Object... o) {
         //o[1] - password
-        mUser = unpackUserFromJsonString((String) o[0]);
-        if (mUser != null) {
-            mUser.setPassword((String) o[1]);
+        if(o[0] instanceof AuthFailureError){
+            mOnDataLoadedListener.dataLoaded(false, 0, 0);
+        }else {
+            mUser = unpackUserFromJsonString((String) o[0]);
+            if (mUser != null) {
+                mUser.setPassword((String) o[1]);
+            }
+            mOnDataLoadedListener.dataLoaded(mUser != null, 0, 0);
         }
-        mOnDataLoadedListener.dataLoaded(mUser != null, 0, 0);
     }
 
     private UserInterface unpackUserFromJsonString(String jsonData) {

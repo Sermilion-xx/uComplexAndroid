@@ -1,6 +1,5 @@
 package org.ucomplex.ucomplex.Modules.Login;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
@@ -10,10 +9,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.ucomplex.ucomplex.AbstractClasses.AbstractPresenter;
+import org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP.AbstractPresenter;
 import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Model;
-import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.ViewToPresenter;
-import org.ucomplex.ucomplex.Interfaces.OnDataLoadedListener;
 import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 import org.ucomplex.ucomplex.Model.Users.LoginErrorType;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
@@ -21,7 +18,6 @@ import org.ucomplex.ucomplex.R;
 import org.ucomplex.ucomplex.Utility.Constants;
 import org.ucomplex.ucomplex.Utility.HttpFactory;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.*;
