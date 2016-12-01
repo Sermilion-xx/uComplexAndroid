@@ -5,6 +5,8 @@ import android.graphics.BitmapFactory;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.ucomplex.ucomplex.Interfaces.IRecyclerItem;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -17,7 +19,7 @@ import lombok.Data;
  * Created by Sermilion on 01/11/2016.
  */
 @Data
-public class EventItem implements Parcelable {
+public class EventItem implements Parcelable, IRecyclerItem {
     private int id;
     private EventParams params;
     private int type;

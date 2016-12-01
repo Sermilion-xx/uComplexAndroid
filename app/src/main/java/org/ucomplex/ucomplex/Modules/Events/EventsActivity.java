@@ -4,12 +4,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import org.ucomplex.ucomplex.Interfaces.MVP.ViewRecylerToPresenter;
+import org.ucomplex.ucomplex.Interfaces.MVP.ViewToPresenterRecycler;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.Modules.BaseActivity;
 import org.ucomplex.ucomplex.Modules.MyApplication;
@@ -18,7 +19,7 @@ import org.ucomplex.ucomplex.Utility.Constants;
 
 import javax.inject.Inject;
 
-public class EventsActivity extends BaseActivity implements ViewRecylerToPresenter {
+public class EventsActivity extends BaseActivity implements ViewToPresenterRecycler {
 
     private FragmentEvents mFragmentEvents;
     private UserInterface mUser;
@@ -74,6 +75,12 @@ public class EventsActivity extends BaseActivity implements ViewRecylerToPresent
     }
 
     @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mPresenter.onConfigurationChanged(this);
+    }
+
+    @Override
     public void onResume() {
         registerReceiver(mUpdateEventsReceiver, new IntentFilter(
                 Constants.EVENTS_REFRESH_BROADCAST));
@@ -103,7 +110,7 @@ public class EventsActivity extends BaseActivity implements ViewRecylerToPresent
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(Constants.EVENTS_LOAD_MORE_BROADCAST)) {
-                ((EventsPresenter) mPresenter).loadMoreEvents(((EventsPresenter) mPresenter).getEventsCount()+1);
+                ((EventsPresenter) mPresenter).loadMoreEvents(((EventsPresenter) mPresenter).getItemCount()+1);
             }
         }
     };

@@ -25,6 +25,7 @@
                 android:id="@+id/list_events_item_text"
                 style="@style/StyleTextViewPrimary"
                 android:layout_marginTop="10dp"
+                android:text="sdfsdfdsfdsf"
                 android:paddingBottom="10dp"
                 android:paddingEnd="10dp"
                 android:paddingLeft="15dp"
@@ -57,6 +58,7 @@
                     <TextView
                         android:id="@+id/list_events_item_name"
                         style="@style/StyleTextViewSecondary"
+                        android:textStyle="bold"
                         android:layout_alignTop="@+id/list_events_item_image"
                         android:layout_marginStart="10dp"
                         android:layout_toEndOf="@+id/list_events_item_image"
@@ -65,6 +67,7 @@
                     <TextView
                         android:id="@+id/list_events_item_date"
                         style="@style/StyleTextViewSecondary"
+                        android:textStyle="bold"
                         android:layout_alignStart="@+id/list_events_item_name"
                         android:layout_below="@+id/list_events_item_name"
                         android:paddingBottom="20dp" />

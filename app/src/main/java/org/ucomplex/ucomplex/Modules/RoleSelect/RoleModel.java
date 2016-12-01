@@ -2,7 +2,9 @@ package org.ucomplex.ucomplex.Modules.RoleSelect;
 
 import android.content.Context;
 
-import org.ucomplex.ucomplex.Interfaces.MVP.Repository;
+import org.ucomplex.ucomplex.Interfaces.IRecyclerItem;
+import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Repository;
+import org.ucomplex.ucomplex.Interfaces.MVP.ModelRecycler;
 import org.ucomplex.ucomplex.Interfaces.OnDataLoadedListener;
 import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
@@ -19,7 +21,7 @@ import java.util.ArrayList;
  * ---------------------------------------------------
  */
 
-public class RoleModel implements MVP_RoleSelect.ModelInterface, OnTaskCompleteListener {
+public class RoleModel implements ModelRecycler, OnTaskCompleteListener {
 
     // PresenterToViewInterface reference
     private ArrayList<RoleItem> mRoles;
@@ -72,25 +74,21 @@ public class RoleModel implements MVP_RoleSelect.ModelInterface, OnTaskCompleteL
        mRepository.loadData(mUser);
     }
 
-    @Override
-    public RoleItem getRole(int position) {
-        return mRoles.get(position);
-    }
-
-    public void setRoles(ArrayList<RoleItem> mRoles) {
-        this.mRoles = mRoles;
-    }
-
-    @Override
-    public int getRolesCount() {
-        return mRoles.size();
-    }
-
     @Override @SuppressWarnings("unchecked")
     public void onTaskComplete(int requestType, Object... o) {
         if(o.length>0){
             mRoles = (ArrayList<RoleItem>) o[0];
         }
         mOnDataLoadedListener.dataLoaded(o.length>0, 0, 0);
+    }
+
+    @Override
+    public IRecyclerItem getItem(int position) {
+        return mRoles.get(position);
+    }
+
+    @Override
+    public int getItemCount() {
+        return mRoles.size();
     }
 }

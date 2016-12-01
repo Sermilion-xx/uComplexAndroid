@@ -1,9 +1,8 @@
-package org.ucomplex.ucomplex.Interfaces.MVP;
+package org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP;
 
 import android.content.Context;
+import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
-
-import org.ucomplex.ucomplex.Model.Users.UserInterface;
 
 /**
  * ---------------------------------------------------
@@ -14,15 +13,17 @@ import org.ucomplex.ucomplex.Model.Users.UserInterface;
  * <a href="http://www.github.com/sermilion>github</a>
  * ---------------------------------------------------
  */
-
-public interface Presenter {
+/**
+ * Required View methods available to PresenterToViewInterface.
+ * A passive layer, responsible to show data
+ * and receive user interactions
+ *      PresenterToViewInterface to View
+ */
+public interface ViewToPresenter {
     Context getAppContext();
     Context getActivityContext();
-    void onDestroy(boolean isChangingConfiguration);
-    void setView(ViewToPresenter view);
-    ViewToPresenter getView();
-    void onConfigurationChanged(ViewToPresenter view);
-    void setModel(Model models);
-    UserInterface getUser();
-
+    void showToast(Toast toast);
+    void showProgress();
+    void hideProgress();
+    void showAlert(AlertDialog dialog);
 }

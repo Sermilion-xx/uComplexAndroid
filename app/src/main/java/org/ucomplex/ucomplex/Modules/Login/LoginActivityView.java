@@ -2,6 +2,7 @@ package org.ucomplex.ucomplex.Modules.Login;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.AlertDialog;
@@ -11,7 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.ucomplex.ucomplex.Interfaces.MVP.ViewActivityToPresenter;
+import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.ViewToPresenter;
 import org.ucomplex.ucomplex.Model.Users.LoginErrorType;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.Modules.BaseActivity;
@@ -32,7 +33,7 @@ import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.PASSWORD_REQUIRED
 import static org.ucomplex.ucomplex.Utility.HttpFactory.encodeLoginData;
 
 
-public class LoginActivityView extends BaseActivity implements ViewActivityToPresenter, View.OnClickListener{
+public class LoginActivityView extends BaseActivity implements ViewToPresenter, View.OnClickListener{
 
     AutoCompleteTextView mLoginView;
     EditText mPasswordView;
@@ -58,7 +59,6 @@ public class LoginActivityView extends BaseActivity implements ViewActivityToPre
         super.setupMVP(this, LoginActivityView.class);
     }
 
-    @Override
     public void setupViews(int layout) {
         setContentView(layout);
         this.mLoginView = ((AutoCompleteTextView) findViewById(R.id.login));
@@ -74,6 +74,12 @@ public class LoginActivityView extends BaseActivity implements ViewActivityToPre
     protected void onDestroy() {
         super.onDestroy();
         mPresenter.onDestroy(isChangingConfigurations());
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mPresenter.onConfigurationChanged(this);
     }
 
     @Override

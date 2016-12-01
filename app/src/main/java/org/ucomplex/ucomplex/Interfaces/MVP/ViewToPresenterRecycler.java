@@ -1,6 +1,6 @@
 package org.ucomplex.ucomplex.Interfaces.MVP;
 
-import android.view.View;
+import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.ViewToPresenter;
 
 /**
  * ---------------------------------------------------
@@ -12,7 +12,7 @@ import android.view.View;
  * ---------------------------------------------------
  */
 
-public interface ViewRecylerToPresenter extends ViewToPresenter {
+public interface ViewToPresenterRecycler extends ViewToPresenter {
     void notifyItemRemoved(int position);
     void notifyDataSetChanged();
     void notifyItemRangeInserted(int start, int end);

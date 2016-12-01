@@ -2,7 +2,7 @@ package org.ucomplex.ucomplex.Modules.RoleSelect;
 
 import android.content.Context;
 
-import org.ucomplex.ucomplex.Interfaces.MVP.Repository;
+import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Repository;
 import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 import org.ucomplex.ucomplex.Model.Users.Role;
 import org.ucomplex.ucomplex.Model.Users.User;

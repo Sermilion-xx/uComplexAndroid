@@ -1,9 +1,8 @@
 package org.ucomplex.ucomplex.Modules.Login;
 
-import org.ucomplex.ucomplex.Interfaces.MVP.Model;
-import org.ucomplex.ucomplex.Interfaces.MVP.Presenter;
+import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Model;
+import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Presenter;
 import org.ucomplex.ucomplex.Model.Users.LoginErrorType;
-import org.ucomplex.ucomplex.Model.Users.UserInterface;
 
 import java.util.ArrayList;
 
@@ -28,13 +27,11 @@ import java.util.ArrayList;
 public class MVP_Login {
 
     interface PresenterInterface extends Presenter {
-        void onDestroy(boolean isChangingConfiguration);
         void showRestorePasswordDialog();
         ArrayList<LoginErrorType> checkCredentials();
     }
 
     interface ModelInterface extends Model {
-        void loadData();
         String sendResetRequest(String email);
     }
 

@@ -3,7 +3,7 @@ package org.ucomplex.ucomplex.Modules.Events;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
-import org.ucomplex.ucomplex.Interfaces.MVP.Presenter;
+import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Presenter;
 
 /**
  * ---------------------------------------------------
@@ -25,12 +25,12 @@ public class ListEventsAdapter extends RecyclerView.Adapter<EventViewHolder> {
 
     @Override
     public int getItemCount() {
-        return ((MVP_Events.PresenterInterface) mPresenter).getEventsCount();
+        return ((MVP_Events.PresenterInterface) mPresenter).getItemCount();
     }
 
     @Override
     public EventViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return ((MVP_Events.PresenterInterface) mPresenter).createViewHolder(parent, viewType);
+        return (EventViewHolder) ((MVP_Events.PresenterInterface) mPresenter).createViewHolder(parent, viewType);
     }
 
     @Override

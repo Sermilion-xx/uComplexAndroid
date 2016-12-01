@@ -1,4 +1,4 @@
-package org.ucomplex.ucomplex.Interfaces.MVP;
+package org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP;
 
 import android.content.Context;
 
@@ -14,10 +14,14 @@ import org.ucomplex.ucomplex.Model.Users.UserInterface;
  * ---------------------------------------------------
  */
 
-public interface Model {
+public interface Presenter {
+    Context getAppContext();
+    Context getActivityContext();
     void onDestroy(boolean isChangingConfiguration);
-    void loadData();
-    void setData(Object data);
-    void setRepository(Repository repository);
+    void setView(ViewToPresenter view);
+    ViewToPresenter getView();
+    void onConfigurationChanged(ViewToPresenter view);
+    void setModel(Model models);
     UserInterface getUser();
+    void loadData();
 }

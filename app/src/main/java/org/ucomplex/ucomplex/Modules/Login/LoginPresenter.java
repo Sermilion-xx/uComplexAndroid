@@ -10,9 +10,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.ucomplex.ucomplex.Interfaces.MVP.Model;
-import org.ucomplex.ucomplex.Interfaces.MVP.ViewActivityToPresenter;
-import org.ucomplex.ucomplex.Interfaces.MVP.ViewToPresenter;
+import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Model;
+import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.ViewToPresenter;
 import org.ucomplex.ucomplex.Interfaces.OnDataLoadedListener;
 import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 import org.ucomplex.ucomplex.Model.Users.LoginErrorType;
@@ -38,26 +37,18 @@ import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.*;
 
 public class LoginPresenter implements MVP_Login.PresenterInterface, OnTaskCompleteListener, OnDataLoadedListener {
 
-    private WeakReference<ViewActivityToPresenter> mView;
+    private WeakReference<ViewToPresenter> mView;
     private Model mModel;
 
-    @Override
-    public void onDestroy(boolean isChangingConfiguration) {
-        mView = null;
-        HttpFactory.getInstance().cancel();
-        mModel.onDestroy(isChangingConfiguration);
-        if (!isChangingConfiguration) {
-            mModel = null;
-        }
-    }
+
 
     @Override
     public void setView(ViewToPresenter view) {
-        mView = new WeakReference<>((ViewActivityToPresenter)view);
+        mView = new WeakReference<>(view);
     }
 
     @Override
-    public ViewActivityToPresenter getView() throws NullPointerException {
+    public ViewToPresenter getView() throws NullPointerException {
         if (mView != null)
             return mView.get();
         else
@@ -73,7 +64,8 @@ public class LoginPresenter implements MVP_Login.PresenterInterface, OnTaskCompl
             getView().showToast(makeToast(getActivityContext().getString(R.string.error_login)));
     }
 
-    public void loadUser() {
+    @Override
+    public void loadData() {
         getView().showProgress();
         mModel.loadData();
     }
@@ -145,7 +137,7 @@ public class LoginPresenter implements MVP_Login.PresenterInterface, OnTaskCompl
     public ArrayList<LoginErrorType> checkCredentials() {
         ArrayList<LoginErrorType> error = runCheck();
         if (error.get(0)==NO_ERROR) {
-            loadUser();
+            loadData();
         }
         return error;
     }
@@ -153,7 +145,7 @@ public class LoginPresenter implements MVP_Login.PresenterInterface, OnTaskCompl
 
     @Override
     public void onConfigurationChanged(ViewToPresenter view) {
-        mView = new WeakReference<>((ViewActivityToPresenter) view);
+        mView = new WeakReference<>((ViewToPresenter) view);
     }
 
     @Override
@@ -192,6 +184,16 @@ public class LoginPresenter implements MVP_Login.PresenterInterface, OnTaskCompl
             return getView().getActivityContext();
         } catch (NullPointerException e) {
             return null;
+        }
+    }
+
+    @Override
+    public void onDestroy(boolean isChangingConfiguration) {
+        mView = null;
+        HttpFactory.getInstance().cancel();
+        mModel.onDestroy(isChangingConfiguration);
+        if (!isChangingConfiguration) {
+            mModel = null;
         }
     }
 

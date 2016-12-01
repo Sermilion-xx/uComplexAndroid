@@ -1,6 +1,7 @@
 package org.ucomplex.ucomplex.Modules.RoleSelect;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -9,7 +10,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import org.ucomplex.ucomplex.Interfaces.MVP.ViewRecylerToPresenter;
+import org.ucomplex.ucomplex.Interfaces.MVP.PresenterRecycler;
+import org.ucomplex.ucomplex.Interfaces.MVP.ViewToPresenterRecycler;
 import org.ucomplex.ucomplex.Modules.BaseActivity;
 import org.ucomplex.ucomplex.Modules.MyApplication;
 import org.ucomplex.ucomplex.R;
@@ -17,7 +19,7 @@ import org.ucomplex.ucomplex.Utility.Constants;
 
 import javax.inject.Inject;
 
-public class RoleSelectActivity extends BaseActivity implements ViewRecylerToPresenter {
+public class RoleSelectActivity extends BaseActivity implements ViewToPresenterRecycler {
 
     private ListRolesAdapter mListAdapter;
 
@@ -49,6 +51,12 @@ public class RoleSelectActivity extends BaseActivity implements ViewRecylerToPre
     protected void onDestroy() {
         super.onDestroy();
         mPresenter.onDestroy(isChangingConfigurations());
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mPresenter.onConfigurationChanged(this);
     }
 
     private void setupRecyclerView() {
@@ -125,7 +133,7 @@ public class RoleSelectActivity extends BaseActivity implements ViewRecylerToPre
 
         @Override
         public int getItemCount() {
-            return ((MVP_RoleSelect.PresenterInterface) mPresenter).getRolesCount();
+            return ((PresenterRecycler)mPresenter).getItemCount();
         }
 
         @Override
@@ -135,12 +143,12 @@ public class RoleSelectActivity extends BaseActivity implements ViewRecylerToPre
 
         @Override
         public RoleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return ((MVP_RoleSelect.PresenterInterface) mPresenter).createViewHolder(parent, viewType);
+            return (RoleViewHolder) ((PresenterRecycler)mPresenter).createViewHolder(parent, viewType);
         }
 
         @Override
         public void onBindViewHolder(RoleViewHolder holder, int position) {
-            ((MVP_RoleSelect.PresenterInterface) mPresenter).bindViewHolder(holder, position);
+            ((PresenterRecycler)mPresenter).bindViewHolder(holder, position);
         }
     }
 

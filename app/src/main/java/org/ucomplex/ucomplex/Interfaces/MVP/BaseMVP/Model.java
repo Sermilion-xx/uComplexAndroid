@@ -1,4 +1,6 @@
-package org.ucomplex.ucomplex.Interfaces.MVP;
+package org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP;
+
+import org.ucomplex.ucomplex.Model.Users.UserInterface;
 
 /**
  * ---------------------------------------------------
@@ -10,6 +12,10 @@ package org.ucomplex.ucomplex.Interfaces.MVP;
  * ---------------------------------------------------
  */
 
-public interface ViewActivityToPresenter extends ViewToPresenter {
-    void setupViews(int layout);
+public interface Model {
+    void onDestroy(boolean isChangingConfiguration);
+    void loadData();
+    void setData(Object data);
+    void setRepository(Repository repository);
+    UserInterface getUser();
 }

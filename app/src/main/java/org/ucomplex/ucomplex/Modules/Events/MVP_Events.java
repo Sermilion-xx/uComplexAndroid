@@ -1,16 +1,10 @@
 package org.ucomplex.ucomplex.Modules.Events;
 
-import android.content.Context;
-import android.support.v7.app.AlertDialog;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.Toast;
-
-import org.ucomplex.ucomplex.Interfaces.MVP.Model;
-import org.ucomplex.ucomplex.Interfaces.MVP.Presenter;
-import org.ucomplex.ucomplex.Interfaces.MVP.ViewRecylerToPresenter;
+import org.ucomplex.ucomplex.Interfaces.IRecyclerItem;
+import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Model;
+import org.ucomplex.ucomplex.Interfaces.MVP.ModelRecycler;
+import org.ucomplex.ucomplex.Interfaces.MVP.PresenterRecycler;
 import org.ucomplex.ucomplex.Model.EventItem;
-import org.ucomplex.ucomplex.Model.Users.UserInterface;
 
 /**
  * Holder interface that contains all interfaces
@@ -32,29 +26,11 @@ import org.ucomplex.ucomplex.Model.Users.UserInterface;
 
 class MVP_Events {
 
-    interface ViewToPresenterInterface extends ViewRecylerToPresenter {
-        Context getAppContext();
-        Context getActivityContext();
-        void showToast(Toast toast);
-        void showProgress();
-        void hideProgress();
-        void showAlert(AlertDialog dialog);
-        void goToCourse();
-    }
-
-    interface PresenterInterface extends Presenter {
-        EventViewHolder createViewHolder(ViewGroup parent, int viewType);
-        void bindViewHolder(EventViewHolder holder, int position);
-        int getItemViewType(int position);
-        int getEventsCount();
-        void loadData();
+    interface PresenterInterface extends PresenterRecycler {
         void loadMoreEvents(int start);
-
     }
 
-    interface ModelInterface extends Model {
-        EventItem getEvent(int position);
-        int getEventsCount();
+    interface ModelInterface extends ModelRecycler {
         void loadMoreEvents(int start);
     }
 }

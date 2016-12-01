@@ -1,26 +1,19 @@
-package org.ucomplex.ucomplex.Modules.RoleSelect;
+package org.ucomplex.ucomplex.Interfaces.MVP;
 
 import org.ucomplex.ucomplex.Interfaces.IRecyclerItem;
-
-import lombok.Data;
+import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Model;
 
 /**
  * ---------------------------------------------------
- * Created by Sermilion on 08/11/2016.
+ * Created by Sermilion on 01/12/2016.
  * Project: uComplex_v_2
  * ---------------------------------------------------
  * <a href="http://www.ucomplex.org">ucomplex.org</a>
  * <a href="http://www.github.com/sermilion>github</a>
  * ---------------------------------------------------
  */
-@Data
-public class RoleItem implements IRecyclerItem {
-    private int roleIcon;
-    private String roleName;
 
-    public RoleItem(int iconId, String name){
-        this.roleIcon = iconId;
-        this.roleName = name;
-    }
-
+public interface ModelRecycler extends Model {
+    IRecyclerItem getItem(int position);
+    int getItemCount();
 }

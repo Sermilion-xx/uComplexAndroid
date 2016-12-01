@@ -4,7 +4,7 @@ package org.ucomplex.ucomplex.Modules.Events;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.ucomplex.ucomplex.Interfaces.MVP.Repository;
+import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Repository;
 import org.ucomplex.ucomplex.Interfaces.OnDataLoadedListener;
 import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 import org.ucomplex.ucomplex.Model.EventItem;
@@ -107,12 +107,12 @@ public class EventsModel implements MVP_Events.ModelInterface, OnTaskCompleteLis
     }
 
     @Override
-    public EventItem getEvent(int position) {
+    public EventItem getItem(int position) {
         return mEventItems.get(position);
     }
 
     @Override
-    public int getEventsCount() {
+    public int getItemCount() {
         if (mEventItems != null)
             return mEventItems.size();
         return 0;

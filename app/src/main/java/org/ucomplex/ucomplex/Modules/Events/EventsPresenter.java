@@ -3,15 +3,16 @@ package org.ucomplex.ucomplex.Modules.Events;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 
-import org.ucomplex.ucomplex.Interfaces.MVP.Model;
-import org.ucomplex.ucomplex.Interfaces.MVP.ViewRecylerToPresenter;
-import org.ucomplex.ucomplex.Interfaces.MVP.ViewToPresenter;
+import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Model;
+import org.ucomplex.ucomplex.Interfaces.MVP.ViewToPresenterRecycler;
+import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.ViewToPresenter;
 import org.ucomplex.ucomplex.Interfaces.OnDataLoadedListener;
 import org.ucomplex.ucomplex.Model.EventItem;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
@@ -34,7 +35,7 @@ import java.lang.ref.WeakReference;
 
 public class EventsPresenter implements MVP_Events.PresenterInterface, OnDataLoadedListener {
 
-    private WeakReference<ViewRecylerToPresenter> mView;
+    private WeakReference<ViewToPresenterRecycler> mView;
     private Model mModel;
     private boolean hasMoreEvents = true;
 
@@ -45,12 +46,8 @@ public class EventsPresenter implements MVP_Events.PresenterInterface, OnDataLoa
 
     }
 
-    public EventsPresenter(ViewRecylerToPresenter view) {
+    public EventsPresenter(ViewToPresenterRecycler view) {
         mView = new WeakReference<>(view);
-    }
-
-    public void setHasMoreEvents(boolean hasMoreEvents) {
-        this.hasMoreEvents = hasMoreEvents;
     }
 
     @Override
@@ -70,7 +67,7 @@ public class EventsPresenter implements MVP_Events.PresenterInterface, OnDataLoa
 
     @Override
     public void onConfigurationChanged(ViewToPresenter view) {
-        mView = new WeakReference<>((ViewRecylerToPresenter) view);
+        mView = new WeakReference<>((ViewToPresenterRecycler) view);
     }
 
     @Override
@@ -90,7 +87,7 @@ public class EventsPresenter implements MVP_Events.PresenterInterface, OnDataLoa
 
     @Override
     public void setView(ViewToPresenter view) {
-        mView = new WeakReference<>((ViewRecylerToPresenter) view);
+        mView = new WeakReference<>((ViewToPresenterRecycler) view);
     }
 
     @Override
@@ -103,10 +100,12 @@ public class EventsPresenter implements MVP_Events.PresenterInterface, OnDataLoa
         return viewHolder;
     }
 
+
     @Override
-    public void bindViewHolder(final EventViewHolder holder, int position) {
-        if (position != getEventsCount() - 1) {
-            final EventItem event = ((EventsModel) mModel).getEvent(position);
+    public void bindViewHolder(final RecyclerView.ViewHolder aHolder, int position) {
+        EventViewHolder holder = (EventViewHolder) aHolder;
+        if (position != getItemCount() - 1) {
+            final EventItem event = ((EventsModel) mModel).getItem(position);
             String personName = event.getParams().getName();
             if (personName == null || personName.equals(Constants.STRING_EMPTY)) {
                 event.getParams().setName(getActivityContext().getResources().getString(R.string.ucomplex));
@@ -150,7 +149,7 @@ public class EventsPresenter implements MVP_Events.PresenterInterface, OnDataLoa
 
     @Override
     public int getItemViewType(int position) {
-        return position == ((EventsModel) mModel).getEventsCount() - 1 ? TYPE_FOOTER : TYPE_COMMON;
+        return position == ((EventsModel) mModel).getItemCount() - 1 ? TYPE_FOOTER : TYPE_COMMON;
     }
 
     public void loadData() {
@@ -173,8 +172,8 @@ public class EventsPresenter implements MVP_Events.PresenterInterface, OnDataLoa
     }
 
     @Override
-    public int getEventsCount() {
-        return ((EventsModel) mModel).getEventsCount();
+    public int getItemCount() {
+        return ((EventsModel) mModel).getItemCount();
     }
 
     @Override
@@ -199,8 +198,8 @@ public class EventsPresenter implements MVP_Events.PresenterInterface, OnDataLoa
     public void dataLoaded(boolean loaded, int start, int end) {
         getView().hideProgress();
         if (loaded) {
-            ((ViewRecylerToPresenter) getView()).notifyItemRangeRemoved(start, end);
-            ((ViewRecylerToPresenter) getView()).notifyItemRangeInserted(start, end);
+            ((ViewToPresenterRecycler) getView()).notifyItemRangeRemoved(start, end);
+            ((ViewToPresenterRecycler) getView()).notifyItemRangeInserted(start, end);
         }else
             hasMoreEvents = false;
     }
