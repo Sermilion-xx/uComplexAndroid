@@ -1,16 +1,12 @@
-package org.ucomplex.ucomplex.Utility;
+package org.ucomplex.ucomplex.CommonDependencies;
 
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.IBinder;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 
-import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 

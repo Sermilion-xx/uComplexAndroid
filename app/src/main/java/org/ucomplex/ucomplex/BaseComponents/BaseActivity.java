@@ -1,12 +1,10 @@
-package org.ucomplex.ucomplex.Modules;
+package org.ucomplex.ucomplex.BaseComponents;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.annotation.IdRes;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -21,7 +19,7 @@ import android.view.Window;
 import android.widget.FrameLayout;
 
 import org.javatuples.Pair;
-import org.ucomplex.ucomplex.FragmentFactory;
+import org.ucomplex.ucomplex.Modules.FragmentFactory;
 import org.ucomplex.ucomplex.Interfaces.IViewExtensions;
 import org.ucomplex.ucomplex.Interfaces.IFragment;
 import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Model;
@@ -29,14 +27,13 @@ import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Presenter;
 import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Repository;
 import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.ViewToPresenter;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
-import org.ucomplex.ucomplex.Modules.Events.EventsActivity;
 import org.ucomplex.ucomplex.NavDrawer.DrawerAdapter;
 import org.ucomplex.ucomplex.NavDrawer.DrawerListItem;
 import org.ucomplex.ucomplex.NavDrawer.FacadeDrawer;
 import org.ucomplex.ucomplex.R;
-import org.ucomplex.ucomplex.Utility.FacadeCommon;
-import org.ucomplex.ucomplex.Utility.FacadeMedia;
-import org.ucomplex.ucomplex.Utility.StateMaintainer;
+import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
+import org.ucomplex.ucomplex.CommonDependencies.FacadeMedia;
+import org.ucomplex.ucomplex.CommonDependencies.StateMaintainer;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -66,7 +63,7 @@ public class BaseActivity extends AppCompatActivity implements IViewExtensions{
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
     }
 
-    protected void setupDrawer(){
+    public void setupDrawer(){
         setupDrawerView(setupDrawerListItems());
     }
 
@@ -136,12 +133,6 @@ public class BaseActivity extends AppCompatActivity implements IViewExtensions{
         mModel.setData(data);
     }
 
-
-    protected void addFragment(@IdRes int containerViewId,
-                               @NonNull Fragment fragment,
-                               @NonNull String fragmentTag) {
-        getFragmentManager().beginTransaction().add(containerViewId, fragment, fragmentTag).disallowAddToBackStack().commit();
-    }
 
     protected String getResourceString(int id) {
         return getResources().getString(id);

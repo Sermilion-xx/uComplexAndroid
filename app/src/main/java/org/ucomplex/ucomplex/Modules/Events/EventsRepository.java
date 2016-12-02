@@ -2,9 +2,9 @@ package org.ucomplex.ucomplex.Modules.Events;
 
 import org.json.JSONException;
 import org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP.AbstractRepository;
-import org.ucomplex.ucomplex.Utility.Constants;
-import org.ucomplex.ucomplex.Utility.FacadePreferences;
-import org.ucomplex.ucomplex.Utility.HttpFactory;
+import org.ucomplex.ucomplex.CommonDependencies.Constants;
+import org.ucomplex.ucomplex.CommonDependencies.FacadePreferences;
+import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
 
 import java.util.HashMap;
 

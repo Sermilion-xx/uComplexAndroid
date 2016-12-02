@@ -4,9 +4,9 @@ import android.content.Context;
 
 import org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP.AbstractRepository;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
-import org.ucomplex.ucomplex.Utility.Constants;
-import org.ucomplex.ucomplex.Utility.FacadePreferences;
-import org.ucomplex.ucomplex.Utility.HttpFactory;
+import org.ucomplex.ucomplex.CommonDependencies.Constants;
+import org.ucomplex.ucomplex.CommonDependencies.FacadePreferences;
+import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
 
 /**
  * ---------------------------------------------------

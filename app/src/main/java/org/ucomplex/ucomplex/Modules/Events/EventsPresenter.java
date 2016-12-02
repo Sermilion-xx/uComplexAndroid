@@ -12,9 +12,9 @@ import com.bumptech.glide.Glide;
 import org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP.AbstractPresenter;
 import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.ViewToPresenterRecycler;
 import org.ucomplex.ucomplex.R;
-import org.ucomplex.ucomplex.Utility.Constants;
-import org.ucomplex.ucomplex.Utility.FacadeMedia;
-import org.ucomplex.ucomplex.Utility.HttpFactory;
+import org.ucomplex.ucomplex.CommonDependencies.Constants;
+import org.ucomplex.ucomplex.CommonDependencies.FacadeMedia;
+import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
 
 /**
  * ---------------------------------------------------
@@ -80,11 +80,11 @@ public class EventsPresenter extends AbstractPresenter implements MVP_Events.Pre
         } else {
             if (hasMoreEvents) {
                 holder.loadMoreEventsButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        getActivityContext().sendBroadcast(new Intent(Constants.EVENTS_LOAD_MORE_BROADCAST));
-                    }
-                }
+                                                                   @Override
+                                                                   public void onClick(View view) {
+                                                                       getActivityContext().sendBroadcast(new Intent(Constants.EVENTS_LOAD_MORE_BROADCAST));
+                                                                   }
+                                                               }
                 );
             } else {
                 holder.loadMoreEventsButton.setVisibility(View.GONE);
@@ -113,10 +113,16 @@ public class EventsPresenter extends AbstractPresenter implements MVP_Events.Pre
     }
 
     @Override
-    public void dataLoaded(boolean loaded, int start, int end) {
+    public void dataLoaded(boolean loaded, int... startEndOldEnd) {
         getView().hideProgress();
+        int start = startEndOldEnd[0];
+        int end = startEndOldEnd[1];
+        int oldEnd = startEndOldEnd.length==3?startEndOldEnd[2]:-1;
         if (loaded) {
-            if(start==0){
+            if (start == 0) {
+                if (oldEnd != -1) {
+                    end = oldEnd;
+                }
                 ((ViewToPresenterRecycler) getView()).notifyItemRangeRemoved(start, end);
             }
             ((ViewToPresenterRecycler) getView()).notifyItemRangeInserted(start, end);

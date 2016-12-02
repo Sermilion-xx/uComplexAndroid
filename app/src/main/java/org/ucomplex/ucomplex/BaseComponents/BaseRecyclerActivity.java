@@ -1,37 +1,20 @@
-package org.ucomplex.ucomplex.Modules.Subjects;
+package org.ucomplex.ucomplex.BaseComponents;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
+import org.ucomplex.ucomplex.Interfaces.IFragment;
 import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.ViewToPresenterRecycler;
-import org.ucomplex.ucomplex.Model.Users.UserInterface;
-import org.ucomplex.ucomplex.BaseComponents.BaseActivity;
-import org.ucomplex.ucomplex.Modules.Events.EventsActivity;
-import org.ucomplex.ucomplex.MyApplication;
-import org.ucomplex.ucomplex.R;
-import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
 
-import javax.inject.Inject;
+public class BaseRecyclerActivity extends BaseActivity implements ViewToPresenterRecycler {
 
-public class SubjectsActivity extends BaseActivity implements ViewToPresenterRecycler {
-
-    FragmentSubjects mFragment;
-
-    //Used in Fragment
-    public final void setupMVP() {
-        UserInterface user = FacadeCommon.getSharedUserInstance(this);
-        setupMVP(this, EventsActivity.class, user);
-
-    }
+    public IFragment mFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setupToolbar(getResourceString(R.string.subjects));
-        setContentViewWithNavDrawer(R.layout.activity_subjects);
-        ((MyApplication) getApplication()).getSubjectsDiComponent().inject(this);
     }
 
     @Override
@@ -93,21 +76,4 @@ public class SubjectsActivity extends BaseActivity implements ViewToPresenterRec
     public void hideProgress() {
         mFragment.hideProgress();
     }
-
-
-    @Inject
-    public void setPresenter(SubjectsPresenter presenter) {
-        super.mPresenter = presenter;
-    }
-
-    @Inject
-    public void setModel(SubjectsModel model) {
-        super.mModel = model;
-    }
-
-    @Inject
-    public void setRepository(SubjectsRepository repository) {
-        super.mRepository = repository;
-    }
-
 }

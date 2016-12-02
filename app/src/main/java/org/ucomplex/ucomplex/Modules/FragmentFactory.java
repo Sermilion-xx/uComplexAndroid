@@ -1,10 +1,8 @@
-package org.ucomplex.ucomplex;
+package org.ucomplex.ucomplex.Modules;
 
-import android.app.Fragment;
-
-import org.codehaus.jackson.map.ObjectMapper;
 import org.ucomplex.ucomplex.Interfaces.IFragment;
 import org.ucomplex.ucomplex.Modules.Events.FragmentEvents;
+import org.ucomplex.ucomplex.Modules.RoleSelect.FragmentRoles;
 
 /**
  * ---------------------------------------------------
@@ -18,10 +16,13 @@ import org.ucomplex.ucomplex.Modules.Events.FragmentEvents;
 
 public class FragmentFactory {
 
-    public static IFragment getFragmentWithName(String name, Object ... params){
+    public static IFragment getFragmentWithName(String name, Object... params) {
 
-        if(name.equals(FragmentEvents.class.getName())){
+        if (name.equals(FragmentEvents.class.getName())) {
             return FragmentEvents.getInstance(params);
+
+        } else if (name.equals(FragmentRoles.class.getName())) {
+            return FragmentRoles.getInstance(params);
         }
         return null;
     }

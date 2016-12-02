@@ -9,8 +9,8 @@ import org.json.JSONObject;
 import org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP.AbstractModel;
 import org.ucomplex.ucomplex.Model.Users.User;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
-import org.ucomplex.ucomplex.Utility.FacadeMedia;
-import org.ucomplex.ucomplex.Utility.FacadePreferences;
+import org.ucomplex.ucomplex.CommonDependencies.FacadeMedia;
+import org.ucomplex.ucomplex.CommonDependencies.FacadePreferences;
 
 /**
  * Model layer on Model View PresenterToViewInterface Pattern

@@ -7,7 +7,7 @@ import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Presenter;
 import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.ViewToPresenter;
 import org.ucomplex.ucomplex.Interfaces.OnDataLoadedListener;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
-import org.ucomplex.ucomplex.Utility.HttpFactory;
+import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
 
 import java.lang.ref.WeakReference;
 

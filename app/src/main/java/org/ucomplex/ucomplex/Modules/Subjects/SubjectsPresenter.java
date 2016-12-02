@@ -18,6 +18,7 @@ import org.ucomplex.ucomplex.Model.Users.UserInterface;
  */
 
 public class SubjectsPresenter implements Presenter {
+
     @Override
     public Context getAppContext() {
         return null;

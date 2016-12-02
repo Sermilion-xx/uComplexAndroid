@@ -1,4 +1,4 @@
-package org.ucomplex.ucomplex.Utility;
+package org.ucomplex.ucomplex.CommonDependencies;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,8 +9,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.amulyakhare.textdrawable.TextDrawable;

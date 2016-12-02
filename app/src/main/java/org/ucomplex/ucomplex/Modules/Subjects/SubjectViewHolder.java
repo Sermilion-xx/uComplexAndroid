@@ -2,6 +2,9 @@ package org.ucomplex.ucomplex.Modules.Subjects;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.TextView;
+
+import org.ucomplex.ucomplex.R;
 
 /**
  * ---------------------------------------------------
@@ -14,7 +17,11 @@ import android.view.View;
  */
 public class SubjectViewHolder extends RecyclerView.ViewHolder {
 
+    TextView mSubjectName;
+    TextView mAssessmentType;
+
     public SubjectViewHolder(View itemView) {
         super(itemView);
+        mSubjectName = (TextView) itemView.findViewById(R.id.subject_name);
     }
 }

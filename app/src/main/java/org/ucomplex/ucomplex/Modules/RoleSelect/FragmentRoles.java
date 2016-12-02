@@ -1,6 +1,5 @@
-package org.ucomplex.ucomplex.Modules.Events;
+package org.ucomplex.ucomplex.Modules.RoleSelect;
 
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,31 +14,28 @@ import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
 
 /**
  * ---------------------------------------------------
- * Created by Sermilion on 10/11/2016.
+ * Created by Sermilion on 02/12/2016.
  * Project: uComplex_v_2
  * ---------------------------------------------------
  * <a href="http://www.ucomplex.org">ucomplex.org</a>
  * <a href="http://www.github.com/sermilion>github</a>
  * ---------------------------------------------------
  */
-public class FragmentEvents extends BaseFragment{
 
-    private MediaPlayer mAlert;
+public class FragmentRoles extends BaseFragment {
 
     public static IFragment getInstance(Object...params) {
-        IFragment fragment =  new FragmentEvents();
+        IFragment fragment =  new FragmentRoles();
         fragment.setActivity((BaseActivity) params[0]);
         return fragment;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_events, container, false);
-        mAlert = MediaPlayer.create(mActivity, R.raw.alert);
+        View view = inflater.inflate(R.layout.fragment_roles, container, false);
         mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-        mActivity.setupMVP((EventsActivity)mActivity, ((EventsActivity)mActivity).getClass(), FacadeCommon.getSharedUserInstance(mActivity));
-        setupRecyclerView(view, R.id.eventsRecyclerView);
-        mActivity.setupDrawer();
+        setupRecyclerView(view, R.id.rolesRecyclerView);
+        mActivity.setupMVP((RoleSelectActivity)mActivity, ((RoleSelectActivity)mActivity).getClass(), FacadeCommon.getSharedUserInstance(mActivity));
         return view;
     }
 

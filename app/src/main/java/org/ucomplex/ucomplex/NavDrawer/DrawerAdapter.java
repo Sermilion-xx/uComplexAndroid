@@ -1,7 +1,6 @@
 package org.ucomplex.ucomplex.NavDrawer;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
@@ -13,9 +12,9 @@ import android.widget.TextView;
 
 import org.ucomplex.ucomplex.Modules.Login.LoginActivityView;
 import org.ucomplex.ucomplex.R;
-import org.ucomplex.ucomplex.Utility.Constants;
-import org.ucomplex.ucomplex.Utility.FacadeMedia;
-import org.ucomplex.ucomplex.Utility.FacadePreferences;
+import org.ucomplex.ucomplex.CommonDependencies.Constants;
+import org.ucomplex.ucomplex.CommonDependencies.FacadeMedia;
+import org.ucomplex.ucomplex.CommonDependencies.FacadePreferences;
 
 import java.util.ArrayList;
 

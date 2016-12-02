@@ -15,15 +15,16 @@ import android.widget.Toast;
 import org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP.AbstractPresenter;
 import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.ModelRecycler;
 import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.PresenterRecycler;
+import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.ViewToPresenterRecycler;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.Modules.Events.EventsActivity;
 import org.ucomplex.ucomplex.R;
-import org.ucomplex.ucomplex.Utility.Constants;
-import org.ucomplex.ucomplex.Utility.FacadePreferences;
+import org.ucomplex.ucomplex.CommonDependencies.Constants;
+import org.ucomplex.ucomplex.CommonDependencies.FacadePreferences;
 
 import java.util.Random;
 
-import static org.ucomplex.ucomplex.Utility.HttpFactory.encodeLoginData;
+import static org.ucomplex.ucomplex.CommonDependencies.HttpFactory.encodeLoginData;
 
 /**
  * ---------------------------------------------------
@@ -110,10 +111,12 @@ public class RolePresenter extends AbstractPresenter implements PresenterRecycle
     }
 
     @Override
-    public void dataLoaded(boolean loaded, int start, int end) {
+    public void dataLoaded(boolean loaded, int...startEndOldEnd) {
         getView().hideProgress();
+        int start = startEndOldEnd[0];
+        int end = startEndOldEnd[1];
         if (loaded)
-            ((RoleSelectActivity) getView()).rolesLoaded(loaded);
+            ((ViewToPresenterRecycler) getView()).notifyItemRangeInserted(start, end);
         else
             getView().showToast(makeToast(getActivityContext().getString(R.string.error_loading_data)));
     }

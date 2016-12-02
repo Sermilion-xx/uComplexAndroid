@@ -1,6 +1,8 @@
 package org.ucomplex.ucomplex.Interfaces;
 
-import android.app.Fragment;
+import org.ucomplex.ucomplex.BaseComponents.BaseActivity;
+import org.ucomplex.ucomplex.BaseComponents.BaseListAdapter;
+
 
 /**
  * ---------------------------------------------------
@@ -14,5 +16,9 @@ import android.app.Fragment;
 
 public interface IFragment {
 
+    void setActivity(BaseActivity activity);
+    BaseListAdapter getListAdapter();
+    void showProgress();
+    void hideProgress();
     void setParams(Object ... params);
 }

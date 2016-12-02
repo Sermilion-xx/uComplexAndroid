@@ -6,8 +6,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP.AbstractModel;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
-import org.ucomplex.ucomplex.Utility.Constants;
-import org.ucomplex.ucomplex.Utility.FacadeCommon;
+import org.ucomplex.ucomplex.CommonDependencies.Constants;
+import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
 
 import java.util.ArrayList;
 
@@ -102,14 +102,24 @@ public class EventsModel extends AbstractModel implements MVP_Events.ModelInterf
             String result = (String) o[0];
             ArrayList<EventItem> newItems = getEventsDataFromJson(result);
             int start;
+            int end;
+            int oldEnd = -1;
             if (requestType == Constants.REQUEST_MORE_EVENTS) {
                 start = mEventItems.size();
                 mEventItems.addAll(newItems);
+                end = mEventItems.size();
             } else {
                 start = 0;
+                if(mEventItems==null){
+                    oldEnd = newItems.size();
+                }else {
+                    oldEnd = mEventItems.size() + newItems.size();
+                }
                 mEventItems = newItems;
+                end = newItems.size();
+
             }
-            mOnDataLoadedListener.dataLoaded(result != null, start, mEventItems.size());
+            mOnDataLoadedListener.dataLoaded(result != null, start, end, oldEnd);
         } catch (JSONException e) {
             e.printStackTrace();
         }

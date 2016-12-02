@@ -49,10 +49,13 @@ public class RoleModel extends AbstractModel implements ModelRecycler {
 
     @Override @SuppressWarnings("unchecked")
     public void onTaskComplete(int requestType, Object... o) {
+        int start = 0;
+        int end = 0;
         if(o.length>0){
             mRoles = (ArrayList<RoleItem>) o[0];
+            end = mRoles.size();
         }
-        mOnDataLoadedListener.dataLoaded(o.length>0, 0, 0);
+        mOnDataLoadedListener.dataLoaded(o.length>0, start, end);
     }
 
     @Override

@@ -1,14 +1,6 @@
-package org.ucomplex.ucomplex.Utility;
+package org.ucomplex.ucomplex.CommonDependencies;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
-
-import com.amulyakhare.textdrawable.TextDrawable;
 
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.R;

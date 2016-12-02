@@ -15,8 +15,8 @@ import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 import org.ucomplex.ucomplex.Model.Users.LoginErrorType;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.R;
-import org.ucomplex.ucomplex.Utility.Constants;
-import org.ucomplex.ucomplex.Utility.HttpFactory;
+import org.ucomplex.ucomplex.CommonDependencies.Constants;
+import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
 
 import java.util.ArrayList;
 
@@ -36,7 +36,7 @@ public class LoginPresenter extends AbstractPresenter implements MVP_Login.Prese
 
 
     @Override
-    public void dataLoaded(boolean loaded, int start, int end){
+    public void dataLoaded(boolean loaded, int...startEndOldEnd){
         getView().hideProgress();
         if(loaded)
             ((LoginActivityView)getView()).successfulLogin(0);

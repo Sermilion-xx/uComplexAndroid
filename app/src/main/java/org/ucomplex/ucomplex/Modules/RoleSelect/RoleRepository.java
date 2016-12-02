@@ -8,7 +8,7 @@ import org.ucomplex.ucomplex.R;
 import java.util.ArrayList;
 import java.util.Random;
 
-import static org.ucomplex.ucomplex.Utility.Constants.REQUEST_LOAD_ROLES;
+import static org.ucomplex.ucomplex.CommonDependencies.Constants.REQUEST_LOAD_ROLES;
 
 /**
  * ---------------------------------------------------

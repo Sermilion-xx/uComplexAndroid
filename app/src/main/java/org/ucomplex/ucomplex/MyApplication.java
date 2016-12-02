@@ -1,4 +1,4 @@
-package org.ucomplex.ucomplex.Modules;
+package org.ucomplex.ucomplex;
 
 import android.app.Application;
 

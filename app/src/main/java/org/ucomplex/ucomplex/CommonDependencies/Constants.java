@@ -1,4 +1,4 @@
-package org.ucomplex.ucomplex.Utility;
+package org.ucomplex.ucomplex.CommonDependencies;
 
 import org.ucomplex.ucomplex.R;
 

@@ -1,10 +1,11 @@
 package org.ucomplex.ucomplex.Modules.Subjects;
 
 import android.view.View;
-import android.widget.ProgressBar;
 
 import org.ucomplex.ucomplex.Interfaces.IFragment;
-import org.ucomplex.ucomplex.Modules.ListAdapter;
+import org.ucomplex.ucomplex.BaseComponents.BaseActivity;
+import org.ucomplex.ucomplex.BaseComponents.BaseFragment;
+import org.ucomplex.ucomplex.BaseComponents.BaseListAdapter;
 
 /**
  * ---------------------------------------------------
@@ -16,12 +17,16 @@ import org.ucomplex.ucomplex.Modules.ListAdapter;
  * ---------------------------------------------------
  */
 
-public class FragmentSubjects implements IFragment {
+public class FragmentSubjects extends BaseFragment {
 
-    private ProgressBar mProgressBar;
-    private ListAdapter mListAdapter;
 
-    public ListAdapter getListAdapter() {
+    public static IFragment getInstance(Object...params) {
+        IFragment fragment =  new FragmentSubjects();
+        fragment.setActivity((BaseActivity) params[0]);
+        return fragment;
+    }
+
+    public BaseListAdapter getListAdapter() {
         return mListAdapter;
     }
 
