@@ -1,4 +1,4 @@
-package org.ucomplex.ucomplex.Model;
+package org.ucomplex.ucomplex.Modules.Events;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -19,7 +19,7 @@ import lombok.Data;
  * Created by Sermilion on 01/11/2016.
  */
 @Data
-public class EventItem implements Parcelable, IRecyclerItem {
+class EventItem implements Parcelable, IRecyclerItem {
     private int id;
     private EventParams params;
     private int type;
@@ -28,11 +28,11 @@ public class EventItem implements Parcelable, IRecyclerItem {
     private Bitmap eventImageBitmap;
     private String eventText;
 
-    public EventItem() {
+    EventItem() {
         params = new EventParams();
     }
 
-    protected EventItem(Parcel in) {
+    EventItem(Parcel in) {
         id = in.readInt();
         type = in.readInt();
         time = in.readString();
@@ -53,40 +53,6 @@ public class EventItem implements Parcelable, IRecyclerItem {
         }
     };
 
-    public EventItem id(int id) {
-        this.id = id;
-        return this;
-    }
-
-    public EventItem params(EventParams params) {
-        this.params = params;
-        return this;
-    }
-
-    public EventItem type(int type) {
-        this.type = type;
-        return this;
-    }
-
-    public EventItem time(String time) {
-        this.time = time;
-        return this;
-    }
-
-    public EventItem seen(int seen) {
-        this.seen = seen;
-        return this;
-    }
-
-    public EventItem eventImageBitmap(Bitmap eventImageBitmap) {
-        this.eventImageBitmap = eventImageBitmap;
-        return this;
-    }
-
-    public EventItem eventText(String eventText) {
-        this.eventText = eventText;
-        return this;
-    }
 
     @Override
     public int describeContents() {
@@ -147,7 +113,7 @@ public class EventItem implements Parcelable, IRecyclerItem {
     }
 
     @Data
-    public class EventParams implements Parcelable {
+    class EventParams implements Parcelable {
 
         private String message;
         private String name;
@@ -160,10 +126,9 @@ public class EventItem implements Parcelable, IRecyclerItem {
         private int type;
 
         public EventParams() {
-
         }
 
-        protected EventParams(Parcel in) {
+        EventParams(Parcel in) {
             message = in.readString();
             name = in.readString();
             id = in.readInt();
@@ -186,47 +151,7 @@ public class EventItem implements Parcelable, IRecyclerItem {
                 return new EventParams[size];
             }
         };
-
-        public EventParams id(int id) {
-            this.id = id;
-            return this;
-        }
-
-        public EventParams name(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public EventParams photo(int photo) {
-            this.photo = photo;
-            return this;
-        }
-
-        public EventParams code(String code) {
-            this.code = code;
-            return this;
-        }
-
-        public EventParams gcourse(int gcourse) {
-            this.gcourse = gcourse;
-            return this;
-        }
-
-        public EventParams courseName(String courseName) {
-            this.courseName = courseName;
-            return this;
-        }
-
-        public EventParams hourType(int hourType) {
-            this.hourType = hourType;
-            return this;
-        }
-
-        public EventParams type(int type) {
-            this.type = type;
-            return this;
-        }
-
+        
         private void writeObject(ObjectOutputStream out) throws IOException {
             out.writeObject(this.name);
             out.writeObject(this.code);

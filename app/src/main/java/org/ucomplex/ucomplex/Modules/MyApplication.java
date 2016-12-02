@@ -8,6 +8,9 @@ import org.ucomplex.ucomplex.Modules.Login.LoginDagger.DaggerLoginDiComponent;
 import org.ucomplex.ucomplex.Modules.Login.LoginDagger.LoginDiComponent;
 import org.ucomplex.ucomplex.Modules.RoleSelect.RoleSelectDagger.DaggerRoleDiComponent;
 import org.ucomplex.ucomplex.Modules.RoleSelect.RoleSelectDagger.RoleDiComponent;
+import org.ucomplex.ucomplex.Modules.Subjects.SubjectsActivity;
+import org.ucomplex.ucomplex.Modules.Subjects.SubjectsDagger.DaggerSubjectsDiComponent;
+import org.ucomplex.ucomplex.Modules.Subjects.SubjectsDagger.SubjectsDiComponent;
 
 
 /**
@@ -25,13 +28,15 @@ public class MyApplication extends Application{
     private LoginDiComponent loginDiComponent;
     private RoleDiComponent roleDiComponent;
     private EventsDiComponent eventsDiComponent;
+    private SubjectsDiComponent subjectsDiComponent;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        loginDiComponent  = DaggerLoginDiComponent.builder().build();
-        roleDiComponent   = DaggerRoleDiComponent.builder().build();
-        eventsDiComponent = DaggerEventsDiComponent.builder().build();
+        loginDiComponent    = DaggerLoginDiComponent.builder().build();
+        roleDiComponent     = DaggerRoleDiComponent.builder().build();
+        eventsDiComponent   = DaggerEventsDiComponent.builder().build();
+        subjectsDiComponent = DaggerSubjectsDiComponent.builder().build();
     }
 
     public LoginDiComponent getLoginDiComponent() {
@@ -44,5 +49,9 @@ public class MyApplication extends Application{
 
     public EventsDiComponent getEventsDiComponent() {
         return eventsDiComponent;
+    }
+
+    public SubjectsDiComponent getSubjectsDiComponent() {
+        return subjectsDiComponent;
     }
 }

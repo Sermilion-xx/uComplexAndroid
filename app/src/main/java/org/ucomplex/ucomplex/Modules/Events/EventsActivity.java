@@ -7,7 +7,6 @@ import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.ViewToPresenterRecycler;
@@ -21,7 +20,7 @@ import javax.inject.Inject;
 
 public class EventsActivity extends BaseActivity implements ViewToPresenterRecycler {
 
-    private FragmentEvents mFragmentEvents;
+    private FragmentEvents mFragment;
     private UserInterface mUser;
 
     @Inject
@@ -49,15 +48,14 @@ public class EventsActivity extends BaseActivity implements ViewToPresenterRecyc
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupToolbar(getResourceString(R.string.events));
-        FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame);
-        getLayoutInflater().inflate(R.layout.activity_main, contentFrameLayout);
+        setContentViewWithNavDrawer(R.layout.activity_main);
 
         Intent intent = getIntent();
         if (intent.hasExtra(Constants.EXTRA_KEY_USER)) {
             mUser = getIntent().getParcelableExtra(Constants.EXTRA_KEY_USER);
             ((MyApplication) getApplication()).getEventsDiComponent().inject(this);
 
-            mFragmentEvents = (FragmentEvents) setupFragment(getFragmentManager(),
+            mFragment = (FragmentEvents) setupFragment(getFragmentManager(),
                     FragmentEvents.class.getName(),
                     this);
         }
@@ -117,27 +115,27 @@ public class EventsActivity extends BaseActivity implements ViewToPresenterRecyc
 
     @Override
     public void notifyItemRemoved(int position) {
-        mFragmentEvents.getListAdapter().notifyItemRemoved(position);
+        mFragment.getListAdapter().notifyItemRemoved(position);
     }
 
     @Override
     public void notifyDataSetChanged() {
-        mFragmentEvents.getListAdapter().notifyDataSetChanged();
+        mFragment.getListAdapter().notifyDataSetChanged();
     }
 
     @Override
     public void notifyItemRangeInserted(int start, int end) {
-        mFragmentEvents.getListAdapter().notifyItemRangeInserted(start, end);
+        mFragment.getListAdapter().notifyItemRangeInserted(start, end);
     }
 
     @Override
     public void notifyItemRangeRemoved(int start, int end) {
-        mFragmentEvents.getListAdapter().notifyItemRangeRemoved(start,end);
+        mFragment.getListAdapter().notifyItemRangeRemoved(start,end);
     }
 
     @Override
     public void notifyItemInserted(int layoutPosition) {
-        mFragmentEvents.getListAdapter().notifyItemInserted(layoutPosition);
+        mFragment.getListAdapter().notifyItemInserted(layoutPosition);
     }
 
     @Override
@@ -167,12 +165,12 @@ public class EventsActivity extends BaseActivity implements ViewToPresenterRecyc
 
     @Override
     public void showProgress() {
-        mFragmentEvents.showProgress();
+        mFragment.showProgress();
     }
 
     @Override
     public void hideProgress() {
-        mFragmentEvents.hideProgress();
+        mFragment.hideProgress();
     }
 
 }

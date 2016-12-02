@@ -18,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.FrameLayout;
 
 import org.javatuples.Pair;
 import org.ucomplex.ucomplex.FragmentFactory;
@@ -28,6 +29,7 @@ import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Presenter;
 import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Repository;
 import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.ViewToPresenter;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
+import org.ucomplex.ucomplex.Modules.Events.EventsActivity;
 import org.ucomplex.ucomplex.NavDrawer.DrawerAdapter;
 import org.ucomplex.ucomplex.NavDrawer.DrawerListItem;
 import org.ucomplex.ucomplex.NavDrawer.FacadeDrawer;
@@ -80,6 +82,11 @@ public class BaseActivity extends AppCompatActivity implements IViewExtensions{
         DrawerListItem headerItem = new DrawerListItem(profileBitmap, user.getName().split(" ")[1],
                 FacadeCommon.getStringUserType(this, user.getType()), user.getId());
         return setupDrawerArrayList(headerItem, mDrawerIcons, mDrawerTitles);
+    }
+
+    protected void setContentViewWithNavDrawer(int layout) {
+        FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame);
+        getLayoutInflater().inflate(layout, contentFrameLayout);
     }
 
     protected void setupToolbar(String title) {

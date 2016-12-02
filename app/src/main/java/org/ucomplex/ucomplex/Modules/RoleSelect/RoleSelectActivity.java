@@ -13,6 +13,7 @@ import android.widget.Toast;
 import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.PresenterRecycler;
 import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.ViewToPresenterRecycler;
 import org.ucomplex.ucomplex.Modules.BaseActivity;
+import org.ucomplex.ucomplex.Modules.ListAdapter;
 import org.ucomplex.ucomplex.Modules.MyApplication;
 import org.ucomplex.ucomplex.R;
 import org.ucomplex.ucomplex.Utility.Constants;
@@ -21,7 +22,7 @@ import javax.inject.Inject;
 
 public class RoleSelectActivity extends BaseActivity implements ViewToPresenterRecycler {
 
-    private ListRolesAdapter mListAdapter;
+    private ListAdapter mListAdapter;
 
     @Inject
     public void setPresenter(RolePresenter presenter) {
@@ -60,7 +61,7 @@ public class RoleSelectActivity extends BaseActivity implements ViewToPresenterR
     }
 
     private void setupRecyclerView() {
-        mListAdapter = new ListRolesAdapter();
+        mListAdapter = new ListAdapter(mPresenter);
         RecyclerView mList = (RecyclerView) findViewById(R.id.recyclerView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);

@@ -1,7 +1,4 @@
-package org.ucomplex.ucomplex.Modules.Subjects;
-
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
+package org.ucomplex.ucomplex.Model.Users;
 
 /**
  * ---------------------------------------------------
@@ -12,9 +9,6 @@ import android.view.View;
  * <a href="http://www.github.com/sermilion>github</a>
  * ---------------------------------------------------
  */
-public class SubjectViewHolder extends RecyclerView.ViewHolder {
 
-    public SubjectViewHolder(View itemView) {
-        super(itemView);
-    }
+public class SharedUser {
 }

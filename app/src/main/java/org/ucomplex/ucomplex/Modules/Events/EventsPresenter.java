@@ -11,7 +11,6 @@ import com.bumptech.glide.Glide;
 
 import org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP.AbstractPresenter;
 import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.ViewToPresenterRecycler;
-import org.ucomplex.ucomplex.Model.EventItem;
 import org.ucomplex.ucomplex.R;
 import org.ucomplex.ucomplex.Utility.Constants;
 import org.ucomplex.ucomplex.Utility.FacadeMedia;

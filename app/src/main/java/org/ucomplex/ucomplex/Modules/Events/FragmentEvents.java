@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import org.ucomplex.ucomplex.Modules.BaseFragment;
+import org.ucomplex.ucomplex.Modules.ListAdapter;
 import org.ucomplex.ucomplex.R;
 
 /**
@@ -27,7 +28,7 @@ public class FragmentEvents extends BaseFragment{
     private MediaPlayer mAlert;
     private ProgressBar mProgressBar;
     private EventsActivity mActivity;
-    private ListEventsAdapter mListAdapter;
+    private ListAdapter mListAdapter;
     private RecyclerView mRecyclerView;
 
 
@@ -42,7 +43,7 @@ public class FragmentEvents extends BaseFragment{
         mActivity = (EventsActivity)params[0];
     }
 
-    public ListEventsAdapter getListAdapter() {
+    public ListAdapter getListAdapter() {
         return mListAdapter;
     }
 
@@ -71,7 +72,7 @@ public class FragmentEvents extends BaseFragment{
     }
 
     public void setupRecyclerView(View view) {
-        mListAdapter = new ListEventsAdapter(mActivity.getPresenter());
+        mListAdapter = new ListAdapter(mActivity.getPresenter());
         mRecyclerView = (RecyclerView) view.findViewById(R.id.eventsRecyclerView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);

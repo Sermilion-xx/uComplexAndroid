@@ -62,5 +62,6 @@
     <string name="error_loading_data">Error loading data</string>
     <string name="load_more">Загрузить еще</string>
     <string name="error_loadig_data">Ошибка при загрузке данных</string>
+    <string name="subjects">Дисциплины</string>
 
 </resources>

@@ -10,6 +10,7 @@ import android.support.v4.content.ContextCompat;
 
 import com.amulyakhare.textdrawable.TextDrawable;
 
+import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.R;
 
 import java.text.SimpleDateFormat;
@@ -28,6 +29,16 @@ import java.util.Locale;
  */
 
 public class FacadeCommon {
+
+    private static UserInterface sharedUser;
+
+    public static UserInterface getSharedUserInstance(Context context){
+        if(sharedUser == null){
+            sharedUser = FacadePreferences.getUserDataFromPref(context);
+        }
+        return sharedUser;
+    }
+
 
     public static String getStringUserType(Context context, int type) {
         String typeStr = null;
