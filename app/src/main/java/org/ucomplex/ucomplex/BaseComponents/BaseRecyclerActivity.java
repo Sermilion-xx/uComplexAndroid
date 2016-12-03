@@ -1,12 +1,16 @@
 package org.ucomplex.ucomplex.BaseComponents;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
 import org.ucomplex.ucomplex.Interfaces.IFragment;
 import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.ViewToPresenterRecycler;
+import org.ucomplex.ucomplex.Modules.Events.FragmentEvents;
+import org.ucomplex.ucomplex.MyApplication;
+import org.ucomplex.ucomplex.R;
 
 public class BaseRecyclerActivity extends BaseActivity implements ViewToPresenterRecycler {
 
@@ -15,6 +19,9 @@ public class BaseRecyclerActivity extends BaseActivity implements ViewToPresente
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mFragment = setupFragment(getFragmentManager(),
+                FragmentEvents.class.getName(),
+                this);
     }
 
     @Override
@@ -57,6 +64,7 @@ public class BaseRecyclerActivity extends BaseActivity implements ViewToPresente
         return this;
     }
 
+
     @Override
     public void showToast(Toast toast) {
 
@@ -76,4 +84,23 @@ public class BaseRecyclerActivity extends BaseActivity implements ViewToPresente
     public void hideProgress() {
         mFragment.hideProgress();
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mPresenter.onDestroy(isChangingConfigurations());
+    }
+
+    @Override
+    public Context getApplicationContext() {
+        return super.getApplicationContext();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mPresenter.onConfigurationChanged(this);
+    }
+
+
 }

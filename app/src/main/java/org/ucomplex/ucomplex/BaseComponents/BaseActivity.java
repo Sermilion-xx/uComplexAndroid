@@ -50,6 +50,7 @@ public class BaseActivity extends AppCompatActivity implements IViewExtensions{
     protected Presenter             mPresenter;
     protected Model                 mModel;
     protected Repository            mRepository;
+    protected View mProgressView;
 
     public Presenter getPresenter() {
         return mPresenter;

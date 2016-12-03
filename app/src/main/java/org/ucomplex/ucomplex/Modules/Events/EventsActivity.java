@@ -35,12 +35,9 @@ public class EventsActivity extends BaseRecyclerActivity implements ViewToPresen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setupToolbar(getResourceString(R.string.events));
         setContentViewWithNavDrawer(R.layout.activity_main);
         ((MyApplication) getApplication()).getEventsDiComponent().inject(this);
-        mFragment = setupFragment(getFragmentManager(),
-                FragmentEvents.class.getName(),
-                this);
+        setupToolbar(getResourceString(R.string.events));
     }
 
     @Override
@@ -48,17 +45,7 @@ public class EventsActivity extends BaseRecyclerActivity implements ViewToPresen
         super.setupDrawer();
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mPresenter.onDestroy(isChangingConfigurations());
-    }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        mPresenter.onConfigurationChanged(this);
-    }
 
     @Override
     public void onResume() {
@@ -94,4 +81,5 @@ public class EventsActivity extends BaseRecyclerActivity implements ViewToPresen
             }
         }
     };
+
 }

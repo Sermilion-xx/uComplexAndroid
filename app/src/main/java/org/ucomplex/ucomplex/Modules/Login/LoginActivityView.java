@@ -1,44 +1,39 @@
 package org.ucomplex.ucomplex.Modules.Login;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
+import org.ucomplex.ucomplex.BaseComponents.BaseViewActivity;
+import org.ucomplex.ucomplex.CommonDependencies.Constants;
+import org.ucomplex.ucomplex.CommonDependencies.FacadePreferences;
 import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.ViewToPresenter;
 import org.ucomplex.ucomplex.Model.Users.LoginErrorType;
 import org.ucomplex.ucomplex.Model.Users.User;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
-import org.ucomplex.ucomplex.BaseComponents.BaseActivity;
 import org.ucomplex.ucomplex.Modules.Events.EventsActivity;
-import org.ucomplex.ucomplex.MyApplication;
 import org.ucomplex.ucomplex.Modules.RoleSelect.RoleSelectActivity;
+import org.ucomplex.ucomplex.MyApplication;
 import org.ucomplex.ucomplex.R;
-import org.ucomplex.ucomplex.CommonDependencies.Constants;
-import org.ucomplex.ucomplex.CommonDependencies.FacadePreferences;
 
 import java.util.ArrayList;
 
 import javax.inject.Inject;
 
+import static org.ucomplex.ucomplex.CommonDependencies.HttpFactory.encodeLoginData;
 import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.EMPTY_EMAIL;
 import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.INVALID_PASSWORD;
 import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.PASSWORD_REQUIRED;
-import static org.ucomplex.ucomplex.CommonDependencies.HttpFactory.encodeLoginData;
 
 
-public class LoginActivityView extends BaseActivity implements ViewToPresenter, View.OnClickListener{
+public class LoginActivityView extends BaseViewActivity implements ViewToPresenter, View.OnClickListener{
 
     AutoCompleteTextView mLoginView;
     EditText mPasswordView;
-    View mProgressView;
     Button mForgotButton;
     Button mLoginSignInButton;
 
@@ -53,7 +48,7 @@ public class LoginActivityView extends BaseActivity implements ViewToPresenter, 
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupViews(R.layout.activity_login);
         ((MyApplication) getApplication()).getLoginDiComponent().inject(this);
@@ -71,47 +66,6 @@ public class LoginActivityView extends BaseActivity implements ViewToPresenter, 
         mForgotButton.setOnClickListener(this);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mPresenter.onDestroy(isChangingConfigurations());
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        mPresenter.onConfigurationChanged(this);
-    }
-
-    @Override
-    public Context getAppContext() {
-        return getApplicationContext();
-    }
-
-    @Override
-    public Context getActivityContext() {
-        return this;
-    }
-
-    @Override
-    public void showToast(Toast toast) {
-        toast.show();
-    }
-
-    @Override
-    public void showProgress() {
-        mProgressView.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void hideProgress() {
-        mProgressView.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showAlert(AlertDialog dialog) {
-        dialog.show();
-    }
 
     void clickForgotButton() {
         ((MVP_Login.PresenterInterface) mPresenter).showRestorePasswordDialog();

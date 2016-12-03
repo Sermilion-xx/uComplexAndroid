@@ -1,10 +1,9 @@
 package org.ucomplex.ucomplex.Modules.RoleSelect;
 
-import android.content.res.Configuration;
 import android.os.Bundle;
 
-import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.ViewToPresenterRecycler;
 import org.ucomplex.ucomplex.BaseComponents.BaseRecyclerActivity;
+import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.ViewToPresenterRecycler;
 import org.ucomplex.ucomplex.MyApplication;
 import org.ucomplex.ucomplex.R;
 
@@ -32,21 +31,6 @@ public class RoleSelectActivity extends BaseRecyclerActivity implements ViewToPr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_role_select);
         ((MyApplication) getApplication()).getRoleDiComponent().inject(this);
-        mFragment = setupFragment(getFragmentManager(),
-                FragmentRoles.class.getName(),
-                this);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mPresenter.onDestroy(isChangingConfigurations());
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        mPresenter.onConfigurationChanged(this);
     }
 
 }

@@ -1,7 +1,5 @@
 package org.ucomplex.ucomplex.Modules.Subjects.SubjectsDagger;
 
-import org.ucomplex.ucomplex.Modules.RoleSelect.RoleSelectActivity;
-import org.ucomplex.ucomplex.Modules.RoleSelect.RoleSelectDagger.RoleModule;
 import org.ucomplex.ucomplex.Modules.Subjects.SubjectsActivity;
 
 import javax.inject.Singleton;

@@ -20,7 +20,7 @@ public class BaseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private PresenterRecycler mPresenter;
 
-    public BaseListAdapter(Presenter presenter){
+    BaseListAdapter(Presenter presenter){
         mPresenter = (PresenterRecycler) presenter;
     }
 
