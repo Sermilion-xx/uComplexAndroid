@@ -29,7 +29,9 @@ public class SubjectRepository extends AbstractRepository {
         final String encodedAuth = FacadePreferences.getLoginDataFromPref(mContext);
         HashMap<String, String> params = new HashMap<>();
         int requestType = Constants.REQUEST_GET_SUBJECT;
-        params.put(SUBJECT_ID, Integer.toString(bundle.getInt(SUBJECT_ID)));
+        if(bundle!=null){
+            params.put(SUBJECT_ID, Integer.toString(bundle.getInt(SUBJECT_ID)));
+        }
         HttpFactory.getInstance().httpVolley(HttpFactory.USER_SUBJECT_URL,
                 encodedAuth,
                 mContext,

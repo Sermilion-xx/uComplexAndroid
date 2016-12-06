@@ -28,7 +28,6 @@ import java.util.HashMap;
 
 public class SubjectsListModel extends AbstractModelRecycler implements ModelRecycler {
 
-    public static final int TYPE_USER = 3;
     private final int[] assessmentType = {R.string.zachet, R.string.exam, R.string.samostoyatelnaya,R.string.empty};
 
     @Override
@@ -60,7 +59,7 @@ public class SubjectsListModel extends AbstractModelRecycler implements ModelRec
                     SubjectListItem subjectListItem = new SubjectListItem(gcourse, courseName, assessmentType[courseFrom]);
                     subjectsListArray.add(subjectListItem);
                 }
-            } else if (getUser().getType() == TYPE_USER) {
+            } else if (getUser().getType() == Constants.USER_TYPE_TEACHER) {
                 JSONObject groursJson = subjectsJson.getJSONObject("groups");
                 JSONObject coursesJson = subjectsJson.getJSONObject("courses");
                 ArrayList<String> coursesKeys = FacadeCommon.getKeys(coursesJson);
