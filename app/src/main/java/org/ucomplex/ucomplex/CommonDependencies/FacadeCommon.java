@@ -8,6 +8,8 @@ import org.json.JSONObject;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.R;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -191,6 +193,16 @@ public class FacadeCommon {
         return keys;
     }
 
-
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+        BigDecimal bd = null;
+        try{
+            bd = new BigDecimal(value);
+        }catch (NumberFormatException e){
+            return 0.0;
+        }
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
 
 }

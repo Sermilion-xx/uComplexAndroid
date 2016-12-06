@@ -1,11 +1,11 @@
 package org.ucomplex.ucomplex.BaseComponents;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -36,10 +36,8 @@ import org.ucomplex.ucomplex.NavDrawer.DrawerListItem;
 import org.ucomplex.ucomplex.NavDrawer.FacadeDrawer;
 import org.ucomplex.ucomplex.R;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
-import org.ucomplex.ucomplex.CommonDependencies.FacadeMedia;
 import org.ucomplex.ucomplex.CommonDependencies.StateMaintainer;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class BaseActivity extends AppCompatActivity implements IViewExtensions, ViewToPresenter{
@@ -98,15 +96,16 @@ public class BaseActivity extends AppCompatActivity implements IViewExtensions, 
         }
     }
 
-    public void setupMVP(ViewToPresenter viewToPresenter, Class<?> type, Object ...data){
+    public void setupMVP(ViewToPresenter viewToPresenter, Class<?> type, Bundle params){
         mStateMaintainer = new StateMaintainer(getFragmentManager(), type.getName());
         if (mStateMaintainer.firstTimeIn()) {
             mPresenter.setView(viewToPresenter);
-            if(data.length>0)
-                mModel.setData(data[0]);
+            UserInterface user = FacadeCommon.getSharedUserInstance(this);
+            if(user!=null)
+                mModel.setUser(user);
             mRepository.setContext(mPresenter.getActivityContext());
             mModel.setRepository(mRepository);
-            mPresenter.setModel(mModel);
+            mPresenter.setModel(mModel, params);
             mStateMaintainer.put(mModel);
             mStateMaintainer.put(type.getName(), mPresenter);
         } else {
@@ -115,18 +114,16 @@ public class BaseActivity extends AppCompatActivity implements IViewExtensions, 
         }
     }
 
-    protected IFragment setupFragment(FragmentManager fragmentManager, String name, Object...params) {
+    protected IFragment setupFragment(FragmentManager fragmentManager, String name) {
         IFragment fragment;
         if(fragmentManager.findFragmentByTag(name) == null) {
             FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-            fragment = FragmentFactory.getFragmentWithName(name, params);
+            fragment = FragmentFactory.getFragmentWithName(name, this);
             fragmentTransaction.add(R.id.container, (Fragment) fragment, name);
             fragmentTransaction.commit();
         }else{
             fragment = (IFragment) fragmentManager.findFragmentByTag(name);
-            if(params.length>0){
-                fragment.setParams(params);
-            }
+            fragment.setActivity(this);
         }
         return fragment;
     }

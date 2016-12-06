@@ -1,5 +1,7 @@
 package org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP;
 
+import android.os.Bundle;
+
 import org.ucomplex.ucomplex.Interfaces.OnDataLoadedListener;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 
@@ -16,7 +18,8 @@ import org.ucomplex.ucomplex.Model.Users.UserInterface;
 public interface Model {
     void onDestroy(boolean isChangingConfiguration);
     void loadData();
-    void setData(Object data);
+    void setBundle(Bundle data);
+    void setUser(UserInterface user);
     void setRepository(Repository repository);
     UserInterface getUser();
     void setOnDataLoadedListener(OnDataLoadedListener onDataLoadListener);

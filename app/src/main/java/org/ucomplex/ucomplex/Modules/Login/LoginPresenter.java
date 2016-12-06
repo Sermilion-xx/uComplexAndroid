@@ -2,6 +2,7 @@ package org.ucomplex.ucomplex.Modules.Login;
 
 import android.content.DialogInterface;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -118,20 +119,20 @@ public class LoginPresenter extends AbstractPresenter implements MVP_Login.Prese
     }
 
     @Override
-    public void setModel(Model model) {
+    public void setModel(Model model, Bundle params) {
         mModel = model;
         mModel.setOnDataLoadedListener(this);
 
         UserInterface user = ((LoginModel)mModel).loadLoggedUser();
         if(user!=null){
-            mModel.setData(user);
+            mModel.setUser(user);
             //1 - has already been logged
             onTaskComplete(Constants.REQUEST_LOGIN, true, 1);
         }
     }
 
     public void setUser(UserInterface user){
-        mModel.setData(user);
+        mModel.setUser(user);
     }
 
     private Toast makeToast(String msg) {

@@ -1,5 +1,8 @@
 package org.ucomplex.ucomplex.Modules.RoleSelect;
 
+import android.os.Bundle;
+
+import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP.AbstractRepository;
 import org.ucomplex.ucomplex.Model.Users.Role;
 import org.ucomplex.ucomplex.Model.Users.User;
@@ -34,8 +37,8 @@ public class RoleRepository extends AbstractRepository {
     }
 
     @Override
-    public void loadData(Object... data) {
-        User user = (User) data[0];
+    public void loadData(Bundle bundle) {
+        User user = bundle.getParcelable(Constants.EXTRA_KEY_USER);
         ArrayList<RoleItem> roles = new ArrayList<>();
         Random random = new Random();
         for (int i = 0; i < user.getRoles().size(); i++) {

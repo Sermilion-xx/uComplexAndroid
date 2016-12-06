@@ -1,5 +1,6 @@
 package org.ucomplex.ucomplex.Modules;
 
+import org.ucomplex.ucomplex.BaseComponents.BaseActivity;
 import org.ucomplex.ucomplex.BaseComponents.BaseRecyclerFragment;
 import org.ucomplex.ucomplex.Interfaces.IFragment;
 
@@ -15,10 +16,10 @@ import org.ucomplex.ucomplex.Interfaces.IFragment;
 
 public class FragmentFactory {
 
-    public static IFragment getFragmentWithName(String name, Object... params) {
+    public static IFragment getFragmentWithName(String name, BaseActivity activity) {
 
         if (name.equals(BaseRecyclerFragment.class.getName())) {
-            return BaseRecyclerFragment.getInstance(params);
+            return BaseRecyclerFragment.getInstance(activity);
         }
         return null;
     }

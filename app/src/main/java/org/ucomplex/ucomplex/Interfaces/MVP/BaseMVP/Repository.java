@@ -1,6 +1,7 @@
 package org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP;
 
 import android.content.Context;
+import android.os.Bundle;
 
 import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 
@@ -16,6 +17,6 @@ import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 
 public interface Repository {
     void setContext(Context context);
-    void loadData(Object...param);
+    void loadData(Bundle param);
     void setTaskCompleteListener(OnTaskCompleteListener mTaskCompleteListener);
 }

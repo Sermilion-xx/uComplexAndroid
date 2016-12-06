@@ -52,7 +52,7 @@ public class LoginActivityView extends BaseActivity implements ViewToPresenter, 
         super.onCreate(savedInstanceState);
         setupViews(R.layout.activity_login);
         ((DaggerApplication) getApplication()).getLoginDiComponent().inject(this);
-        super.setupMVP(this, LoginActivityView.class);
+        super.setupMVP(this, LoginActivityView.class, null);
     }
 
     public void setupViews(int layout) {

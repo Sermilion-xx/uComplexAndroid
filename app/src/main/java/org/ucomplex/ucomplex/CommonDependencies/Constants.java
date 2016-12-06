@@ -14,11 +14,13 @@ import org.ucomplex.ucomplex.R;
 
 public class Constants {
 
-    private static final String EXTRA_PREFIX = "org.ucomplex.ucomplex.";
-    public static final String EXTRA_KEY_USER = EXTRA_PREFIX+"user";
-    public static final String EXTRA_KEY_USER_TYPE = EXTRA_PREFIX+"userType";
-    public static final String EVENTS_REFRESH_BROADCAST = EXTRA_PREFIX+"org.ucomplex.ucomplex.EVENTS_REFRESH";
-    public static final String EVENTS_LOAD_MORE_BROADCAST = EXTRA_PREFIX+"org.ucomplex.ucomplex.EVENTS_LOAD_MORE";
+    private static final String PREFIX = "org.ucomplex.ucomplex.";
+    public static final String EXTRA_KEY_USER = PREFIX +"user";
+    public static final String EXTRA_KEY_MORE_EVENTS = PREFIX +"more_events";
+
+    public static final String EXTRA_KEY_USER_TYPE = PREFIX +"userType";
+    public static final String EVENTS_REFRESH_BROADCAST = PREFIX +"EVENTS_REFRESH";
+    public static final String EVENTS_LOAD_MORE_BROADCAST = PREFIX +"EVENTS_LOAD_MORE";
     public static final String UCOMPLEX_PROFILE = "ucomplex_profile";
     public static final String IMAGE_FORMAT_JPG = ".jpg";
 
@@ -29,7 +31,9 @@ public class Constants {
     public static final int REQUEST_GET_SUBJECTS = 4;
     public static final int REQUEST_GET_SUBJECT = 5;
 
-    public static final int TYPE_STUDENT = 4;
+    public static final int USER_TYPE_STUDENT = 4;
+    public static final int USER_TYPE_TEACHER = 3;
+
 
 
     public static final int[] colorsUserSelect = new int[]{

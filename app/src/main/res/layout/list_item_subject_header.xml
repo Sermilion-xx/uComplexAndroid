@@ -6,7 +6,7 @@
 
     <TextView
         style="@style/StyleTextViewPrimary"
-        android:id="@+id/subject_discipline_header"
+        android:id="@+id/subjects_subject_header"
         android:text="dfdfdfdfd"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"

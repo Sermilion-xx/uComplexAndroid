@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
 import org.ucomplex.ucomplex.Interfaces.IFragment;
@@ -21,8 +22,7 @@ public class BaseRecyclerActivity extends BaseActivity implements ViewToPresente
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mFragment = setupFragment(getFragmentManager(),
-                BaseRecyclerFragment.class.getName(),
-                this);
+                BaseRecyclerFragment.class.getName());
     }
 
     @Override
@@ -53,6 +53,11 @@ public class BaseRecyclerActivity extends BaseActivity implements ViewToPresente
     @Override
     public void notifyItemRangeChanged(int positionStart, int itemCount) {
         mFragment.getListAdapter().notifyItemRangeChanged(positionStart, itemCount);
+    }
+
+    @Override
+    public RecyclerView getRecyclerView() {
+        return mFragment.getRecyclerView();
     }
 
 

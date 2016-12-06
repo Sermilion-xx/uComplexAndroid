@@ -1,5 +1,7 @@
 package org.ucomplex.ucomplex.Model.Users;
 
+import android.os.Parcelable;
+
 /**
  * ---------------------------------------------------
  * Created by Sermilion on 06/12/2016.
@@ -10,5 +12,5 @@ package org.ucomplex.ucomplex.Model.Users;
  * ---------------------------------------------------
  */
 
-public class Student extends User {
+public class Student extends User implements Parcelable{
 }

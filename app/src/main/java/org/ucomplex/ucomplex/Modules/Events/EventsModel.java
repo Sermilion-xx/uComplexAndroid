@@ -1,6 +1,8 @@
 package org.ucomplex.ucomplex.Modules.Events;
 
 
+import android.os.Bundle;
+
 import com.android.volley.VolleyError;
 
 import org.json.JSONArray;
@@ -55,18 +57,17 @@ public class EventsModel extends AbstractModelRecycler implements MVP_Events.Mod
     public EventsModel() {
     }
 
-    @Override
+
     @SuppressWarnings("unchecked")
     public void setData(Object data) {
-        if (data instanceof ArrayList)
-            this.mRecyclerItems = (ArrayList<IRecyclerItem>) data;
-        else
-            this.mUser = (UserInterface) data;
+        this.mRecyclerItems = (ArrayList<IRecyclerItem>) data;
     }
 
     @Override
     public void loadMoreEvents(int start) {
-        mRepository.loadData(start);
+        Bundle bundle = new Bundle();
+        bundle.putInt(Constants.EXTRA_KEY_MORE_EVENTS,start);
+        mRepository.loadData(bundle);
     }
 
     @Override

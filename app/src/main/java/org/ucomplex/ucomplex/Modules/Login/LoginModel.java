@@ -3,8 +3,11 @@ package org.ucomplex.ucomplex.Modules.Login;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Bundle;
+import android.os.Parcelable;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.ParseError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
@@ -13,6 +16,7 @@ import com.google.gson.GsonBuilder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeMedia;
 import org.ucomplex.ucomplex.CommonDependencies.FacadePreferences;
 import org.ucomplex.ucomplex.CommonDependencies.UriDeserializer;
@@ -44,7 +48,9 @@ public class LoginModel extends AbstractModel implements MVP_Login.ModelInterfac
     @Override
     public void loadData() {
         //User object with loadData and password
-        mRepository.loadData(mUser);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(Constants.EXTRA_KEY_USER, (Parcelable) mUser);
+        mRepository.loadData(bundle);
     }
 
     @Override

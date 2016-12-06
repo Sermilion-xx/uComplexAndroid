@@ -74,5 +74,9 @@
     <string name="empty" />
     <string name="profile_picture">Аватарка</string>
     <string name="subject">Дисциплина</string>
+    <string name="lecturers">Преподаватели</string>
+
+    <string name="absence" formatted="false">Absence: %1$d \%</string>
+
 
 </resources>

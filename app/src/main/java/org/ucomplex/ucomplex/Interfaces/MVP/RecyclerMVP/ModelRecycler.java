@@ -1,5 +1,7 @@
 package org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP;
 
+import android.support.v7.widget.RecyclerView;
+
 import org.ucomplex.ucomplex.Interfaces.IRecyclerItem;
 import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Model;
 

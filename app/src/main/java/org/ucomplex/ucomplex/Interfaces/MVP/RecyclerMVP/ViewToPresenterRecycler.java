@@ -1,5 +1,7 @@
 package org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP;
 
+import android.support.v7.widget.RecyclerView;
+
 import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.ViewToPresenter;
 
 /**
@@ -19,4 +21,5 @@ public interface ViewToPresenterRecycler extends ViewToPresenter {
     void notifyItemRangeRemoved(int start, int end);
     void notifyItemInserted(int layoutPosition);
     void notifyItemRangeChanged(int positionStart, int itemCount);
+    RecyclerView getRecyclerView();
 }

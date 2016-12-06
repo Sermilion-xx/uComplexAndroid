@@ -7,7 +7,7 @@
     <de.hdodenhof.circleimageview.CircleImageView
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:id="@+id/subject_discipline_teacher"
+        android:id="@+id/subjects_subject_teacher"
         android:contentDescription="@string/profile_picture"
         android:layout_marginStart="18dp"
         android:layout_marginBottom="8dp"
@@ -16,9 +16,9 @@
 
     <TextView
         style="@style/StyleTextViewPrimary"
-        android:id="@+id/subject_discipline_teacher_name"
+        android:id="@+id/subjects_subject_teacher_name"
         android:layout_centerVertical="true"
         android:layout_marginStart="16dp"
-        android:layout_toEndOf="@+id/subject_discipline_teacher" />
+        android:layout_toEndOf="@+id/subjects_subject_teacher" />
 
 </RelativeLayout>

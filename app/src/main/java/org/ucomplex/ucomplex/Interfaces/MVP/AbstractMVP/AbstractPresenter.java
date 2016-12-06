@@ -1,6 +1,7 @@
 package org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP;
 
 import android.content.Context;
+import android.os.Bundle;
 
 import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Model;
 import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Presenter;
@@ -42,8 +43,9 @@ public abstract class AbstractPresenter implements Presenter, OnDataLoadedListen
     }
 
     @Override
-    public void setModel(Model models) {
+    public void setModel(Model models, Bundle params) {
         mModel = models;
+        mModel.setBundle(params);
         mModel.setOnDataLoadedListener(this);
         loadData();
     }
@@ -69,7 +71,7 @@ public abstract class AbstractPresenter implements Presenter, OnDataLoadedListen
     }
 
     @Override
-    public void loadData() {
+    public void loadData(Object...params) {
         getView().showProgress();
         mModel.loadData();
     }

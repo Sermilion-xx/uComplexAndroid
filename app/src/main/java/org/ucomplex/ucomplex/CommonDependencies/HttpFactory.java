@@ -64,6 +64,8 @@ public class HttpFactory {
     public static final String USER_SUBJECTS_USER_URL = BASE_URL +"student/subjects_list?json";
     public static final String USER_SUBJECTS_TEACHER_URL = BASE_URL +"teacher/subjects_list?json";
     public static final String USER_SUBJECT_URL = BASE_URL +"student/ajax/my_subjects?json";
+    public static final String GET_PHOTO_URL = BASE_URL +"files/photos/";
+
 
     String urlStudentString = "https://ucomplex.org/student/subjects_list?json";
     String urlTeacherString = "https://ucomplex.org/teacher/subjects_list?json";

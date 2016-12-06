@@ -1,5 +1,7 @@
 package org.ucomplex.ucomplex.Modules.SubjectsList;
 
+import android.os.Bundle;
+
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.CommonDependencies.FacadePreferences;
 import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
@@ -20,7 +22,7 @@ import java.util.HashMap;
 public class SubjectsListRepository extends AbstractRepository{
 
     @Override
-    public void loadData(Object... param) {
+    public void loadData(Bundle bundle) {
         final String encodedAuth = FacadePreferences.getLoginDataFromPref(mContext);
         HashMap<String, String> params = new HashMap<>();
         int requestType = Constants.REQUEST_GET_SUBJECTS;

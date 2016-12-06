@@ -38,11 +38,17 @@ public class BaseRecyclerFragment extends Fragment implements IFragment{
     protected RecyclerView mRecyclerView;
     protected LinearLayoutManager linearLayoutManager;
     protected boolean hasDivider;
+    protected Bundle mBundle;
 
-    public static IFragment getInstance(Object...params) {
+    public static IFragment getInstance(BaseActivity activity) {
         IFragment fragment =  new BaseRecyclerFragment();
-        fragment.setActivity((BaseActivity) params[0]);
+        fragment.setActivity(activity);
         return fragment;
+    }
+
+    @Override
+    public void setArguments(Bundle bundle) {
+        this.mBundle = bundle;
     }
 
     @Override
@@ -58,8 +64,9 @@ public class BaseRecyclerFragment extends Fragment implements IFragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recycler, container, false);
+        Bundle bundle = getArguments();
         mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-        mActivity.setupMVP(mActivity, mActivity.getClass(), FacadeCommon.getSharedUserInstance(mActivity));
+        mActivity.setupMVP(mActivity, mActivity.getClass(), bundle);
         setupRecyclerView(view, R.id.recyclerView);
         mActivity.setupDrawer();
         return view;
@@ -68,7 +75,7 @@ public class BaseRecyclerFragment extends Fragment implements IFragment{
     public void setupRecyclerView(View view, int layout) {
         mListAdapter = new BaseListAdapter(mActivity.getPresenter());
         mRecyclerView = (RecyclerView) view.findViewById(layout);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
+        linearLayoutManager = new LinearLayoutManager(mActivity);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setAdapter(mListAdapter);
@@ -85,14 +92,13 @@ public class BaseRecyclerFragment extends Fragment implements IFragment{
         hasDivider = true;
     }
 
-    public BaseListAdapter getListAdapter() {
-        return mListAdapter;
+    @Override
+    public RecyclerView getRecyclerView() {
+        return mRecyclerView;
     }
 
-    @Override
-    public void setParams(Object ... params) {
-        mActivity = (BaseActivity) params[0];
-
+    public BaseListAdapter getListAdapter() {
+        return mListAdapter;
     }
 
     public void setActivity(Activity mActivity) {

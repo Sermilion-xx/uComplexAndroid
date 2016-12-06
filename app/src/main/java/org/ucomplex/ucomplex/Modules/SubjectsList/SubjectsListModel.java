@@ -37,7 +37,7 @@ public class SubjectsListModel extends AbstractModelRecycler implements ModelRec
         JSONObject subjectsJson;
         try {
             subjectsJson = new JSONObject(jsonData);
-            if (getUser().getType() == Constants.TYPE_STUDENT) {
+            if (getUser().getType() == Constants.USER_TYPE_STUDENT) {
                 JSONObject courses = subjectsJson.getJSONObject("courses");
                 JSONObject coursesForms = subjectsJson.getJSONObject("courses_forms");
                 JSONArray studentSubjectsList = subjectsJson.getJSONArray("studentSubjectsList");

@@ -1,6 +1,7 @@
 package org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP;
 
 import android.content.Context;
+import android.os.Bundle;
 
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 
@@ -21,7 +22,7 @@ public interface Presenter {
     void setView(ViewToPresenter view);
     ViewToPresenter getView();
     void onConfigurationChanged(ViewToPresenter view);
-    void setModel(Model models);
+    void setModel(Model models, Bundle params);
     UserInterface getUser();
-    void loadData();
+    void loadData(Object...params);
 }

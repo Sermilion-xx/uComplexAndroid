@@ -15,10 +15,12 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.reflect.TypeToken;
 
 import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
 import org.ucomplex.ucomplex.Modules.Events.EventsActivity;
 import org.ucomplex.ucomplex.Modules.Login.LoginActivityView;
+import org.ucomplex.ucomplex.Modules.Subject.SubjectActivity;
 import org.ucomplex.ucomplex.Modules.SubjectsList.SubjectsListActivity;
 import org.ucomplex.ucomplex.R;
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
@@ -121,28 +123,36 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
         public void onClick(View view) {
             int position = getAdapterPosition();
             if(position==getItemCount()-1){
-                FacadePreferences.clearPref(mContext);
-                mContext.startActivity(new Intent(mContext, LoginActivityView.class));
-                mContext.finish();
+                logout();
             }else if(position==0){
                 //TODO: go to profile
             }else if(position==1){
-                if(!(mContext instanceof EventsActivity)){
-                    mContext.startActivity(new Intent(mContext, EventsActivity.class));
-                }
+                onDrawerItemPressed(EventsActivity.class);
                 mContext.sendBroadcast(new Intent(Constants.EVENTS_REFRESH_BROADCAST));
             }else if(position==2){
-                if(!(mContext instanceof SubjectsListActivity)) {
-                    mContext.startActivity(new Intent(mContext, SubjectsListActivity.class));
-                }else {
-                    mContext.onBackPressed();
-                }
+                onDrawerItemPressed(SubjectsListActivity.class);
+            }else if(position==3){
+//                onDrawerItemPressed(SubjectActivity.class);
             }
         }
 
         @Override
         public boolean onLongClick(View view) {
             return false;
+        }
+    }
+
+    public void logout() {
+        FacadePreferences.clearPref(mContext);
+        mContext.startActivity(new Intent(mContext, LoginActivityView.class));
+        mContext.finish();
+    }
+
+    private void onDrawerItemPressed(Class<? extends Activity> activity) {
+        if(!(mContext.getClass() == activity)) {
+            mContext.startActivity(new Intent(mContext, activity));
+        }else {
+            mContext.onBackPressed();
         }
     }
 }

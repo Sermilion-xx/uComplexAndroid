@@ -1,5 +1,7 @@
 package org.ucomplex.ucomplex.Model.Users;
 
+import android.os.Parcelable;
+
 import org.ucomplex.ucomplex.Modules.Materials.DepartmentItem;
 import org.ucomplex.ucomplex.Modules.Materials.MaterialItem;
 import org.ucomplex.ucomplex.Modules.Materials.TimetableEntryItem;
@@ -18,7 +20,7 @@ import lombok.Data;
  * ---------------------------------------------------
  */
 @Data
-public class Teacher extends User {
+public class Teacher extends User implements Parcelable {
 
     private int post;
     private int experience;

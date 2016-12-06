@@ -34,7 +34,7 @@ public class SubjectsListActivity extends BaseRecyclerActivity implements ViewTo
         super.onCreate(savedInstanceState);
         ((DaggerApplication) getApplication()).getSubjectsListDiComponent().inject(this);
         setupToolbar(getResourceString(R.string.subjects));
-        setContentViewWithNavDrawer(R.layout.activity_subjects);
+        setContentViewWithNavDrawer(R.layout.activity_subjects_list);
         getFragment().addDivider();
     }
 

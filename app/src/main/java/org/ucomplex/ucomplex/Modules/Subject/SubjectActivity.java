@@ -32,5 +32,9 @@ public class SubjectActivity extends BaseRecyclerActivity {
         ((DaggerApplication) getApplication()).getSubjectDiComponent().inject(this);
         setupToolbar(getResourceString(R.string.subject));
         setContentViewWithNavDrawer(R.layout.activity_subject);
+
+        Bundle args = new Bundle();
+        args.putInt("subjId", getIntent().getIntExtra("subjId", -1));
+        mFragment.setArguments(args);
     }
 }

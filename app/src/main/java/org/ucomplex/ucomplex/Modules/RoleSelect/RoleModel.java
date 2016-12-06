@@ -1,6 +1,10 @@
 package org.ucomplex.ucomplex.Modules.RoleSelect;
 
+import android.os.Bundle;
+import android.os.Parcelable;
+
 import org.json.JSONException;
+import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.Interfaces.IRecyclerItem;
 import org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP.AbstractModelRecycler;
 import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.ModelRecycler;
@@ -22,9 +26,12 @@ public class RoleModel extends AbstractModelRecycler implements ModelRecycler {
     public RoleModel() {
     }
 
-    @Override @SuppressWarnings("unchecked")
+    @Override
+    @SuppressWarnings("unchecked")
     public void loadData() {
-       mRepository.loadData(mUser);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(Constants.EXTRA_KEY_USER, (Parcelable) mUser);
+        mRepository.loadData(bundle);
     }
 
     @Override
@@ -32,13 +39,14 @@ public class RoleModel extends AbstractModelRecycler implements ModelRecycler {
         throw new UnsupportedOperationException("RoleModel does not need to process json. Do not call this method.");
     }
 
-    @Override @SuppressWarnings("unchecked")
+    @Override
+    @SuppressWarnings("unchecked")
     public void onTaskComplete(int requestType, Object... o) {
-        if(o.length>0){
+        if (o.length > 0) {
             mRecyclerItems = (ArrayList<IRecyclerItem>) o[0];
             end = mRecyclerItems.size();
         }
-        mOnDataLoadedListener.dataLoaded(o.length>0, start, end, oldEnd);
+        mOnDataLoadedListener.dataLoaded(o.length > 0, start, end, oldEnd);
     }
 
 

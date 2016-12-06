@@ -1,6 +1,7 @@
 package org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,15 @@ public abstract class AbstractPresenterRecycler extends AbstractPresenter implem
     protected int end = 0;
     protected int oldEnd = 0;
     protected int itemLayout;
+    protected RecyclerOnClickListener baseOnClickListener = new RecyclerOnClickListener();
+
+    protected class RecyclerOnClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            int itemPosition = ((ViewToPresenterRecycler) getView()).getRecyclerView().indexOfChild(v);
+            Log.e("Position is ",String.valueOf(itemPosition));
+        }
+    }
 
     public void setItemLayout(int itemLayout) {
         this.itemLayout = itemLayout;
@@ -54,6 +64,7 @@ public abstract class AbstractPresenterRecycler extends AbstractPresenter implem
         itemLayout = isAvailableListViewItem();
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View viewTaskRow = inflater.inflate(itemLayout, parent, false);
+        viewTaskRow.setOnClickListener(baseOnClickListener);
         viewHolder = getViewHolderForItemLayout(viewTaskRow, itemLayout);
         return viewHolder;
     }

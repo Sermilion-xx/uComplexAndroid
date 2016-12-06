@@ -1,5 +1,7 @@
 package org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP;
 
+import android.os.Bundle;
+
 import org.json.JSONException;
 import org.ucomplex.ucomplex.Interfaces.IRecyclerItem;
 import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Model;
@@ -26,13 +28,14 @@ public abstract class AbstractModel implements Model, OnTaskCompleteListener {
     protected UserInterface mUser;
     protected OnDataLoadedListener mOnDataLoadedListener;
     protected ArrayList<IRecyclerItem> mRecyclerItems;
+    protected Bundle mParams;
 
     public abstract Object getDataFromJson(String jsonString)  throws JSONException;
 
     @Override
     @SuppressWarnings("unchecked")
     public void loadData() {
-        mRepository.loadData();
+        mRepository.loadData(this.mParams);
     }
 
     @Override
@@ -41,8 +44,13 @@ public abstract class AbstractModel implements Model, OnTaskCompleteListener {
     }
 
     @Override
-    public void setData(Object data) {
-        this.mUser = (UserInterface) data;
+    public void setUser(UserInterface user) {
+        this.mUser = user;
+    }
+
+    @Override
+    public void setBundle(Bundle data) {
+        this.mParams = data;
     }
 
     @Override

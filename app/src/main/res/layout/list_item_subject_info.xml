@@ -5,19 +5,17 @@
 
     <TextView
         style="@style/StyleTextViewPrimary"
-        android:id="@+id/course_info_course_attendance"
-        android:textColor="@color/colorBlack"
+        android:id="@+id/subjects_subject_attendance"
         android:text="Посещаемость по предмету: 100%"
         android:layout_marginStart="20dp"
         android:layout_marginTop="2dp" />
 
     <TextView
         style="@style/StyleTextViewPrimary"
-        android:id="@+id/course_info_course_mark"
-        android:textColor="@color/colorBlack"
+        android:id="@+id/subjects_subject_mark"
         android:text="Посещаемость по предмету: 100%"
         android:layout_marginStart="20dp"
-        android:layout_below="@+id/course_info_course_attendance"
+        android:layout_below="@+id/subjects_subject_attendance"
         android:layout_marginTop="5dp" />
 
 </RelativeLayout>

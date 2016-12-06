@@ -1,20 +1,15 @@
 package org.ucomplex.ucomplex.Modules.Subject;
 
-import com.android.volley.VolleyError;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.ucomplex.ucomplex.Interfaces.IRecyclerItem;
 import org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP.AbstractModelRecycler;
 import org.ucomplex.ucomplex.Model.Users.Teacher;
-import org.ucomplex.ucomplex.Model.Users.User;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.Modules.Materials.DepartmentItem;
 import org.ucomplex.ucomplex.Modules.Materials.MaterialItem;
 import org.ucomplex.ucomplex.Modules.Materials.ProgressItem;
-import org.ucomplex.ucomplex.Modules.Subject.SubjectActivity;
-import org.ucomplex.ucomplex.Modules.Subject.SubjectItem;
 
 import java.util.ArrayList;
 
@@ -31,17 +26,6 @@ import java.util.ArrayList;
 public class SubjectModel extends AbstractModelRecycler {
 
     public static final String JSON_KEY_COURSE = "course";
-    private int subjId;
-
-    @Override
-    public void setData(Object data) {
-        subjId= (int)data;
-    }
-
-    @Override
-    public void loadData() {
-        mRepository.loadData(subjId);
-    }
 
     @Override
     public ArrayList<IRecyclerItem> getDataFromJson(String jsonString) throws JSONException {
@@ -155,5 +139,6 @@ public class SubjectModel extends AbstractModelRecycler {
             }
             return null;
     }
+
 
 }
