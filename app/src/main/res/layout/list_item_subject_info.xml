@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        style="@style/StyleTextViewPrimary"
+        android:id="@+id/course_info_course_attendance"
+        android:textColor="@color/colorBlack"
+        android:text="Посещаемость по предмету: 100%"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="2dp" />
+
+    <TextView
+        style="@style/StyleTextViewPrimary"
+        android:id="@+id/course_info_course_mark"
+        android:textColor="@color/colorBlack"
+        android:text="Посещаемость по предмету: 100%"
+        android:layout_marginStart="20dp"
+        android:layout_below="@+id/course_info_course_attendance"
+        android:layout_marginTop="5dp" />
+
+</RelativeLayout>

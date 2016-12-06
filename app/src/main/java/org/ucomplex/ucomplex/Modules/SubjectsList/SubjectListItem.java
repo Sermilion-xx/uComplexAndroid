@@ -1,4 +1,4 @@
-package org.ucomplex.ucomplex.Modules.Subjects;
+package org.ucomplex.ucomplex.Modules.SubjectsList;
 
 import org.ucomplex.ucomplex.Interfaces.IRecyclerItem;
 
@@ -14,10 +14,16 @@ import lombok.Data;
  * ---------------------------------------------------
  */
 @Data
-public class SubjectItem implements IRecyclerItem {
+class SubjectListItem extends IRecyclerItem {
 
     private int courseId;
-    private String name;
-    private String assesmentType;
+    private String courseName;
+    private int assessmentType;
+
+    SubjectListItem(int courseId, String courseName, int assessmentType){
+        this.courseId = courseId;
+        this.courseName = courseName;
+        this.assessmentType = assessmentType;
+    }
 
 }

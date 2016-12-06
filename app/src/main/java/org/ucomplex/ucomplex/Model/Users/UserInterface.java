@@ -5,6 +5,8 @@ import android.net.Uri;
 
 import java.util.List;
 
+import lombok.Data;
+
 /**
  * ---------------------------------------------------
  * Created by Sermilion on 10/11/2016.
@@ -14,7 +16,6 @@ import java.util.List;
  * <a href="http://www.github.com/sermilion>github</a>
  * ---------------------------------------------------
  */
-
 public interface UserInterface {
     int getType();
     String getLogin();
@@ -23,11 +24,20 @@ public interface UserInterface {
     void setPassword(String password);
     void setLogin(String login);
     int getPhoto();
+    void setPhoto(int photo);
     String getCode();
-    void setBitmapUri(Uri uri);
-    Uri getBitmapUri();
+    void setCode(String code);
+    void setBitmapUriString(String uri);
+    String getBitmapUriStringFromUri(Uri uri);
+    Uri getBitmapUriFromUriString();
+    String getBitmapUriString();
     String getName();
+    void setName(String name);
     int getId();
+    void setId(int id);
     void setType(int type);
+    int getPerson();
+
+
 
 }

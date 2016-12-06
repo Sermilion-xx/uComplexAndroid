@@ -6,12 +6,17 @@ import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import org.ucomplex.ucomplex.CommonDependencies.UriDeserializer;
+import org.ucomplex.ucomplex.CommonDependencies.UriSerializer;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Data;
@@ -30,7 +35,7 @@ public class User implements UserInterface, Parcelable{
     private int role;
     private int person;
     private Bitmap photoBitmap;
-    private Uri bitmapUri;
+    private String bitmapUriString;
     private int photo;
     private String code;
     private int client;
@@ -40,6 +45,18 @@ public class User implements UserInterface, Parcelable{
     private List<Role> roles;
 
     public User(){
+
+    }
+    public String getBitmapUriStringFromUri(Uri bitmapUri){
+        return bitmapUri.toString();
+    }
+
+    public Uri getBitmapUriFromUriString(){
+        if(bitmapUriString!=null){
+            return Uri.parse(bitmapUriString);
+        } else {
+            return null;
+        }
 
     }
 
@@ -52,7 +69,7 @@ public class User implements UserInterface, Parcelable{
         role = in.readInt();
         person = in.readInt();
         photoBitmap = in.readParcelable(Bitmap.class.getClassLoader());
-        bitmapUri = in.readParcelable(Uri.class.getClassLoader());
+        bitmapUriString = in.readParcelable(Uri.class.getClassLoader());
         photo = in.readInt();
         code = in.readString();
         client = in.readInt();
@@ -94,7 +111,7 @@ public class User implements UserInterface, Parcelable{
         parcel.writeInt(role);
         parcel.writeInt(person);
         parcel.writeParcelable(photoBitmap, i);
-        parcel.writeParcelable(bitmapUri, i);
+        parcel.writeString(bitmapUriString);
         parcel.writeInt(photo);
         parcel.writeString(code);
         parcel.writeInt(client);

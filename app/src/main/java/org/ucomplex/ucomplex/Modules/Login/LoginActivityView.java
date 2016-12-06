@@ -8,7 +8,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 
-import org.ucomplex.ucomplex.BaseComponents.BaseViewActivity;
+import org.ucomplex.ucomplex.BaseComponents.BaseActivity;
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.CommonDependencies.FacadePreferences;
 import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.ViewToPresenter;
@@ -17,7 +17,7 @@ import org.ucomplex.ucomplex.Model.Users.User;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.Modules.Events.EventsActivity;
 import org.ucomplex.ucomplex.Modules.RoleSelect.RoleSelectActivity;
-import org.ucomplex.ucomplex.MyApplication;
+import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
 import org.ucomplex.ucomplex.R;
 
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.INVALID_PASSWORD;
 import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.PASSWORD_REQUIRED;
 
 
-public class LoginActivityView extends BaseViewActivity implements ViewToPresenter, View.OnClickListener{
+public class LoginActivityView extends BaseActivity implements ViewToPresenter, View.OnClickListener{
 
     AutoCompleteTextView mLoginView;
     EditText mPasswordView;
@@ -51,7 +51,7 @@ public class LoginActivityView extends BaseViewActivity implements ViewToPresent
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupViews(R.layout.activity_login);
-        ((MyApplication) getApplication()).getLoginDiComponent().inject(this);
+        ((DaggerApplication) getApplication()).getLoginDiComponent().inject(this);
         super.setupMVP(this, LoginActivityView.class);
     }
 

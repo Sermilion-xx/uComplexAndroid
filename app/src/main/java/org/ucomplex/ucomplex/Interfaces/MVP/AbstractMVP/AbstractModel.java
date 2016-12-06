@@ -1,10 +1,14 @@
 package org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP;
 
+import org.json.JSONException;
+import org.ucomplex.ucomplex.Interfaces.IRecyclerItem;
 import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Model;
 import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Repository;
 import org.ucomplex.ucomplex.Interfaces.OnDataLoadedListener;
 import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
+
+import java.util.ArrayList;
 
 /**
  * ---------------------------------------------------
@@ -17,9 +21,29 @@ import org.ucomplex.ucomplex.Model.Users.UserInterface;
  */
 
 public abstract class AbstractModel implements Model, OnTaskCompleteListener {
+
     protected Repository mRepository;
     protected UserInterface mUser;
     protected OnDataLoadedListener mOnDataLoadedListener;
+    protected ArrayList<IRecyclerItem> mRecyclerItems;
+
+    public abstract Object getDataFromJson(String jsonString)  throws JSONException;
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void loadData() {
+        mRepository.loadData();
+    }
+
+    @Override
+    public UserInterface getUser() {
+        return this.mUser;
+    }
+
+    @Override
+    public void setData(Object data) {
+        this.mUser = (UserInterface) data;
+    }
 
     @Override
     public void setOnDataLoadedListener(OnDataLoadedListener mOnDataLoadedListener) {
@@ -38,6 +62,7 @@ public abstract class AbstractModel implements Model, OnTaskCompleteListener {
             mRepository = null;
             mUser = null;
             mOnDataLoadedListener = null;
+            mRecyclerItems = null;
         }
     }
 

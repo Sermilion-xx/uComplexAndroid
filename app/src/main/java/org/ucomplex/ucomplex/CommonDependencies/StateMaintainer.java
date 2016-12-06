@@ -19,7 +19,7 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 
 /**
- * Retains and maintain object'SubjectsRepository state between configuration changes
+ * Retains and maintain object'SubjectsListRepository state between configuration changes
  * in Activitys and Fragments.
  *
  * Created by @Sermilion on 7/011/16. <br>
@@ -80,7 +80,7 @@ public class StateMaintainer {
 
     /**
      * Insert the object to be preserved.
-     * @param key   object'SubjectsRepository TAG
+     * @param key   object'SubjectsListRepository TAG
      * @param obj   object to maintain
      */
     public void put(String key, Object obj) {
@@ -98,7 +98,7 @@ public class StateMaintainer {
 
     /**
      * Recovers the object saved
-     * @param key   Object'SubjectsRepository TAG
+     * @param key   Object'SubjectsListRepository TAG
      * @param <T>   Object type
      * @return      Object saved
      */

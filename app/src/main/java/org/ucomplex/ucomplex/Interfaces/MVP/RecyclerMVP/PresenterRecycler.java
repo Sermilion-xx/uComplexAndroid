@@ -20,4 +20,5 @@ public interface PresenterRecycler extends Presenter {
     void bindViewHolder(RecyclerView.ViewHolder holder, int position);
     int getItemViewType(int position);
     int getItemCount();
+    void setItemLayout(int itemLayout);
 }

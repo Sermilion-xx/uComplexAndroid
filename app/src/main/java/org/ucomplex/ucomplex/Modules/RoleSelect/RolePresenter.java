@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP.AbstractPresenter;
+import org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP.AbstractPresenterRecycler;
 import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.ModelRecycler;
 import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.PresenterRecycler;
 import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.ViewToPresenterRecycler;
@@ -36,25 +37,10 @@ import static org.ucomplex.ucomplex.CommonDependencies.HttpFactory.encodeLoginDa
  * ---------------------------------------------------
  */
 
-public class RolePresenter extends AbstractPresenter implements PresenterRecycler {
+public class RolePresenter extends AbstractPresenterRecycler implements PresenterRecycler {
 
     public RolePresenter() {
 
-    }
-
-    @Override
-    public RoleViewHolder createViewHolder(ViewGroup parent, int viewType) {
-        RoleViewHolder viewHolder;
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View viewTaskRow = inflater.inflate(R.layout.list_item_role, parent, false);
-        Random random = new Random();
-        int rand = random.nextInt(5);
-        StateListDrawable states = new StateListDrawable();
-        states.addState(new int[]{android.R.attr.state_pressed, android.R.attr.state_focused}, createBitmapDrawbale(rand));
-        states.addState(new int[]{android.R.attr.state_pressed, -android.R.attr.state_focused}, createBitmapDrawbale(rand + 1));
-        viewTaskRow.setBackground(states);
-        viewHolder = new RoleViewHolder(viewTaskRow, getActivityContext());
-        return viewHolder;
     }
 
     private BitmapDrawable createBitmapDrawbale(int position) {
@@ -94,30 +80,5 @@ public class RolePresenter extends AbstractPresenter implements PresenterRecycle
                 getActivityContext().startActivity(intent);
             }
         });
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        return 0;
-    }
-
-    @Override
-    public int getItemCount() {
-        return ((ModelRecycler)mModel).getItemCount();
-    }
-
-    private Toast makeToast(String msg) {
-        return Toast.makeText(getView().getAppContext(), msg, Toast.LENGTH_SHORT);
-    }
-
-    @Override
-    public void dataLoaded(boolean loaded, int...startEndOldEnd) {
-        getView().hideProgress();
-        int start = startEndOldEnd[0];
-        int end = startEndOldEnd[1];
-        if (loaded)
-            ((ViewToPresenterRecycler) getView()).notifyItemRangeInserted(start, end);
-        else
-            getView().showToast(makeToast(getActivityContext().getString(R.string.error_loading_data)));
     }
 }

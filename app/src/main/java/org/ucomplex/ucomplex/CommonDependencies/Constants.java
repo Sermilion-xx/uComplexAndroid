@@ -17,8 +17,8 @@ public class Constants {
     private static final String EXTRA_PREFIX = "org.ucomplex.ucomplex.";
     public static final String EXTRA_KEY_USER = EXTRA_PREFIX+"user";
     public static final String EXTRA_KEY_USER_TYPE = EXTRA_PREFIX+"userType";
-    public static final String EVENTS_REFRESH_BROADCAST = EXTRA_PREFIX+"EVENTS_REFRESH";
-    public static final String EVENTS_LOAD_MORE_BROADCAST = EXTRA_PREFIX+"EVENTS_LOAD_MORE";
+    public static final String EVENTS_REFRESH_BROADCAST = EXTRA_PREFIX+"org.ucomplex.ucomplex.EVENTS_REFRESH";
+    public static final String EVENTS_LOAD_MORE_BROADCAST = EXTRA_PREFIX+"org.ucomplex.ucomplex.EVENTS_LOAD_MORE";
     public static final String UCOMPLEX_PROFILE = "ucomplex_profile";
     public static final String IMAGE_FORMAT_JPG = ".jpg";
 
@@ -26,6 +26,11 @@ public class Constants {
     public static final int REQUEST_EVENTS = 1;
     public static final int REQUEST_MORE_EVENTS = 2;
     public static final int REQUEST_LOAD_ROLES = 3;
+    public static final int REQUEST_GET_SUBJECTS = 4;
+    public static final int REQUEST_GET_SUBJECT = 5;
+
+    public static final int TYPE_STUDENT = 4;
+
 
     public static final int[] colorsUserSelect = new int[]{
             R.drawable.select_account_1,
@@ -37,4 +42,5 @@ public class Constants {
 
     public static final String STRING_EMPTY = "";
     public static final String IMAGE_FORMAT = ".jpg";
+
 }

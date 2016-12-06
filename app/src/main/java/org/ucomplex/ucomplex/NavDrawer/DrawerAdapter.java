@@ -2,6 +2,7 @@ package org.ucomplex.ucomplex.NavDrawer;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,7 +11,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.ImageRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
+import org.ucomplex.ucomplex.Modules.Events.EventsActivity;
 import org.ucomplex.ucomplex.Modules.Login.LoginActivityView;
+import org.ucomplex.ucomplex.Modules.SubjectsList.SubjectsListActivity;
 import org.ucomplex.ucomplex.R;
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeMedia;
@@ -88,11 +97,20 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
             if(getItemViewType() == 0){
                 mTextView1.setText(row.getTitle1());
                 mTextView2.setText(row.getTitle2());
-                if(row.getProfileBitmap() == null){
+                if(row.getProfileBitmapCode() == null){
                     Drawable textDrawable = FacadeMedia.getTextDrawable(row.getId(), row.getTitle1(), mContext);
-                    row.setProfileBitmap(FacadeMedia.drawableToBitmap(textDrawable));
+                    mProfileImageView.setImageBitmap(FacadeMedia.drawableToBitmap(textDrawable));
+                }else {
+                    String url = HttpFactory.PROFILE_IMAGE_URL + row.getProfileBitmapCode() + Constants.IMAGE_FORMAT_JPG;
+                    RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+                    ImageRequest imageRequest = new ImageRequest(url, new Response.Listener<Bitmap>() {
+                        @Override
+                        public void onResponse(Bitmap response) {
+                            mProfileImageView.setImageBitmap(response);
+                        }
+                    }, 0, 0, null, null);
+                    requestQueue.add(imageRequest);
                 }
-                mProfileImageView.setImageBitmap(row.getProfileBitmap());
             }else{
                 mTextView1.setText(row.getTitle1());
                 mIconImageView.setImageResource(row.getIcon());
@@ -101,12 +119,24 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
 
         @Override
         public void onClick(View view) {
-            if(getAdapterPosition()==getItemCount()-1){
+            int position = getAdapterPosition();
+            if(position==getItemCount()-1){
                 FacadePreferences.clearPref(mContext);
                 mContext.startActivity(new Intent(mContext, LoginActivityView.class));
                 mContext.finish();
-            }else if(getAdapterPosition()==1){
+            }else if(position==0){
+                //TODO: go to profile
+            }else if(position==1){
+                if(!(mContext instanceof EventsActivity)){
+                    mContext.startActivity(new Intent(mContext, EventsActivity.class));
+                }
                 mContext.sendBroadcast(new Intent(Constants.EVENTS_REFRESH_BROADCAST));
+            }else if(position==2){
+                if(!(mContext instanceof SubjectsListActivity)) {
+                    mContext.startActivity(new Intent(mContext, SubjectsListActivity.class));
+                }else {
+                    mContext.onBackPressed();
+                }
             }
         }
 

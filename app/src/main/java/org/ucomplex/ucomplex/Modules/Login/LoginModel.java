@@ -1,16 +1,25 @@
 package org.ucomplex.ucomplex.Modules.Login;
 
 
+import android.graphics.Bitmap;
+import android.net.Uri;
+
 import com.android.volley.AuthFailureError;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.ucomplex.ucomplex.CommonDependencies.FacadeMedia;
+import org.ucomplex.ucomplex.CommonDependencies.FacadePreferences;
+import org.ucomplex.ucomplex.CommonDependencies.UriDeserializer;
+import org.ucomplex.ucomplex.CommonDependencies.UriSerializer;
 import org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP.AbstractModel;
 import org.ucomplex.ucomplex.Model.Users.User;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
-import org.ucomplex.ucomplex.CommonDependencies.FacadeMedia;
-import org.ucomplex.ucomplex.CommonDependencies.FacadePreferences;
 
 /**
  * Model layer on Model View PresenterToViewInterface Pattern
@@ -33,12 +42,6 @@ public class LoginModel extends AbstractModel implements MVP_Login.ModelInterfac
     }
 
     @Override
-    public void setData(Object data) {
-        this.mUser = (UserInterface) data;
-    }
-
-
-    @Override
     public void loadData() {
         //User object with loadData and password
         mRepository.loadData(mUser);
@@ -50,39 +53,24 @@ public class LoginModel extends AbstractModel implements MVP_Login.ModelInterfac
         return null;
     }
 
-    @Override
-    public UserInterface getUser() {
-        return mUser;
-    }
 
     UserInterface loadLoggedUser() {
         return ((LoginRepository) mRepository).loadLoggedUser();
     }
 
     @Override
-    public void onTaskComplete(int requestType, Object... o) {
-        //o[1] - password
-        if(o[0] instanceof AuthFailureError){
-            mOnDataLoadedListener.dataLoaded(false, 0, 0);
-        }else {
-            mUser = unpackUserFromJsonString((String) o[0]);
-            if (mUser != null) {
-                mUser.setPassword((String) o[1]);
-            }
-            mOnDataLoadedListener.dataLoaded(mUser != null, 0, 0);
-        }
-    }
-
-    private UserInterface unpackUserFromJsonString(String jsonData) {
+    public Object getDataFromJson(String jsonString) throws JSONException {
         UserInterface user;
         try {
-            JSONObject jsonObject = new JSONObject(jsonData);
+            JSONObject jsonObject = new JSONObject(jsonString);
             if (jsonObject.getJSONArray(JSON_ROLES_KEY) == null) {
                 return null;
             } else {
-                user = getUserFromJson(jsonData);
+                user = getUserFromJson(jsonString);
                 if (user.getPhoto() == 1) {
-                    user.setBitmapUri(FacadeMedia.createFileForBitmap(user.getCode()));
+                    Uri bitmapUri = FacadeMedia.createFileForBitmap();
+                    String uriString = user.getBitmapUriStringFromUri(bitmapUri);
+                    user.setBitmapUriString(uriString);
                 } else {
                     FacadePreferences.deleteFromPref(((LoginRepository) mRepository).getContext(), FacadePreferences.KEY_PREF_PROFILE_PHOTO);
                 }
@@ -91,6 +79,24 @@ public class LoginModel extends AbstractModel implements MVP_Login.ModelInterfac
         } catch (JSONException | NullPointerException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    @Override
+    public void onTaskComplete(int requestType, Object... o) {
+        //o[1] - password
+        if(o[0] instanceof VolleyError){
+            mOnDataLoadedListener.dataLoaded(false, 0, 0);
+        }else {
+            try {
+                mUser = (UserInterface) getDataFromJson((String) o[0]);
+                if (mUser != null) {
+                    mUser.setPassword((String) o[1]);
+                }
+                mOnDataLoadedListener.dataLoaded(mUser != null, 0, 0);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 

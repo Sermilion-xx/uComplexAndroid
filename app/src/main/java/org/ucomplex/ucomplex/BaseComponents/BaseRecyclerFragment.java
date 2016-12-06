@@ -5,15 +5,20 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
 
+import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
 import org.ucomplex.ucomplex.Interfaces.IFragment;
+import org.ucomplex.ucomplex.R;
 
 /**
  * ---------------------------------------------------
@@ -25,12 +30,20 @@ import org.ucomplex.ucomplex.Interfaces.IFragment;
  * ---------------------------------------------------
  */
 
-public abstract class BaseFragment extends Fragment implements IFragment{
+public class BaseRecyclerFragment extends Fragment implements IFragment{
 
     protected ProgressBar mProgressBar;
     protected BaseActivity mActivity;
     protected BaseListAdapter mListAdapter;
     protected RecyclerView mRecyclerView;
+    protected LinearLayoutManager linearLayoutManager;
+    protected boolean hasDivider;
+
+    public static IFragment getInstance(Object...params) {
+        IFragment fragment =  new BaseRecyclerFragment();
+        fragment.setActivity((BaseActivity) params[0]);
+        return fragment;
+    }
 
     @Override
     public void setActivity(BaseActivity mActivity) {
@@ -42,6 +55,15 @@ public abstract class BaseFragment extends Fragment implements IFragment{
         super.onCreate(savedInstanceState);
         FragmentArgs.inject(this); // read @Arg fields
     }
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_recycler, container, false);
+        mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        mActivity.setupMVP(mActivity, mActivity.getClass(), FacadeCommon.getSharedUserInstance(mActivity));
+        setupRecyclerView(view, R.id.recyclerView);
+        mActivity.setupDrawer();
+        return view;
+    }
 
     public void setupRecyclerView(View view, int layout) {
         mListAdapter = new BaseListAdapter(mActivity.getPresenter());
@@ -51,6 +73,16 @@ public abstract class BaseFragment extends Fragment implements IFragment{
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setAdapter(mListAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        if(hasDivider){
+            DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
+                    linearLayoutManager.getOrientation());
+            mRecyclerView.addItemDecoration(mDividerItemDecoration);
+        }
+    }
+
+    @Override
+    public void addDivider(){
+        hasDivider = true;
     }
 
     public BaseListAdapter getListAdapter() {

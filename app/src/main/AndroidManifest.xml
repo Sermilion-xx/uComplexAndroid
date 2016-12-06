@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-        android:name=".MyApplication"
+        android:name=".BaseComponents.DaggerApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -28,8 +28,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".Modules.RoleSelect.RoleSelectActivity" />
-        <activity android:name=".Modules.Subjects.SubjectsActivity" />
-        <activity android:name=".BaseComponents.BaseRecyclerActivity"></activity>
+        <activity android:name=".Modules.SubjectsList.SubjectsListActivity" />
+        <activity android:name=".BaseComponents.BaseRecyclerActivity" />
+        <activity android:name=".Modules.Subject.SubjectActivity"></activity>
     </application>
 
 </manifest>

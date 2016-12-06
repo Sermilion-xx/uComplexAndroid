@@ -14,7 +14,7 @@ import lombok.Data;
  * ---------------------------------------------------
  */
 @Data
-public class RoleItem implements IRecyclerItem {
+public class RoleItem extends IRecyclerItem {
     private int roleIcon;
     private String roleName;
 

@@ -5,6 +5,7 @@ import android.content.Context;
 import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Model;
 import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Presenter;
 import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.ViewToPresenter;
+import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.ViewToPresenterRecycler;
 import org.ucomplex.ucomplex.Interfaces.OnDataLoadedListener;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
@@ -23,7 +24,7 @@ import java.lang.ref.WeakReference;
 
 public abstract class AbstractPresenter implements Presenter, OnDataLoadedListener {
 
-    protected WeakReference<ViewToPresenter> mView;
+    private WeakReference<ViewToPresenter> mView;
     protected Model mModel;
 
     @Override
@@ -33,6 +34,7 @@ public abstract class AbstractPresenter implements Presenter, OnDataLoadedListen
         else
             throw new NullPointerException("View is unavailable");
     }
+
 
     @Override
     public void setView(ViewToPresenter view) {
@@ -90,4 +92,9 @@ public abstract class AbstractPresenter implements Presenter, OnDataLoadedListen
         }
     }
 
+
+    @Override
+    public void dataLoaded(boolean loaded, int... startEndOldEnd) {
+        getView().hideProgress();
+    }
 }

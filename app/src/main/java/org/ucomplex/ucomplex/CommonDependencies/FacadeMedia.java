@@ -12,6 +12,8 @@ import android.os.Environment;
 import android.util.Log;
 
 import com.amulyakhare.textdrawable.TextDrawable;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.ucomplex.ucomplex.R;
 
@@ -44,7 +46,7 @@ public class FacadeMedia {
                 Log.d("UComplex", "failed to create directory");
             }
         }
-        // Create a media file name
+        // Create a media file courseName
         File mediaFile;
         if (type == MEDIA_TYPE_IMAGE) {
             mediaFile = new File(mediaStorageDir.getPath() + File.separator +
@@ -120,7 +122,8 @@ public class FacadeMedia {
     }
 
     private static int getColor(int index) {
-        int[] hexColors = {R.color.color_uc_placeholder1,
+        int[] hexColors = {
+                R.color.color_uc_placeholder1,
                 R.color.color_uc_placeholder2,
                 R.color.color_uc_placeholder3,
                 R.color.color_uc_placeholder4,
@@ -158,15 +161,12 @@ public class FacadeMedia {
         return bitmap;
     }
 
-    public static Uri createFileForBitmap(String code) {
+    public static Uri createFileForBitmap() {
         File bitmapFile = FacadeMedia.getOutputMediaFile(MEDIA_TYPE_IMAGE, Environment.DIRECTORY_PICTURES, Constants.UCOMPLEX_PROFILE);
         if (bitmapFile != null) {
-            String url = HttpFactory.PROFILE_IMAGE_URL + code + Constants.IMAGE_FORMAT_JPG;
-            HttpFactory.httpGetFile(url, bitmapFile, "");
             return Uri.fromFile(bitmapFile);
         } else {
             throw new NullPointerException("Bitmap file is null");
         }
     }
-
 }

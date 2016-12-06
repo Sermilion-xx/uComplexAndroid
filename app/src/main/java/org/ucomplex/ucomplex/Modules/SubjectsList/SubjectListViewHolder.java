@@ -1,4 +1,4 @@
-package org.ucomplex.ucomplex.Modules.Subjects;
+package org.ucomplex.ucomplex.Modules.SubjectsList;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -15,13 +15,14 @@ import org.ucomplex.ucomplex.R;
  * <a href="http://www.github.com/sermilion>github</a>
  * ---------------------------------------------------
  */
-public class SubjectViewHolder extends RecyclerView.ViewHolder {
+public class SubjectListViewHolder extends RecyclerView.ViewHolder {
 
     TextView mSubjectName;
     TextView mAssessmentType;
 
-    public SubjectViewHolder(View itemView) {
+    public SubjectListViewHolder(View itemView) {
         super(itemView);
         mSubjectName = (TextView) itemView.findViewById(R.id.subject_name);
+        mAssessmentType = (TextView) itemView.findViewById(R.id.subject_assessment_type);
     }
 }

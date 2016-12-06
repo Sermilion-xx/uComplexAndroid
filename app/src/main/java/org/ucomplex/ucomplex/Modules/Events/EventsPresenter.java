@@ -9,12 +9,13 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 
-import org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP.AbstractPresenter;
-import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.ViewToPresenterRecycler;
-import org.ucomplex.ucomplex.R;
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeMedia;
 import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
+import org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP.AbstractPresenterRecycler;
+import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.ModelRecycler;
+import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.ViewToPresenterRecycler;
+import org.ucomplex.ucomplex.R;
 
 /**
  * ---------------------------------------------------
@@ -26,7 +27,7 @@ import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
  * ---------------------------------------------------
  */
 
-public class EventsPresenter extends AbstractPresenter implements MVP_Events.PresenterInterface {
+public class EventsPresenter extends AbstractPresenterRecycler implements MVP_Events.PresenterInterface {
 
     private boolean hasMoreEvents = true;
     private static final int TYPE_COMMON = 0;
@@ -39,9 +40,12 @@ public class EventsPresenter extends AbstractPresenter implements MVP_Events.Pre
     @Override
     public EventViewHolder createViewHolder(ViewGroup parent, int viewType) {
         EventViewHolder viewHolder;
-        int layout = viewType == 0 ? R.layout.list_item_event : R.layout.list_item_event_footer;
+        itemLayout = isAvailableListViewItem();
+        if(itemLayout!=R.layout.list_item_no_content && itemLayout!=R.layout.list_item_no_internet) {
+            itemLayout = viewType == 0 ? R.layout.list_item_event : R.layout.list_item_event_footer;
+        }
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View viewTaskRow = inflater.inflate(layout, parent, false);
+        View viewTaskRow = inflater.inflate(itemLayout, parent, false);
         viewHolder = new EventViewHolder(viewTaskRow);
         return viewHolder;
     }
@@ -50,7 +54,7 @@ public class EventsPresenter extends AbstractPresenter implements MVP_Events.Pre
     public void bindViewHolder(final RecyclerView.ViewHolder aHolder, int position) {
         EventViewHolder holder = (EventViewHolder) aHolder;
         if (position != getItemCount() - 1) {
-            final EventItem event = ((EventsModel) mModel).getItem(position);
+            final EventItem event = (EventItem) ((ModelRecycler) mModel).getItem(position);
             String personName = event.getParams().getName();
             if (personName == null || personName.equals(Constants.STRING_EMPTY)) {
                 event.getParams().setName(getActivityContext().getResources().getString(R.string.ucomplex));
@@ -79,12 +83,13 @@ public class EventsPresenter extends AbstractPresenter implements MVP_Events.Pre
 //            });
         } else {
             if (hasMoreEvents) {
-                holder.loadMoreEventsButton.setOnClickListener(new View.OnClickListener() {
-                                                                   @Override
-                                                                   public void onClick(View view) {
-                                                                       getActivityContext().sendBroadcast(new Intent(Constants.EVENTS_LOAD_MORE_BROADCAST));
-                                                                   }
-                                                               }
+                holder.loadMoreEventsButton.setOnClickListener(
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                getActivityContext().sendBroadcast(new Intent(Constants.EVENTS_LOAD_MORE_BROADCAST));
+                            }
+                        }
                 );
             } else {
                 holder.loadMoreEventsButton.setVisibility(View.GONE);
@@ -108,16 +113,16 @@ public class EventsPresenter extends AbstractPresenter implements MVP_Events.Pre
     }
 
     @Override
-    public int getItemCount() {
-        return ((EventsModel) mModel).getItemCount();
-    }
-
-    @Override
     public void dataLoaded(boolean loaded, int... startEndOldEnd) {
         getView().hideProgress();
+        if(startEndOldEnd.length==0){
+            startEndOldEnd[0]=0;
+            startEndOldEnd[1]=0;
+            startEndOldEnd[2]=0;
+        }
         int start = startEndOldEnd[0];
         int end = startEndOldEnd[1];
-        int oldEnd = startEndOldEnd.length==3?startEndOldEnd[2]:-1;
+        int oldEnd = startEndOldEnd.length == 3 ? startEndOldEnd[2] : -1;
         if (loaded) {
             if (start == 0) {
                 if (oldEnd != -1) {

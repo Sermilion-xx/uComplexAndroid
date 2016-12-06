@@ -1,10 +1,14 @@
 package org.ucomplex.ucomplex.Modules.Events;
 
 
+import com.android.volley.VolleyError;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.ucomplex.ucomplex.Interfaces.IRecyclerItem;
 import org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP.AbstractModel;
+import org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP.AbstractModelRecycler;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
@@ -23,13 +27,13 @@ import java.util.ArrayList;
  * <a href="http://www.github.com/sermilion>github</a>
  * ---------------------------------------------------
  */
-public class EventsModel extends AbstractModel implements MVP_Events.ModelInterface {
+public class EventsModel extends AbstractModelRecycler implements MVP_Events.ModelInterface {
 
     private static final String KEY_JSON_EVENTS = "events";
     private static final String EVENT_PARAMS = "params";
     private static final String EVENT_TIME = "time";
     private static final String EVENT_ID = "id";
-    private static final String EVENT_NAME = "name";
+    private static final String EVENT_NAME = "courseName";
     private static final String EVENT_PHOTO = "photo";
     private static final String EVENT_GCOURSE = "gcourse";
     private static final String EVENT_COURSE_NAME = "courseName";
@@ -46,7 +50,7 @@ public class EventsModel extends AbstractModel implements MVP_Events.ModelInterf
     private static final String EVENT_SEMESTER = "semester";
     private static final String EVENT_YEAR = "year";
 
-    private ArrayList<EventItem> mEventItems;
+
 
     public EventsModel() {
     }
@@ -55,28 +59,9 @@ public class EventsModel extends AbstractModel implements MVP_Events.ModelInterf
     @SuppressWarnings("unchecked")
     public void setData(Object data) {
         if (data instanceof ArrayList)
-            this.mEventItems = (ArrayList<EventItem>) data;
+            this.mRecyclerItems = (ArrayList<IRecyclerItem>) data;
         else
             this.mUser = (UserInterface) data;
-    }
-
-    @Override
-    public UserInterface getUser() {
-        return this.mUser;
-    }
-
-    @Override
-    public void onDestroy(boolean isChangingConfiguration) {
-        super.onDestroy(isChangingConfiguration);
-        if (!isChangingConfiguration) {
-            mEventItems = null;
-        }
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public void loadData() {
-        mRepository.loadData();
     }
 
     @Override
@@ -85,49 +70,40 @@ public class EventsModel extends AbstractModel implements MVP_Events.ModelInterf
     }
 
     @Override
-    public EventItem getItem(int position) {
-        return mEventItems.get(position);
-    }
-
-    @Override
-    public int getItemCount() {
-        if (mEventItems != null)
-            return mEventItems.size();
-        return 0;
-    }
-
-    @Override
     public void onTaskComplete(int requestType, Object... o) {
         try {
-            String result = (String) o[0];
-            ArrayList<EventItem> newItems = getEventsDataFromJson(result);
-            int start;
-            int end;
-            int oldEnd = -1;
-            if (requestType == Constants.REQUEST_MORE_EVENTS) {
-                start = mEventItems.size();
-                mEventItems.addAll(newItems);
-                end = mEventItems.size();
-            } else {
-                start = 0;
-                if(mEventItems==null){
-                    oldEnd = newItems.size();
-                }else {
-                    oldEnd = mEventItems.size() + newItems.size();
-                }
-                mEventItems = newItems;
-                end = newItems.size();
+            if(!(o[0] instanceof VolleyError)) {
+                String result = (String) o[0];
+                ArrayList<IRecyclerItem> newItems = getDataFromJson(result);
+                if (requestType == Constants.REQUEST_MORE_EVENTS) {
+                    start = mRecyclerItems.size();
+                    mRecyclerItems.addAll(newItems);
+                    end = mRecyclerItems.size();
+                } else {
+                    start = 0;
+                    if (mRecyclerItems == null) {
+                        oldEnd = newItems.size();
+                    } else {
+                        oldEnd = mRecyclerItems.size() + newItems.size();
+                    }
+                    mRecyclerItems = newItems;
+                    end = newItems.size();
 
+                }
+                mOnDataLoadedListener.dataLoaded(result != null, start, end, oldEnd);
+            }else {
+                mOnDataLoadedListener.dataLoaded(false);
             }
-            mOnDataLoadedListener.dataLoaded(result != null, start, end, oldEnd);
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    private ArrayList<EventItem> getEventsDataFromJson(String eventsJsonStr)
+
+    @Override
+    public ArrayList<IRecyclerItem> getDataFromJson(String eventsJsonStr)
             throws JSONException {
-        ArrayList<EventItem> displayEventsArray = new ArrayList<>();
+        ArrayList<IRecyclerItem> displayEventsArray = new ArrayList<>();
         JSONObject eventJson = new JSONObject(eventsJsonStr);
         JSONArray eventsArray = eventJson.getJSONArray(KEY_JSON_EVENTS);
 

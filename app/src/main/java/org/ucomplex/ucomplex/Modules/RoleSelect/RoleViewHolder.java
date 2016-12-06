@@ -19,19 +19,15 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * ---------------------------------------------------
  */
 
-class RoleViewHolder extends RecyclerView.ViewHolder {
+public class RoleViewHolder extends RecyclerView.ViewHolder {
 
     TextView        roleName;
     CircleImageView roleIcon;
-    private View    mView;
-    private Context mContext;
 
 
-    RoleViewHolder(View view, Context context){
+    public RoleViewHolder(View view){
         super(view);
         setupViews(view);
-        this.mContext = context;
-        mView = view;
     }
 
     private void setupViews(View view) {

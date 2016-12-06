@@ -1,14 +1,21 @@
 package org.ucomplex.ucomplex.CommonDependencies;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.R;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * ---------------------------------------------------
@@ -29,6 +36,12 @@ public class FacadeCommon {
             sharedUser = FacadePreferences.getUserDataFromPref(context);
         }
         return sharedUser;
+    }
+
+    public static boolean isNetworkConnected(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        return cm.getActiveNetworkInfo() != null;
     }
 
 
@@ -155,6 +168,27 @@ public class FacadeCommon {
             r = yyyyMMdd;
         }
         return r;
+    }
+
+    public static Map<String, String> parseJsonKV(JSONObject jObject) throws JSONException {
+        Map<String, String> map = new HashMap<>();
+        Iterator iter = jObject.keys();
+        while (iter.hasNext()) {
+            String key = (String) iter.next();
+            String value = jObject.getString(key);
+            map.put(key, value);
+        }
+        return map;
+    }
+
+    public static ArrayList<String> getKeys(JSONObject object) throws JSONException {
+        ArrayList<String> keys = new ArrayList<>();
+        Iterator iter = object.keys();
+        while (iter.hasNext()) {
+            String key = (String) iter.next();
+            keys.add(key);
+        }
+        return keys;
     }
 
 

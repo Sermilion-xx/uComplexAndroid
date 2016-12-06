@@ -1,6 +1,6 @@
-package org.ucomplex.ucomplex.Modules.Subjects.SubjectsDagger;
+package org.ucomplex.ucomplex.Modules.SubjectsList.SubjectsListDagger;
 
-import org.ucomplex.ucomplex.Modules.Subjects.SubjectsActivity;
+import org.ucomplex.ucomplex.Modules.SubjectsList.SubjectsListActivity;
 
 import javax.inject.Singleton;
 
@@ -16,7 +16,7 @@ import dagger.Component;
  * ---------------------------------------------------
  */
 @Singleton
-@Component(modules = {SubjectsModule.class})
-public interface SubjectsDiComponent {
-    void inject(SubjectsActivity activity);
+@Component(modules = {SubjectsListModule.class})
+public interface SubjectsListDiComponent {
+    void inject(SubjectsListActivity activity);
 }

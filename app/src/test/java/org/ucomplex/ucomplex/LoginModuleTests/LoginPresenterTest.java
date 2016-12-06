@@ -41,7 +41,7 @@ public class LoginPresenterTest {
 //        //following prints "null" because get(999) was not stubbed
 //        System.out.println(mockedList.get(999));
 
-        //Although it is possible to verify a stubbed invocation, usually it'SubjectsRepository just redundant
+        //Although it is possible to verify a stubbed invocation, usually it'SubjectsListRepository just redundant
         //If your code cares what get(0) returns, then something else breaks (often even before verify() gets executed).
         //If your code doesn't care what get(0) returns, then it should not be stubbed. Not convinced? See here.
 //        verify(mockedList).get(0);

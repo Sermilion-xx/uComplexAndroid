@@ -61,36 +61,12 @@ public class HttpFactory {
     public static final String AUTHENTICATIO_URL = BASE_URL + "auth?mobile=1";
     public static final String RESTORE_PASSWORD_URL = BASE_URL + "public/password?mobile=1";
     public static final String LOAD_PROFILE_URL = BASE_URL + "files/photos/";
+    public static final String USER_SUBJECTS_USER_URL = BASE_URL +"student/subjects_list?json";
+    public static final String USER_SUBJECTS_TEACHER_URL = BASE_URL +"teacher/subjects_list?json";
+    public static final String USER_SUBJECT_URL = BASE_URL +"student/ajax/my_subjects?json";
 
-    public static void httpGetFile(@NonNull String url, @NonNull File destFile, String encodedAuth) {
-        try {
-            val okHttpClient = new OkHttpClient();
-            val request = new Request.Builder()
-                    .url(url)
-                    .addHeader("Authorization", "Basic " + encodedAuth)
-                    .build();
-            val response = okHttpClient.newCall(request).execute();
-            val body = response.body();
-//        val contentLength = body.contentLength()
-            @Cleanup val source = body.source();
-            @Cleanup val sink = Okio.buffer(Okio.sink(destFile));
-            val sinkBuffer = sink.buffer();
-            long totalBytesRead = 0;
-            val bufferSize = 8 * 1024L;
-            long bytesRead;
-            while (source.read(sinkBuffer, bufferSize) != -1L) {
-                bytesRead = source.read(sinkBuffer, bufferSize);
-                sink.emit();
-                totalBytesRead += bytesRead;
-//            val progress = (totalBytesRead * 100 / contentLength) as Int
-//            publishProgress(progress)
-            }
-            sink.flush();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
+    String urlStudentString = "https://ucomplex.org/student/subjects_list?json";
+    String urlTeacherString = "https://ucomplex.org/teacher/subjects_list?json";
 
     public static String encodeLoginData(String loginData) {
         byte[] authBytes;
@@ -102,31 +78,6 @@ public class HttpFactory {
             e.printStackTrace();
         }
         return null;
-    }
-
-    public static boolean httpPostFile(String url, String encodedAuth, File file, String fileName) {
-        val MEDIA_TYPE = MediaType.parse("image/*");
-        val client = new OkHttpClient();
-        val builder = new MultipartBody.Builder();
-
-        builder.setType(MultipartBody.FORM);
-        builder.addFormDataPart("file", "fileName", RequestBody.create(MEDIA_TYPE, file));
-        builder.setType(MediaType.parse("multipart/form-data"));
-        val requestBody = builder.build();
-        val request = new Request.Builder()
-                .url(url)
-                .post(requestBody).addHeader("Authorization", "Basic " + encodedAuth)
-                .build();
-        Response response;
-        try {
-            response = client.newCall(request).execute();
-            if (response.isSuccessful()) {
-                return true;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return false;
     }
 
     public static boolean isNetworkConnected(Context context) {
@@ -184,5 +135,4 @@ public class HttpFactory {
         };
         queue.add(stringRequest);
     }
-
 }

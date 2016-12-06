@@ -11,7 +11,7 @@ import lombok.Data;
 @Data
 public class DrawerListItem {
     private int id;
-    private Bitmap profileBitmap;
+    private String profileBitmapCode;
     private String title1;
     private String title2;
     private int icon;
@@ -21,8 +21,8 @@ public class DrawerListItem {
         this.title1 = title;
     }
 
-    public DrawerListItem(Bitmap bitmap, String name, String type, int id){
-        this.profileBitmap = bitmap;
+    public DrawerListItem(String code, String name, String type, int id){
+        this.profileBitmapCode = code;
         this.title1 = name;
         this.title2 = type;
         this.id = id;

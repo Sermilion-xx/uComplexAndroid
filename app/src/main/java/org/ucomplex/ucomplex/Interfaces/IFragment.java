@@ -1,5 +1,7 @@
 package org.ucomplex.ucomplex.Interfaces;
 
+import android.support.v7.widget.RecyclerView;
+
 import org.ucomplex.ucomplex.BaseComponents.BaseActivity;
 import org.ucomplex.ucomplex.BaseComponents.BaseListAdapter;
 
@@ -21,4 +23,5 @@ public interface IFragment {
     void showProgress();
     void hideProgress();
     void setParams(Object ... params);
+    void addDivider();
 }

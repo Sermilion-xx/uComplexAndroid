@@ -64,4 +64,15 @@
     <string name="error_loadig_data">Ошибка при загрузке данных</string>
     <string name="subjects">Дисциплины</string>
 
+    <string name="zachet">Зачет</string>
+    <string name="exam">Экзамен</string>
+    <string name="samostoyatelnaya">Самостоятельная работа</string>
+
+    <string name="no_internet_str">Пожалуйста, проверьте ваше интернет соединение</string>
+    <string name="no_content_str">Нет контента для отображения</string>
+    <string name="no_dilogs_str">Нет диалогов</string>
+    <string name="empty" />
+    <string name="profile_picture">Аватарка</string>
+    <string name="subject">Дисциплина</string>
+
 </resources>

@@ -19,7 +19,7 @@ import lombok.Data;
  * Created by Sermilion on 01/11/2016.
  */
 @Data
-class EventItem implements Parcelable, IRecyclerItem {
+class EventItem extends IRecyclerItem implements Parcelable {
     private int id;
     private EventParams params;
     private int type;
@@ -68,6 +68,7 @@ class EventItem implements Parcelable, IRecyclerItem {
         parcel.writeParcelable(eventImageBitmap, i);
         parcel.writeString(eventText);
     }
+
 
     private class BitmapDataObject implements Serializable {
         private static final long serialVersionUID = 111696345129311948L;

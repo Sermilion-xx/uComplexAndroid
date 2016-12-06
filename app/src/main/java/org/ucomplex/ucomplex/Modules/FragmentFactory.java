@@ -1,8 +1,7 @@
 package org.ucomplex.ucomplex.Modules;
 
+import org.ucomplex.ucomplex.BaseComponents.BaseRecyclerFragment;
 import org.ucomplex.ucomplex.Interfaces.IFragment;
-import org.ucomplex.ucomplex.Modules.Events.FragmentEvents;
-import org.ucomplex.ucomplex.Modules.RoleSelect.FragmentRoles;
 
 /**
  * ---------------------------------------------------
@@ -18,11 +17,8 @@ public class FragmentFactory {
 
     public static IFragment getFragmentWithName(String name, Object... params) {
 
-        if (name.equals(FragmentEvents.class.getName())) {
-            return FragmentEvents.getInstance(params);
-
-        } else if (name.equals(FragmentRoles.class.getName())) {
-            return FragmentRoles.getInstance(params);
+        if (name.equals(BaseRecyclerFragment.class.getName())) {
+            return BaseRecyclerFragment.getInstance(params);
         }
         return null;
     }

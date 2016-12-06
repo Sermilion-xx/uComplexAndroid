@@ -16,4 +16,5 @@ import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Model;
 public interface ModelRecycler extends Model {
     IRecyclerItem getItem(int position);
     int getItemCount();
+    void addItem(IRecyclerItem iRecyclerItem);
 }

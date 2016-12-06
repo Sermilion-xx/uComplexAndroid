@@ -1,9 +1,9 @@
 package org.ucomplex.ucomplex.Modules.RoleSelect;
 
-import org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP.AbstractModel;
+import org.json.JSONException;
 import org.ucomplex.ucomplex.Interfaces.IRecyclerItem;
+import org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP.AbstractModelRecycler;
 import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.ModelRecycler;
-import org.ucomplex.ucomplex.Model.Users.UserInterface;
 
 import java.util.ArrayList;
 
@@ -17,29 +17,9 @@ import java.util.ArrayList;
  * ---------------------------------------------------
  */
 
-public class RoleModel extends AbstractModel implements ModelRecycler {
-
-    private ArrayList<RoleItem> mRoles;
+public class RoleModel extends AbstractModelRecycler implements ModelRecycler {
 
     public RoleModel() {
-    }
-
-    @Override
-    public void setData(Object data) {
-        mUser = (UserInterface) data;
-    }
-
-    @Override
-    public UserInterface getUser() {
-        return mUser;
-    }
-
-    @Override
-    public void onDestroy(boolean isChangingConfiguration) {
-        super.onDestroy(isChangingConfiguration);
-        if (!isChangingConfiguration) {
-            mRoles = null;
-        }
     }
 
     @Override @SuppressWarnings("unchecked")
@@ -47,24 +27,19 @@ public class RoleModel extends AbstractModel implements ModelRecycler {
        mRepository.loadData(mUser);
     }
 
+    @Override
+    public ArrayList<IRecyclerItem> getDataFromJson(String result) throws JSONException {
+        throw new UnsupportedOperationException("RoleModel does not need to process json. Do not call this method.");
+    }
+
     @Override @SuppressWarnings("unchecked")
     public void onTaskComplete(int requestType, Object... o) {
-        int start = 0;
-        int end = 0;
         if(o.length>0){
-            mRoles = (ArrayList<RoleItem>) o[0];
-            end = mRoles.size();
+            mRecyclerItems = (ArrayList<IRecyclerItem>) o[0];
+            end = mRecyclerItems.size();
         }
-        mOnDataLoadedListener.dataLoaded(o.length>0, start, end);
+        mOnDataLoadedListener.dataLoaded(o.length>0, start, end, oldEnd);
     }
 
-    @Override
-    public IRecyclerItem getItem(int position) {
-        return mRoles.get(position);
-    }
 
-    @Override
-    public int getItemCount() {
-        return mRoles.size();
-    }
 }
