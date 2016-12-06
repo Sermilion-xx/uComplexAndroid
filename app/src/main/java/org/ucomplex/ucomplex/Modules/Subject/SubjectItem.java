@@ -28,8 +28,8 @@ public class SubjectItem extends IRecyclerItem {
     private int                      table;
     private int                      client;
     private int                      course_id;
-    private ArrayList<UserInterface> teachers;
-    private ArrayList<MaterialItem>  files;
+    private ArrayList<UserInterface> teachers = new ArrayList<>();
+    private ArrayList<MaterialItem>  files = new ArrayList<>();
     private DepartmentItem           department;
     private ProgressItem             progress;
     private String                   name;

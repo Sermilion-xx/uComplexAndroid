@@ -12,14 +12,15 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
 import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
+import org.ucomplex.ucomplex.Interfaces.IRecyclerItem;
 import org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP.AbstractPresenterRecycler;
 import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.ModelRecycler;
 import org.ucomplex.ucomplex.Modules.Materials.ProgressItem;
 import org.ucomplex.ucomplex.R;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 /**
@@ -35,22 +36,45 @@ import java.util.Locale;
 public class SubjectPresenter extends AbstractPresenterRecycler {
 
     private SubjectItem subjectItem;
+    private static final int TYPE_0 = 0;
+    private static final int TYPE_1 = 1;
+    private static final int TYPE_2 = 2;
+
+    public SubjectPresenter() {
+
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if(position == 0){
+            return TYPE_0;
+        }else if(position == getItemCount()-1){
+            return TYPE_2;
+        }else{
+            return TYPE_1;
+        }
+    }
 
     @Override
     public SubjectViewHolder createViewHolder(ViewGroup parent, int viewType) {
         SubjectViewHolder viewHolder;
-        subjectItem = (SubjectItem) ((ModelRecycler) mModel).getItem(0);
+        ArrayList<IRecyclerItem> items = ((ModelRecycler) mModel).getRecyclerItems();
+        if (items != null) {
+            if (subjectItem == null && items.size()>0) {
+                subjectItem = (SubjectItem) ((ModelRecycler) mModel).getItem(0);
+            }
+        }
         itemLayout = isAvailableListViewItem();
         if (itemLayout != R.layout.list_item_no_content && itemLayout != R.layout.list_item_no_internet) {
             itemLayout = viewType == 0 ? R.layout.list_item_event : R.layout.list_item_event_footer;
             switch (viewType) {
-                case 0:
+                case TYPE_0:
                     itemLayout = R.layout.list_item_subject_header;
                     break;
-                case 1:
+                case TYPE_1:
                     itemLayout = R.layout.list_item_subject_teacher;
                     break;
-                case 2:
+                case TYPE_2:
                     itemLayout = R.layout.list_item_subject_info;
                     break;
             }
@@ -64,34 +88,36 @@ public class SubjectPresenter extends AbstractPresenterRecycler {
     @Override
     public void bindViewHolder(RecyclerView.ViewHolder holder, int position) {
         final SubjectViewHolder aHolder = (SubjectViewHolder) holder;
-        switch (position) {
-            case 0:
-                aHolder.mTitle.setText(getActivityContext().getString(R.string.lecturers));
-                break;
-            case 1:
-                String url = HttpFactory.GET_PHOTO_URL + subjectItem.getTeachers().get(position-1).getCode();
-                RequestQueue requestQueue = Volley.newRequestQueue(getActivityContext());
-                ImageRequest imageRequest = new ImageRequest(url, new Response.Listener<Bitmap>() {
-                    @Override
-                    public void onResponse(Bitmap response) {
-                        aHolder.mIcon.setImageBitmap(response);
-                    }
-                }, 0, 0, null, null);
-                requestQueue.add(imageRequest);
+        if(subjectItem!=null) {
+            switch (getItemViewType(position)) {
+                case TYPE_0:
+                    aHolder.mTitle.setText(getActivityContext().getString(R.string.lecturers));
+                    break;
+                case TYPE_1:
+                    String url = HttpFactory.GET_PHOTO_URL + subjectItem.getTeachers().get(position - 1).getCode();
+                    RequestQueue requestQueue = Volley.newRequestQueue(getActivityContext());
+                    ImageRequest imageRequest = new ImageRequest(url, new Response.Listener<Bitmap>() {
+                        @Override
+                        public void onResponse(Bitmap response) {
+                            aHolder.mIcon.setImageBitmap(response);
+                        }
+                    }, 0, 0, null, null);
+                    requestQueue.add(imageRequest);
 
-                aHolder.mTeachersName.setText(subjectItem.getName());
-                break;
-            case 2:
-                ProgressItem progress = subjectItem.getProgress();
-                double absence = getAbsence(progress);
-                absence = FacadeCommon.round(absence, 2);
-                double mark = getMark(progress);
-                mark = FacadeCommon.round(mark, 2);
-                String text = getActivityContext().getString(R.string.absence, absence);
-                aHolder.mAttendance.setText(Html.fromHtml(text));
-                Locale current = getActivityContext().getResources().getConfiguration().locale;
-                aHolder.mAverageGrade.setText(String.format(current,"%f", mark));
-                break;
+                    aHolder.mTeachersName.setText(subjectItem.getName());
+                    break;
+                case TYPE_2:
+                    ProgressItem progress = subjectItem.getProgress();
+                    double absence = getAbsence(progress);
+                    absence = FacadeCommon.round(absence, 2);
+                    double mark = getMark(progress);
+                    mark = FacadeCommon.round(mark, 2);
+                    String text = getActivityContext().getString(R.string.absence, absence);
+                    aHolder.mAttendance.setText(Html.fromHtml(text));
+                    Locale current = getActivityContext().getResources().getConfiguration().locale;
+                    aHolder.mAverageGrade.setText(String.format(current, "%f", mark));
+                    break;
+            }
         }
     }
 
@@ -114,5 +140,10 @@ public class SubjectPresenter extends AbstractPresenterRecycler {
             }
         }
         return absence;
+    }
+
+    @Override
+    public int getItemCount() {
+        return 3;
     }
 }

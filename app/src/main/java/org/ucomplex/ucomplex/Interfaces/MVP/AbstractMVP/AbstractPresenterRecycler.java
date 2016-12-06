@@ -49,11 +49,12 @@ public abstract class AbstractPresenterRecycler extends AbstractPresenter implem
     }
 
     protected int isAvailableListViewItem(){
+
         if(!FacadeCommon.isNetworkConnected(getActivityContext())){
             return R.layout.list_item_no_internet;
-        }else  if (((ModelRecycler) mModel).getItem(0).isEmpty()) {
+        } else if (((ModelRecycler) mModel).getRecyclerItems()==null) {
             return R.layout.list_item_no_content;
-        }else {
+        } else {
             return itemLayout;
         }
     }

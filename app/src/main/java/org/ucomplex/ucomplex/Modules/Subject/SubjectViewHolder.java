@@ -37,7 +37,7 @@ class SubjectViewHolder extends RecyclerView.ViewHolder {
                 mIcon = (CircleImageView) itemView.findViewById(R.id.subjects_subject_teacher);
                 mTeachersName = (TextView) itemView.findViewById(R.id.subjects_subject_teacher_name);
                 break;
-            case 3:
+            case 2:
                 mAttendance = (TextView) itemView.findViewById(R.id.subjects_subject_attendance);
                 mAverageGrade = (TextView) itemView.findViewById(R.id.subjects_subject_mark);
                 break;

@@ -5,6 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import org.ucomplex.ucomplex.Interfaces.IRecyclerItem;
 import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Model;
 
+import java.util.ArrayList;
+
 /**
  * ---------------------------------------------------
  * Created by Sermilion on 01/12/2016.
@@ -17,6 +19,7 @@ import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Model;
 
 public interface ModelRecycler extends Model {
     IRecyclerItem getItem(int position);
+    ArrayList<IRecyclerItem> getRecyclerItems();
     int getItemCount();
     void addItem(IRecyclerItem iRecyclerItem);
 }

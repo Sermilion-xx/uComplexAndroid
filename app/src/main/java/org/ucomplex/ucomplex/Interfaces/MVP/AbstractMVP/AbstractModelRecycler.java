@@ -1,5 +1,7 @@
 package org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP;
 
+import com.android.volley.VolleyError;
+
 import org.json.JSONException;
 import org.ucomplex.ucomplex.Interfaces.IRecyclerItem;
 import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.ModelRecycler;
@@ -22,7 +24,7 @@ public abstract class AbstractModelRecycler extends AbstractModel implements Mod
     protected int end = 0;
     protected int oldEnd = -1;
 
-    public abstract ArrayList<IRecyclerItem> getDataFromJson(String jsonString)  throws JSONException;
+    public abstract ArrayList<IRecyclerItem> getDataFromJson(String jsonString) throws JSONException;
 
     @Override
     public IRecyclerItem getItem(int position) {
@@ -36,15 +38,19 @@ public abstract class AbstractModelRecycler extends AbstractModel implements Mod
         return 0;
     }
 
+
     @Override
     public void onTaskComplete(int requestType, Object... o) {
-        String result = (String) o[0];
-        try {
-            mRecyclerItems = getDataFromJson(result);
-            end = mRecyclerItems.size();
+        String result = null;
+        if (!(o[0] instanceof VolleyError)) {
+            try {
+                result = (String) o[0];
+                mRecyclerItems = getDataFromJson(result);
+                end = mRecyclerItems.size();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             mOnDataLoadedListener.dataLoaded(result != null, start, end, oldEnd);
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
     }
 

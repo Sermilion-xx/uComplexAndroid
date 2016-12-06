@@ -28,7 +28,7 @@ import java.util.HashMap;
 
 public class SubjectsListModel extends AbstractModelRecycler implements ModelRecycler {
 
-    private final int[] assessmentType = {R.string.zachet, R.string.exam, R.string.samostoyatelnaya,R.string.empty};
+    private final int[] assessmentType = {R.string.zachet, R.string.exam, R.string.samostoyatelnaya, R.string.empty};
 
     @Override
     public ArrayList<IRecyclerItem> getDataFromJson(String jsonData) {
@@ -53,7 +53,7 @@ public class SubjectsListModel extends AbstractModelRecycler implements ModelRec
                     String _courseNameId = studentSubjectsListHashMap.get(i).get("course");
                     String courseName = hashCourses.get(_courseNameId);
                     int courseFrom = 3;
-                    if(hashCoursesForms.get(_courseNameId)!=null){
+                    if (hashCoursesForms.get(_courseNameId) != null) {
                         courseFrom = Integer.parseInt(hashCoursesForms.get(_courseNameId));
                     }
                     SubjectListItem subjectListItem = new SubjectListItem(gcourse, courseName, assessmentType[courseFrom]);
@@ -88,15 +88,4 @@ public class SubjectsListModel extends AbstractModelRecycler implements ModelRec
         return subjectsListArray;
     }
 
-    @Override
-    public void onTaskComplete(int requestType, Object... o) {
-        if (!(o[0] instanceof VolleyError)) {
-            String result = (String) o[0];
-            mRecyclerItems = getDataFromJson(result);
-            end = mRecyclerItems.size();
-            mOnDataLoadedListener.dataLoaded(result != null && mRecyclerItems.size() > 0, start, end, oldEnd);
-        }else{
-            mOnDataLoadedListener.dataLoaded(false);
-        }
-    }
 }

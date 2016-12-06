@@ -76,7 +76,7 @@
     <string name="subject">Дисциплина</string>
     <string name="lecturers">Преподаватели</string>
 
-    <string name="absence" formatted="false">Absence: %1$d \%</string>
+    <string name="absence" formatted="false">Absence: %1$f \%</string>
 
 
 </resources>

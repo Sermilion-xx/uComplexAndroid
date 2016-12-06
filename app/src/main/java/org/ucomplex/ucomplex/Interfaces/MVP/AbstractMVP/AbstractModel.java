@@ -27,8 +27,12 @@ public abstract class AbstractModel implements Model, OnTaskCompleteListener {
     protected Repository mRepository;
     protected UserInterface mUser;
     protected OnDataLoadedListener mOnDataLoadedListener;
-    protected ArrayList<IRecyclerItem> mRecyclerItems;
+    protected ArrayList<IRecyclerItem> mRecyclerItems = new ArrayList<>();
     protected Bundle mParams;
+
+    public ArrayList<IRecyclerItem> getRecyclerItems() {
+        return mRecyclerItems;
+    }
 
     public abstract Object getDataFromJson(String jsonString)  throws JSONException;
 
@@ -70,7 +74,7 @@ public abstract class AbstractModel implements Model, OnTaskCompleteListener {
             mRepository = null;
             mUser = null;
             mOnDataLoadedListener = null;
-            mRecyclerItems = null;
+            mRecyclerItems.clear();
         }
     }
 

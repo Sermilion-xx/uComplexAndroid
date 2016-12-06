@@ -47,11 +47,6 @@ public class BaseRecyclerFragment extends Fragment implements IFragment{
     }
 
     @Override
-    public void setArguments(Bundle bundle) {
-        this.mBundle = bundle;
-    }
-
-    @Override
     public void setActivity(BaseActivity mActivity) {
         this.mActivity = mActivity;
     }
