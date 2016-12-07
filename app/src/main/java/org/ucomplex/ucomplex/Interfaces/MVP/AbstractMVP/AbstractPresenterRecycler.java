@@ -40,7 +40,7 @@ public abstract class AbstractPresenterRecycler extends AbstractPresenter implem
         @Override
         public void onClick(View v) {
             int itemPosition = ((ViewToPresenterRecycler) getView()).getRecyclerView().indexOfChild(v);
-            Log.e("Position is ",String.valueOf(itemPosition));
+            Log.e("Position is ", String.valueOf(itemPosition));
         }
     }
 
@@ -48,11 +48,11 @@ public abstract class AbstractPresenterRecycler extends AbstractPresenter implem
         this.itemLayout = itemLayout;
     }
 
-    protected int isAvailableListViewItem(){
+    protected int isAvailableListViewItem() {
 
-        if(!FacadeCommon.isNetworkConnected(getActivityContext())){
+        if (!FacadeCommon.isNetworkConnected(getActivityContext())) {
             return R.layout.list_item_no_internet;
-        } else if (((ModelRecycler) mModel).getRecyclerItems()==null) {
+        } else if (((ModelRecycler) mModel).getRecyclerItems() == null) {
             return R.layout.list_item_no_content;
         } else {
             return itemLayout;
@@ -88,10 +88,10 @@ public abstract class AbstractPresenterRecycler extends AbstractPresenter implem
     @Override
     public void dataLoaded(boolean loaded, int... startEndOldEnd) {
         super.dataLoaded(loaded, startEndOldEnd);
-        if(startEndOldEnd.length==0){
-            startEndOldEnd[0]=0;
-            startEndOldEnd[1]=0;
-            startEndOldEnd[2]=0;
+        if (startEndOldEnd.length == 0) {
+            startEndOldEnd[0] = 0;
+            startEndOldEnd[1] = 0;
+            startEndOldEnd[2] = 0;
         }
         start = startEndOldEnd[0];
         end = startEndOldEnd[1];
@@ -111,11 +111,10 @@ public abstract class AbstractPresenterRecycler extends AbstractPresenter implem
                 }
                 ((ViewToPresenterRecycler) getView()).notifyItemRangeRemoved(start, end);
             }
-            ((ViewToPresenterRecycler) getView()).notifyItemRangeInserted(start, end);
         } else {
             getView().showToast(makeToast(getActivityContext().getString(R.string.error_loading_data)));
-            ((ViewToPresenterRecycler) getView()).notifyDataSetChanged();
         }
+        ((ViewToPresenterRecycler) getView()).notifyItemRangeInserted(start, end);
     }
 
     private RecyclerView.ViewHolder getViewHolderForItemLayout(View view, int itemLayout) {

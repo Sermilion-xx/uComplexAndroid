@@ -76,7 +76,9 @@
     <string name="subject">Дисциплина</string>
     <string name="lecturers">Преподаватели</string>
 
-    <string name="absence" formatted="false">Absence: %1$f \%</string>
+    <string name="absence" formatted="false">Посещаемость: %1$s</string>
+    <string name="average_mark">Средняя успеваемость: %1$s</string>
+    <string name="attendance">Посещаемость по предмету:</string>
 
 
 </resources>

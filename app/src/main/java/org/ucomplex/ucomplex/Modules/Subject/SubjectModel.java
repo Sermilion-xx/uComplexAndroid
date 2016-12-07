@@ -1,11 +1,13 @@
 package org.ucomplex.ucomplex.Modules.Subject;
 
 import android.support.annotation.NonNull;
+import android.text.Html;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
+import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
 import org.ucomplex.ucomplex.Interfaces.IRecyclerItem;
 import org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP.AbstractModelRecycler;
 import org.ucomplex.ucomplex.Model.Users.Teacher;
@@ -13,8 +15,10 @@ import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.Modules.Materials.DepartmentItem;
 import org.ucomplex.ucomplex.Modules.Materials.MaterialItem;
 import org.ucomplex.ucomplex.Modules.Materials.ProgressItem;
+import org.ucomplex.ucomplex.R;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * ---------------------------------------------------
@@ -33,12 +37,11 @@ public class SubjectModel extends AbstractModelRecycler {
 
     @Override
     public ArrayList<IRecyclerItem> getDataFromJson(String jsonString) throws JSONException {
-        ArrayList<IRecyclerItem> subjects = new ArrayList<>();
+        ArrayList<IRecyclerItem> listItems = new ArrayList<>();
         JSONObject subjectJson;
         SubjectItem subjectItem = new SubjectItem();
         try {
             subjectJson = new JSONObject(jsonString);
-
 
             DepartmentItem          department = getDepartment(subjectJson, subjectItem);
             ArrayList<MaterialItem> files = getFiles(subjectJson, subjectItem);
@@ -58,12 +61,57 @@ public class SubjectModel extends AbstractModelRecycler {
             subjectItem.setCourse_id(courseArray.getInt("course_id"));
             subjectItem.setDescription(courseArray.getString("description"));
 
-            subjects.add(subjectItem);
+            SubjectItemForList itemTitle = new SubjectItemForList();
+            itemTitle.setResourceString(R.string.lecturers);
+            listItems.add(itemTitle);
+
+            for(UserInterface teacher: subjectItem.getTeachers()){
+                SubjectItemForList itemTeacher = new SubjectItemForList();
+                if(teacher.getPhoto()==1){
+                    itemTeacher.setCode(teacher.getCode());
+                }
+                itemTeacher.setTextOne(teacher.getName());
+                itemTeacher.setTextTwo(Integer.toString(teacher.getId()));
+                listItems.add(itemTeacher);
+            }
+
+            SubjectItemForList itemStatistics = new SubjectItemForList();
+
+            double absence = getAbsence(progress);
+            absence = FacadeCommon.round(absence, 2);
+            itemStatistics.setTextOne(Double.toString(absence));
+
+            double mark = getMark(progress);
+            mark = FacadeCommon.round(mark, 2);
+            itemStatistics.setTextTwo(Double.toString(mark));
+            listItems.add(itemStatistics);
+
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
         }
-        return subjects;
+        return listItems;
+    }
+
+    private double getMark(ProgressItem progress) {
+        double mark = 0.0;
+        if (progress.getMark() != 0 && progress.getMarkCount() != 0) {
+            mark = progress.getMark() / progress.getMarkCount();
+        }
+        return mark;
+    }
+
+    private double getAbsence(ProgressItem progress) {
+        int a = progress.getAbsence();
+        int b = progress.getHours();
+        double absence = 100;
+        if (a != 0 && b != 0) {
+            absence = ((double) a / (double) b) * 100;
+            if (absence == 0.0) {
+                absence = 100;
+            }
+        }
+        return absence;
     }
 
     private ArrayList<MaterialItem> getFiles(JSONObject subjectJson, SubjectItem subjectItem) throws JSONException {
