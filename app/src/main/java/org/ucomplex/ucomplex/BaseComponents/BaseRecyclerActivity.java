@@ -12,17 +12,11 @@ import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.ViewToPresenterRecycler;
 
 public class BaseRecyclerActivity extends BaseActivity implements ViewToPresenterRecycler {
 
-    public IFragment mFragment;
-
-    public IFragment getFragment() {
-        return mFragment;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mFragment = setupFragment(getFragmentManager(),
-                BaseRecyclerFragment.class.getName());
+        mFragment = setupFragment(savedInstanceState, BaseRecyclerFragment.class.getName());
     }
 
     @Override
@@ -103,6 +97,5 @@ public class BaseRecyclerActivity extends BaseActivity implements ViewToPresente
         super.onConfigurationChanged(newConfig);
         mPresenter.onConfigurationChanged(this);
     }
-
 
 }

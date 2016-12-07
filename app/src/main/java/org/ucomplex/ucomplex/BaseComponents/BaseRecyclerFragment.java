@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 
 
 import com.hannesdorfmann.fragmentargs.FragmentArgs;
+import com.hannesdorfmann.fragmentargs.annotation.Arg;
 
 import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
 import org.ucomplex.ucomplex.Interfaces.IFragment;
@@ -32,13 +33,13 @@ import org.ucomplex.ucomplex.R;
 
 public class BaseRecyclerFragment extends Fragment implements IFragment{
 
+
     protected ProgressBar mProgressBar;
     protected BaseActivity mActivity;
     protected BaseListAdapter mListAdapter;
     protected RecyclerView mRecyclerView;
     protected LinearLayoutManager linearLayoutManager;
-    protected boolean hasDivider;
-    protected Bundle mBundle;
+    @Arg protected boolean hasDivider;
 
     public static IFragment getInstance(BaseActivity activity) {
         IFragment fragment =  new BaseRecyclerFragment();

@@ -1,6 +1,5 @@
 package org.ucomplex.ucomplex.BaseComponents;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -23,20 +22,20 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import org.javatuples.Pair;
-import org.ucomplex.ucomplex.Modules.FragmentFactory;
-import org.ucomplex.ucomplex.Interfaces.IViewExtensions;
+import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
+import org.ucomplex.ucomplex.CommonDependencies.StateMaintainer;
 import org.ucomplex.ucomplex.Interfaces.IFragment;
+import org.ucomplex.ucomplex.Interfaces.IViewExtensions;
 import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Model;
 import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Presenter;
 import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Repository;
 import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.ViewToPresenter;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
+import org.ucomplex.ucomplex.Modules.FragmentFactory;
 import org.ucomplex.ucomplex.NavDrawer.DrawerAdapter;
 import org.ucomplex.ucomplex.NavDrawer.DrawerListItem;
 import org.ucomplex.ucomplex.NavDrawer.FacadeDrawer;
 import org.ucomplex.ucomplex.R;
-import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
-import org.ucomplex.ucomplex.CommonDependencies.StateMaintainer;
 
 import java.util.ArrayList;
 
@@ -56,9 +55,17 @@ public class BaseActivity extends AppCompatActivity implements IViewExtensions, 
     protected Repository            mRepository;
     protected View                  mProgressView;
 
+    public IFragment mFragment;
+
+    public IFragment getFragment() {
+        return mFragment;
+    }
+
     public Presenter getPresenter() {
         return mPresenter;
     }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,16 +121,25 @@ public class BaseActivity extends AppCompatActivity implements IViewExtensions, 
         }
     }
 
-    protected IFragment setupFragment(FragmentManager fragmentManager, String name) {
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        FragmentManager manager = getFragmentManager();
+        manager.putFragment(outState, BaseRecyclerFragment.class.getName(), (Fragment) mFragment);
+        super.onSaveInstanceState(outState);
+    }
+
+    protected IFragment setupFragment(Bundle inState, String name) {
         IFragment fragment;
-        if(fragmentManager.findFragmentByTag(name) == null) {
-            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-            fragment = FragmentFactory.getFragmentWithName(name, this);
-            fragmentTransaction.add(R.id.container, (Fragment) fragment, name);
-            fragmentTransaction.commit();
-        }else{
-            fragment = (IFragment) fragmentManager.findFragmentByTag(name);
+        FragmentManager manager = getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+
+        if (inState != null) {
+            fragment = (BaseRecyclerFragment) manager.getFragment(inState, name);
             fragment.setActivity(this);
+        } else {
+            fragment = FragmentFactory.getFragmentWithName(name, this);
+            transaction.add(R.id.container, (Fragment) fragment , name);
+            transaction.commit();
         }
         return fragment;
     }

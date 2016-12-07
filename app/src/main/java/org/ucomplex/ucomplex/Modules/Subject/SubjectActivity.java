@@ -1,14 +1,21 @@
 package org.ucomplex.ucomplex.Modules.Subject;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 
 import org.ucomplex.ucomplex.BaseComponents.BaseRecyclerActivity;
+import org.ucomplex.ucomplex.BaseComponents.BaseRecyclerFragment;
 import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
+import org.ucomplex.ucomplex.Modules.FragmentFactory;
 import org.ucomplex.ucomplex.R;
 
 import javax.inject.Inject;
 
 public class SubjectActivity extends BaseRecyclerActivity {
+
+    public static final String KEY_SUBJECT_ID = "subjId";
 
     @Inject
     public void setPresenter(SubjectPresenter presenter) {
@@ -26,6 +33,7 @@ public class SubjectActivity extends BaseRecyclerActivity {
     }
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,8 +41,10 @@ public class SubjectActivity extends BaseRecyclerActivity {
         setupToolbar(getResourceString(R.string.subject));
         setContentViewWithNavDrawer(R.layout.activity_subject);
 
-        Bundle args = new Bundle();
-        args.putInt("subjId", getIntent().getIntExtra("subjId", -1));
-        mFragment.setArguments(args);
+        if(((Fragment)mFragment).getArguments()==null){
+            Bundle args = new Bundle();
+            args.putInt(KEY_SUBJECT_ID, getIntent().getIntExtra(KEY_SUBJECT_ID, -1));
+            mFragment.setArguments(args);
+        }
     }
 }
