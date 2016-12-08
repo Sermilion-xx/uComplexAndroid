@@ -25,7 +25,11 @@ public class Constants {
     public static final String IMAGE_FORMAT_JPG = ".jpg";
 
     public static final int REQUEST_LOGIN = 0;
+    public static final int REQUEST_EVENTS = 1;
+    public static final int REQUEST_MORE_EVENTS = 2;
     public static final int REQUEST_LOAD_ROLES = 3;
+    public static final int REQUEST_GET_SUBJECTS = 4;
+    public static final int REQUEST_GET_SUBJECT = 5;
 
     public static final int USER_TYPE_STUDENT = 4;
     public static final int USER_TYPE_TEACHER = 3;

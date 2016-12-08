@@ -1,9 +1,8 @@
 package org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
+import com.android.volley.VolleyError;
+
 import org.json.JSONException;
-import org.ucomplex.ucomplex.BaseComponents.EventBusEvents.Implementations.BaseHTTPRequestEvent;
 import org.ucomplex.ucomplex.Interfaces.IRecyclerItem;
 import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.ModelRecycler;
 
@@ -25,10 +24,6 @@ public abstract class AbstractModelRecycler extends AbstractModel implements Mod
     protected int end = 0;
     protected int oldEnd = -1;
 
-    public AbstractModelRecycler(){
-
-    }
-
     public abstract ArrayList<IRecyclerItem> getDataFromJson(String jsonString) throws JSONException;
 
     @Override
@@ -43,18 +38,18 @@ public abstract class AbstractModelRecycler extends AbstractModel implements Mod
         return 0;
     }
 
-    @Subscribe
-    public void onReceiveHTTTRequestCompleteEvent(BaseHTTPRequestEvent event){
+
+    @Override
+    public void onTaskComplete(int requestType, Object... o) {
         String result = null;
-        if (!event.hasError()) {
+        if (!(o[0] instanceof VolleyError)) {
             try {
-                result = event.getResult();
+                result = (String) o[0];
                 mRecyclerItems = getDataFromJson(result);
                 end = mRecyclerItems.size();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            EventBus.getDefault().post(event);
             mOnDataLoadedListener.dataLoaded(result != null, start, end, oldEnd);
         }
     }

@@ -2,7 +2,6 @@ package org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP;
 
 import android.os.Bundle;
 
-import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.ucomplex.ucomplex.Interfaces.IRecyclerItem;
 import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Model;
@@ -23,7 +22,7 @@ import java.util.ArrayList;
  * ---------------------------------------------------
  */
 
-public abstract class AbstractModel implements Model {
+public abstract class AbstractModel implements Model, OnTaskCompleteListener {
 
     protected Repository mRepository;
     protected UserInterface mUser;
@@ -31,17 +30,11 @@ public abstract class AbstractModel implements Model {
     protected ArrayList<IRecyclerItem> mRecyclerItems = new ArrayList<>();
     protected Bundle mParams;
 
-
-    public AbstractModel(){
-
-    }
-
     public ArrayList<IRecyclerItem> getRecyclerItems() {
         return mRecyclerItems;
     }
 
     public abstract Object getDataFromJson(String jsonString)  throws JSONException;
-
 
     @Override
     @SuppressWarnings("unchecked")
@@ -72,6 +65,7 @@ public abstract class AbstractModel implements Model {
     @Override
     public void setRepository(Repository repository) {
         this.mRepository = repository;
+        mRepository.setTaskCompleteListener(this);
     }
 
     @Override

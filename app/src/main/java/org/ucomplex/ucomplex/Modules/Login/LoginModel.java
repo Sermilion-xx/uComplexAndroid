@@ -1,21 +1,26 @@
 package org.ucomplex.ucomplex.Modules.Login;
 
 
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.ParseError;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.ucomplex.ucomplex.BaseComponents.EventBusEvents.EventTypes.RequestType;
-import org.ucomplex.ucomplex.BaseComponents.EventBusEvents.Implementations.BaseHTTPRequestEvent;
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeMedia;
 import org.ucomplex.ucomplex.CommonDependencies.FacadePreferences;
+import org.ucomplex.ucomplex.CommonDependencies.UriDeserializer;
+import org.ucomplex.ucomplex.CommonDependencies.UriSerializer;
 import org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP.AbstractModel;
 import org.ucomplex.ucomplex.Model.Users.User;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
@@ -31,13 +36,13 @@ import org.ucomplex.ucomplex.Model.Users.UserInterface;
  * <a href="http://www.github.com/sermilion>github</a>
  * ---------------------------------------------------
  */
-public class LoginModel extends AbstractModel implements MVP_Login.ModelInterface {
+public class LoginModel extends AbstractModel implements MVP_Login.ModelInterface{
 
     private static final String JSON_SESSION_KEY = "session";
     private static final String JSON_ROLES_KEY = "roles";
 
     public LoginModel() {
-        EventBus.getDefault().register(this);
+
     }
 
     @Override
@@ -83,23 +88,20 @@ public class LoginModel extends AbstractModel implements MVP_Login.ModelInterfac
         }
     }
 
-
-    @Subscribe
-    public void onReceiveHTTTRequestCompleteEvent(BaseHTTPRequestEvent event) {
-        if (event.getEventType() == RequestType.LOGIN) {
-            if (!event.hasError()) {
-                try {
-                    String result = event.getResult();
-                    mUser = (UserInterface) getDataFromJson(result);
-                    if (mUser != null) {
-                        mUser.setPassword((String) event.getDataAtIndex(0));
-                    }
-                    mOnDataLoadedListener.dataLoaded(mUser != null, 0, 0);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+    @Override
+    public void onTaskComplete(int requestType, Object... o) {
+        //o[1] - password
+        if(o[0] instanceof VolleyError){
+            mOnDataLoadedListener.dataLoaded(false, 0, 0);
+        }else {
+            try {
+                mUser = (UserInterface) getDataFromJson((String) o[0]);
+                if (mUser != null) {
+                    mUser.setPassword((String) o[1]);
                 }
-            } else {
-                mOnDataLoadedListener.dataLoaded(false, 0, 0);
+                mOnDataLoadedListener.dataLoaded(mUser != null, 0, 0);
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
         }
     }

@@ -116,9 +116,7 @@ public class EventsPresenter extends AbstractPresenterRecycler implements MVP_Ev
     public void dataLoaded(boolean loaded, int... startEndOldEnd) {
         getView().hideProgress();
         if(startEndOldEnd.length==0){
-            startEndOldEnd[0]=0;
-            startEndOldEnd[1]=0;
-            startEndOldEnd[2]=0;
+            startEndOldEnd = new int[3];
         }
         int start = startEndOldEnd[0];
         int end = startEndOldEnd[1];
