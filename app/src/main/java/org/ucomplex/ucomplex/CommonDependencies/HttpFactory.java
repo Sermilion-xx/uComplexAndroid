@@ -59,10 +59,6 @@ public class HttpFactory {
     public static final String USER_SUBJECT_URL = BASE_URL +"student/ajax/my_subjects?json";
     public static final String GET_PHOTO_URL = BASE_URL +"files/photos/";
 
-
-    String urlStudentString = "https://ucomplex.org/student/subjects_list?json";
-    String urlTeacherString = "https://ucomplex.org/teacher/subjects_list?json";
-
     public static String encodeLoginData(String loginData) {
         byte[] authBytes;
         try {
@@ -83,7 +79,7 @@ public class HttpFactory {
     public void httpVolley(String url,
                            final String encodedAuth,
                            Context context,
-                           final EventType requestType, HashMap<String, String> params, final Object... returnData) {
+                           final RequestType requestType, HashMap<String, String> params, final Object... returnData) {
         if (params == null) {
             params = new HashMap<>();
         }
@@ -91,7 +87,7 @@ public class HttpFactory {
         final HashMap<String, String> finalParams = params;
         RequestQueue queue = Volley.newRequestQueue(context);
 
-        final IRequestEventBusEvent event = EventBusFactory.getHTTPEvent();
+        final IRequestEventBusEvent event = EventBusFactory.getHTTPEvent(requestType);
         event.setEventType(requestType);
 
         stringRequest = new StringRequest(com.android.volley.Request.Method.POST, url,
@@ -105,11 +101,9 @@ public class HttpFactory {
                             if (returnData.length > 0) {
                                 data = returnData[0];
                             }
-
                             event.setResult(utf8String);
                             event.addOptionalData(data);
                             EventBus.getDefault().post(event);
-
                         } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
                         }
@@ -118,7 +112,6 @@ public class HttpFactory {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
-
                 event.setError(error);
                 EventBus.getDefault().post(event);
             }

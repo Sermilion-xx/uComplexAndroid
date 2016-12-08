@@ -23,7 +23,7 @@ import java.util.ArrayList;
  * ---------------------------------------------------
  */
 
-public abstract class AbstractModel implements Model, OnTaskCompleteListener {
+public abstract class AbstractModel implements Model {
 
     protected Repository mRepository;
     protected UserInterface mUser;
@@ -46,7 +46,6 @@ public abstract class AbstractModel implements Model, OnTaskCompleteListener {
     @Override
     @SuppressWarnings("unchecked")
     public void loadData() {
-
         mRepository.loadData(this.mParams);
     }
 
@@ -73,7 +72,6 @@ public abstract class AbstractModel implements Model, OnTaskCompleteListener {
     @Override
     public void setRepository(Repository repository) {
         this.mRepository = repository;
-        mRepository.setTaskCompleteListener(this);
     }
 
     @Override
@@ -83,7 +81,6 @@ public abstract class AbstractModel implements Model, OnTaskCompleteListener {
             mUser = null;
             mOnDataLoadedListener = null;
             mRecyclerItems.clear();
-            EventBus.getDefault().unregister(this);
         }
     }
 

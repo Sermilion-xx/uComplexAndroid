@@ -1,6 +1,7 @@
 package org.ucomplex.ucomplex.BaseComponents.EventBusEvents;
 
-import org.ucomplex.ucomplex.BaseComponents.EventBusEvents.Implementations.HTTPRequestCompleteEvent;
+import org.ucomplex.ucomplex.BaseComponents.EventBusEvents.EventTypes.RequestType;
+import org.ucomplex.ucomplex.BaseComponents.EventBusEvents.Implementations.BaseHTTPRequestEvent;
 
 /**
  * ---------------------------------------------------
@@ -15,8 +16,13 @@ import org.ucomplex.ucomplex.BaseComponents.EventBusEvents.Implementations.HTTPR
 public class EventBusFactory {
 
 
-    public static HTTPRequestCompleteEvent getHTTPEvent(){
-        return new HTTPRequestCompleteEvent();
+    public static BaseHTTPRequestEvent getHTTPEvent(RequestType requestType){
+//        if(requestType==RequestType.LOGIN){
+//            return new LoginRequestEvent();
+//        }else if(requestType==RequestType.EVENTS || requestType==RequestType.EVENTS_MORE){
+//            return new EventsRequestEvent();
+//        }
+        return new BaseHTTPRequestEvent(requestType);
     }
 
 

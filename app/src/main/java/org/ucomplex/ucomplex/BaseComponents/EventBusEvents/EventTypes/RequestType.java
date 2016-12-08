@@ -11,5 +11,5 @@ package org.ucomplex.ucomplex.BaseComponents.EventBusEvents.EventTypes;
  */
 
 public enum RequestType implements EventType{
-    HTTP_SEND, HTTP_RECEIVE, HTTP_LOAD_MORE, DB_INSERT, DB_UPDATE, DB_DELETE
+    LOGIN, ROLES, EVENTS, EVENTS_MORE, SUBJECT_LIST, SUBJECT
 }

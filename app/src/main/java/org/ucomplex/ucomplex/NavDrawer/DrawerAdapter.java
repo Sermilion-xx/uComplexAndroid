@@ -103,15 +103,17 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
                     Drawable textDrawable = FacadeMedia.getTextDrawable(row.getId(), row.getTitle1(), mContext);
                     mProfileImageView.setImageBitmap(FacadeMedia.drawableToBitmap(textDrawable));
                 }else {
-                    String url = HttpFactory.PROFILE_IMAGE_URL + row.getProfileBitmapCode() + Constants.IMAGE_FORMAT_JPG;
-                    RequestQueue requestQueue = Volley.newRequestQueue(mContext);
-                    ImageRequest imageRequest = new ImageRequest(url, new Response.Listener<Bitmap>() {
-                        @Override
-                        public void onResponse(Bitmap response) {
-                            mProfileImageView.setImageBitmap(response);
-                        }
-                    }, 0, 0, null, null);
-                    requestQueue.add(imageRequest);
+                    if(row.getProfileBitmapCode()!=null) {
+                        String url = HttpFactory.PROFILE_IMAGE_URL + row.getProfileBitmapCode() + Constants.IMAGE_FORMAT_JPG;
+                        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+                        ImageRequest imageRequest = new ImageRequest(url, new Response.Listener<Bitmap>() {
+                            @Override
+                            public void onResponse(Bitmap response) {
+                                mProfileImageView.setImageBitmap(response);
+                            }
+                        }, 0, 0, null, null);
+                        requestQueue.add(imageRequest);
+                    }
                 }
             }else{
                 mTextView1.setText(row.getTitle1());

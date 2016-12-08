@@ -55,6 +55,11 @@ public class LoginActivityView extends BaseActivity implements ViewToPresenter, 
         super.setupMVP(this, LoginActivityView.class, null);
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+
+    }
+
     public void setupViews(int layout) {
         setContentView(layout);
         this.mLoginView = ((AutoCompleteTextView) findViewById(R.id.login));
@@ -103,7 +108,8 @@ public class LoginActivityView extends BaseActivity implements ViewToPresenter, 
             if(user.getRoles().size() == 1){
                 user.setType(user.getRoles().get(0).getType());
                 FacadePreferences.setUserDataToPref(getActivityContext(), user);
-                String loginData = encodeLoginData(user.getLogin()+":"+user.getPassword()+":"+user.getRoles().get(0).getId());
+                String temp = user.getLogin()+":"+user.getPassword()+":"+user.getRoles().get(0).getId();
+                String loginData = encodeLoginData(temp);
                 FacadePreferences.setLoginDataToPref(getActivityContext(), loginData);
             }
         }else {

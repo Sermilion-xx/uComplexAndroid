@@ -34,7 +34,7 @@ public class LoginRepository extends AbstractRepository {
         HttpFactory.getInstance().httpVolley(HttpFactory.AUTHENTICATIO_URL,
                 encodedAuth,
                 mContext,
-                RequestType.HTTP_RECEIVE,
+                RequestType.LOGIN,
                 null,
                 password);
     }

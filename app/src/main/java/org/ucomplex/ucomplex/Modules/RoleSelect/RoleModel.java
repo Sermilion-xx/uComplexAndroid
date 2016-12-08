@@ -39,15 +39,4 @@ public class RoleModel extends AbstractModelRecycler implements ModelRecycler {
         throw new UnsupportedOperationException("RoleModel does not need to process json. Do not call this method.");
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public void onTaskComplete(int requestType, Object... o) {
-        if (o.length > 0) {
-            mRecyclerItems = (ArrayList<IRecyclerItem>) o[0];
-            end = mRecyclerItems.size();
-        }
-        mOnDataLoadedListener.dataLoaded(o.length > 0, start, end, oldEnd);
-    }
-
-
 }

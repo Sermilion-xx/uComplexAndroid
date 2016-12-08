@@ -1,6 +1,7 @@
 package org.ucomplex.ucomplex.BaseComponents.EventBusEvents;
 
 import org.ucomplex.ucomplex.BaseComponents.EventBusEvents.EventTypes.EventType;
+import org.ucomplex.ucomplex.BaseComponents.EventBusEvents.EventTypes.RequestType;
 import org.ucomplex.ucomplex.BaseComponents.EventBusEvents.Interfaces.IEventBusEvent;
 
 /**
@@ -15,16 +16,16 @@ import org.ucomplex.ucomplex.BaseComponents.EventBusEvents.Interfaces.IEventBusE
 
 public abstract class BaseEventBusEvent implements IEventBusEvent {
 
-    private EventType eventType;
+    private EventType requestType;
 
     @Override
     public EventType getEventType() {
-        return eventType;
+        return requestType;
     }
 
     @Override
-    public void setEventType(EventType eventType) {
-        this.eventType = eventType;
+    public void setEventType(EventType requestType) {
+        this.requestType = requestType;
     }
 
 }

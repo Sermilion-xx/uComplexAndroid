@@ -83,7 +83,11 @@ public class BaseActivity extends AppCompatActivity implements IViewExtensions, 
     private ArrayList<DrawerListItem> setupDrawerListItems(){
         UserInterface user = mPresenter.getUser();
         setupDrawerItemListForUser(user);
-        DrawerListItem headerItem = new DrawerListItem(user.getCode(), user.getName().split(" ")[1],
+        String code = null;
+        if(user.getPhoto()==1){
+            code = user.getCode();
+        }
+        DrawerListItem headerItem = new DrawerListItem(code, user.getName().split(" ")[1],
                 FacadeCommon.getStringUserType(this, user.getType()), mModel.getUser().getPerson());
         return setupDrawerArrayList(headerItem, mDrawerIcons, mDrawerTitles);
     }

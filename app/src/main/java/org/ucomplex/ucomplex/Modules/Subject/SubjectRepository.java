@@ -35,7 +35,7 @@ public class SubjectRepository extends AbstractRepository {
         HttpFactory.getInstance().httpVolley(HttpFactory.USER_SUBJECT_URL,
                 encodedAuth,
                 mContext,
-                RequestType.HTTP_RECEIVE,
+                RequestType.SUBJECT,
                 params);
     }
 }

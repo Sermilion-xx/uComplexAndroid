@@ -3,14 +3,12 @@ package org.ucomplex.ucomplex.Modules.Events;
 
 import android.os.Bundle;
 
-import com.android.volley.VolleyError;
-
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.ucomplex.ucomplex.BaseComponents.EventBusEvents.EventTypes.EventType;
 import org.ucomplex.ucomplex.BaseComponents.EventBusEvents.EventTypes.RequestType;
-import org.ucomplex.ucomplex.BaseComponents.EventBusEvents.Implementations.HTTPRequestCompleteEvent;
+import org.ucomplex.ucomplex.BaseComponents.EventBusEvents.Implementations.BaseHTTPRequestEvent;
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
 import org.ucomplex.ucomplex.Interfaces.IRecyclerItem;
@@ -55,6 +53,7 @@ public class EventsModel extends AbstractModelRecycler implements MVP_Events.Mod
 
 
     public EventsModel() {
+        EventBus.getDefault().register(this);
     }
 
 
@@ -71,28 +70,31 @@ public class EventsModel extends AbstractModelRecycler implements MVP_Events.Mod
     }
 
     @Override
-    public void onReceiveHTTTRequestCompleteEvent(HTTPRequestCompleteEvent event) {
-        if (!event.hasError()) {
-            try {
-                String result = event.getResult();
-                ArrayList<IRecyclerItem> newItems = getDataFromJson(result);
-                if(event.getEventType() == RequestType.HTTP_LOAD_MORE){
-                    start = mRecyclerItems.size();
-                    mRecyclerItems.addAll(newItems);
-                    end = mRecyclerItems.size();
-                }else{
-                    start = 0;
-                    if (mRecyclerItems == null) {
-                        oldEnd = newItems.size();
+    public void onReceiveHTTTRequestCompleteEvent(BaseHTTPRequestEvent event) {
+        if (event.getEventType() == RequestType.EVENTS ||
+                event.getEventType() == RequestType.EVENTS_MORE) {
+            if (!event.hasError()) {
+                try {
+                    String result = event.getResult();
+                    ArrayList<IRecyclerItem> newItems = getDataFromJson(result);
+                    if (event.getEventType() == RequestType.EVENTS_MORE) {
+                        start = mRecyclerItems.size();
+                        mRecyclerItems.addAll(newItems);
+                        end = mRecyclerItems.size();
                     } else {
-                        oldEnd = mRecyclerItems.size() + newItems.size();
+                        start = 0;
+                        if (mRecyclerItems == null) {
+                            oldEnd = newItems.size();
+                        } else {
+                            oldEnd = mRecyclerItems.size() + newItems.size();
+                        }
+                        mRecyclerItems = newItems;
+                        end = newItems.size();
                     }
-                    mRecyclerItems = newItems;
-                    end = newItems.size();
+                    mOnDataLoadedListener.dataLoaded(result != null, start, end, oldEnd);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-                mOnDataLoadedListener.dataLoaded(result != null, start, end, oldEnd);
-            } catch (JSONException e) {
-                e.printStackTrace();
             }
         }
     }

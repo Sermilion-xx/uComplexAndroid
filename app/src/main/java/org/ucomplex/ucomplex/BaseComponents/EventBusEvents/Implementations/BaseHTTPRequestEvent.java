@@ -3,6 +3,7 @@ package org.ucomplex.ucomplex.BaseComponents.EventBusEvents.Implementations;
 import com.android.volley.VolleyError;
 
 import org.ucomplex.ucomplex.BaseComponents.EventBusEvents.BaseEventBusEvent;
+import org.ucomplex.ucomplex.BaseComponents.EventBusEvents.EventTypes.RequestType;
 import org.ucomplex.ucomplex.BaseComponents.EventBusEvents.Interfaces.IRequestEventBusEvent;
 
 import java.util.ArrayList;
@@ -18,29 +19,29 @@ import java.util.List;
  * ---------------------------------------------------
  */
 
-public class HTTPRequestCompleteEvent extends BaseEventBusEvent implements IRequestEventBusEvent {
+public class BaseHTTPRequestEvent extends BaseEventBusEvent implements IRequestEventBusEvent {
 
     private String result;
     private VolleyError error;
     private List<Object> optionalData;
 
-    public HTTPRequestCompleteEvent(){
+    public BaseHTTPRequestEvent(RequestType requestType) {
         this.optionalData = new ArrayList<>();
+        setEventType(requestType);
     }
 
+    public boolean hasError() {
+        return this.error != null;
+    }
 
     @Override
-    public String getResult() {
-        return this.result;
+    public String  getResult() {
+        return result;
     }
 
     @Override
     public void setResult(String result) {
         this.result = result;
-    }
-
-    public boolean hasError(){
-        return this.error !=null;
     }
 
     @Override

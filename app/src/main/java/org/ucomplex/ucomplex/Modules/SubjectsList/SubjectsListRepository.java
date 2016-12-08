@@ -30,7 +30,7 @@ public class SubjectsListRepository extends AbstractRepository{
         HttpFactory.getInstance().httpVolley(HttpFactory.USER_SUBJECTS_USER_URL,
                 encodedAuth,
                 mContext,
-                RequestType.HTTP_RECEIVE,
+                RequestType.SUBJECT_LIST,
                 params);
     }
 

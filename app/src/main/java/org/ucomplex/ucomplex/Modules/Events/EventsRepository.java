@@ -36,11 +36,11 @@ public class EventsRepository extends AbstractRepository {
         try {
             HashMap<String, String> params = new HashMap<>();
             int start;
-            EventType eventType = RequestType.HTTP_RECEIVE;
+            RequestType eventType = RequestType.EVENTS;
             if (bundle != null) {
                 start = bundle.getInt(EVENTS_START);
                 params.put(EVENTS_START, Integer.toString(start));
-                eventType = RequestType.HTTP_LOAD_MORE;
+                eventType = RequestType.EVENTS_MORE;
             }
             loadEvents(HttpFactory.USER_EVENTS_URL, encodedAuth, eventType, params);
         } catch (JSONException e) {
@@ -48,7 +48,7 @@ public class EventsRepository extends AbstractRepository {
         }
     }
 
-    private void loadEvents(String url, String encodedAuth, EventType requestType, HashMap<String, String> params) throws JSONException {
+    private void loadEvents(String url, String encodedAuth, RequestType requestType, HashMap<String, String> params) throws JSONException {
         HttpFactory.getInstance().httpVolley(url,
                 encodedAuth,
                 mContext,
