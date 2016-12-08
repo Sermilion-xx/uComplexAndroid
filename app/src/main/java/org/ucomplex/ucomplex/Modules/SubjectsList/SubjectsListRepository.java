@@ -2,6 +2,7 @@ package org.ucomplex.ucomplex.Modules.SubjectsList;
 
 import android.os.Bundle;
 
+import org.ucomplex.ucomplex.BaseComponents.EventBusEvents.EventTypes.RequestType;
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.CommonDependencies.FacadePreferences;
 import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
@@ -25,12 +26,11 @@ public class SubjectsListRepository extends AbstractRepository{
     public void loadData(Bundle bundle) {
         final String encodedAuth = FacadePreferences.getLoginDataFromPref(mContext);
         HashMap<String, String> params = new HashMap<>();
-        int requestType = Constants.REQUEST_GET_SUBJECTS;
+
         HttpFactory.getInstance().httpVolley(HttpFactory.USER_SUBJECTS_USER_URL,
                 encodedAuth,
                 mContext,
-                mOnTaskCompleteListener,
-                requestType,
+                RequestType.HTTP_RECEIVE,
                 params);
     }
 

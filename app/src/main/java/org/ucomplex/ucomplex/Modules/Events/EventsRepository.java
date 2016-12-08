@@ -3,6 +3,8 @@ package org.ucomplex.ucomplex.Modules.Events;
 import android.os.Bundle;
 
 import org.json.JSONException;
+import org.ucomplex.ucomplex.BaseComponents.EventBusEvents.EventTypes.EventType;
+import org.ucomplex.ucomplex.BaseComponents.EventBusEvents.EventTypes.RequestType;
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.CommonDependencies.FacadePreferences;
 import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
@@ -33,24 +35,23 @@ public class EventsRepository extends AbstractRepository {
         final String encodedAuth = FacadePreferences.getLoginDataFromPref(mContext);
         try {
             HashMap<String, String> params = new HashMap<>();
-            int requestType = Constants.REQUEST_EVENTS;
             int start;
+            EventType eventType = RequestType.HTTP_RECEIVE;
             if (bundle != null) {
                 start = bundle.getInt(EVENTS_START);
                 params.put(EVENTS_START, Integer.toString(start));
-                requestType = Constants.REQUEST_MORE_EVENTS;
+                eventType = RequestType.HTTP_LOAD_MORE;
             }
-            loadEvents(HttpFactory.USER_EVENTS_URL, encodedAuth, requestType, params);
+            loadEvents(HttpFactory.USER_EVENTS_URL, encodedAuth, eventType, params);
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    private void loadEvents(String url, String encodedAuth, int requestType, HashMap<String, String> params) throws JSONException {
+    private void loadEvents(String url, String encodedAuth, EventType requestType, HashMap<String, String> params) throws JSONException {
         HttpFactory.getInstance().httpVolley(url,
                 encodedAuth,
                 mContext,
-                mOnTaskCompleteListener,
                 requestType,
                 params);
     }

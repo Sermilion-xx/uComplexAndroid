@@ -2,7 +2,11 @@ package org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP;
 
 import com.android.volley.VolleyError;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONException;
+import org.ucomplex.ucomplex.BaseComponents.EventBusEvents.Implementations.HTTPRequestCompleteEvent;
+import org.ucomplex.ucomplex.BaseComponents.EventBusEvents.Interfaces.IRequestEventBusEvent;
 import org.ucomplex.ucomplex.Interfaces.IRecyclerItem;
 import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.ModelRecycler;
 
@@ -24,6 +28,10 @@ public abstract class AbstractModelRecycler extends AbstractModel implements Mod
     protected int end = 0;
     protected int oldEnd = -1;
 
+    public AbstractModelRecycler(){
+        EventBus.getDefault().register(this);
+    }
+
     public abstract ArrayList<IRecyclerItem> getDataFromJson(String jsonString) throws JSONException;
 
     @Override
@@ -38,6 +46,21 @@ public abstract class AbstractModelRecycler extends AbstractModel implements Mod
         return 0;
     }
 
+    @Subscribe
+    public void onReceiveHTTTRequestCompleteEvent(HTTPRequestCompleteEvent event){
+        String result = null;
+        if (!event.hasError()) {
+            try {
+                result = event.getResult();
+                mRecyclerItems = getDataFromJson(result);
+                end = mRecyclerItems.size();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            EventBus.getDefault().post(event);
+            mOnDataLoadedListener.dataLoaded(result != null, start, end, oldEnd);
+        }
+    }
 
     @Override
     public void onTaskComplete(int requestType, Object... o) {

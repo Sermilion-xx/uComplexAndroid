@@ -2,7 +2,6 @@ package org.ucomplex.ucomplex.CommonDependencies;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
-import android.support.annotation.NonNull;
 import android.util.Base64;
 
 import com.android.volley.AuthFailureError;
@@ -11,23 +10,17 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.codehaus.jackson.map.util.EnumValues;
+import org.greenrobot.eventbus.EventBus;
+import org.ucomplex.ucomplex.BaseComponents.EventBusEvents.EventBusFactory;
+import org.ucomplex.ucomplex.BaseComponents.EventBusEvents.EventTypes.EventType;
+import org.ucomplex.ucomplex.BaseComponents.EventBusEvents.EventTypes.RequestType;
+import org.ucomplex.ucomplex.BaseComponents.EventBusEvents.Interfaces.IRequestEventBusEvent;
 import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
-
-import lombok.Cleanup;
-import lombok.val;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import okio.Okio;
 
 /**
  * Created by Sermilion on 20/09/16.
@@ -90,14 +83,16 @@ public class HttpFactory {
     public void httpVolley(String url,
                            final String encodedAuth,
                            Context context,
-                           final OnTaskCompleteListener onTaskCompleteListener,
-                           final int requestType, HashMap<String, String> params, final Object... returnData) {
+                           final EventType requestType, HashMap<String, String> params, final Object... returnData) {
         if (params == null) {
             params = new HashMap<>();
         }
 
         final HashMap<String, String> finalParams = params;
         RequestQueue queue = Volley.newRequestQueue(context);
+
+        final IRequestEventBusEvent event = EventBusFactory.getHTTPEvent();
+        event.setEventType(requestType);
 
         stringRequest = new StringRequest(com.android.volley.Request.Method.POST, url,
                 new com.android.volley.Response.Listener<String>() {
@@ -110,7 +105,11 @@ public class HttpFactory {
                             if (returnData.length > 0) {
                                 data = returnData[0];
                             }
-                            onTaskCompleteListener.onTaskComplete(requestType, utf8String, data);
+
+                            event.setResult(utf8String);
+                            event.addOptionalData(data);
+                            EventBus.getDefault().post(event);
+
                         } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
                         }
@@ -119,7 +118,9 @@ public class HttpFactory {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
-                onTaskCompleteListener.onTaskComplete(requestType, error, 0);
+
+                event.setError(error);
+                EventBus.getDefault().post(event);
             }
         }) {
 

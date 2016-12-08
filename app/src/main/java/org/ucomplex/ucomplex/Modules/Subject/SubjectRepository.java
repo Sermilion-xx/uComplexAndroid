@@ -3,6 +3,7 @@ package org.ucomplex.ucomplex.Modules.Subject;
 import android.os.Bundle;
 
 import org.json.JSONException;
+import org.ucomplex.ucomplex.BaseComponents.EventBusEvents.EventTypes.RequestType;
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.CommonDependencies.FacadePreferences;
 import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
@@ -28,15 +29,13 @@ public class SubjectRepository extends AbstractRepository {
     public void loadData(Bundle bundle) {
         final String encodedAuth = FacadePreferences.getLoginDataFromPref(mContext);
         HashMap<String, String> params = new HashMap<>();
-        int requestType = Constants.REQUEST_GET_SUBJECT;
         if(bundle!=null){
             params.put(SUBJECT_ID, Integer.toString(bundle.getInt(SUBJECT_ID)));
         }
         HttpFactory.getInstance().httpVolley(HttpFactory.USER_SUBJECT_URL,
                 encodedAuth,
                 mContext,
-                mOnTaskCompleteListener,
-                requestType,
+                RequestType.HTTP_RECEIVE,
                 params);
     }
 }

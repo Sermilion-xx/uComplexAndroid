@@ -3,6 +3,7 @@ package org.ucomplex.ucomplex.Modules.Login;
 import android.content.Context;
 import android.os.Bundle;
 
+import org.ucomplex.ucomplex.BaseComponents.EventBusEvents.EventTypes.RequestType;
 import org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP.AbstractRepository;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
@@ -33,8 +34,7 @@ public class LoginRepository extends AbstractRepository {
         HttpFactory.getInstance().httpVolley(HttpFactory.AUTHENTICATIO_URL,
                 encodedAuth,
                 mContext,
-                mOnTaskCompleteListener,
-                Constants.REQUEST_LOGIN,
+                RequestType.HTTP_RECEIVE,
                 null,
                 password);
     }
