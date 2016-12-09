@@ -38,7 +38,6 @@ public abstract class AbstractModelRecycler extends AbstractModel implements Mod
         return 0;
     }
 
-
     @Override
     public void onTaskComplete(int requestType, Object... o) {
         String result = null;
@@ -46,12 +45,20 @@ public abstract class AbstractModelRecycler extends AbstractModel implements Mod
             try {
                 result = (String) o[0];
                 mRecyclerItems = getDataFromJson(result);
-                end = mRecyclerItems.size();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            mOnDataLoadedListener.dataLoaded(result != null, start, end, oldEnd);
         }
+        if(mRecyclerItems.size()==0){
+            mRecyclerItems.add(new IRecyclerItem() {
+                @Override
+                public boolean isEmpty() {
+                    return true;
+                }
+            });
+        }
+        end = mRecyclerItems.size();
+        mOnDataLoadedListener.dataLoaded(result != null, start, end, oldEnd);
     }
 
     @Override

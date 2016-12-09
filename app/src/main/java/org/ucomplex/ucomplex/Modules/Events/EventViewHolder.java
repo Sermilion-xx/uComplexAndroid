@@ -36,4 +36,14 @@ public class EventViewHolder extends RecyclerView.ViewHolder {
         eventDetailsLayout   = (RelativeLayout) view.findViewById(R.id.event_details_layout);
         loadMoreEventsButton = (Button) view.findViewById(R.id.loadMoreEventsButton);
     }
+
+    public boolean allNullElements(){
+        return eventsImageView       == null &&
+                eventTextView        == null &&
+                eventTime            == null &&
+                eventPersonName      == null &&
+                eventDetailsLayout   == null &&
+                loadMoreEventsButton == null;
+
+    }
 }

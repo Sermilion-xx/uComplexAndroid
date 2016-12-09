@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide;
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeMedia;
 import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
+import org.ucomplex.ucomplex.Interfaces.IRecyclerItem;
 import org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP.AbstractPresenterRecycler;
 import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.ModelRecycler;
 import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.ViewToPresenterRecycler;
@@ -41,7 +42,7 @@ public class EventsPresenter extends AbstractPresenterRecycler implements MVP_Ev
     public EventViewHolder createViewHolder(ViewGroup parent, int viewType) {
         EventViewHolder viewHolder;
         itemLayout = isAvailableListViewItem();
-        if(itemLayout!=R.layout.list_item_no_content && itemLayout!=R.layout.list_item_no_internet) {
+        if (itemLayout != R.layout.list_item_no_content && itemLayout != R.layout.list_item_no_internet) {
             itemLayout = viewType == 0 ? R.layout.list_item_event : R.layout.list_item_event_footer;
         }
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
@@ -53,36 +54,38 @@ public class EventsPresenter extends AbstractPresenterRecycler implements MVP_Ev
     @Override
     public void bindViewHolder(final RecyclerView.ViewHolder aHolder, int position) {
         EventViewHolder holder = (EventViewHolder) aHolder;
-        if (position != getItemCount() - 1) {
-            final EventItem event = (EventItem) ((ModelRecycler) mModel).getItem(position);
-            String personName = event.getParams().getName();
-            if (personName == null || personName.equals(Constants.STRING_EMPTY)) {
-                event.getParams().setName(getActivityContext().getResources().getString(R.string.ucomplex));
-            }
-            holder.eventPersonName.setText(event.getParams().getName());
-            holder.eventTextView.setText(event.getEventText());
-            holder.eventTime.setText(event.getTime());
-            int id = event.getParams().getId();
-            String name = event.getParams().getName();
-            Drawable textDrawable = FacadeMedia.getTextDrawable(id, name, getActivityContext());
-            holder.eventsImageView.setImageDrawable(textDrawable);
-            if (event.getEventImageBitmap() != null) {
-                holder.eventsImageView.setImageBitmap(event.getEventImageBitmap());
-            } else {
-                if (event.getParams().getCode() == null) {
-                    holder.eventsImageView.setImageDrawable(textDrawable);
-                } else {
-                    Glide.with(getActivityContext())
-                            .load(HttpFactory.LOAD_PROFILE_URL + event.getParams().getCode() + Constants.IMAGE_FORMAT)
-                            .into(holder.eventsImageView);
+        final IRecyclerItem item = ((ModelRecycler) mModel).getItem(position);
+        if (item instanceof EventItem && !holder.allNullElements() && !item.isEmpty()) {
+            EventItem event = (EventItem) item;
+                String personName = event.getParams().getName();
+                if (personName == null || personName.equals(Constants.STRING_EMPTY)) {
+                    event.getParams().setName(getActivityContext().getResources().getString(R.string.ucomplex));
                 }
-            }
+                holder.eventPersonName.setText(event.getParams().getName());
+                holder.eventTextView.setText(event.getEventText());
+                holder.eventTime.setText(event.getTime());
+                int id = event.getParams().getId();
+                String name = event.getParams().getName();
+                Drawable textDrawable = FacadeMedia.getTextDrawable(id, name, getActivityContext());
+                holder.eventsImageView.setImageDrawable(textDrawable);
+                if (event.getEventImageBitmap() != null) {
+                    holder.eventsImageView.setImageBitmap(event.getEventImageBitmap());
+                } else {
+                    if (event.getParams().getCode() == null) {
+                        holder.eventsImageView.setImageDrawable(textDrawable);
+                    } else {
+                        Glide.with(getActivityContext())
+                                .load(HttpFactory.LOAD_PROFILE_URL + event.getParams().getCode() + Constants.IMAGE_FORMAT)
+                                .into(holder.eventsImageView);
+                    }
+                }
 
 //            holder.eventDetailsLayout.setOnClickListener(view -> {
 ////                Intent intent = new Intent(getActivityContext(), null);
 //            });
         } else {
             if (hasMoreEvents) {
+                holder.loadMoreEventsButton.setVisibility(View.VISIBLE);
                 holder.loadMoreEventsButton.setOnClickListener(
                         new View.OnClickListener() {
                             @Override
@@ -92,7 +95,9 @@ public class EventsPresenter extends AbstractPresenterRecycler implements MVP_Ev
                         }
                 );
             } else {
-                holder.loadMoreEventsButton.setVisibility(View.GONE);
+                if (holder.loadMoreEventsButton != null) {
+                    holder.loadMoreEventsButton.setVisibility(View.GONE);
+                }
             }
         }
     }
@@ -115,22 +120,18 @@ public class EventsPresenter extends AbstractPresenterRecycler implements MVP_Ev
     @Override
     public void dataLoaded(boolean loaded, int... startEndOldEnd) {
         getView().hideProgress();
-        if(startEndOldEnd.length==0){
-            startEndOldEnd = new int[3];
-        }
         int start = startEndOldEnd[0];
         int end = startEndOldEnd[1];
-        int oldEnd = startEndOldEnd.length == 3 ? startEndOldEnd[2] : -1;
+        int requestType = startEndOldEnd[3];
+        hasMoreEvents = loaded;
         if (loaded) {
-            if (start == 0) {
-                if (oldEnd != -1) {
-                    end = oldEnd;
-                }
-                ((ViewToPresenterRecycler) getView()).notifyItemRangeRemoved(start, end);
+            if (requestType == Constants.REQUEST_MORE_EVENTS) {
+                ((ViewToPresenterRecycler) getView()).notifyItemRangeInserted(start, end);
+            } else {
+                hasMoreEvents = true;
+                ((ViewToPresenterRecycler) getView()).notifyDataSetChanged();
             }
-            ((ViewToPresenterRecycler) getView()).notifyItemRangeInserted(start, end);
-        } else
-            hasMoreEvents = false;
+        }
     }
 }
 

@@ -8,12 +8,10 @@ import com.android.volley.VolleyError;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.ucomplex.ucomplex.Interfaces.IRecyclerItem;
-import org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP.AbstractModel;
-import org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP.AbstractModelRecycler;
-import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
+import org.ucomplex.ucomplex.Interfaces.IRecyclerItem;
+import org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP.AbstractModelRecycler;
 
 import java.util.ArrayList;
 
@@ -53,7 +51,6 @@ public class EventsModel extends AbstractModelRecycler implements MVP_Events.Mod
     private static final String EVENT_YEAR = "year";
 
 
-
     public EventsModel() {
     }
 
@@ -66,35 +63,42 @@ public class EventsModel extends AbstractModelRecycler implements MVP_Events.Mod
     @Override
     public void loadMoreEvents(int start) {
         Bundle bundle = new Bundle();
-        bundle.putInt(Constants.EXTRA_KEY_MORE_EVENTS,start);
+        bundle.putInt(Constants.EXTRA_KEY_MORE_EVENTS, start);
         mRepository.loadData(bundle);
     }
 
     @Override
     public void onTaskComplete(int requestType, Object... o) {
+        String result = null;
         try {
-            if(!(o[0] instanceof VolleyError)) {
-                String result = (String) o[0];
+            if (!(o[0] instanceof VolleyError)) {
+                result = (String) o[0];
                 ArrayList<IRecyclerItem> newItems = getDataFromJson(result);
                 if (requestType == Constants.REQUEST_MORE_EVENTS) {
                     start = mRecyclerItems.size();
-                    mRecyclerItems.addAll(newItems);
-                    end = mRecyclerItems.size();
+                    mRecyclerItems.addAll(mRecyclerItems.size() - 1, newItems);
                 } else {
                     start = 0;
-                    if (mRecyclerItems == null) {
-                        oldEnd = newItems.size();
-                    } else {
-                        oldEnd = mRecyclerItems.size() + newItems.size();
-                    }
                     mRecyclerItems = newItems;
-                    end = newItems.size();
-
+                    mRecyclerItems.add(new IRecyclerItem() {
+                        @Override
+                        public boolean isEmpty() {
+                            return true;
+                        }
+                    });
                 }
-                mOnDataLoadedListener.dataLoaded(result != null, start, end, oldEnd);
-            }else {
-                mOnDataLoadedListener.dataLoaded(false);
+            } else {
+                if(mRecyclerItems.size()==0){
+                    mRecyclerItems.add(new IRecyclerItem() {
+                        @Override
+                        public boolean isEmpty() {
+                            return true;
+                        }
+                    });
+                }
             }
+            end = mRecyclerItems.size();
+            mOnDataLoadedListener.dataLoaded(result != null, start, end, oldEnd, requestType);
         } catch (JSONException e) {
             e.printStackTrace();
         }

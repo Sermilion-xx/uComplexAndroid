@@ -49,10 +49,10 @@ public abstract class AbstractPresenterRecycler extends AbstractPresenter implem
     }
 
     protected int isAvailableListViewItem() {
-
-        if (!FacadeCommon.isNetworkConnected(getActivityContext())) {
+        IRecyclerItem item = ((ModelRecycler) mModel).getRecyclerItems().get(0);
+        if (!FacadeCommon.isNetworkConnected(getActivityContext()) && item.isEmpty()) {
             return R.layout.list_item_no_internet;
-        } else if (((ModelRecycler) mModel).getRecyclerItems() == null) {
+        } else if (item.isEmpty()) {
             return R.layout.list_item_no_content;
         } else {
             return itemLayout;
@@ -109,11 +109,11 @@ public abstract class AbstractPresenterRecycler extends AbstractPresenter implem
                 if (oldEnd != -1) {
                     end = oldEnd;
                 }
-                ((ViewToPresenterRecycler) getView()).notifyItemRangeRemoved(start, end);
             }
         } else {
             getView().showToast(makeToast(getActivityContext().getString(R.string.error_loading_data)));
         }
+        ((ViewToPresenterRecycler) getView()).notifyItemRangeRemoved(start, end);
         ((ViewToPresenterRecycler) getView()).notifyItemRangeInserted(start, end);
     }
 
@@ -127,8 +127,10 @@ public abstract class AbstractPresenterRecycler extends AbstractPresenter implem
                 return new SubjectListViewHolder(view);
             case R.layout.list_item_no_content:
                 return new ViewHolderNoContent(view);
+            case R.layout.list_item_no_internet:
+                return new ViewHolderNoContent(view);
             default:
-                return null;
+                return new ViewHolderNoContent(view);
         }
     }
 
