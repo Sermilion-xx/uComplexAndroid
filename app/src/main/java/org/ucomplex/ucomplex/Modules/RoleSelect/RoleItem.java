@@ -2,8 +2,6 @@ package org.ucomplex.ucomplex.Modules.RoleSelect;
 
 import org.ucomplex.ucomplex.Interfaces.IRecyclerItem;
 
-import lombok.Data;
-
 /**
  * ---------------------------------------------------
  * Created by Sermilion on 08/11/2016.
@@ -13,7 +11,7 @@ import lombok.Data;
  * <a href="http://www.github.com/sermilion>github</a>
  * ---------------------------------------------------
  */
-@Data
+
 public class RoleItem extends IRecyclerItem {
     private int roleIcon;
     private String roleName;
@@ -23,4 +21,22 @@ public class RoleItem extends IRecyclerItem {
         this.roleName = name;
     }
 
+    public RoleItem() {
+    }
+
+    public int getRoleIcon() {
+        return roleIcon;
+    }
+
+    public void setRoleIcon(int roleIcon) {
+        this.roleIcon = roleIcon;
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
 }

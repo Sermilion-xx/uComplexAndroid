@@ -2,7 +2,6 @@ package org.ucomplex.ucomplex.Modules.Subject;
 
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,15 +12,9 @@ import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeMedia;
 import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
-import org.ucomplex.ucomplex.Interfaces.IRecyclerItem;
 import org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP.AbstractPresenterRecycler;
 import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.ModelRecycler;
-import org.ucomplex.ucomplex.Model.Users.Teacher;
-import org.ucomplex.ucomplex.Modules.Materials.ProgressItem;
 import org.ucomplex.ucomplex.R;
-
-import java.util.ArrayList;
-import java.util.Locale;
 
 /**
  * ---------------------------------------------------
@@ -101,7 +94,7 @@ public class SubjectPresenter extends AbstractPresenterRecycler {
                     break;
                 case TYPE_2:
                     String text = getActivityContext().getString(R.string.absence, subjectItem.getTextOne());
-                    aHolder.mAttendance.setText(Html.fromHtml(text));
+                    aHolder.mAttendance.setText(FacadeCommon.fromHtml(text));
                     String average = getActivityContext().getString(R.string.average_mark, subjectItem.getTextTwo());
                     aHolder.mAverageGrade.setText(average);
                     break;

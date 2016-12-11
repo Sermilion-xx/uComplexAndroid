@@ -2,8 +2,6 @@ package org.ucomplex.ucomplex.Modules.SubjectsList;
 
 import org.ucomplex.ucomplex.Interfaces.IRecyclerItem;
 
-import lombok.Data;
-
 /**
  * ---------------------------------------------------
  * Created by Sermilion on 01/12/2016.
@@ -13,7 +11,7 @@ import lombok.Data;
  * <a href="http://www.github.com/sermilion>github</a>
  * ---------------------------------------------------
  */
-@Data
+
 class SubjectListItem extends IRecyclerItem {
 
     private int courseId;
@@ -26,4 +24,30 @@ class SubjectListItem extends IRecyclerItem {
         this.assessmentType = assessmentType;
     }
 
+    public SubjectListItem() {
+    }
+
+    public int getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(int courseId) {
+        this.courseId = courseId;
+    }
+
+    public String getCourseName() {
+        return courseName;
+    }
+
+    public void setCourseName(String courseName) {
+        this.courseName = courseName;
+    }
+
+    public int getAssessmentType() {
+        return assessmentType;
+    }
+
+    public void setAssessmentType(int assessmentType) {
+        this.assessmentType = assessmentType;
+    }
 }

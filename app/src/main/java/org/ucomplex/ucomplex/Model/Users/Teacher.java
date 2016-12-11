@@ -8,8 +8,6 @@ import org.ucomplex.ucomplex.Modules.Materials.TimetableEntryItem;
 
 import java.util.ArrayList;
 
-import lombok.Data;
-
 /**
  * ---------------------------------------------------
  * Created by Sermilion on 06/12/2016.
@@ -19,7 +17,7 @@ import lombok.Data;
  * <a href="http://www.github.com/sermilion>github</a>
  * ---------------------------------------------------
  */
-@Data
+
 public class Teacher extends User implements Parcelable {
 
     private int post;
@@ -58,4 +56,287 @@ public class Teacher extends User implements Parcelable {
     private String facultyName;
     private ArrayList<TimetableEntryItem> timetableEntries;
 
+    public Teacher(){
+
+    }
+
+    public int getPost() {
+        return post;
+    }
+
+    public void setPost(int post) {
+        this.post = post;
+    }
+
+    public int getExperience() {
+        return experience;
+    }
+
+    public void setExperience(int experience) {
+        this.experience = experience;
+    }
+
+    public int getDep_experience() {
+        return dep_experience;
+    }
+
+    public void setDep_experience(int dep_experience) {
+        this.dep_experience = dep_experience;
+    }
+
+    public ArrayList<String> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(ArrayList<String> courses) {
+        this.courses = courses;
+    }
+
+    public int getRank() {
+        return rank;
+    }
+
+    public void setRank(int rank) {
+        this.rank = rank;
+    }
+
+    public int getDegree() {
+        return degree;
+    }
+
+    public void setDegree(int degree) {
+        this.degree = degree;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public int getPlan() {
+        return plan;
+    }
+
+    public void setPlan(int plan) {
+        this.plan = plan;
+    }
+
+    public int getFact() {
+        return fact;
+    }
+
+    public void setFact(int fact) {
+        this.fact = fact;
+    }
+
+    public int getFails() {
+        return fails;
+    }
+
+    public void setFails(int fails) {
+        this.fails = fails;
+    }
+
+    public String getActivity_update() {
+        return activity_update;
+    }
+
+    public void setActivity_update(String activity_update) {
+        this.activity_update = activity_update;
+    }
+
+    public int getSelection() {
+        return selection;
+    }
+
+    public void setSelection(int selection) {
+        this.selection = selection;
+    }
+
+    public DepartmentItem getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(DepartmentItem department) {
+        this.department = department;
+    }
+
+    public int getDepartmentId() {
+        return departmentId;
+    }
+
+    public void setDepartmentId(int departmentId) {
+        this.departmentId = departmentId;
+    }
+
+    public String getDepartmentName() {
+        return departmentName;
+    }
+
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
+    }
+
+    public int getClosed() {
+        return closed;
+    }
+
+    public void setClosed(int closed) {
+        this.closed = closed;
+    }
+
+    public ArrayList<MaterialItem> getFiles() {
+        return files;
+    }
+
+    public void setFiles(ArrayList<MaterialItem> files) {
+        this.files = files;
+    }
+
+    public int getSex() {
+        return sex;
+    }
+
+    public void setSex(int sex) {
+        this.sex = sex;
+    }
+
+    public String getSeries() {
+        return series;
+    }
+
+    public void setSeries(String series) {
+        this.series = series;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+    }
+
+    public String getDocumentDate() {
+        return documentDate;
+    }
+
+    public void setDocumentDate(String documentDate) {
+        this.documentDate = documentDate;
+    }
+
+    public String getDocumentDepart() {
+        return documentDepart;
+    }
+
+    public void setDocumentDepart(String documentDepart) {
+        this.documentDepart = documentDepart;
+    }
+
+    public String getDocumentDepartCode() {
+        return documentDepartCode;
+    }
+
+    public void setDocumentDepartCode(String documentDepartCode) {
+        this.documentDepartCode = documentDepartCode;
+    }
+
+    public int getAcademicDegree() {
+        return academicDegree;
+    }
+
+    public void setAcademicDegree(int academicDegree) {
+        this.academicDegree = academicDegree;
+    }
+
+    public int getAcademicRank() {
+        return academicRank;
+    }
+
+    public void setAcademicRank(int academicRank) {
+        this.academicRank = academicRank;
+    }
+
+    public String getStatuses() {
+        return statuses;
+    }
+
+    public void setStatuses(String statuses) {
+        this.statuses = statuses;
+    }
+
+    public String getAcademicAwards() {
+        return academicAwards;
+    }
+
+    public void setAcademicAwards(String academicAwards) {
+        this.academicAwards = academicAwards;
+    }
+
+    public String getUpqualification() {
+        return upqualification;
+    }
+
+    public void setUpqualification(String upqualification) {
+        this.upqualification = upqualification;
+    }
+
+    public int getRate() {
+        return rate;
+    }
+
+    public void setRate(int rate) {
+        this.rate = rate;
+    }
+
+    public int getSection() {
+        return section;
+    }
+
+    public void setSection(int section) {
+        this.section = section;
+    }
+
+    public String getSectionName() {
+        return sectionName;
+    }
+
+    public void setSectionName(String sectionName) {
+        this.sectionName = sectionName;
+    }
+
+    public int getLead() {
+        return lead;
+    }
+
+    public void setLead(int lead) {
+        this.lead = lead;
+    }
+
+    public int getActivity() {
+        return activity;
+    }
+
+    public void setActivity(int activity) {
+        this.activity = activity;
+    }
+
+    public String getFacultyName() {
+        return facultyName;
+    }
+
+    public void setFacultyName(String facultyName) {
+        this.facultyName = facultyName;
+    }
+
+    public ArrayList<TimetableEntryItem> getTimetableEntries() {
+        return timetableEntries;
+    }
+
+    public void setTimetableEntries(ArrayList<TimetableEntryItem> timetableEntries) {
+        this.timetableEntries = timetableEntries;
+    }
 }

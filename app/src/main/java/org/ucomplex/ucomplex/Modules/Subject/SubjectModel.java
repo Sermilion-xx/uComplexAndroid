@@ -1,7 +1,6 @@
 package org.ucomplex.ucomplex.Modules.Subject;
 
 import android.support.annotation.NonNull;
-import android.text.Html;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,7 +17,6 @@ import org.ucomplex.ucomplex.Modules.Materials.ProgressItem;
 import org.ucomplex.ucomplex.R;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 /**
  * ---------------------------------------------------
@@ -32,7 +30,7 @@ import java.util.Locale;
 
 public class SubjectModel extends AbstractModelRecycler {
 
-    public static final String JSON_KEY_COURSE = "course";
+    private static final String JSON_KEY_COURSE = "course";
 
 
     @Override

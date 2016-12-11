@@ -12,8 +12,6 @@ import android.os.Environment;
 import android.util.Log;
 
 import com.amulyakhare.textdrawable.TextDrawable;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import org.ucomplex.ucomplex.R;
 
@@ -38,7 +36,7 @@ public class FacadeMedia {
     /**
      * Create a File for saving an image or video
      */
-    public static File getOutputMediaFile(int type, String directory, String fileName) {
+    private static File getOutputMediaFile(int type, String directory, String fileName) {
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
                 directory), "UComplex");
         if (!mediaStorageDir.exists()) {
@@ -57,7 +55,7 @@ public class FacadeMedia {
         return mediaFile;
     }
 
-    static int getPowerOfTwoForSampleRatio(Double ratio) {
+    private static int getPowerOfTwoForSampleRatio(Double ratio) {
         int k = Integer.highestOneBit((int) Math.floor(ratio));
         if (k == 0)
             return 1;

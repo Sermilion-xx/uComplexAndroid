@@ -21,10 +21,6 @@ import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
 
 public class LoginRepository extends AbstractRepository {
 
-    LoginRepository(Context context) {
-        this.mContext = context;
-    }
-
     public LoginRepository() {
     }
 
@@ -51,7 +47,7 @@ public class LoginRepository extends AbstractRepository {
         loginRequest(user.getLogin(), password);
     }
 
-    public UserInterface loadLoggedUser() {
+    UserInterface loadLoggedUser() {
         return FacadePreferences.getUserDataFromPref(mContext);
     }
 }

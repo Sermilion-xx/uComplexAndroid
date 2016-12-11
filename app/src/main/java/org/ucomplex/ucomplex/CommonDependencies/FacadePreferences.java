@@ -10,14 +10,20 @@ import org.ucomplex.ucomplex.Model.Users.User;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 
 /**
+ * ---------------------------------------------------
  * Created by Sermilion on 01/11/2016.
+ * Project: uComplex_v_2
+ * ---------------------------------------------------
+ * <a href="http://www.ucomplex.org">ucomplex.org</a>
+ * <a href="http://www.github.com/sermilion>github</a>
+ * ---------------------------------------------------
  */
 
 public class FacadePreferences {
 
-    public static final String KEY_PREF_USER_ROLE = "userRole";
-    public static final String KEY_PREF_LOGIN_DATA = "userRole";
-    public static final String KEY_PREF_LOGGED_USER = "loggedUser";
+    private static final String KEY_PREF_USER_ROLE = "userRole";
+    private static final String KEY_PREF_LOGIN_DATA = "userRole";
+    private static final String KEY_PREF_LOGGED_USER = "loggedUser";
     public static final String KEY_PREF_PROFILE_PHOTO = "profilePhoto";
 
     public static void setRoleToPref(Context mContext, int role) {
@@ -28,14 +34,12 @@ public class FacadePreferences {
 
     public static int getRoleFromPref(Context mContext) {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(mContext);
-        int role = pref.getInt(KEY_PREF_USER_ROLE, -2);
-        return role;
+        return pref.getInt(KEY_PREF_USER_ROLE, -2);
     }
 
     public static String getLoginDataFromPref(Context mContext) {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(mContext);
-        String json = pref.getString(KEY_PREF_LOGIN_DATA, "");
-        return json;
+        return pref.getString(KEY_PREF_LOGIN_DATA, "");
     }
 
     public static void setLoginDataToPref(Context mContext, String loginData) {

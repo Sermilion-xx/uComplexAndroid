@@ -6,12 +6,6 @@ import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import org.ucomplex.ucomplex.CommonDependencies.UriDeserializer;
-import org.ucomplex.ucomplex.CommonDependencies.UriSerializer;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -19,12 +13,10 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.List;
 
-import lombok.Data;
-
 /**
  * Created by Sermilion on 01/11/2016.
  */
-@Data
+
 public class User implements UserInterface, Parcelable{
 
     private int id;
@@ -143,5 +135,155 @@ public class User implements UserInterface, Parcelable{
             BitmapDataObject bitmapDataObject = (BitmapDataObject) in.readObject();
             this.photoBitmap = BitmapFactory.decodeByteArray(bitmapDataObject.imageByteArray, 0, bitmapDataObject.imageByteArray.length);
         }
+    }
+
+    @Override
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    @Override
+    public String getLogin() {
+        return login;
+    }
+
+    @Override
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public int getRole() {
+        return role;
+    }
+
+    public void setRole(int role) {
+        this.role = role;
+    }
+
+    @Override
+    public int getPerson() {
+        return person;
+    }
+
+    public void setPerson(int person) {
+        this.person = person;
+    }
+
+    public Bitmap getPhotoBitmap() {
+        return photoBitmap;
+    }
+
+    public void setPhotoBitmap(Bitmap photoBitmap) {
+        this.photoBitmap = photoBitmap;
+    }
+
+    @Override
+    public String getBitmapUriString() {
+        return bitmapUriString;
+    }
+
+    @Override
+    public void setBitmapUriString(String bitmapUriString) {
+        this.bitmapUriString = bitmapUriString;
+    }
+
+    @Override
+    public int getPhoto() {
+        return photo;
+    }
+
+    @Override
+    public void setPhoto(int photo) {
+        this.photo = photo;
+    }
+
+    @Override
+    public String getCode() {
+        return code;
+    }
+
+    @Override
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public int getClient() {
+        return client;
+    }
+
+    public void setClient(int client) {
+        this.client = client;
+    }
+
+    @Override
+    public int getType() {
+        return type;
+    }
+
+    @Override
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public String getSession() {
+        return session;
+    }
+
+    public void setSession(String session) {
+        this.session = session;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
+
+    public static Creator<User> getCREATOR() {
+        return CREATOR;
     }
 }

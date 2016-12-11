@@ -1,15 +1,12 @@
 package org.ucomplex.ucomplex.Modules.Subject;
 
 import org.ucomplex.ucomplex.Interfaces.IRecyclerItem;
-import org.ucomplex.ucomplex.Model.Users.User;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.Modules.Materials.DepartmentItem;
 import org.ucomplex.ucomplex.Modules.Materials.MaterialItem;
 import org.ucomplex.ucomplex.Modules.Materials.ProgressItem;
 
 import java.util.ArrayList;
-
-import lombok.Data;
 
 /**
  * ---------------------------------------------------
@@ -20,7 +17,7 @@ import lombok.Data;
  * <a href="http://www.github.com/sermilion>github</a>
  * ---------------------------------------------------
  */
-@Data
+
 public class SubjectItem extends IRecyclerItem {
     private int                      id;
     private int                      course;
@@ -37,5 +34,104 @@ public class SubjectItem extends IRecyclerItem {
 
     public void addTeacher(UserInterface teacher){
         this.teachers.add(teacher);
+    }
+
+    public SubjectItem() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getCourse() {
+        return course;
+    }
+
+    public void setCourse(int course) {
+        this.course = course;
+    }
+
+    public int getGroup() {
+        return group;
+    }
+
+    public void setGroup(int group) {
+        this.group = group;
+    }
+
+    public int getTable() {
+        return table;
+    }
+
+    public void setTable(int table) {
+        this.table = table;
+    }
+
+    public int getClient() {
+        return client;
+    }
+
+    public void setClient(int client) {
+        this.client = client;
+    }
+
+    public int getCourse_id() {
+        return course_id;
+    }
+
+    public void setCourse_id(int course_id) {
+        this.course_id = course_id;
+    }
+
+    public ArrayList<UserInterface> getTeachers() {
+        return teachers;
+    }
+
+    public void setTeachers(ArrayList<UserInterface> teachers) {
+        this.teachers = teachers;
+    }
+
+    public ArrayList<MaterialItem> getFiles() {
+        return files;
+    }
+
+    public void setFiles(ArrayList<MaterialItem> files) {
+        this.files = files;
+    }
+
+    public DepartmentItem getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(DepartmentItem department) {
+        this.department = department;
+    }
+
+    public ProgressItem getProgress() {
+        return progress;
+    }
+
+    public void setProgress(ProgressItem progress) {
+        this.progress = progress;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

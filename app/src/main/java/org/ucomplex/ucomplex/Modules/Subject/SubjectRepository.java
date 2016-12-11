@@ -2,7 +2,6 @@ package org.ucomplex.ucomplex.Modules.Subject;
 
 import android.os.Bundle;
 
-import org.json.JSONException;
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.CommonDependencies.FacadePreferences;
 import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;

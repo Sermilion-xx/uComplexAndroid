@@ -57,28 +57,25 @@ public class RolePresenter extends AbstractPresenterRecycler implements Presente
         final RoleItem role = (RoleItem) ((ModelRecycler)mModel).getItem(position);
         holder.roleName.setText(role.getRoleName());
         holder.roleIcon.setImageResource(role.getRoleIcon());
-        holder.roleIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final UserInterface user = mModel.getUser();
-                new AsyncTask<Void, Void, Void>() {
-                    @Override
-                    protected Void doInBackground(Void... voids) {
-                        String login = user.getLogin();
-                        String password = user.getPassword();
-                        int role = user.getRoles().get(position).getId();
-                        user.setType(user.getRoles().get(position).getType());
-                        mModel.getUser().setType(user.getType());
-                        String encodedAuth = encodeLoginData(login + ":" + password + ":" + role);
-                        FacadePreferences.setLoginDataToPref(getActivityContext(), encodedAuth);
-                        FacadePreferences.setUserDataToPref(getActivityContext(), user);
-                        return null;
-                    }
-                }.execute();
-                Intent intent = new Intent(getActivityContext(), EventsActivity.class);
-                intent.putExtra(Constants.EXTRA_KEY_USER, (Parcelable) user);
-                getActivityContext().startActivity(intent);
-            }
+        holder.roleIcon.setOnClickListener(view -> {
+            final UserInterface user = mModel.getUser();
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... voids) {
+                    String login = user.getLogin();
+                    String password = user.getPassword();
+                    int role1 = user.getRoles().get(position).getId();
+                    user.setType(user.getRoles().get(position).getType());
+                    mModel.getUser().setType(user.getType());
+                    String encodedAuth = encodeLoginData(login + ":" + password + ":" + role1);
+                    FacadePreferences.setLoginDataToPref(getActivityContext(), encodedAuth);
+                    FacadePreferences.setUserDataToPref(getActivityContext(), user);
+                    return null;
+                }
+            }.execute();
+            Intent intent = new Intent(getActivityContext(), EventsActivity.class);
+            intent.putExtra(Constants.EXTRA_KEY_USER, (Parcelable) user);
+            getActivityContext().startActivity(intent);
         });
     }
 }

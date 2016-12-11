@@ -2,35 +2,27 @@ package org.ucomplex.ucomplex.CommonDependencies;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
-import android.support.annotation.NonNull;
 import android.util.Base64;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.RequestQueue;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
-import lombok.Cleanup;
-import lombok.val;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import okio.Okio;
-
 /**
+ * ---------------------------------------------------
  * Created by Sermilion on 20/09/16.
+ * Project: uComplex_v_2
+ * ---------------------------------------------------
+ * <a href="http://www.ucomplex.org">ucomplex.org</a>
+ * <a href="http://www.github.com/sermilion>github</a>
+ * ---------------------------------------------------
  */
 public class HttpFactory {
 
@@ -55,7 +47,7 @@ public class HttpFactory {
     }
 
     private static final String SCHEMA = "https://";
-    public static final String BASE_URL = SCHEMA + "ucomplex.org/";
+    private static final String BASE_URL = SCHEMA + "ucomplex.org/";
     public static final String USER_EVENTS_URL = BASE_URL + "user/events?mobile=1";
     public static final String PROFILE_IMAGE_URL = BASE_URL + "files/photos/";
     public static final String AUTHENTICATIO_URL = BASE_URL + "auth?mobile=1";
@@ -66,9 +58,6 @@ public class HttpFactory {
     public static final String USER_SUBJECT_URL = BASE_URL +"student/ajax/my_subjects?json";
     public static final String GET_PHOTO_URL = BASE_URL +"files/photos/";
 
-
-    String urlStudentString = "https://ucomplex.org/student/subjects_list?json";
-    String urlTeacherString = "https://ucomplex.org/teacher/subjects_list?json";
 
     public static String encodeLoginData(String loginData) {
         byte[] authBytes;
@@ -100,28 +89,22 @@ public class HttpFactory {
         RequestQueue queue = Volley.newRequestQueue(context);
 
         stringRequest = new StringRequest(com.android.volley.Request.Method.POST, url,
-                new com.android.volley.Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        String utf8String;
-                        try {
-                            utf8String = new String(response.getBytes("ISO-8859-1"), "UTF-8");
-                            Object data = null;
-                            if (returnData.length > 0) {
-                                data = returnData[0];
-                            }
-                            onTaskCompleteListener.onTaskComplete(requestType, utf8String, data);
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
+                response -> {
+                    String utf8String;
+                    try {
+                        utf8String = new String(response.getBytes("ISO-8859-1"), "UTF-8");
+                        Object data = null;
+                        if (returnData.length > 0) {
+                            data = returnData[0];
                         }
+                        onTaskCompleteListener.onTaskComplete(requestType, utf8String, data);
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
                     }
-                }, new com.android.volley.Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-                onTaskCompleteListener.onTaskComplete(requestType, error, 0);
-            }
-        }) {
+                }, error -> {
+                    error.printStackTrace();
+                    onTaskCompleteListener.onTaskComplete(requestType, error, 0);
+                }) {
 
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {

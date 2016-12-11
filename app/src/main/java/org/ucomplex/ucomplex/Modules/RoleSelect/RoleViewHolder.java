@@ -1,6 +1,5 @@
 package org.ucomplex.ucomplex.Modules.RoleSelect;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;

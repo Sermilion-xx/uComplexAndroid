@@ -2,6 +2,10 @@ package org.ucomplex.ucomplex.CommonDependencies;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.os.Build;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.Spanned;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -158,8 +162,6 @@ public class FacadeCommon {
             if (justDate != null) {
                 if (hhMMss != null) {
                     r += " в " + hhMMss.substring(0, 5);
-                } else {
-
                 }
             }
 
@@ -195,7 +197,7 @@ public class FacadeCommon {
 
     public static double round(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();
-        BigDecimal bd = null;
+        BigDecimal bd;
         try{
             bd = new BigDecimal(value);
         }catch (NumberFormatException e){
@@ -205,4 +207,12 @@ public class FacadeCommon {
         return bd.doubleValue();
     }
 
+    @SuppressWarnings("deprecation")
+    public static Spanned fromHtml(String source) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            return Html.fromHtml(source, Html.FROM_HTML_MODE_LEGACY);
+        } else {
+            return Html.fromHtml(source);
+        }
+    }
 }

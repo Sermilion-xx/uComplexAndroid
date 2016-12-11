@@ -37,7 +37,7 @@ public class EventViewHolder extends RecyclerView.ViewHolder {
         loadMoreEventsButton = (Button) view.findViewById(R.id.loadMoreEventsButton);
     }
 
-    public boolean allNullElements(){
+    boolean allNullElements(){
         return eventsImageView       == null &&
                 eventTextView        == null &&
                 eventTime            == null &&

@@ -180,26 +180,18 @@ public class BaseActivity extends AppCompatActivity implements IViewExtensions, 
         mRecyclerView.setAdapter(mDrawerAdapter);
 
         mActionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawer, mToolbar, R.string.drawer_open, R.string.drawer_closed);
-        mDrawer.setDrawerListener(mActionBarDrawerToggle);
+        mDrawer.addDrawerListener(mActionBarDrawerToggle);
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.menu_home:
-                        mDrawer.closeDrawers();
-                        break;
-                }
-                return false;
+        navigationView.setNavigationItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.menu_home:
+                    mDrawer.closeDrawers();
+                    break;
             }
+            return false;
         });
-        mDrawer.setDrawerListener(mActionBarDrawerToggle);
-        mDrawer.post(new Runnable() {
-            @Override
-            public void run() {
-                mActionBarDrawerToggle.syncState();
-            }
-        });
+        mDrawer.addDrawerListener(mActionBarDrawerToggle);
+        mDrawer.post(() -> mActionBarDrawerToggle.syncState());
 
     }
 

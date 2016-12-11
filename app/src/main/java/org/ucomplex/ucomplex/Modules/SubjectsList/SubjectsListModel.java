@@ -28,7 +28,7 @@ public class SubjectsListModel extends AbstractModelRecycler implements ModelRec
 
     private final int[] assessmentType = {R.string.zachet, R.string.exam, R.string.samostoyatelnaya, R.string.empty};
 
-    @Override
+    @Override @SuppressWarnings("unchecked")
     public ArrayList<IRecyclerItem> getDataFromJson(String jsonData) {
         ArrayList<IRecyclerItem> subjectsListArray = new ArrayList<>();
         JSONObject subjectsJson;

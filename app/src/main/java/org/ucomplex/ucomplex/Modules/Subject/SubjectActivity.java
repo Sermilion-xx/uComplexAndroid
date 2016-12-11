@@ -1,14 +1,10 @@
 package org.ucomplex.ucomplex.Modules.Subject;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 
 import org.ucomplex.ucomplex.BaseComponents.BaseRecyclerActivity;
-import org.ucomplex.ucomplex.BaseComponents.BaseRecyclerFragment;
 import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
-import org.ucomplex.ucomplex.Modules.FragmentFactory;
 import org.ucomplex.ucomplex.R;
 
 import javax.inject.Inject;

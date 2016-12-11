@@ -27,7 +27,7 @@ class SubjectViewHolder extends RecyclerView.ViewHolder {
     TextView mAttendance;
     TextView mAverageGrade;
 
-    public SubjectViewHolder(View itemView, int viewType) {
+    SubjectViewHolder(View itemView, int viewType) {
         super(itemView);
         switch (viewType) {
             case 0:

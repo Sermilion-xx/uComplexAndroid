@@ -10,18 +10,21 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.ucomplex.ucomplex.CommonDependencies.Constants;
+import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
 import org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP.AbstractPresenter;
 import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Model;
 import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 import org.ucomplex.ucomplex.Model.Users.LoginErrorType;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.R;
-import org.ucomplex.ucomplex.CommonDependencies.Constants;
-import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
 
 import java.util.ArrayList;
 
-import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.*;
+import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.EMPTY_EMAIL;
+import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.INVALID_PASSWORD;
+import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.NO_ERROR;
+import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.PASSWORD_REQUIRED;
 
 /**
  * ---------------------------------------------------
@@ -78,11 +81,7 @@ public class LoginPresenter extends AbstractPresenter implements MVP_Login.Prese
                     }
                 })
                 .setNegativeButton(getActivityContext().getString(R.string.cancel),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
+                        (dialog, id) -> dialog.cancel());
         AlertDialog alert = alertDialogBuilder.create();
         alert.show();
     }

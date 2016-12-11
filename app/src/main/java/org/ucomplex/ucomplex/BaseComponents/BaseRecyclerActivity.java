@@ -7,7 +7,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
-import org.ucomplex.ucomplex.Interfaces.IFragment;
 import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.ViewToPresenterRecycler;
 
 public class BaseRecyclerActivity extends BaseActivity implements ViewToPresenterRecycler {

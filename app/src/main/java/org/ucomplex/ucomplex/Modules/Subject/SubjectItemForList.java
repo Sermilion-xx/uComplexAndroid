@@ -2,8 +2,6 @@ package org.ucomplex.ucomplex.Modules.Subject;
 
 import org.ucomplex.ucomplex.Interfaces.IRecyclerItem;
 
-import lombok.Data;
-
 /**
  * ---------------------------------------------------
  * Created by Sermilion on 07/12/2016.
@@ -13,10 +11,54 @@ import lombok.Data;
  * <a href="http://www.github.com/sermilion>github</a>
  * ---------------------------------------------------
  */
-@Data
-public class SubjectItemForList extends IRecyclerItem {
+
+class SubjectItemForList extends IRecyclerItem {
     private int resourceString;
     private String textOne;
     private String textTwo;
     private String code;
+
+    SubjectItemForList(int resourceString, String textOne, String textTwo, String code) {
+        this.resourceString = resourceString;
+        this.textOne = textOne;
+        this.textTwo = textTwo;
+        this.code = code;
+    }
+
+    int getResourceString() {
+        return resourceString;
+    }
+
+    void setResourceString(int resourceString) {
+        this.resourceString = resourceString;
+    }
+
+    String getTextOne() {
+        return textOne;
+    }
+
+    void setTextOne(String textOne) {
+        this.textOne = textOne;
+    }
+
+    String getTextTwo() {
+        return textTwo;
+    }
+
+    void setTextTwo(String textTwo) {
+        this.textTwo = textTwo;
+    }
+
+    String getCode() {
+        return code;
+    }
+
+    void setCode(String code) {
+        this.code = code;
+    }
+
+    public SubjectItemForList() {
+    }
+
+
 }

@@ -3,9 +3,9 @@ package org.ucomplex.ucomplex.Modules.RoleSelect;
 import android.os.Bundle;
 
 import org.ucomplex.ucomplex.BaseComponents.BaseRecyclerActivity;
+import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
 import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.PresenterRecycler;
 import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.ViewToPresenterRecycler;
-import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
 import org.ucomplex.ucomplex.R;
 
 import javax.inject.Inject;

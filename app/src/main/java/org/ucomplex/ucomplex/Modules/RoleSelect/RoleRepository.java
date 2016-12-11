@@ -40,21 +40,23 @@ public class RoleRepository extends AbstractRepository {
     public void loadData(Bundle bundle) {
         User user = bundle.getParcelable(Constants.EXTRA_KEY_USER);
         ArrayList<RoleItem> roles = new ArrayList<>();
-        Random random = new Random();
-        for (int i = 0; i < user.getRoles().size(); i++) {
-            Role role = user.getRoles().get(i);
-            String roleStr = "";
-            if (role.getType() == 3) {
-                roleStr = mContext.getResources().getString(R.string.prepodvatel);
-            } else if (role.getType() == 4) {
-                roleStr = mContext.getResources().getString(R.string.student);
-            } else if (role.getType() == 0) {
-                roleStr = mContext.getResources().getString(R.string.sotrudnik);
-            } else if (role.getType() == 3) {
-                roleStr = mContext.getResources().getString(R.string.prepodvatel);
+        if (user!=null) {
+            Random random = new Random();
+            for (int i = 0; i < user.getRoles().size(); i++) {
+                Role role = user.getRoles().get(i);
+                String roleStr = "";
+                if (role.getType() == 3) {
+                    roleStr = mContext.getResources().getString(R.string.prepodvatel);
+                } else if (role.getType() == 4) {
+                    roleStr = mContext.getResources().getString(R.string.student);
+                } else if (role.getType() == 0) {
+                    roleStr = mContext.getResources().getString(R.string.sotrudnik);
+                } else if (role.getType() == 3) {
+                    roleStr = mContext.getResources().getString(R.string.prepodvatel);
+                }
+                int index = random.nextInt(5);
+                roles.add(new RoleItem(roleIcons[index], roleStr));
             }
-            int index = random.nextInt(5);
-            roles.add(new RoleItem(roleIcons[index], roleStr));
         }
         mOnTaskCompleteListener.onTaskComplete(REQUEST_LOAD_ROLES, roles);
     }

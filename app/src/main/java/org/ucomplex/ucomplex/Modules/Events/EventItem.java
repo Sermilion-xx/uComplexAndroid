@@ -13,12 +13,16 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-import lombok.Data;
-
 /**
+ * ---------------------------------------------------
  * Created by Sermilion on 01/11/2016.
+ * Project: uComplex_v_2
+ * ---------------------------------------------------
+ * <a href="http://www.ucomplex.org">ucomplex.org</a>
+ * <a href="http://www.github.com/sermilion>github</a>
+ * ---------------------------------------------------
  */
-@Data
+
 class EventItem extends IRecyclerItem implements Parcelable {
     private int id;
     private EventParams params;
@@ -28,11 +32,15 @@ class EventItem extends IRecyclerItem implements Parcelable {
     private Bitmap eventImageBitmap;
     private String eventText;
 
+    public static Creator<EventItem> getCREATOR() {
+        return CREATOR;
+    }
+
     EventItem() {
         params = new EventParams();
     }
 
-    EventItem(Parcel in) {
+    private EventItem(Parcel in) {
         id = in.readInt();
         type = in.readInt();
         time = in.readString();
@@ -113,7 +121,6 @@ class EventItem extends IRecyclerItem implements Parcelable {
 
     }
 
-    @Data
     class EventParams implements Parcelable {
 
         private String message;
@@ -126,7 +133,83 @@ class EventItem extends IRecyclerItem implements Parcelable {
         private int hourType;
         private int type;
 
-        public EventParams() {
+        EventParams() {
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public int getPhoto() {
+            return photo;
+        }
+
+        public void setPhoto(int photo) {
+            this.photo = photo;
+        }
+
+        public String getCode() {
+            return code;
+        }
+
+        public void setCode(String code) {
+            this.code = code;
+        }
+
+        public int getGcourse() {
+            return gcourse;
+        }
+
+        public void setGcourse(int gcourse) {
+            this.gcourse = gcourse;
+        }
+
+        public String getCourseName() {
+            return courseName;
+        }
+
+        public void setCourseName(String courseName) {
+            this.courseName = courseName;
+        }
+
+        public int getHourType() {
+            return hourType;
+        }
+
+        public void setHourType(int hourType) {
+            this.hourType = hourType;
+        }
+
+        public int getType() {
+            return type;
+        }
+
+        public void setType(int type) {
+            this.type = type;
+        }
+
+        public Creator<EventParams> getCREATOR() {
+            return CREATOR;
         }
 
         EventParams(Parcel in) {
@@ -195,5 +278,61 @@ class EventItem extends IRecyclerItem implements Parcelable {
             parcel.writeInt(hourType);
             parcel.writeInt(type);
         }
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public EventParams getParams() {
+        return params;
+    }
+
+    public void setParams(EventParams params) {
+        this.params = params;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public int getSeen() {
+        return seen;
+    }
+
+    public void setSeen(int seen) {
+        this.seen = seen;
+    }
+
+    public Bitmap getEventImageBitmap() {
+        return eventImageBitmap;
+    }
+
+    public void setEventImageBitmap(Bitmap eventImageBitmap) {
+        this.eventImageBitmap = eventImageBitmap;
+    }
+
+    public String getEventText() {
+        return eventText;
+    }
+
+    public void setEventText(String eventText) {
+        this.eventText = eventText;
     }
 }

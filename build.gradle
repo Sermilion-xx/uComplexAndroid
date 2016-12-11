@@ -5,14 +5,13 @@ buildscript {
     ext.support_version = '25.0.1'
     ext.JUNIT_VERSION = '4.12'
     ext.DAGGER_VERSION ='2.7'
-    ext.AAVersion = '4.1.0'
-
 
     repositories {
         jcenter()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.3'
+
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files

@@ -87,12 +87,7 @@ public class EventsPresenter extends AbstractPresenterRecycler implements MVP_Ev
             if (hasMoreEvents) {
                 holder.loadMoreEventsButton.setVisibility(View.VISIBLE);
                 holder.loadMoreEventsButton.setOnClickListener(
-                        new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                getActivityContext().sendBroadcast(new Intent(Constants.EVENTS_LOAD_MORE_BROADCAST));
-                            }
-                        }
+                        view -> getActivityContext().sendBroadcast(new Intent(Constants.EVENTS_LOAD_MORE_BROADCAST))
                 );
             } else {
                 if (holder.loadMoreEventsButton != null) {

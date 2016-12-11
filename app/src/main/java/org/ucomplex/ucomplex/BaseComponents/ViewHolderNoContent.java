@@ -2,7 +2,6 @@ package org.ucomplex.ucomplex.BaseComponents;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ImageView;
 
 import org.ucomplex.ucomplex.R;
 
@@ -17,8 +16,6 @@ import org.ucomplex.ucomplex.R;
  */
 
 public class ViewHolderNoContent extends RecyclerView.ViewHolder {
-
-    ImageView imageView;
 
     public ViewHolderNoContent(View itemView) {
         super(itemView);
