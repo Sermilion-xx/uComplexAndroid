@@ -47,4 +47,7 @@ public class Constants {
     public static final String STRING_EMPTY = "";
     public static final String IMAGE_FORMAT = ".jpg";
 
+    public static final String LOGIN = "login";
+    public static final String PASSWORD = "password";
+
 }

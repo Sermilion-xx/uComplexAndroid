@@ -8,7 +8,10 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 
-import org.ucomplex.ucomplex.BaseComponents.BaseActivity;
+import net.oneread.sermilionmvp.Architecture.BaseActivity;
+import net.oneread.sermilionmvp.MVP.BaseMVP.MVPView;
+import net.oneread.sermilionmvp.MVP.RecyclerMVP.MVPViewRecycler;
+
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.CommonDependencies.FacadePreferences;
 import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.ViewToPresenter;
@@ -27,10 +30,11 @@ import javax.inject.Inject;
 import static org.ucomplex.ucomplex.CommonDependencies.HttpFactory.encodeLoginData;
 import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.EMPTY_EMAIL;
 import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.INVALID_PASSWORD;
+import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.NO_ERROR;
 import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.PASSWORD_REQUIRED;
 
 
-public class LoginActivityView extends BaseActivity implements ViewToPresenter, View.OnClickListener{
+public class LoginActivityView extends BaseActivity implements MVPView, View.OnClickListener{
 
     AutoCompleteTextView mLoginView;
     EditText mPasswordView;
@@ -41,18 +45,22 @@ public class LoginActivityView extends BaseActivity implements ViewToPresenter, 
         super.mPresenter = presenter;
     }
     @Inject public void setModel(LoginModel model) {
-        super.mModel = model;
-    }
-    @Inject public void setRepository(LoginRepository repository) {
-        super.mRepository = repository;
+        super.mMVPModel = model;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        ((DaggerApplication) getApplication()).getLoginDiComponent().inject(this);
+        fragmentContainerid = R.id.container;
         super.onCreate(savedInstanceState);
         setupViews(R.layout.activity_login);
-        ((DaggerApplication) getApplication()).getLoginDiComponent().inject(this);
+        //MVP library
         super.setupMVP(this, LoginActivityView.class, null);
+    }
+
+    @SuppressWarnings("unchecked")
+    public  <T extends View> T find(int id){
+        return (T) findViewById(id);
     }
 
     public void setupViews(int layout) {
@@ -65,7 +73,6 @@ public class LoginActivityView extends BaseActivity implements ViewToPresenter, 
         mLoginSignInButton.setOnClickListener(this);
         mForgotButton.setOnClickListener(this);
     }
-
 
     void clickForgotButton() {
         ((MVP_Login.PresenterInterface) mPresenter).showRestorePasswordDialog();
@@ -83,20 +90,24 @@ public class LoginActivityView extends BaseActivity implements ViewToPresenter, 
         user.setLogin(login);
         ((LoginPresenter)mPresenter).setUser(user);
 
-        ArrayList<LoginErrorType> error = ((MVP_Login.PresenterInterface) mPresenter).checkCredentials();
+        ArrayList<LoginErrorType> error = ((LoginPresenter) mPresenter).checkCredentials();
 
-        if (error.contains(PASSWORD_REQUIRED)) {
-            mPasswordView.setError(getString(R.string.error_field_required));
-        } else if (error.contains(INVALID_PASSWORD)) {
-            mPasswordView.setError(getString(R.string.error_incorrect_password));
-        }
-        if (error.contains(EMPTY_EMAIL)) {
-            mLoginView.setError(getString(R.string.error_field_required));
+        if(error.contains(NO_ERROR)){
+            mPresenter.loadData();
+        }else {
+            if (error.contains(PASSWORD_REQUIRED)) {
+                mPasswordView.setError(getString(R.string.error_field_required));
+            } else if (error.contains(INVALID_PASSWORD)) {
+                mPasswordView.setError(getString(R.string.error_incorrect_password));
+            }
+            if (error.contains(EMPTY_EMAIL)) {
+                mLoginView.setError(getString(R.string.error_field_required));
+            }
         }
     }
 
     public void successfulLogin(int flag) {
-        UserInterface user = mPresenter.getUser();
+        UserInterface user = ((LoginPresenter)mPresenter).getUser();
         Intent intent;
         if(flag == 1 || user.getRoles().size() == 1){
             intent = new Intent(getActivityContext(), EventsActivity.class);

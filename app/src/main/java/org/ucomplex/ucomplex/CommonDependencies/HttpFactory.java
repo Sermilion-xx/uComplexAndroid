@@ -4,16 +4,10 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.util.Base64;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-
 import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * ---------------------------------------------------
@@ -26,7 +20,7 @@ import java.util.Map;
  */
 public class HttpFactory {
 
-    private StringRequest stringRequest;
+//    private StringRequest stringRequest;
     private static HttpFactory mInstance;
 
     private HttpFactory() {
@@ -42,8 +36,8 @@ public class HttpFactory {
     }
 
     public void cancel() {
-        if (stringRequest != null)
-            stringRequest.cancel();
+//        if (stringRequest != null)
+//            stringRequest.cancel();
     }
 
     private static final String SCHEMA = "https://";
@@ -86,38 +80,38 @@ public class HttpFactory {
         }
 
         final HashMap<String, String> finalParams = params;
-        RequestQueue queue = Volley.newRequestQueue(context);
+//        RequestQueue queue = Volley.newRequestQueue(context);
 
-        stringRequest = new StringRequest(com.android.volley.Request.Method.POST, url,
-                response -> {
-                    String utf8String;
-                    try {
-                        utf8String = new String(response.getBytes("ISO-8859-1"), "UTF-8");
-                        Object data = null;
-                        if (returnData.length > 0) {
-                            data = returnData[0];
-                        }
-                        onTaskCompleteListener.onTaskComplete(requestType, utf8String, data);
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
-                }, error -> {
-                    error.printStackTrace();
-                    onTaskCompleteListener.onTaskComplete(requestType, error, 0);
-                }) {
-
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                return finalParams;
-            }
-
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> header = new HashMap<>();
-                header.put("Authorization", "Basic " + encodedAuth);
-                return header;
-            }
-        };
-        queue.add(stringRequest);
+//        stringRequest = new StringRequest(com.android.volley.Request.Method.POST, url,
+//                response -> {
+//                    String utf8String;
+//                    try {
+//                        utf8String = new String(response.getBytes("ISO-8859-1"), "UTF-8");
+//                        Object data = null;
+//                        if (returnData.length > 0) {
+//                            data = returnData[0];
+//                        }
+//                        onTaskCompleteListener.onTaskComplete(requestType, utf8String, data);
+//                    } catch (UnsupportedEncodingException e) {
+//                        e.printStackTrace();
+//                    }
+//                }, error -> {
+//                    error.printStackTrace();
+//                    onTaskCompleteListener.onTaskComplete(requestType, error, 0);
+//                }) {
+//
+//            @Override
+//            protected Map<String, String> getParams() throws AuthFailureError {
+//                return finalParams;
+//            }
+//
+//            @Override
+//            public Map<String, String> getHeaders() throws AuthFailureError {
+//                HashMap<String, String> header = new HashMap<>();
+//                header.put("Authorization", "Basic " + encodedAuth);
+//                return header;
+//            }
+//        };
+//        queue.add(stringRequest);
     }
 }
