@@ -62,13 +62,9 @@ public class LoginModel extends AbstractMVPModel {
         String login = mUser.getLogin();
         String password = mUser.getPassword();
 
-//        UserDeserializationStrategy userDeserializationStrategy = new UserDeserializationStrategy();
-//        UCJsonDeserializer<User> deserializer = new UCJsonDeserializer<>(userDeserializationStrategy);
-
         LoginService loginService =
                 ServiceGenerator.createService(LoginService.class, login, password, "");
         Call<String> call = loginService.login();
-        String a = call.request().url().toString();
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
