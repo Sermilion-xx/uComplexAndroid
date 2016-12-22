@@ -7,16 +7,14 @@ import android.content.IntentFilter;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 
-import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.PresenterRecycler;
-import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.ViewToPresenterRecycler;
-import org.ucomplex.ucomplex.BaseComponents.BaseRecyclerActivity;
 import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
-import org.ucomplex.ucomplex.R;
+import org.ucomplex.ucomplex.BaseComponents.UCBaseActivity;
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
+import org.ucomplex.ucomplex.R;
 
 import javax.inject.Inject;
 
-public class EventsActivity extends BaseRecyclerActivity implements ViewToPresenterRecycler {
+public class EventsActivity extends UCBaseActivity {
 
     private MediaPlayer mAlert;
     private Boolean updateEventsReceiverRegistered = false;
@@ -24,17 +22,11 @@ public class EventsActivity extends BaseRecyclerActivity implements ViewToPresen
     @Inject
     public void setPresenter(EventsPresenter presenter) {
         super.mPresenter = presenter;
-        ((PresenterRecycler)super.mPresenter).setItemLayout(R.layout.list_item_event);
     }
 
     @Inject
     public void setModel(EventsModel model) {
-        super.mModel = model;
-    }
-
-    @Inject
-    public void setRepository(EventsRepository repository) {
-        super.mRepository = repository;
+        super.mMVPModel = model;
     }
 
     @Override
@@ -53,12 +45,8 @@ public class EventsActivity extends BaseRecyclerActivity implements ViewToPresen
         setupToolbar(getResourceString(R.string.events));
         setContentViewWithNavDrawer(R.layout.activity_main);
         mAlert = MediaPlayer.create(this, R.raw.alert);
-
-    }
-
-    @Override
-    public final void setupDrawer() {
-        super.setupDrawer();
+        ((EventsModel)mMVPModel).setUser(((DaggerApplication) getApplication()).getUser());
+        super.setupDrawer(((EventsModel)mMVPModel).getUser());
     }
 
     @Override
@@ -97,5 +85,4 @@ public class EventsActivity extends BaseRecyclerActivity implements ViewToPresen
             }
         }
     };
-
 }
