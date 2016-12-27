@@ -1,31 +1,29 @@
 package org.ucomplex.ucomplex.Modules.Login;
 
 
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Bundle;
+import android.os.Parcelable;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.ParseError;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
 import com.google.gson.Gson;
-
-import net.oneread.sermilionmvp.Data.DataSource;
-import net.oneread.sermilionmvp.MVP.AbstractMVP.AbstractMVPModel;
+import com.google.gson.GsonBuilder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeMedia;
+import org.ucomplex.ucomplex.CommonDependencies.FacadePreferences;
+import org.ucomplex.ucomplex.CommonDependencies.UriDeserializer;
+import org.ucomplex.ucomplex.CommonDependencies.UriSerializer;
+import org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP.AbstractModel;
 import org.ucomplex.ucomplex.Model.Users.User;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
-import org.ucomplex.ucomplex.Retrofit.JsonDeserialization.DeserializationStrategies.UserDeserializationStrategy;
-import org.ucomplex.ucomplex.Retrofit.JsonDeserialization.UCJsonDeserializer;
-import org.ucomplex.ucomplex.Retrofit.LoginService;
-import org.ucomplex.ucomplex.Retrofit.ServiceGenerator;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
-import static org.ucomplex.ucomplex.Retrofit.ServiceGenerator.API_BASE_URL;
 
 /**
  * Model layer on Model View PresenterToViewInterface Pattern
@@ -38,55 +36,36 @@ import static org.ucomplex.ucomplex.Retrofit.ServiceGenerator.API_BASE_URL;
  * <a href="http://www.github.com/sermilion>github</a>
  * ---------------------------------------------------
  */
-public class LoginModel extends AbstractMVPModel {
+public class LoginModel extends AbstractModel implements MVP_Login.ModelInterface{
 
     private static final String JSON_SESSION_KEY = "session";
     private static final String JSON_ROLES_KEY = "roles";
 
-    private UserInterface mUser;
-
-    public UserInterface getUser() {
-        return mUser;
-    }
-
-    public void setUser(UserInterface user) {
-        this.mUser = user;
-    }
-
     public LoginModel() {
 
     }
-    //MVP library
+
     @Override
-    public void loadData(DataSource.LoadJsonCallback loadJsonCallback) {
-        String login = mUser.getLogin();
-        String password = mUser.getPassword();
-
-        LoginService loginService =
-                ServiceGenerator.createService(LoginService.class, login, password, "");
-        Call<String> call = loginService.login();
-        call.enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                try {
-                    mUser = getDataFromJson(response.body());
-                    loadJsonCallback.onTasksLoaded(response.body());
-                    if (mUser != null) {
-                        mUser.setPassword(password);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                loadJsonCallback.onDataNotAvailable(t.getMessage());
-            }
-        });
-
+    public void loadData() {
+        //User object with loadData and password
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(Constants.EXTRA_KEY_USER, (Parcelable) mUser);
+        mRepository.loadData(bundle);
     }
 
-    private UserInterface getDataFromJson(String jsonString) throws JSONException {
+    @Override
+    public String sendResetRequest(String email) {
+        String json = "\"email\":\"" + email + "\"";
+        return null;
+    }
+
+
+    UserInterface loadLoggedUser() {
+        return ((LoginRepository) mRepository).loadLoggedUser();
+    }
+
+    @Override
+    public Object getDataFromJson(String jsonString) throws JSONException {
         UserInterface user;
         try {
             JSONObject jsonObject = new JSONObject(jsonString);
@@ -98,6 +77,8 @@ public class LoginModel extends AbstractMVPModel {
                     Uri bitmapUri = FacadeMedia.createFileForBitmap();
                     String uriString = user.getBitmapUriStringFromUri(bitmapUri);
                     user.setBitmapUriString(uriString);
+                } else {
+                    FacadePreferences.deleteFromPref(((LoginRepository) mRepository).getContext(), FacadePreferences.KEY_PREF_PROFILE_PHOTO);
                 }
                 return user;
             }
@@ -107,11 +88,28 @@ public class LoginModel extends AbstractMVPModel {
         }
     }
 
+    @Override
+    public void onTaskComplete(int requestType, Object... o) {
+        //o[1] - password
+        if(o[0] instanceof VolleyError){
+            mOnDataLoadedListener.dataLoaded(false, 0, 0);
+        }else {
+            try {
+                mUser = (UserInterface) getDataFromJson((String) o[0]);
+                if (mUser != null) {
+                    mUser.setPassword((String) o[1]);
+                }
+                mOnDataLoadedListener.dataLoaded(mUser != null, 0, 0);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     private User getUserFromJson(String rolesJsonStr) throws JSONException {
         JSONObject rolesJson = new JSONObject(rolesJsonStr);
         Gson gson = new Gson();
         JSONObject userSession = rolesJson.getJSONObject(JSON_SESSION_KEY);
         return gson.fromJson(userSession.toString(), User.class);
     }
-
 }

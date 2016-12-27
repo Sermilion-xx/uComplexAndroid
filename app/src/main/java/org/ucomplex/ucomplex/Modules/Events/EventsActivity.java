@@ -7,14 +7,16 @@ import android.content.IntentFilter;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 
+import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.PresenterRecycler;
+import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.ViewToPresenterRecycler;
+import org.ucomplex.ucomplex.BaseComponents.BaseRecyclerActivity;
 import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
-import org.ucomplex.ucomplex.BaseComponents.UCBaseActivity;
-import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.R;
+import org.ucomplex.ucomplex.CommonDependencies.Constants;
 
 import javax.inject.Inject;
 
-public class EventsActivity extends UCBaseActivity {
+public class EventsActivity extends BaseRecyclerActivity implements ViewToPresenterRecycler {
 
     private MediaPlayer mAlert;
     private Boolean updateEventsReceiverRegistered = false;
@@ -22,11 +24,17 @@ public class EventsActivity extends UCBaseActivity {
     @Inject
     public void setPresenter(EventsPresenter presenter) {
         super.mPresenter = presenter;
+        ((PresenterRecycler)super.mPresenter).setItemLayout(R.layout.list_item_event);
     }
 
     @Inject
     public void setModel(EventsModel model) {
-        super.mMVPModel = model;
+        super.mModel = model;
+    }
+
+    @Inject
+    public void setRepository(EventsRepository repository) {
+        super.mRepository = repository;
     }
 
     @Override
@@ -45,8 +53,12 @@ public class EventsActivity extends UCBaseActivity {
         setupToolbar(getResourceString(R.string.events));
         setContentViewWithNavDrawer(R.layout.activity_main);
         mAlert = MediaPlayer.create(this, R.raw.alert);
-        ((EventsModel)mMVPModel).setUser(((DaggerApplication) getApplication()).getUser());
-        super.setupDrawer(((EventsModel)mMVPModel).getUser());
+
+    }
+
+    @Override
+    public final void setupDrawer() {
+        super.setupDrawer();
     }
 
     @Override
@@ -85,4 +97,5 @@ public class EventsActivity extends UCBaseActivity {
             }
         }
     };
+
 }

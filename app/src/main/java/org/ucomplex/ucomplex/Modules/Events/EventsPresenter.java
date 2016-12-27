@@ -9,15 +9,13 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 
-import net.oneread.sermilionmvp.Architecture.RecyclerView.IRecyclerItem;
-import net.oneread.sermilionmvp.ClickStrategy.OnClickStrategy;
-import net.oneread.sermilionmvp.MVP.AbstractMVP.AbstractMVPPresenterRecycler;
-import net.oneread.sermilionmvp.MVP.RecyclerMVP.MVPModelRecycler;
-import net.oneread.sermilionmvp.MVP.RecyclerMVP.MVPViewRecycler;
-
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeMedia;
 import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
+import org.ucomplex.ucomplex.Interfaces.IRecyclerItem;
+import org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP.AbstractPresenterRecycler;
+import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.ModelRecycler;
+import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.ViewToPresenterRecycler;
 import org.ucomplex.ucomplex.R;
 
 /**
@@ -30,26 +28,21 @@ import org.ucomplex.ucomplex.R;
  * ---------------------------------------------------
  */
 
-public class EventsPresenter extends AbstractMVPPresenterRecycler {
+public class EventsPresenter extends AbstractPresenterRecycler implements MVP_Events.PresenterInterface {
 
     private boolean hasMoreEvents = true;
     private static final int TYPE_COMMON = 0;
     private static final int TYPE_FOOTER = 1;
 
-    public EventsPresenter(){
+    public EventsPresenter() {
 
-    }
-
-    public EventsPresenter(int listItemLayout, OnClickStrategy clickStrategy, int noContentLayout, int noInternetLayout){
-        super(listItemLayout, clickStrategy, noContentLayout, noInternetLayout);
-        itemLayout = listItemLayout;
     }
 
     @Override
     public EventViewHolder createViewHolder(ViewGroup parent, int viewType) {
         EventViewHolder viewHolder;
         itemLayout = isAvailableListViewItem();
-        if (itemLayout != list_item_no_content && itemLayout != list_item_no_internet) {
+        if (itemLayout != R.layout.list_item_no_content && itemLayout != R.layout.list_item_no_internet) {
             itemLayout = viewType == 0 ? R.layout.list_item_event : R.layout.list_item_event_footer;
         }
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
@@ -61,7 +54,7 @@ public class EventsPresenter extends AbstractMVPPresenterRecycler {
     @Override
     public void bindViewHolder(final RecyclerView.ViewHolder aHolder, int position) {
         EventViewHolder holder = (EventViewHolder) aHolder;
-        final IRecyclerItem item = ((MVPModelRecycler) mModel).getItem(position);
+        final IRecyclerItem item = ((ModelRecycler) mModel).getItem(position);
         if (item instanceof EventItem && !holder.allNullElements() && !item.isEmpty()) {
             EventItem event = (EventItem) item;
                 String personName = event.getParams().getName();
@@ -110,10 +103,6 @@ public class EventsPresenter extends AbstractMVPPresenterRecycler {
     }
 
     @Override
-    public void setItemLayout(int itemLayout) {
-        this.itemLayout = itemLayout;
-    }
-
     public void loadMoreEvents(final int start) {
         try {
             getView().showProgress();
@@ -123,7 +112,7 @@ public class EventsPresenter extends AbstractMVPPresenterRecycler {
         }
     }
 
-
+    @Override
     public void dataLoaded(boolean loaded, int... startEndOldEnd) {
         getView().hideProgress();
         int start = startEndOldEnd[0];
@@ -132,10 +121,10 @@ public class EventsPresenter extends AbstractMVPPresenterRecycler {
         hasMoreEvents = loaded;
         if (loaded) {
             if (requestType == Constants.REQUEST_MORE_EVENTS) {
-                ((MVPViewRecycler) getView()).notifyItemRangeInserted(start, end);
+                ((ViewToPresenterRecycler) getView()).notifyItemRangeInserted(start, end);
             } else {
                 hasMoreEvents = true;
-                ((MVPViewRecycler) getView()).notifyDataSetChanged();
+                ((ViewToPresenterRecycler) getView()).notifyDataSetChanged();
             }
         }
     }

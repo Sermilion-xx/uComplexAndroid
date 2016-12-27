@@ -1,6 +1,8 @@
 package org.ucomplex.ucomplex.Modules.Login;
 
 import android.content.DialogInterface;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -8,15 +10,11 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import net.oneread.sermilionmvp.Data.DataSource;
-import net.oneread.sermilionmvp.MVP.AbstractMVP.AbstractMVPPresenter;
-import net.oneread.sermilionmvp.MVP.BaseMVP.MVPModel;
-import net.oneread.sermilionmvp.MVP.BaseMVP.MVPView;
-import net.oneread.sermilionmvp.MVP.RecyclerMVP.MVPViewRecycler;
-
-import org.ucomplex.ucomplex.CommonDependencies.FacadePreferences;
+import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
-import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.PresenterRecycler;
+import org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP.AbstractPresenter;
+import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Model;
+import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 import org.ucomplex.ucomplex.Model.Users.LoginErrorType;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.R;
@@ -38,18 +36,20 @@ import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.PASSWORD_REQUIRED
  * ---------------------------------------------------
  */
 
-public class LoginPresenter extends AbstractMVPPresenter {
+public class LoginPresenter extends AbstractPresenter implements MVP_Login.PresenterInterface, OnTaskCompleteListener {
 
 
-    public void setUser(UserInterface user){
-        ((LoginModel)mModel).setUser(user);
+    @Override
+    public void dataLoaded(boolean loaded, int...startEndOldEnd){
+        getView().hideProgress();
+        if(loaded)
+            ((LoginActivityView)getView()).successfulLogin(0);
+        else
+            getView().showToast(makeToast(getActivityContext().getString(R.string.error_login)));
     }
 
-    public UserInterface getUser(){
-        return ((LoginModel)mModel).getUser();
-    }
 
-
+    @Override
     public void showRestorePasswordDialog() {
         LayoutInflater layoutInflater = LayoutInflater.from(getActivityContext());
         View promptView = layoutInflater.inflate(R.layout.dialog_forgot_password, null);
@@ -61,20 +61,20 @@ public class LoginPresenter extends AbstractMVPPresenter {
                     public void onClick(DialogInterface dialog, int id) {
                         if (HttpFactory.isNetworkConnected(getActivityContext())) {
                             final String email = editText.getText().toString();
-//                            new AsyncTask<Void, Void, String>() {
-//                                @Override
-//                                protected String doInBackground(Void... params) {
-//                                    return ((LoginModel)mModel).sendResetRequest(email);
-//                                }
-//
-//                                @Override
-//                                protected void onPostExecute(String result) {
-//                                    super.onPostExecute(result);
-//                                    if (result != null) {
-//                                        makeToast(getActivityContext().getString(R.string.reset_password_sent));
-//                                    }
-//                                }
-//                            }.execute();
+                            new AsyncTask<Void, Void, String>() {
+                                @Override
+                                protected String doInBackground(Void... params) {
+                                    return ((LoginModel)mModel).sendResetRequest(email);
+                                }
+
+                                @Override
+                                protected void onPostExecute(String result) {
+                                    super.onPostExecute(result);
+                                    if (result != null) {
+                                        makeToast(getActivityContext().getString(R.string.reset_password_sent));
+                                    }
+                                }
+                            }.execute();
                         } else {
                             makeToast(getActivityContext().getString(R.string.error_check_internet));
                         }
@@ -88,8 +88,8 @@ public class LoginPresenter extends AbstractMVPPresenter {
 
     private ArrayList<LoginErrorType> runCheck() {
         ArrayList<LoginErrorType> errors = new ArrayList<>();
-        String password = ((LoginModel)mModel).getUser().getPassword();
-        String login = ((LoginModel)mModel).getUser().getLogin();
+        String password = mModel.getUser().getPassword();
+        String login = mModel.getUser().getLogin();
         if (TextUtils.isEmpty(password)) {
             errors.add(PASSWORD_REQUIRED);
         } else if (!isPasswordValid(password)) {
@@ -108,7 +108,7 @@ public class LoginPresenter extends AbstractMVPPresenter {
         return password.length() > 3;
     }
 
-
+    @Override
     public ArrayList<LoginErrorType> checkCredentials() {
         ArrayList<LoginErrorType> error = runCheck();
         if (error.get(0)==NO_ERROR) {
@@ -117,40 +117,32 @@ public class LoginPresenter extends AbstractMVPPresenter {
         return error;
     }
 
-    private UserInterface loadLoggedUser() {
-        return FacadePreferences.getUserDataFromPref(getActivityContext());
-    }
-    //MVP library
     @Override
-    public void setModel(MVPModel model) {
+    public void setModel(Model model, Bundle params) {
         mModel = model;
-        UserInterface user = loadLoggedUser();
+        mModel.setOnDataLoadedListener(this);
+
+        UserInterface user = ((LoginModel)mModel).loadLoggedUser();
         if(user!=null){
-            ((LoginModel)mModel).setUser(user);
+            mModel.setUser(user);
+            //1 - has already been logged
+            onTaskComplete(Constants.REQUEST_LOGIN, true, 1);
         }
     }
-    //MVP library
-    @Override @SuppressWarnings("unchecked")
-    public void loadData() {
-        getView().showProgress();
-        mModel.loadData(new DataSource.LoadJsonCallback<String, String>() {
 
-            @Override
-            public void onTasksLoaded(String s) {
-                getView().hideProgress();
-                ((LoginActivityView)getView()).successfulLogin(0);
-            }
-
-            @Override
-            public void onDataNotAvailable(String s) {
-                makeToast("Ошибка при входе").show();
-                getView().hideProgress();
-            }
-        });
+    public void setUser(UserInterface user){
+        mModel.setUser(user);
     }
 
     private Toast makeToast(String msg) {
         return Toast.makeText(getView().getAppContext(), msg, Toast.LENGTH_SHORT);
     }
 
+    @Override
+    public void onTaskComplete(int requestType, Object... o) {
+        boolean result = (boolean) o[0];
+        if (result) {
+            ((LoginActivityView)getView()).successfulLogin(1);
+        }
+    }
 }

@@ -13,7 +13,7 @@ import android.os.Parcelable;
  * ---------------------------------------------------
  */
 
-public class Role implements Parcelable, Comparable{
+public class Role implements Parcelable{
 
     private int id;
     private int person;
@@ -89,22 +89,5 @@ public class Role implements Parcelable, Comparable{
 
     public static Creator<Role> getCREATOR() {
         return CREATOR;
-    }
-
-    @Override
-    public int compareTo(Object o) {
-        Role role = (Role) o;
-        if(this.name.equals(role.getName()) &&
-                this.type == role.getType() &&
-                this.id == role.getId() &&
-                this.person == role.getPerson()){
-            return 0;
-
-        }else if(this.type<role.getType()){
-            return 1;
-        }else {
-            return -1;
-        }
-
     }
 }
