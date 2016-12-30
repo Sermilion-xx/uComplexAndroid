@@ -33,47 +33,20 @@ import org.ucomplex.ucomplex.Model.Users.UserInterface;
 public class LoginModel extends AbstractModel {
 
     private UserInterface mUser;
+    private String tempPassword;
 
     private static final String JSON_SESSION_KEY = "session";
     private static final String JSON_ROLES_KEY = "roles";
-    private Context mContext;
 
-    public void setContext(Context mContext) {
-        this.mContext = mContext;
+    public String getTempPassword() {
+        String password = tempPassword;
+        tempPassword = null;
+        return password;
     }
-
-    public LoginModel() {
-
-    }
-
 
     public String sendResetRequest(String email) {
         String json = "\"email\":\"" + email + "\"";
         return null;
-    }
-
-
-    public Object getDataFromJson(String jsonString) throws JSONException {
-        UserInterface user;
-        try {
-            JSONObject jsonObject = new JSONObject(jsonString);
-            if (jsonObject.getJSONArray(JSON_ROLES_KEY) == null) {
-                return null;
-            } else {
-                user = getUserFromJson(jsonString);
-                if (user.getPhoto() == 1) {
-                    Uri bitmapUri = FacadeMedia.createFileForBitmap();
-                    String uriString = user.getBitmapUriStringFromUri(bitmapUri);
-                    user.setBitmapUriString(uriString);
-                } else {
-                    FacadePreferences.deleteFromPref(null, FacadePreferences.KEY_PREF_PROFILE_PHOTO);
-                }
-                return user;
-            }
-        } catch (JSONException | NullPointerException e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 
     private User getUserFromJson(String rolesJsonStr) throws JSONException {
@@ -85,15 +58,14 @@ public class LoginModel extends AbstractModel {
 
     @Override
     public void loadData(MVPCallback mvpCallback, Bundle... bundles) {
-        String password = mUser.getPassword();
-        final String encodedAuth = HttpFactory.encodeLoginData(mUser.getLogin() + ":" + mUser.getPassword());
+        tempPassword = mUser.getPassword();
+        final String encodedAuth = HttpFactory.encodeLoginData(mUser.getLogin() + Constants.AUTH_DELIMETER + mUser.getPassword());
         HttpFactory.getInstance().httpVolley(HttpFactory.AUTHENTICATIO_URL,
                 encodedAuth,
                 mContext,
-                Constants.REQUEST_LOGIN,
                 null,
-                mvpCallback,
-                password);
+                mvpCallback
+                );
     }
 
     @Override

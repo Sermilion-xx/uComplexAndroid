@@ -10,6 +10,7 @@ import com.bumptech.glide.Glide;
 
 import net.oneread.aghanim.components.utility.IRecyclerItem;
 import net.oneread.aghanim.mvp.abstractmvp.AbstractPresenterRecycler;
+import net.oneread.aghanim.mvp.basemvp.MVPModel;
 import net.oneread.aghanim.mvp.recyclermvp.ModelRecycler;
 
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
@@ -33,6 +34,12 @@ public class EventsPresenter extends AbstractPresenterRecycler {
     private boolean hasMoreEvents = true;
     private static final int TYPE_COMMON = 0;
     private static final int TYPE_FOOTER = 1;
+
+    @Override
+    public void setModel(MVPModel models) {
+        super.setModel(models);
+
+    }
 
     private int isAvailableListViewItem() {
         IRecyclerItem item = ((ModelRecycler) mModel).getItems().get(0);

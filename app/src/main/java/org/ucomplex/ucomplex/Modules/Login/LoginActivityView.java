@@ -10,26 +10,20 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import net.oneread.aghanim.components.base.MVPBaseActivity;
-import net.oneread.aghanim.mvp.basemvp.MVPView;
 
-
+import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
-import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
-import org.ucomplex.ucomplex.CommonDependencies.FacadePreferences;
-import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.ViewToPresenter;
 import org.ucomplex.ucomplex.Model.Users.LoginErrorType;
 import org.ucomplex.ucomplex.Model.Users.User;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.Modules.Events.EventsActivity;
 import org.ucomplex.ucomplex.Modules.RoleSelect.RoleSelectActivity;
-import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
 import org.ucomplex.ucomplex.R;
 
 import java.util.ArrayList;
 
 import javax.inject.Inject;
 
-import static org.ucomplex.ucomplex.CommonDependencies.HttpFactory.encodeLoginData;
 import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.EMPTY_EMAIL;
 import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.INVALID_PASSWORD;
 import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.PASSWORD_REQUIRED;

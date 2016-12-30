@@ -47,7 +47,6 @@ public class LoginPresenter extends AbstractPresenter {
     @Override
     public void setModel(MVPModel model) {
         mModel = model;
-        ((LoginModel)mModel).setContext(getActivityContext());
         UserInterface user = FacadeCommon.getSharedUserInstance(getActivityContext());
         if(user!=null){
             ((LoginActivityView)getView()).successfulLogin(1);
@@ -61,6 +60,7 @@ public class LoginPresenter extends AbstractPresenter {
             public void onSuccess(Object o) {
                 mModel.processJson((String)o);
                 UserInterface user = ((LoginModel)mModel).getUser();
+                user.setPassword(((LoginModel)mModel).getTempPassword());
                 if(user.getRoles().size() == 1){
                     user.setType(user.getRoles().get(0).getType());
                     FacadePreferences.setUserDataToPref(getActivityContext(), user);

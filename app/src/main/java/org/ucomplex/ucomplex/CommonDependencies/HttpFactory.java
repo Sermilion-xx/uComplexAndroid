@@ -79,10 +79,8 @@ public class HttpFactory {
     public void httpVolley(String url,
                            final String encodedAuth,
                            Context context,
-                           final int requestType,
                            HashMap<String, String> params,
-                           MVPCallback callback,
-                           final Object... returnData) {
+                           MVPCallback callback) {
         if (params == null) {
             params = new HashMap<>();
         }
@@ -95,10 +93,6 @@ public class HttpFactory {
                     String utf8String;
                     try {
                         utf8String = new String(response.getBytes("ISO-8859-1"), "UTF-8");
-                        Object data = null;
-                        if (returnData.length > 0) {
-                            data = returnData[0];
-                        }
                         callback.onSuccess(utf8String);
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();

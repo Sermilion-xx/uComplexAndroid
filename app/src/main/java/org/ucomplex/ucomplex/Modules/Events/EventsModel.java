@@ -55,23 +55,14 @@ public class EventsModel extends AbstractModelRecycler {
     private static final String EVENT_YEAR = "year";
     private static final String EVENTS_START = "event_start";
 
-    private Context context;
-
-    public void setContext(Context context) {
-        this.context = context;
-    }
-
-    public EventsModel() {
-    }
-
 
     @Override
     public void loadData(MVPCallback mvpCallback, Bundle... bundle) {
-        final String encodedAuth = FacadePreferences.getLoginDataFromPref(context);
+        final String encodedAuth = FacadePreferences.getLoginDataFromPref(mContext);
         HashMap<String, String> params = new HashMap<>();
         int requestType = Constants.REQUEST_EVENTS;
         int start;
-        if (bundle[0] != null) {
+        if (bundle.length>0) {
             start = bundle[0].getInt(EVENTS_START);
             params.put(EVENTS_START, Integer.toString(start));
             requestType = Constants.REQUEST_MORE_EVENTS;
@@ -79,8 +70,7 @@ public class EventsModel extends AbstractModelRecycler {
         int finalRequestType = requestType;
         HttpFactory.getInstance().httpVolley(HttpFactory.USER_EVENTS_URL,
                 encodedAuth,
-                context,
-                requestType,
+                mContext,
                 params,
                 new MVPCallback() {
                     int start = 0;

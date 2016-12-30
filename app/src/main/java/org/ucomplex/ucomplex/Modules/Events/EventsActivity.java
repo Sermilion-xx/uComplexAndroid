@@ -30,7 +30,6 @@ public class EventsActivity extends BaseRecyclerActivity {
     @Inject
     public void setPresenter(EventsPresenter presenter) {
         super.mPresenter = presenter;
-        ((PresenterRecycler)super.mPresenter).setItemLayout(R.layout.list_item_event);
     }
 
     //mvp
@@ -47,6 +46,7 @@ public class EventsActivity extends BaseRecyclerActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ((DaggerApplication) getApplication()).getEventsDiComponent().inject(this);
         super.onCreate(savedInstanceState);
         initPresenter();
         if(savedInstanceState!=null){
