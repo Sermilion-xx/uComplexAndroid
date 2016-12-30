@@ -1,5 +1,6 @@
 package org.ucomplex.ucomplex.Modules.Login;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,17 +11,22 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import net.oneread.aghanim.components.utility.MVPCallback;
+import net.oneread.aghanim.mvp.abstractmvp.AbstractPresenter;
+import net.oneread.aghanim.mvp.basemvp.MVPModel;
+import net.oneread.aghanim.mvp.basemvp.MVPView;
+
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
+import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
+import org.ucomplex.ucomplex.CommonDependencies.FacadePreferences;
 import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
-import org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP.AbstractPresenter;
-import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Model;
-import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
 import org.ucomplex.ucomplex.Model.Users.LoginErrorType;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.R;
 
 import java.util.ArrayList;
 
+import static org.ucomplex.ucomplex.CommonDependencies.HttpFactory.encodeLoginData;
 import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.EMPTY_EMAIL;
 import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.INVALID_PASSWORD;
 import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.NO_ERROR;
@@ -36,20 +42,40 @@ import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.PASSWORD_REQUIRED
  * ---------------------------------------------------
  */
 
-public class LoginPresenter extends AbstractPresenter implements MVP_Login.PresenterInterface, OnTaskCompleteListener {
-
+public class LoginPresenter extends AbstractPresenter {
 
     @Override
-    public void dataLoaded(boolean loaded, int...startEndOldEnd){
-        getView().hideProgress();
-        if(loaded)
-            ((LoginActivityView)getView()).successfulLogin(0);
-        else
-            getView().showToast(makeToast(getActivityContext().getString(R.string.error_login)));
+    public void setModel(MVPModel model) {
+        mModel = model;
+        ((LoginModel)mModel).setContext(getActivityContext());
+        UserInterface user = FacadeCommon.getSharedUserInstance(getActivityContext());
+        if(user!=null){
+            ((LoginActivityView)getView()).successfulLogin(1);
+        }
     }
 
-
     @Override
+    public void loadData(Bundle... bundle) {
+        mModel.loadData(new MVPCallback() {
+            @Override
+            public void onSuccess(Object o) {
+                mModel.processJson((String)o);
+                UserInterface user = ((LoginModel)mModel).getUser();
+                if(user.getRoles().size() == 1){
+                    user.setType(user.getRoles().get(0).getType());
+                    FacadePreferences.setUserDataToPref(getActivityContext(), user);
+                    String loginData = encodeLoginData(user.getLogin()+":"+user.getPassword()+":"+user.getRoles().get(0).getId());
+                    FacadePreferences.setLoginDataToPref(getActivityContext(), loginData);
+                }
+                ((LoginActivityView)getView()).successfulLogin(0);
+            }
+            @Override
+            public void onError(Throwable throwable) {
+                ((LoginActivityView)getView()).showToast(makeToast(getActivityContext().getString(R.string.error_login)));
+            }
+        });
+    }
+
     public void showRestorePasswordDialog() {
         LayoutInflater layoutInflater = LayoutInflater.from(getActivityContext());
         View promptView = layoutInflater.inflate(R.layout.dialog_forgot_password, null);
@@ -87,9 +113,10 @@ public class LoginPresenter extends AbstractPresenter implements MVP_Login.Prese
     }
 
     private ArrayList<LoginErrorType> runCheck() {
+        UserInterface user = ((LoginModel)mModel).getUser();
         ArrayList<LoginErrorType> errors = new ArrayList<>();
-        String password = mModel.getUser().getPassword();
-        String login = mModel.getUser().getLogin();
+        String password = user.getPassword();
+        String login = user.getLogin();
         if (TextUtils.isEmpty(password)) {
             errors.add(PASSWORD_REQUIRED);
         } else if (!isPasswordValid(password)) {
@@ -108,7 +135,7 @@ public class LoginPresenter extends AbstractPresenter implements MVP_Login.Prese
         return password.length() > 3;
     }
 
-    @Override
+
     public ArrayList<LoginErrorType> checkCredentials() {
         ArrayList<LoginErrorType> error = runCheck();
         if (error.get(0)==NO_ERROR) {
@@ -117,28 +144,11 @@ public class LoginPresenter extends AbstractPresenter implements MVP_Login.Prese
         return error;
     }
 
-    @Override
-    public void setModel(Model model, Bundle params) {
-        mModel = model;
-        mModel.setOnDataLoadedListener(this);
-
-        UserInterface user = ((LoginModel)mModel).loadLoggedUser();
-        if(user!=null){
-            mModel.setUser(user);
-            //1 - has already been logged
-            onTaskComplete(Constants.REQUEST_LOGIN, true, 1);
-        }
-    }
-
-    public void setUser(UserInterface user){
-        mModel.setUser(user);
-    }
-
     private Toast makeToast(String msg) {
         return Toast.makeText(getView().getAppContext(), msg, Toast.LENGTH_SHORT);
     }
 
-    @Override
+
     public void onTaskComplete(int requestType, Object... o) {
         boolean result = (boolean) o[0];
         if (result) {

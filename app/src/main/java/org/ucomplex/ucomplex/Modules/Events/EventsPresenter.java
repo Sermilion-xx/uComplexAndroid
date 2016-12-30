@@ -3,19 +3,19 @@ package org.ucomplex.ucomplex.Modules.Events;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 
+import net.oneread.aghanim.components.utility.IRecyclerItem;
+import net.oneread.aghanim.mvp.abstractmvp.AbstractPresenterRecycler;
+import net.oneread.aghanim.mvp.recyclermvp.ModelRecycler;
+
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
+import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeMedia;
 import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
-import org.ucomplex.ucomplex.Interfaces.IRecyclerItem;
-import org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP.AbstractPresenterRecycler;
-import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.ModelRecycler;
-import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.ViewToPresenterRecycler;
 import org.ucomplex.ucomplex.R;
 
 /**
@@ -28,27 +28,30 @@ import org.ucomplex.ucomplex.R;
  * ---------------------------------------------------
  */
 
-public class EventsPresenter extends AbstractPresenterRecycler implements MVP_Events.PresenterInterface {
+public class EventsPresenter extends AbstractPresenterRecycler {
 
     private boolean hasMoreEvents = true;
     private static final int TYPE_COMMON = 0;
     private static final int TYPE_FOOTER = 1;
 
-    public EventsPresenter() {
-
+    private int isAvailableListViewItem() {
+        IRecyclerItem item = ((ModelRecycler) mModel).getItems().get(0);
+        if (!FacadeCommon.isNetworkConnected(getActivityContext()) && item.isEmpty()) {
+            return R.layout.list_item_no_internet;
+        } else if (item.isEmpty()) {
+            return R.layout.list_item_no_content;
+        } else {
+            return itemLayout;
+        }
     }
 
     @Override
     public EventViewHolder createViewHolder(ViewGroup parent, int viewType) {
-        EventViewHolder viewHolder;
         itemLayout = isAvailableListViewItem();
         if (itemLayout != R.layout.list_item_no_content && itemLayout != R.layout.list_item_no_internet) {
-            itemLayout = viewType == 0 ? R.layout.list_item_event : R.layout.list_item_event_footer;
+            itemLayout = viewType == 0 ? itemLayout : R.layout.list_item_event_footer;
         }
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View viewTaskRow = inflater.inflate(itemLayout, parent, false);
-        viewHolder = new EventViewHolder(viewTaskRow);
-        return viewHolder;
+        return (EventViewHolder) super.createViewHolder(parent, viewType);
     }
 
     @Override
@@ -103,30 +106,31 @@ public class EventsPresenter extends AbstractPresenterRecycler implements MVP_Ev
     }
 
     @Override
-    public void loadMoreEvents(final int start) {
+    public void setItemLayout(int i) {
+        this.itemLayout = i;
+    }
+
+    void loadMoreEvents(final int start) {
         try {
-            getView().showProgress();
             ((EventsModel) mModel).loadMoreEvents(start);
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
     }
 
-    @Override
-    public void dataLoaded(boolean loaded, int... startEndOldEnd) {
-        getView().hideProgress();
-        int start = startEndOldEnd[0];
-        int end = startEndOldEnd[1];
-        int requestType = startEndOldEnd[3];
-        hasMoreEvents = loaded;
-        if (loaded) {
-            if (requestType == Constants.REQUEST_MORE_EVENTS) {
-                ((ViewToPresenterRecycler) getView()).notifyItemRangeInserted(start, end);
-            } else {
-                hasMoreEvents = true;
-                ((ViewToPresenterRecycler) getView()).notifyDataSetChanged();
-            }
-        }
-    }
+//    public void dataLoaded(boolean loaded, int... startEndOldEnd) {
+//        int start = startEndOldEnd[0];
+//        int end = startEndOldEnd[1];
+//        int requestType = startEndOldEnd[3];
+//        hasMoreEvents = loaded;
+//        if (loaded) {
+//            if (requestType == Constants.REQUEST_MORE_EVENTS) {
+//                ((ViewRecycler) getView()).notifyItemRangeInserted(start, end);
+//            } else {
+//                hasMoreEvents = true;
+//                ((ViewRecycler) getView()).notifyDataSetChanged();
+//            }
+//        }
+//    }
 }
 

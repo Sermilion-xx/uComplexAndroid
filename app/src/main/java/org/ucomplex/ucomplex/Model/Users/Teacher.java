@@ -2,9 +2,9 @@ package org.ucomplex.ucomplex.Model.Users;
 
 import android.os.Parcelable;
 
-import org.ucomplex.ucomplex.Modules.Materials.DepartmentItem;
-import org.ucomplex.ucomplex.Modules.Materials.MaterialItem;
-import org.ucomplex.ucomplex.Modules.Materials.TimetableEntryItem;
+import org.ucomplex.ucomplex.Model.Materials.DepartmentItem;
+import org.ucomplex.ucomplex.Model.Materials.MaterialItem;
+import org.ucomplex.ucomplex.Model.Materials.TimetableEntryItem;
 
 import java.util.ArrayList;
 

@@ -1,8 +1,8 @@
-package org.ucomplex.ucomplex.Modules.Materials;
+package org.ucomplex.ucomplex.Model.Materials;
 
 import org.ucomplex.ucomplex.Interfaces.IRecyclerItem;
 import org.ucomplex.ucomplex.Model.Users.User;
-import org.ucomplex.ucomplex.Modules.Subject.SubjectItem;
+//import org.ucomplex.ucomplex.Modules.Subject.SubjectItem;
 
 /**
  * ---------------------------------------------------
@@ -16,7 +16,7 @@ import org.ucomplex.ucomplex.Modules.Subject.SubjectItem;
 
 public class ProgressItem extends IRecyclerItem {
     private int student;
-    private SubjectItem course;
+//    private SubjectItem course;
     private User teacher;
     private int table;
     private int time;
@@ -39,13 +39,13 @@ public class ProgressItem extends IRecyclerItem {
         this.student = student;
     }
 
-    public SubjectItem getCourse() {
-        return course;
-    }
-
-    public void setCourse(SubjectItem course) {
-        this.course = course;
-    }
+//    public SubjectItem getCourse() {
+//        return course;
+//    }
+//
+//    public void setCourse(SubjectItem course) {
+//        this.course = course;
+//    }
 
     public User getTeacher() {
         return teacher;

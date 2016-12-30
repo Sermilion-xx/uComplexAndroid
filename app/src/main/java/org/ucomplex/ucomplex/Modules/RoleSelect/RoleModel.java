@@ -3,11 +3,13 @@ package org.ucomplex.ucomplex.Modules.RoleSelect;
 import android.os.Bundle;
 import android.os.Parcelable;
 
+import net.oneread.aghanim.components.utility.IRecyclerItem;
+import net.oneread.aghanim.components.utility.MVPCallback;
+import net.oneread.aghanim.mvp.abstractmvp.AbstractModelRecycler;
+import net.oneread.aghanim.mvp.recyclermvp.ModelRecycler;
+
 import org.json.JSONException;
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
-import org.ucomplex.ucomplex.Interfaces.IRecyclerItem;
-import org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP.AbstractModelRecycler;
-import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.ModelRecycler;
 
 import java.util.ArrayList;
 
@@ -27,27 +29,12 @@ public class RoleModel extends AbstractModelRecycler implements ModelRecycler {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public void loadData() {
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(Constants.EXTRA_KEY_USER, (Parcelable) mUser);
-        mRepository.loadData(bundle);
+    public void loadData(MVPCallback mvpCallback, Bundle... bundles) {
+
     }
 
     @Override
-    public ArrayList<IRecyclerItem> getDataFromJson(String result) throws JSONException {
-        throw new UnsupportedOperationException("RoleModel does not need to process json. Do not call this method.");
+    public Object processJson(String s) {
+        return null;
     }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public void onTaskComplete(int requestType, Object... o) {
-        if (o.length > 0) {
-            mRecyclerItems = (ArrayList<IRecyclerItem>) o[0];
-            end = mRecyclerItems.size();
-        }
-        mOnDataLoadedListener.dataLoaded(o.length > 0, start, end, oldEnd);
-    }
-
-
 }

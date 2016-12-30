@@ -15,7 +15,7 @@ import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.PresenterRecycler;
 import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.ViewToPresenterRecycler;
 import org.ucomplex.ucomplex.Modules.Events.EventViewHolder;
 import org.ucomplex.ucomplex.Modules.RoleSelect.RoleViewHolder;
-import org.ucomplex.ucomplex.Modules.SubjectsList.SubjectListViewHolder;
+//import org.ucomplex.ucomplex.Modules.SubjectsList.SubjectListViewHolder;
 import org.ucomplex.ucomplex.R;
 
 /**
@@ -124,7 +124,7 @@ public abstract class AbstractPresenterRecycler extends AbstractPresenter implem
             case R.layout.list_item_role:
                 return new RoleViewHolder(view);
             case R.layout.list_item_subject:
-                return new SubjectListViewHolder(view);
+//                return new SubjectListViewHolder(view);
             case R.layout.list_item_no_content:
                 return new ViewHolderNoContent(view);
             case R.layout.list_item_no_internet:

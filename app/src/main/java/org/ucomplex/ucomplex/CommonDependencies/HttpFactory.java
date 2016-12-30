@@ -9,7 +9,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.ucomplex.ucomplex.Interfaces.OnTaskCompleteListener;
+import net.oneread.aghanim.components.utility.MVPCallback;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
@@ -53,10 +53,10 @@ public class HttpFactory {
     public static final String AUTHENTICATIO_URL = BASE_URL + "auth?mobile=1";
     public static final String RESTORE_PASSWORD_URL = BASE_URL + "public/password?mobile=1";
     public static final String LOAD_PROFILE_URL = BASE_URL + "files/photos/";
-    public static final String USER_SUBJECTS_USER_URL = BASE_URL +"student/subjects_list?json";
-    public static final String USER_SUBJECTS_TEACHER_URL = BASE_URL +"teacher/subjects_list?json";
-    public static final String USER_SUBJECT_URL = BASE_URL +"student/ajax/my_subjects?json";
-    public static final String GET_PHOTO_URL = BASE_URL +"files/photos/";
+    public static final String USER_SUBJECTS_USER_URL = BASE_URL + "student/subjects_list?json";
+    public static final String USER_SUBJECTS_TEACHER_URL = BASE_URL + "teacher/subjects_list?json";
+    public static final String USER_SUBJECT_URL = BASE_URL + "student/ajax/my_subjects?json";
+    public static final String GET_PHOTO_URL = BASE_URL + "files/photos/";
 
 
     public static String encodeLoginData(String loginData) {
@@ -79,8 +79,10 @@ public class HttpFactory {
     public void httpVolley(String url,
                            final String encodedAuth,
                            Context context,
-                           final OnTaskCompleteListener onTaskCompleteListener,
-                           final int requestType, HashMap<String, String> params, final Object... returnData) {
+                           final int requestType,
+                           HashMap<String, String> params,
+                           MVPCallback callback,
+                           final Object... returnData) {
         if (params == null) {
             params = new HashMap<>();
         }
@@ -97,14 +99,15 @@ public class HttpFactory {
                         if (returnData.length > 0) {
                             data = returnData[0];
                         }
-                        onTaskCompleteListener.onTaskComplete(requestType, utf8String, data);
+                        callback.onSuccess(utf8String);
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                     }
                 }, error -> {
-                    error.printStackTrace();
-                    onTaskCompleteListener.onTaskComplete(requestType, error, 0);
-                }) {
+            callback.onError(error);
+            error.printStackTrace();
+
+        }) {
 
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {

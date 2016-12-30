@@ -20,8 +20,8 @@ import com.google.gson.reflect.TypeToken;
 import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
 import org.ucomplex.ucomplex.Modules.Events.EventsActivity;
 import org.ucomplex.ucomplex.Modules.Login.LoginActivityView;
-import org.ucomplex.ucomplex.Modules.Subject.SubjectActivity;
-import org.ucomplex.ucomplex.Modules.SubjectsList.SubjectsListActivity;
+//import org.ucomplex.ucomplex.Modules.Subject.SubjectActivity;
+//import org.ucomplex.ucomplex.Modules.SubjectsList.SubjectsListActivity;
 import org.ucomplex.ucomplex.R;
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeMedia;
@@ -130,7 +130,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
                 onDrawerItemPressed(EventsActivity.class);
                 mContext.sendBroadcast(new Intent(Constants.EVENTS_REFRESH_BROADCAST));
             }else if(position==2){
-                onDrawerItemPressed(SubjectsListActivity.class);
+//                onDrawerItemPressed(SubjectsListActivity.class);
             }else if(position==3){
 //                onDrawerItemPressed(SubjectActivity.class);
             }

@@ -1,6 +1,7 @@
 package org.ucomplex.ucomplex.Modules.RoleSelect;
 
-import org.ucomplex.ucomplex.Interfaces.IRecyclerItem;
+
+import net.oneread.aghanim.components.utility.IRecyclerItem;
 
 /**
  * ---------------------------------------------------

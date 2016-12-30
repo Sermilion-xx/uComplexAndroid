@@ -1,19 +1,23 @@
 package org.ucomplex.ucomplex.Modules.Events;
 
 
+import android.content.Context;
 import android.os.Bundle;
 
-import com.android.volley.VolleyError;
+import net.oneread.aghanim.components.utility.IRecyclerItem;
+import net.oneread.aghanim.components.utility.MVPCallback;
+import net.oneread.aghanim.mvp.abstractmvp.AbstractModelRecycler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
-import org.ucomplex.ucomplex.Interfaces.IRecyclerItem;
-import org.ucomplex.ucomplex.Interfaces.MVP.AbstractMVP.AbstractModelRecycler;
+import org.ucomplex.ucomplex.CommonDependencies.FacadePreferences;
+import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 /**
@@ -27,7 +31,7 @@ import java.util.ArrayList;
  * <a href="http://www.github.com/sermilion>github</a>
  * ---------------------------------------------------
  */
-public class EventsModel extends AbstractModelRecycler implements MVP_Events.ModelInterface {
+public class EventsModel extends AbstractModelRecycler {
 
     private static final String KEY_JSON_EVENTS = "events";
     private static final String EVENT_PARAMS = "params";
@@ -49,63 +53,165 @@ public class EventsModel extends AbstractModelRecycler implements MVP_Events.Mod
     private static final String EVENT_MESSAGE = "message";
     private static final String EVENT_SEMESTER = "semester";
     private static final String EVENT_YEAR = "year";
+    private static final String EVENTS_START = "event_start";
 
+    private Context context;
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
 
     public EventsModel() {
     }
 
 
-    @SuppressWarnings("unchecked")
-    public void setData(Object data) {
-        this.mRecyclerItems = (ArrayList<IRecyclerItem>) data;
+    @Override
+    public void loadData(MVPCallback mvpCallback, Bundle... bundle) {
+        final String encodedAuth = FacadePreferences.getLoginDataFromPref(context);
+        HashMap<String, String> params = new HashMap<>();
+        int requestType = Constants.REQUEST_EVENTS;
+        int start;
+        if (bundle[0] != null) {
+            start = bundle[0].getInt(EVENTS_START);
+            params.put(EVENTS_START, Integer.toString(start));
+            requestType = Constants.REQUEST_MORE_EVENTS;
+        }
+        int finalRequestType = requestType;
+        HttpFactory.getInstance().httpVolley(HttpFactory.USER_EVENTS_URL,
+                encodedAuth,
+                context,
+                requestType,
+                params,
+                new MVPCallback() {
+                    int start = 0;
+                    @Override
+                    public void onSuccess(Object o) {
+                        ArrayList<IRecyclerItem> newItems = processJson((String) o);
+                        if (finalRequestType == Constants.REQUEST_MORE_EVENTS) {
+                            start = mItems.size();
+                            mItems.addAll(mItems.size() - 1, newItems);
+                        }else {
+                            start = 0;
+                            mItems = newItems;
+                            mItems.add(new IRecyclerItem() {
+                                @Override
+                                public boolean isEmpty() {
+                                    return true;
+                                }
+                            });
+                        }
+                        mvpCallback.onSuccess("success");
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        mvpCallback.onError(throwable);
+                    }
+                });
     }
 
     @Override
+    public ArrayList<IRecyclerItem> processJson(String s) {
+        ArrayList<IRecyclerItem> displayEventsArray = new ArrayList<>();
+        try {
+            JSONObject eventJson = new JSONObject(s);
+            JSONArray eventsArray = eventJson.getJSONArray(KEY_JSON_EVENTS);
+
+            for (int i = 0; i < eventsArray.length(); i++) {
+                EventItem item = new EventItem();
+                EventItem.EventParams params = item.getParams();
+                JSONObject event = eventsArray.getJSONObject(i);
+                int type = Integer.parseInt(event.getString(EVENT_TYPE));
+                JSONObject paramsJson = new JSONObject(event.getString(EVENT_PARAMS));
+                String displayEvent = makeEvent(type, paramsJson);
+                String time = FacadeCommon.makeDate(event.getString(EVENT_TIME));
+
+                if (type != 6) {
+                    if (paramsJson.has(EVENT_TYPE)) {
+                        params.setType(paramsJson.getInt(EVENT_TYPE));
+                    }
+                    if (paramsJson.has(EVENT_ID)) {
+                        params.setId(paramsJson.getInt(EVENT_ID));
+                    }
+                    if (paramsJson.has(EVENT_NAME)) {
+                        params.setName(paramsJson.getString(EVENT_NAME));
+                    }
+                    if (paramsJson.has(EVENT_PHOTO)) {
+                        params.setPhoto(paramsJson.getInt(EVENT_PHOTO));
+                    }
+                    if (paramsJson.has(EVENT_GCOURSE)) {
+                        params.setGcourse(paramsJson.getInt(EVENT_GCOURSE));
+                    }
+                    if (paramsJson.has(EVENT_COURSE_NAME)) {
+                        params.setCourseName(paramsJson.getString(EVENT_COURSE_NAME));
+                    }
+                    if (paramsJson.has(EVENT_HOUR_TYPE)) {
+                        params.setHourType(paramsJson.getInt(EVENT_HOUR_TYPE));
+                    }
+                    if (paramsJson.has(EVENT_CODE)) {
+                        params.setCode(paramsJson.getString(EVENT_CODE));
+                    }
+                } else {
+                    try {
+                        int param_type = paramsJson.getInt(EVENT_TYPE);
+                        params.setType(param_type);
+                    } catch (JSONException ignored) {
+                    }
+                }
+                item.setParams(params);
+                item.setEventText(displayEvent);
+                item.setTime(time);
+                item.setSeen(Integer.parseInt(event.getString(EVENT_SEEN)));
+                item.setType(type);
+                displayEventsArray.add(item);
+            }
+        } catch (JSONException ignored) {
+        }
+        return displayEventsArray;
+    }
+
     public void loadMoreEvents(int start) {
         Bundle bundle = new Bundle();
         bundle.putInt(Constants.EXTRA_KEY_MORE_EVENTS, start);
-        mRepository.loadData(bundle);
     }
 
-    @Override
-    public void onTaskComplete(int requestType, Object... o) {
-        String result = null;
-        try {
-            if (!(o[0] instanceof VolleyError)) {
-                result = (String) o[0];
-                ArrayList<IRecyclerItem> newItems = getDataFromJson(result);
-                if (requestType == Constants.REQUEST_MORE_EVENTS) {
-                    start = mRecyclerItems.size();
-                    mRecyclerItems.addAll(mRecyclerItems.size() - 1, newItems);
-                } else {
-                    start = 0;
-                    mRecyclerItems = newItems;
-                    mRecyclerItems.add(new IRecyclerItem() {
-                        @Override
-                        public boolean isEmpty() {
-                            return true;
-                        }
-                    });
-                }
-            } else {
-                if(mRecyclerItems.size()==0){
-                    mRecyclerItems.add(new IRecyclerItem() {
-                        @Override
-                        public boolean isEmpty() {
-                            return true;
-                        }
-                    });
-                }
-            }
-            end = mRecyclerItems.size();
-            mOnDataLoadedListener.dataLoaded(result != null, start, end, oldEnd, requestType);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
+//    public void onTaskComplete(int requestType, Object... o) {
+//        String result = null;
+//        try {
+//            if (!(o[0] instanceof VolleyError)) {
+//                result = (String) o[0];
+//                ArrayList<IRecyclerItem> newItems = getDataFromJson(result);
+//                if (requestType == Constants.REQUEST_MORE_EVENTS) {
+//                    start = mRecyclerItems.size();
+//                    mRecyclerItems.addAll(mRecyclerItems.size() - 1, newItems);
+//                } else {
+//                    start = 0;
+//                    mRecyclerItems = newItems;
+//                    mRecyclerItems.add(new IRecyclerItem() {
+//                        @Override
+//                        public boolean isEmpty() {
+//                            return true;
+//                        }
+//                    });
+//                }
+//            } else {
+//                if(mRecyclerItems.size()==0){
+//                    mRecyclerItems.add(new IRecyclerItem() {
+//                        @Override
+//                        public boolean isEmpty() {
+//                            return true;
+//                        }
+//                    });
+//                }
+//            }
+//            end = mRecyclerItems.size();
+//            mOnDataLoadedListener.dataLoaded(result != null, start, end, oldEnd, requestType);
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 
-    @Override
     public ArrayList<IRecyclerItem> getDataFromJson(String eventsJsonStr)
             throws JSONException {
         ArrayList<IRecyclerItem> displayEventsArray = new ArrayList<>();
@@ -222,5 +328,6 @@ public class EventsModel extends AbstractModelRecycler implements MVP_Events.Mod
         }
         return result;
     }
+
 
 }

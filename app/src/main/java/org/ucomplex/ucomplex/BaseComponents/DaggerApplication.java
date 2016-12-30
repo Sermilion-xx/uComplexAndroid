@@ -8,10 +8,10 @@ import org.ucomplex.ucomplex.Modules.Login.LoginDagger.DaggerLoginDiComponent;
 import org.ucomplex.ucomplex.Modules.Login.LoginDagger.LoginDiComponent;
 import org.ucomplex.ucomplex.Modules.RoleSelect.RoleSelectDagger.DaggerRoleDiComponent;
 import org.ucomplex.ucomplex.Modules.RoleSelect.RoleSelectDagger.RoleDiComponent;
-import org.ucomplex.ucomplex.Modules.Subject.SubjectDagger.DaggerSubjectDiComponent;
-import org.ucomplex.ucomplex.Modules.Subject.SubjectDagger.SubjectDiComponent;
-import org.ucomplex.ucomplex.Modules.SubjectsList.SubjectsListDagger.DaggerSubjectsListDiComponent;
-import org.ucomplex.ucomplex.Modules.SubjectsList.SubjectsListDagger.SubjectsListDiComponent;
+//import org.ucomplex.ucomplex.Modules.Subject.SubjectDagger.DaggerSubjectDiComponent;
+//import org.ucomplex.ucomplex.Modules.Subject.SubjectDagger.SubjectDiComponent;
+//import org.ucomplex.ucomplex.Modules.SubjectsList.SubjectsListDagger.DaggerSubjectsListDiComponent;
+//import org.ucomplex.ucomplex.Modules.SubjectsList.SubjectsListDagger.SubjectsListDiComponent;
 
 
 /**
@@ -29,8 +29,8 @@ public class DaggerApplication extends Application{
     private LoginDiComponent loginDiComponent;
     private RoleDiComponent roleDiComponent;
     private EventsDiComponent eventsDiComponent;
-    private SubjectsListDiComponent subjectsListDiComponent;
-    private SubjectDiComponent subjectDiComponent;
+//    private SubjectsListDiComponent subjectsListDiComponent;
+//    private SubjectDiComponent subjectDiComponent;
 
     @Override
     public void onCreate() {
@@ -38,8 +38,8 @@ public class DaggerApplication extends Application{
         loginDiComponent    = DaggerLoginDiComponent.builder().build();
         roleDiComponent     = DaggerRoleDiComponent.builder().build();
         eventsDiComponent   = DaggerEventsDiComponent.builder().build();
-        subjectsListDiComponent = DaggerSubjectsListDiComponent.builder().build();
-        subjectDiComponent = DaggerSubjectDiComponent.builder().build();
+//        subjectsListDiComponent = DaggerSubjectsListDiComponent.builder().build();
+//        subjectDiComponent = DaggerSubjectDiComponent.builder().build();
     }
 
     public LoginDiComponent getLoginDiComponent() {
@@ -54,11 +54,11 @@ public class DaggerApplication extends Application{
         return eventsDiComponent;
     }
 
-    public SubjectsListDiComponent getSubjectsListDiComponent() {
-        return subjectsListDiComponent;
-    }
-
-    public SubjectDiComponent getSubjectDiComponent() {
-        return subjectDiComponent;
-    }
+//    public SubjectsListDiComponent getSubjectsListDiComponent() {
+//        return subjectsListDiComponent;
+//    }
+//
+//    public SubjectDiComponent getSubjectDiComponent() {
+//        return subjectDiComponent;
+//    }
 }

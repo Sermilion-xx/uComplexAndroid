@@ -6,35 +6,37 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
+import android.widget.FrameLayout;
 
-import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.PresenterRecycler;
-import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.ViewToPresenterRecycler;
+import net.oneread.aghanim.components.base.BaseRecyclerFragment;
+import net.oneread.aghanim.components.utility.IRecyclerItem;
+import net.oneread.aghanim.components.utility.RecyclerOnClickListener;
+import net.oneread.aghanim.mvp.recyclermvp.PresenterRecycler;
+
 import org.ucomplex.ucomplex.BaseComponents.BaseRecyclerActivity;
 import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
-import org.ucomplex.ucomplex.R;
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
+import org.ucomplex.ucomplex.R;
 
 import javax.inject.Inject;
 
-public class EventsActivity extends BaseRecyclerActivity implements ViewToPresenterRecycler {
+public class EventsActivity extends BaseRecyclerActivity {
 
     private MediaPlayer mAlert;
     private Boolean updateEventsReceiverRegistered = false;
 
+    //mvp
     @Inject
     public void setPresenter(EventsPresenter presenter) {
         super.mPresenter = presenter;
         ((PresenterRecycler)super.mPresenter).setItemLayout(R.layout.list_item_event);
     }
 
+    //mvp
     @Inject
     public void setModel(EventsModel model) {
         super.mModel = model;
-    }
-
-    @Inject
-    public void setRepository(EventsRepository repository) {
-        super.mRepository = repository;
     }
 
     @Override
@@ -46,20 +48,42 @@ public class EventsActivity extends BaseRecyclerActivity implements ViewToPresen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initPresenter();
         if(savedInstanceState!=null){
             updateEventsReceiverRegistered = savedInstanceState.getBoolean("updateEventsReceiverRegistered");
         }
         ((DaggerApplication) getApplication()).getEventsDiComponent().inject(this);
         setupToolbar(getResourceString(R.string.events));
-        setContentViewWithNavDrawer(R.layout.activity_main);
+        FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame);
+        getLayoutInflater().inflate(R.layout.activity_main, contentFrameLayout);
         mAlert = MediaPlayer.create(this, R.raw.alert);
-
+        //mvp
+        mFragment = setupRecyclerFragment(savedInstanceState, BaseRecyclerFragment.class.getName(), mPresenter, R.layout.fragment_recycler,R.id.recyclerView);
     }
 
+    //mvp
+    private void initPresenter() {
+        RecyclerOnClickListener clickListener = new RecyclerOnClickListener(view -> {
+            int position = getRecyclerView().indexOfChild(view);
+            IRecyclerItem item = ((PresenterRecycler)mPresenter).getItem(position);
+        });
+        ((PresenterRecycler)mPresenter).setBaseOnClickListener(clickListener);
+        ((PresenterRecycler)mPresenter).setCreator((view, i) -> new EventViewHolder(view));
+        ((PresenterRecycler)mPresenter).setItemLayout(R.layout.list_item_event);
+    }
+
+    //mvp
     @Override
-    public final void setupDrawer() {
-        super.setupDrawer();
+    public RecyclerView getRecyclerView() {
+        return mFragment.getRecyclerView();
     }
+
+    //mvp
+    @Override
+    public RecyclerView.Adapter<RecyclerView.ViewHolder> getAdapter() {
+        return mFragment.getListAdapter();
+    }
+
 
     @Override
     public void onResume() {

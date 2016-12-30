@@ -1,4 +1,4 @@
-package org.ucomplex.ucomplex.Modules.Materials;
+package org.ucomplex.ucomplex.Model.Materials;
 
 import org.ucomplex.ucomplex.Interfaces.IRecyclerItem;
 

@@ -5,13 +5,15 @@ import android.graphics.BitmapFactory;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import org.ucomplex.ucomplex.Interfaces.IRecyclerItem;
+import net.oneread.aghanim.components.utility.IRecyclerItem;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+
+
 
 /**
  * ---------------------------------------------------
@@ -22,7 +24,7 @@ import java.io.Serializable;
  * <a href="http://www.github.com/sermilion>github</a>
  * ---------------------------------------------------
  */
-
+//extend IRecyclerItem for mvp
 class EventItem extends IRecyclerItem implements Parcelable {
     private int id;
     private EventParams params;

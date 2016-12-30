@@ -4,14 +4,11 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -19,17 +16,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.FrameLayout;
-import android.widget.Toast;
+
+import net.oneread.aghanim.components.base.BaseRecyclerFragment;
+import net.oneread.aghanim.components.base.MVPBaseActivity;
+import net.oneread.aghanim.components.utility.IFragment;
+import net.oneread.aghanim.components.utility.IRecyclerItem;
+import net.oneread.aghanim.mvp.abstractmvp.AbstractPresenterRecycler;
+import net.oneread.aghanim.mvp.basemvp.MVPPresenter;
+import net.oneread.aghanim.mvp.recyclermvp.PresenterRecycler;
+import net.oneread.aghanim.mvp.recyclermvp.ViewRecycler;
 
 import org.javatuples.Pair;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
-import org.ucomplex.ucomplex.CommonDependencies.StateMaintainer;
-import org.ucomplex.ucomplex.Interfaces.IFragment;
-import org.ucomplex.ucomplex.Interfaces.IViewExtensions;
-import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Model;
-import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Presenter;
-import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.Repository;
-import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.ViewToPresenter;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.Modules.FragmentFactory;
 import org.ucomplex.ucomplex.NavDrawer.DrawerAdapter;
@@ -39,41 +37,25 @@ import org.ucomplex.ucomplex.R;
 
 import java.util.ArrayList;
 
-public class BaseActivity extends AppCompatActivity implements IViewExtensions, ViewToPresenter{
+public class BaseActivity extends MVPBaseActivity{
 
-    //Navigation Drawer
     protected DrawerLayout          mDrawer;
     protected ActionBarDrawerToggle mActionBarDrawerToggle;
     protected Toolbar               mToolbar;
     protected String[]              mDrawerTitles;
     protected int[]                 mDrawerIcons;
-
-    //MVP
-    protected StateMaintainer       mStateMaintainer;
-    protected Presenter             mPresenter;
-    protected Model                 mModel;
-    protected Repository            mRepository;
-    protected View                  mProgressView;
-
-    public IFragment mFragment;
-
-    public IFragment getFragment() {
-        return mFragment;
-    }
-
-    public Presenter getPresenter() {
-        return mPresenter;
-    }
-
-
+    protected UserInterface         mUser;
+    protected IFragment             mFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mUser = FacadeCommon.getSharedUserInstance(this);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_base);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-
+        //mvp
+        setupMVP(this,BaseActivity.class);
     }
 
     public void setupDrawer(){
@@ -81,10 +63,9 @@ public class BaseActivity extends AppCompatActivity implements IViewExtensions, 
     }
 
     private ArrayList<DrawerListItem> setupDrawerListItems(){
-        UserInterface user = mPresenter.getUser();
-        setupDrawerItemListForUser(user);
-        DrawerListItem headerItem = new DrawerListItem(user.getCode(), user.getName().split(" ")[1],
-                FacadeCommon.getStringUserType(this, user.getType()), mModel.getUser().getPerson());
+        setupDrawerItemListForUser(mUser);
+        DrawerListItem headerItem = new DrawerListItem(mUser.getCode(), mUser.getName().split(" ")[1],
+                FacadeCommon.getStringUserType(this, mUser.getType()), mUser.getPerson());
         return setupDrawerArrayList(headerItem, mDrawerIcons, mDrawerTitles);
     }
 
@@ -103,41 +84,21 @@ public class BaseActivity extends AppCompatActivity implements IViewExtensions, 
         }
     }
 
-    public void setupMVP(ViewToPresenter viewToPresenter, Class<?> type, Bundle params){
-        mStateMaintainer = new StateMaintainer(getFragmentManager(), type.getName());
-        if (mStateMaintainer.firstTimeIn()) {
-            mPresenter.setView(viewToPresenter);
-            UserInterface user = FacadeCommon.getSharedUserInstance(this);
-            if(user!=null)
-                mModel.setUser(user);
-            mRepository.setContext(mPresenter.getActivityContext());
-            mModel.setRepository(mRepository);
-            mPresenter.setModel(mModel, params);
-            mStateMaintainer.put(mModel);
-            mStateMaintainer.put(type.getName(), mPresenter);
-        } else {
-            mPresenter = mStateMaintainer.get(type.getName());
-            mPresenter.setView(viewToPresenter);
-        }
-    }
-
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         FragmentManager manager = getFragmentManager();
-        manager.putFragment(outState, BaseRecyclerFragment.class.getName(), (Fragment) mFragment);
+        manager.putFragment(outState, mFragment.getClass().getName(), (Fragment) mFragment);
         super.onSaveInstanceState(outState);
     }
 
-    protected IFragment setupFragment(Bundle inState, String name) {
+    protected IFragment setupRecyclerFragment(Bundle inState, String name, MVPPresenter presenter, int fragmentLayout, int recyclerId) {
         IFragment fragment;
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
-
         if (inState != null) {
             fragment = (BaseRecyclerFragment) manager.getFragment(inState, name);
-            fragment.setActivity(this);
         } else {
-            fragment = FragmentFactory.getFragmentWithName(name, this);
+            fragment = FragmentFactory.getFragmentWithName(name, presenter, fragmentLayout, recyclerId);
             transaction.add(R.id.container, (Fragment) fragment , name);
             transaction.commit();
         }
@@ -215,45 +176,9 @@ public class BaseActivity extends AppCompatActivity implements IViewExtensions, 
         return super.onOptionsItemSelected(item);
     }
 
-    @Override @SuppressWarnings("unchecked")
-    public  <T extends View> T find(int id){
-        return (T) findViewById(id);
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        mPresenter.onConfigurationChanged(this);
-    }
-
-    @Override
-    public Context getAppContext() {
-        return getApplicationContext();
-    }
-
     @Override
     public Context getActivityContext() {
         return this;
-    }
-
-    @Override
-    public void showToast(Toast toast) {
-        toast.show();
-    }
-
-    @Override
-    public void showProgress() {
-        mProgressView.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void hideProgress() {
-        mProgressView.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showAlert(AlertDialog dialog) {
-        dialog.show();
     }
 }
 

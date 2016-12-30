@@ -7,9 +7,14 @@ import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
-import org.ucomplex.ucomplex.BaseComponents.BaseActivity;
+import net.oneread.aghanim.components.base.MVPBaseActivity;
+import net.oneread.aghanim.mvp.basemvp.MVPView;
+
+
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
+import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
 import org.ucomplex.ucomplex.CommonDependencies.FacadePreferences;
 import org.ucomplex.ucomplex.Interfaces.MVP.BaseMVP.ViewToPresenter;
 import org.ucomplex.ucomplex.Model.Users.LoginErrorType;
@@ -30,12 +35,13 @@ import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.INVALID_PASSWORD;
 import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.PASSWORD_REQUIRED;
 
 
-public class LoginActivityView extends BaseActivity implements ViewToPresenter, View.OnClickListener{
+public class LoginActivityView extends MVPBaseActivity implements View.OnClickListener{
 
     AutoCompleteTextView mLoginView;
     EditText mPasswordView;
     Button mForgotButton;
     Button mLoginSignInButton;
+    View mProgressView;
 
     @Inject public void setPresenter(LoginPresenter presenter) {
         super.mPresenter = presenter;
@@ -43,25 +49,23 @@ public class LoginActivityView extends BaseActivity implements ViewToPresenter, 
     @Inject public void setModel(LoginModel model) {
         super.mModel = model;
     }
-    @Inject public void setRepository(LoginRepository repository) {
-        super.mRepository = repository;
-    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupViews(R.layout.activity_login);
         ((DaggerApplication) getApplication()).getLoginDiComponent().inject(this);
-        super.setupMVP(this, LoginActivityView.class, null);
+        super.setupMVP(this, LoginActivityView.class);
     }
 
     public void setupViews(int layout) {
         setContentView(layout);
         this.mLoginView = ((AutoCompleteTextView) findViewById(R.id.login));
-        this.mPasswordView = find(R.id.password);
-        this.mProgressView = find(R.id.login_progress);
-        this.mForgotButton = find(R.id.forgot_pass_button);
-        this.mLoginSignInButton = find(R.id.login_sign_in_button);
+        this.mPasswordView = (EditText) findViewById(R.id.password);
+        this.mProgressView = findViewById(R.id.login_progress);
+        this.mForgotButton = (Button) findViewById(R.id.forgot_pass_button);
+        this.mLoginSignInButton = (Button) findViewById(R.id.login_sign_in_button);
         mLoginSignInButton.setOnClickListener(this);
         mForgotButton.setOnClickListener(this);
     }
@@ -81,9 +85,9 @@ public class LoginActivityView extends BaseActivity implements ViewToPresenter, 
         UserInterface user = new User();
         user.setPassword(password);
         user.setLogin(login);
-        ((LoginPresenter)mPresenter).setUser(user);
+        ((LoginModel)mModel).setUser(user);
 
-        ArrayList<LoginErrorType> error = ((MVP_Login.PresenterInterface) mPresenter).checkCredentials();
+        ArrayList<LoginErrorType> error = ((LoginPresenter) mPresenter).checkCredentials();
 
         if (error.contains(PASSWORD_REQUIRED)) {
             mPasswordView.setError(getString(R.string.error_field_required));
@@ -96,20 +100,13 @@ public class LoginActivityView extends BaseActivity implements ViewToPresenter, 
     }
 
     public void successfulLogin(int flag) {
-        UserInterface user = mPresenter.getUser();
         Intent intent;
-        if(flag == 1 || user.getRoles().size() == 1){
+        if(flag == 1 || ((LoginModel)mModel).getUser().getRoles().size() == 1){
             intent = new Intent(getActivityContext(), EventsActivity.class);
-            if(user.getRoles().size() == 1){
-                user.setType(user.getRoles().get(0).getType());
-                FacadePreferences.setUserDataToPref(getActivityContext(), user);
-                String loginData = encodeLoginData(user.getLogin()+":"+user.getPassword()+":"+user.getRoles().get(0).getId());
-                FacadePreferences.setLoginDataToPref(getActivityContext(), loginData);
-            }
         }else {
             intent = new Intent(getActivityContext(), RoleSelectActivity.class);
         }
-        intent.putExtra(Constants.EXTRA_KEY_USER, (Parcelable) user);
+        intent.putExtra(Constants.EXTRA_KEY_USER, (Parcelable) ((LoginModel)mModel).getUser());
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         getActivityContext().startActivity(intent);
         finish();
@@ -126,5 +123,10 @@ public class LoginActivityView extends BaseActivity implements ViewToPresenter, 
                 clickForgotButton();
                 break;
         }
+    }
+
+
+    public void showToast(Toast toast) {
+        toast.show();
     }
 }

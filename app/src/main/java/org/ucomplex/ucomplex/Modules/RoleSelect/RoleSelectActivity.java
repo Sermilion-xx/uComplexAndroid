@@ -2,6 +2,8 @@ package org.ucomplex.ucomplex.Modules.RoleSelect;
 
 import android.os.Bundle;
 
+import net.oneread.aghanim.mvp.recyclermvp.ViewRecycler;
+
 import org.ucomplex.ucomplex.BaseComponents.BaseRecyclerActivity;
 import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
 import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.PresenterRecycler;
@@ -10,7 +12,7 @@ import org.ucomplex.ucomplex.R;
 
 import javax.inject.Inject;
 
-public class RoleSelectActivity extends BaseRecyclerActivity implements ViewToPresenterRecycler {
+public class RoleSelectActivity extends BaseRecyclerActivity implements ViewRecycler {
 
     @Inject
     public void setPresenter(RolePresenter presenter) {
@@ -21,11 +23,6 @@ public class RoleSelectActivity extends BaseRecyclerActivity implements ViewToPr
     @Inject
     public void setModel(RoleModel model) {
         super.mModel = model;
-    }
-
-    @Inject
-    public void setRepository(RoleRepository repository) {
-        super.mRepository = repository;
     }
 
     @Override

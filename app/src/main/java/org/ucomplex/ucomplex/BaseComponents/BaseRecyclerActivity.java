@@ -2,57 +2,52 @@ package org.ucomplex.ucomplex.BaseComponents;
 
 import android.content.Context;
 import android.content.res.Configuration;
-import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
-import android.widget.Toast;
 
-import org.ucomplex.ucomplex.Interfaces.MVP.RecyclerMVP.ViewToPresenterRecycler;
+import net.oneread.aghanim.components.base.MVPBaseRecyclerActivity;
 
-public class BaseRecyclerActivity extends BaseActivity implements ViewToPresenterRecycler {
-
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mFragment = setupFragment(savedInstanceState, BaseRecyclerFragment.class.getName());
-    }
+//implements MVPBaseRecyclerActivity for mvp
+public class BaseRecyclerActivity extends BaseActivity implements MVPBaseRecyclerActivity{
 
     @Override
     public void notifyItemRemoved(int position) {
-        mFragment.getListAdapter().notifyItemRemoved(position);
+        getAdapter().notifyItemRemoved(position);
     }
 
     @Override
     public void notifyDataSetChanged() {
-        mFragment.getListAdapter().notifyDataSetChanged();
+        getAdapter().notifyDataSetChanged();
     }
 
     @Override
     public void notifyItemRangeInserted(int start, int end) {
-        mFragment.getListAdapter().notifyItemRangeInserted(start, end);
+        getAdapter().notifyItemRangeInserted(start, end);
     }
 
     @Override
     public void notifyItemRangeRemoved(int start, int end) {
-        mFragment.getListAdapter().notifyItemRangeRemoved(start, end);
+        getAdapter().notifyItemRangeRemoved(start, end);
     }
 
     @Override
     public void notifyItemInserted(int layoutPosition) {
-        mFragment.getListAdapter().notifyItemInserted(layoutPosition);
+        getAdapter().notifyItemInserted(layoutPosition);
     }
 
     @Override
     public void notifyItemRangeChanged(int positionStart, int itemCount) {
-        mFragment.getListAdapter().notifyItemRangeChanged(positionStart, itemCount);
+        getAdapter().notifyItemRangeChanged(positionStart, itemCount);
     }
 
     @Override
     public RecyclerView getRecyclerView() {
-        return mFragment.getRecyclerView();
+        throw new UnsupportedOperationException("Method not implemented yet.");
     }
 
+    @Override
+    public RecyclerView.Adapter<RecyclerView.ViewHolder> getAdapter() {
+        throw new UnsupportedOperationException("Method not implemented yet.");
+    }
 
     @Override
     public Context getAppContext() {
@@ -62,27 +57,6 @@ public class BaseRecyclerActivity extends BaseActivity implements ViewToPresente
     @Override
     public Context getActivityContext() {
         return this;
-    }
-
-
-    @Override
-    public void showToast(Toast toast) {
-        toast.show();
-    }
-
-    @Override
-    public void showAlert(AlertDialog dialog) {
-        dialog.show();
-    }
-
-    @Override
-    public void showProgress() {
-        mFragment.showProgress();
-    }
-
-    @Override
-    public void hideProgress() {
-        mFragment.hideProgress();
     }
 
     @Override
