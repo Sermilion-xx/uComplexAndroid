@@ -1,6 +1,5 @@
 package org.ucomplex.ucomplex.Modules.Login;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,9 +13,7 @@ import android.widget.Toast;
 import net.oneread.aghanim.components.utility.MVPCallback;
 import net.oneread.aghanim.mvp.abstractmvp.AbstractPresenter;
 import net.oneread.aghanim.mvp.basemvp.MVPModel;
-import net.oneread.aghanim.mvp.basemvp.MVPView;
 
-import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
 import org.ucomplex.ucomplex.CommonDependencies.FacadePreferences;
 import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
@@ -47,6 +44,7 @@ public class LoginPresenter extends AbstractPresenter {
     @Override
     public void setModel(MVPModel model) {
         mModel = model;
+        mModel.setContext(getActivityContext());
         UserInterface user = FacadeCommon.getSharedUserInstance(getActivityContext());
         if(user!=null){
             ((LoginActivityView)getView()).successfulLogin(1);
@@ -59,7 +57,7 @@ public class LoginPresenter extends AbstractPresenter {
             @Override
             public void onSuccess(Object o) {
                 mModel.processJson((String)o);
-                UserInterface user = ((LoginModel)mModel).getUser();
+                UserInterface user = (UserInterface) mModel.processJson((String)o);
                 user.setPassword(((LoginModel)mModel).getTempPassword());
                 if(user.getRoles().size() == 1){
                     user.setType(user.getRoles().get(0).getType());

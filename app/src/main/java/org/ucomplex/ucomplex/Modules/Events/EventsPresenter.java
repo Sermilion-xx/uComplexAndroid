@@ -1,7 +1,7 @@
 package org.ucomplex.ucomplex.Modules.Events;
 
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,15 +9,19 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 
 import net.oneread.aghanim.components.utility.IRecyclerItem;
+import net.oneread.aghanim.components.utility.MVPCallback;
 import net.oneread.aghanim.mvp.abstractmvp.AbstractPresenterRecycler;
 import net.oneread.aghanim.mvp.basemvp.MVPModel;
 import net.oneread.aghanim.mvp.recyclermvp.ModelRecycler;
+import net.oneread.aghanim.mvp.recyclermvp.ViewRecycler;
 
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeMedia;
 import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
 import org.ucomplex.ucomplex.R;
+
+import java.util.List;
 
 /**
  * ---------------------------------------------------
@@ -38,7 +42,7 @@ public class EventsPresenter extends AbstractPresenterRecycler {
     @Override
     public void setModel(MVPModel models) {
         super.setModel(models);
-
+        mModel.setContext(getActivityContext());
     }
 
     private int isAvailableListViewItem() {
@@ -65,42 +69,41 @@ public class EventsPresenter extends AbstractPresenterRecycler {
     public void bindViewHolder(final RecyclerView.ViewHolder aHolder, int position) {
         EventViewHolder holder = (EventViewHolder) aHolder;
         final IRecyclerItem item = ((ModelRecycler) mModel).getItem(position);
-        if (item instanceof EventItem && !holder.allNullElements() && !item.isEmpty()) {
+        if (!holder.allNullElements() && item instanceof EventItem) {
             EventItem event = (EventItem) item;
-                String personName = event.getParams().getName();
-                if (personName == null || personName.equals(Constants.STRING_EMPTY)) {
-                    event.getParams().setName(getActivityContext().getResources().getString(R.string.ucomplex));
-                }
-                holder.eventPersonName.setText(event.getParams().getName());
-                holder.eventTextView.setText(event.getEventText());
-                holder.eventTime.setText(event.getTime());
-                int id = event.getParams().getId();
-                String name = event.getParams().getName();
-                Drawable textDrawable = FacadeMedia.getTextDrawable(id, name, getActivityContext());
-                holder.eventsImageView.setImageDrawable(textDrawable);
-                if (event.getEventImageBitmap() != null) {
-                    holder.eventsImageView.setImageBitmap(event.getEventImageBitmap());
-                } else {
-                    if (event.getParams().getCode() == null) {
-                        holder.eventsImageView.setImageDrawable(textDrawable);
-                    } else {
-                        Glide.with(getActivityContext())
-                                .load(HttpFactory.LOAD_PROFILE_URL + event.getParams().getCode() + Constants.IMAGE_FORMAT)
-                                .into(holder.eventsImageView);
-                    }
-                }
+            String personName = event.getParams().getName();
+            if (personName == null || personName.equals(Constants.STRING_EMPTY)) {
+                event.getParams().setName(getActivityContext().getResources().getString(R.string.ucomplex));
+            }
+            holder.eventPersonName.setText(event.getParams().getName());
+            holder.eventTextView.setText(event.getEventText());
+            holder.eventTime.setText(event.getTime());
 
+            Drawable textDrawable = FacadeMedia.getTextDrawable(event.getParams().getId(),
+                    event.getParams().getName(),
+                    getActivityContext());
+            holder.eventsImageView.setImageDrawable(textDrawable);
+            if (event.getEventImageBitmap() != null) {
+                holder.eventsImageView.setImageBitmap(event.getEventImageBitmap());
+            } else {
+                if (event.getParams().getCode() == null) {
+                    holder.eventsImageView.setImageDrawable(textDrawable);
+                } else {
+                    Glide.with(getActivityContext())
+                            .load(HttpFactory.LOAD_PROFILE_URL + event.getParams().getCode() + Constants.IMAGE_FORMAT)
+                            .into(holder.eventsImageView);
+                }
+            }
+            //TODO: implement "go to course click"
 //            holder.eventDetailsLayout.setOnClickListener(view -> {
 ////                Intent intent = new Intent(getActivityContext(), null);
 //            });
         } else {
-            if (hasMoreEvents) {
-                holder.loadMoreEventsButton.setVisibility(View.VISIBLE);
-                holder.loadMoreEventsButton.setOnClickListener(
-                        view -> getActivityContext().sendBroadcast(new Intent(Constants.EVENTS_LOAD_MORE_BROADCAST))
-                );
-            } else {
-                if (holder.loadMoreEventsButton != null) {
+            if (holder.loadMoreEventsButton != null) {
+                if (hasMoreEvents) {
+                    holder.loadMoreEventsButton.setVisibility(View.VISIBLE);
+                    holder.loadMoreEventsButton.setOnClickListener(baseOnClickListener);
+                } else {
                     holder.loadMoreEventsButton.setVisibility(View.GONE);
                 }
             }
@@ -117,27 +120,52 @@ public class EventsPresenter extends AbstractPresenterRecycler {
         this.itemLayout = i;
     }
 
-    void loadMoreEvents(final int start) {
-        try {
-            ((EventsModel) mModel).loadMoreEvents(start);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
+    @Override
+    public void loadData(Bundle... bundle) {
+        ((EventsActivity) getView()).showProgress();
+        mModel.loadData(new MVPCallback() {
+            @Override
+            public void onSuccess(Object o) {
+                if (!EventsModel.INITIAL_EVENTS_LOADED) {
+                    processInitialEvents((String) o);
+                    ((EventsActivity) getView()).hideProgress();
+                } else {
+                    processMoreEvents((String) o);
+                    ((EventsActivity) getView()).hideProgress();
+                }
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                throwable.printStackTrace();
+            }
+        }, bundle);
     }
 
-//    public void dataLoaded(boolean loaded, int... startEndOldEnd) {
-//        int start = startEndOldEnd[0];
-//        int end = startEndOldEnd[1];
-//        int requestType = startEndOldEnd[3];
-//        hasMoreEvents = loaded;
-//        if (loaded) {
-//            if (requestType == Constants.REQUEST_MORE_EVENTS) {
-//                ((ViewRecycler) getView()).notifyItemRangeInserted(start, end);
-//            } else {
-//                hasMoreEvents = true;
-//                ((ViewRecycler) getView()).notifyDataSetChanged();
-//            }
-//        }
-//    }
+    private void processInitialEvents(String o) {
+        EventsModel.INITIAL_EVENTS_LOADED = true;
+        List<IRecyclerItem> newItems = ((EventsModel) mModel).processJson(o);
+        ((ModelRecycler) mModel).setItems(newItems);
+        addEmptyElement();
+        hasMoreEvents = true;
+        ((ViewRecycler) getView()).notifyDataSetChanged();
+    }
+
+    private void processMoreEvents(String o) {
+        List<IRecyclerItem> newItems = ((EventsModel) mModel).processJson(o);
+        int end = ((ModelRecycler) mModel).getItems().size();
+        getItems().addAll(end, newItems);
+        int itemCount = ((ModelRecycler) mModel).getItemCount();
+        ((ViewRecycler) getView()).notifyItemRangeInserted(end, itemCount-1);
+    }
+
+    private void addEmptyElement() {
+        ((ModelRecycler) mModel).getItems().add(new IRecyclerItem() {
+            @Override
+            public boolean isEmpty() {
+                return true;
+            }
+        });
+    }
 }
 

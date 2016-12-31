@@ -5,8 +5,6 @@ import net.oneread.aghanim.components.utility.IFragment;
 import net.oneread.aghanim.mvp.basemvp.MVPPresenter;
 import net.oneread.aghanim.mvp.recyclermvp.PresenterRecycler;
 
-import org.ucomplex.ucomplex.BaseComponents.BaseActivity;
-
 /**
  * ---------------------------------------------------
  * Created by Sermilion on 26/11/2016.

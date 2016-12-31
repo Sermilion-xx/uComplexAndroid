@@ -1,7 +1,6 @@
 package org.ucomplex.ucomplex.Modules.Login;
 
 
-import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -82,11 +81,12 @@ public class LoginModel extends AbstractModel {
                     String uriString = user.getBitmapUriStringFromUri(bitmapUri);
                     user.setBitmapUriString(uriString);
                 } else {
-                    FacadePreferences.deleteFromPref(null, FacadePreferences.KEY_PREF_PROFILE_PHOTO);
+                    FacadePreferences.deleteFromPref(mContext, FacadePreferences.KEY_PREF_PROFILE_PHOTO);
                 }
+                setUser(user);
                 return user;
             }
-        } catch (JSONException | NullPointerException e) {
+        } catch (JSONException e) {
             e.printStackTrace();
             return null;
         }

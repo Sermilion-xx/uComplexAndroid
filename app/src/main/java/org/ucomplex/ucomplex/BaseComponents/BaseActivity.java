@@ -54,8 +54,6 @@ public class BaseActivity extends MVPBaseActivity{
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_base);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-        //mvp
-        setupMVP(this,BaseActivity.class);
     }
 
     public void setupDrawer(){

@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.FrameLayout;
 
 import net.oneread.aghanim.components.base.BaseRecyclerFragment;
@@ -14,6 +15,7 @@ import net.oneread.aghanim.components.utility.IRecyclerItem;
 import net.oneread.aghanim.components.utility.RecyclerOnClickListener;
 import net.oneread.aghanim.mvp.recyclermvp.PresenterRecycler;
 
+import org.ucomplex.ucomplex.BaseComponents.BaseActivity;
 import org.ucomplex.ucomplex.BaseComponents.BaseRecyclerActivity;
 import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
@@ -25,6 +27,7 @@ public class EventsActivity extends BaseRecyclerActivity {
 
     private MediaPlayer mAlert;
     private Boolean updateEventsReceiverRegistered = false;
+    private View mProgressBar;
 
     //mvp
     @Inject
@@ -48,23 +51,27 @@ public class EventsActivity extends BaseRecyclerActivity {
     protected void onCreate(Bundle savedInstanceState) {
         ((DaggerApplication) getApplication()).getEventsDiComponent().inject(this);
         super.onCreate(savedInstanceState);
+        FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame);
+        getLayoutInflater().inflate(R.layout.activity_main, contentFrameLayout);
+        mProgressBar = findViewById(R.id.progressBar);
+        //mvp
+        setupMVP(this, BaseActivity.class);
+        mFragment = setupRecyclerFragment(savedInstanceState, BaseRecyclerFragment.class.getName(), mPresenter, R.layout.fragment_recycler,R.id.recyclerView);
         initPresenter();
         if(savedInstanceState!=null){
             updateEventsReceiverRegistered = savedInstanceState.getBoolean("updateEventsReceiverRegistered");
         }
-        ((DaggerApplication) getApplication()).getEventsDiComponent().inject(this);
         setupToolbar(getResourceString(R.string.events));
-        FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame);
-        getLayoutInflater().inflate(R.layout.activity_main, contentFrameLayout);
         mAlert = MediaPlayer.create(this, R.raw.alert);
-        //mvp
-        mFragment = setupRecyclerFragment(savedInstanceState, BaseRecyclerFragment.class.getName(), mPresenter, R.layout.fragment_recycler,R.id.recyclerView);
     }
 
     //mvp
     private void initPresenter() {
         RecyclerOnClickListener clickListener = new RecyclerOnClickListener(view -> {
-            int position = getRecyclerView().indexOfChild(view);
+            int position = getRecyclerView().getChildAdapterPosition(view);
+            if(position == ((PresenterRecycler)mPresenter).getItemCount()-1){
+                getActivityContext().sendBroadcast(new Intent(Constants.EVENTS_LOAD_MORE_BROADCAST));
+            }
             IRecyclerItem item = ((PresenterRecycler)mPresenter).getItem(position);
         });
         ((PresenterRecycler)mPresenter).setBaseOnClickListener(clickListener);
@@ -117,9 +124,19 @@ public class EventsActivity extends BaseRecyclerActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(Constants.EVENTS_LOAD_MORE_BROADCAST)) {
-                ((EventsPresenter) mPresenter).loadMoreEvents(((EventsPresenter) mPresenter).getItemCount()+1);
+                Bundle bundle = new Bundle();
+                bundle.putInt(EventsModel.EVENTS_START, ((EventsPresenter) mPresenter).getItemCount()-1);
+                mPresenter.loadData(bundle);
             }
         }
     };
+
+    public void showProgress(){
+        mProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    public void hideProgress(){
+        mProgressBar.setVisibility(View.GONE);
+    }
 
 }

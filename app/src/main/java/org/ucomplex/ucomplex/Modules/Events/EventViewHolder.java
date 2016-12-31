@@ -43,7 +43,7 @@ public class EventViewHolder extends RecyclerView.ViewHolder {
                 eventTime            == null &&
                 eventPersonName      == null &&
                 eventDetailsLayout   == null &&
-                loadMoreEventsButton == null;
+                loadMoreEventsButton != null;
 
     }
 }

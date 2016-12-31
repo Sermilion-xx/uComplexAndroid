@@ -12,6 +12,7 @@ import org.json.JSONException;
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * ---------------------------------------------------
@@ -37,4 +38,6 @@ public class RoleModel extends AbstractModelRecycler implements ModelRecycler {
     public Object processJson(String s) {
         return null;
     }
+
+
 }

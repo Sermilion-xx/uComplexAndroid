@@ -9,4 +9,12 @@
 
     <include layout="@layout/toolbar"/>
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:progressDrawable="@drawable/progress_bar_blue"
+        android:visibility="gone"/>
+
 </RelativeLayout>
