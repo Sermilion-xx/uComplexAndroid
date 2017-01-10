@@ -33,11 +33,11 @@ public class FacadeDrawer {
                 R.drawable.ic_menu_settings,
                 R.drawable.ic_menu_exit};
         String[] titles = new String[] {
-                getResourceString(R.string.events),
-                getResourceString(R.string.users),
-                getResourceString(R.string.materials),
-                getResourceString(R.string.settings),
-                getResourceString(R.string.logout)};
+                getString(R.string.events),
+                getString(R.string.users),
+                getString(R.string.materials),
+                getString(R.string.settings),
+                getString(R.string.logout)};
         return new Pair<>(icons, titles);
     }
 
@@ -53,19 +53,19 @@ public class FacadeDrawer {
                 R.drawable.ic_menu_exit
         };
         String[] titles = new String[]{
-                getResourceString(R.string.events),
-                getResourceString(R.string.disciplines),
-                getResourceString(R.string.materials),
-                getResourceString(R.string.users),
-                getResourceString(R.string.messages),
-                getResourceString(R.string.calendar),
-                getResourceString(R.string.settings),
-                getResourceString(R.string.logout)};
+                getString(R.string.events),
+                getString(R.string.disciplines),
+                getString(R.string.materials),
+                getString(R.string.users),
+                getString(R.string.messages),
+                getString(R.string.calendar),
+                getString(R.string.settings),
+                getString(R.string.logout)};
         return new Pair<>(icons, titles);
     }
 
-    protected String getResourceString(int id) {
-        return mContext.getResources().getString(id);
+    protected String getString(int id) {
+        return mContext.getString(id);
     }
 
 }

@@ -56,6 +56,7 @@ public class EventsActivity extends BaseRecyclerActivity {
         mProgressBar = findViewById(R.id.progressBar);
         //mvp
         setupMVP(this, BaseActivity.class);
+        setupDrawer();
         mFragment = setupRecyclerFragment(savedInstanceState, BaseRecyclerFragment.class.getName(), mPresenter, R.layout.fragment_recycler,R.id.recyclerView);
         initPresenter();
         if(savedInstanceState!=null){

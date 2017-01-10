@@ -47,9 +47,9 @@ public class LoginActivityView extends MVPBaseActivity implements View.OnClickLi
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        ((DaggerApplication) getApplication()).getLoginDiComponent().inject(this);
         super.onCreate(savedInstanceState);
         setupViews(R.layout.activity_login);
-        ((DaggerApplication) getApplication()).getLoginDiComponent().inject(this);
         super.setupMVP(this, LoginActivityView.class);
     }
 
