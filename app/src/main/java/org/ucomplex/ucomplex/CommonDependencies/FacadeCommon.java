@@ -9,6 +9,7 @@ import android.text.Spanned;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.R;
 
@@ -35,18 +36,8 @@ import java.util.Map;
 
 public class FacadeCommon {
 
-    private static UserInterface sharedUser;
-
-    public static UserInterface getSharedUserInstance(Context context){
-        if(sharedUser == null){
-            sharedUser = FacadePreferences.getUserDataFromPref(context);
-        }
-        return sharedUser;
-    }
-
     public static boolean isNetworkConnected(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-
         return cm.getActiveNetworkInfo() != null;
     }
 

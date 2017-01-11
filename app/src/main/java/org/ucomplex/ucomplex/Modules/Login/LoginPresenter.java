@@ -14,6 +14,7 @@ import net.oneread.aghanim.components.utility.MVPCallback;
 import net.oneread.aghanim.mvp.abstractmvp.AbstractPresenter;
 import net.oneread.aghanim.mvp.basemvp.MVPModel;
 
+import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
 import org.ucomplex.ucomplex.CommonDependencies.FacadePreferences;
 import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
@@ -42,10 +43,10 @@ import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.PASSWORD_REQUIRED
 public class LoginPresenter extends AbstractPresenter {
 
     @Override
-    public void setModel(MVPModel model) {
+    public void setModel(MVPModel model, Bundle...bundles) {
         mModel = model;
         mModel.setContext(getActivityContext());
-        UserInterface user = FacadeCommon.getSharedUserInstance(getActivityContext());
+        UserInterface user = ((DaggerApplication)getAppContext()).getSharedUser();
         if(user!=null){
             ((LoginActivityView)getView()).successfulLogin(1);
         }
@@ -61,9 +62,13 @@ public class LoginPresenter extends AbstractPresenter {
                 user.setPassword(((LoginModel)mModel).getTempPassword());
                 if(user.getRoles().size() == 1){
                     user.setType(user.getRoles().get(0).getType());
-                    FacadePreferences.setUserDataToPref(getActivityContext(), user);
+                    ((DaggerApplication)getAppContext()).setSharedUser(user);
                     String loginData = encodeLoginData(user.getLogin()+":"+user.getPassword()+":"+user.getRoles().get(0).getId());
                     FacadePreferences.setLoginDataToPref(getActivityContext(), loginData);
+                    DaggerApplication application = (DaggerApplication)getAppContext();
+                    FacadePreferences.setUserDataToPref(getActivityContext(), user);
+                    application.setAuthString(loginData);
+                    application.setSharedUser(user);
                 }
                 ((LoginActivityView)getView()).successfulLogin(0);
             }
@@ -144,13 +149,5 @@ public class LoginPresenter extends AbstractPresenter {
 
     private Toast makeToast(String msg) {
         return Toast.makeText(getView().getAppContext(), msg, Toast.LENGTH_SHORT);
-    }
-
-
-    public void onTaskComplete(int requestType, Object... o) {
-        boolean result = (boolean) o[0];
-        if (result) {
-            ((LoginActivityView)getView()).successfulLogin(1);
-        }
     }
 }

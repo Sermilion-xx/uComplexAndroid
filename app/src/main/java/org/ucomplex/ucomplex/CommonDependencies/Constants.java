@@ -14,7 +14,7 @@ import org.ucomplex.ucomplex.R;
 
 public class Constants {
 
-    private static final String PREFIX = "org.ucomplex.ucomplex.";
+    public static final String PREFIX = "org.ucomplex.ucomplex.";
     public static final String EXTRA_KEY_USER = PREFIX +"user";
     public static final String EXTRA_KEY_MORE_EVENTS = PREFIX +"more_events";
 
@@ -24,15 +24,9 @@ public class Constants {
     public static final String UCOMPLEX_PROFILE = "ucomplex_profile";
     public static final String IMAGE_FORMAT_JPG = ".jpg";
 
-    public static final int REQUEST_LOGIN = 0;
-    public static final int REQUEST_EVENTS = 1;
-    public static final int REQUEST_MORE_EVENTS = 2;
     public static final int REQUEST_LOAD_ROLES = 3;
-    public static final int REQUEST_GET_SUBJECTS = 4;
-    public static final int REQUEST_GET_SUBJECT = 5;
 
-    public static final int USER_TYPE_STUDENT = 4;
-    public static final int USER_TYPE_TEACHER = 3;
+    public static final String AUTH_STRING = "AUTH_STRING";
 
 
 

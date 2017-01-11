@@ -15,6 +15,7 @@ import net.oneread.aghanim.mvp.basemvp.MVPModel;
 import net.oneread.aghanim.mvp.recyclermvp.ModelRecycler;
 import net.oneread.aghanim.mvp.recyclermvp.ViewRecycler;
 
+import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeMedia;
@@ -22,6 +23,8 @@ import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
 import org.ucomplex.ucomplex.R;
 
 import java.util.List;
+
+import static org.ucomplex.ucomplex.CommonDependencies.Constants.AUTH_STRING;
 
 /**
  * ---------------------------------------------------
@@ -40,9 +43,8 @@ public class EventsPresenter extends AbstractPresenterRecycler {
     private static final int TYPE_FOOTER = 1;
 
     @Override
-    public void setModel(MVPModel models) {
-        super.setModel(models);
-        mModel.setContext(getActivityContext());
+    public void setModel(MVPModel models, Bundle...bundles) {
+        super.setModel(models, bundles);
     }
 
     private int isAvailableListViewItem() {
@@ -123,6 +125,8 @@ public class EventsPresenter extends AbstractPresenterRecycler {
     @Override
     public void loadData(Bundle... bundle) {
         ((EventsActivity) getView()).showProgress();
+        DaggerApplication application = (DaggerApplication)getAppContext();
+        application.getAuthString();
         mModel.loadData(new MVPCallback() {
             @Override
             public void onSuccess(Object o) {
@@ -134,7 +138,6 @@ public class EventsPresenter extends AbstractPresenterRecycler {
                     ((EventsActivity) getView()).hideProgress();
                 }
             }
-
             @Override
             public void onError(Throwable throwable) {
                 throwable.printStackTrace();
@@ -145,7 +148,8 @@ public class EventsPresenter extends AbstractPresenterRecycler {
     private void processInitialEvents(String o) {
         EventsModel.INITIAL_EVENTS_LOADED = true;
         List<IRecyclerItem> newItems = ((EventsModel) mModel).processJson(o);
-        ((ModelRecycler) mModel).setItems(newItems);
+        ((ModelRecycler) mModel).getItems().clear();
+        ((ModelRecycler) mModel).addAll(newItems);
         addEmptyElement();
         hasMoreEvents = true;
         ((ViewRecycler) getView()).notifyDataSetChanged();

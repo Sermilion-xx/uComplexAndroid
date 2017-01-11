@@ -23,8 +23,11 @@ import org.ucomplex.ucomplex.R;
 
 import javax.inject.Inject;
 
+import static org.ucomplex.ucomplex.CommonDependencies.Constants.AUTH_STRING;
+
 public class EventsActivity extends BaseRecyclerActivity {
 
+    public static final String ACTION_RELOAD_EVENTS = Constants.PREFIX+"refresh_events";
     private MediaPlayer mAlert;
     private Boolean updateEventsReceiverRegistered = false;
     private View mProgressBar;
@@ -55,7 +58,10 @@ public class EventsActivity extends BaseRecyclerActivity {
         getLayoutInflater().inflate(R.layout.activity_main, contentFrameLayout);
         mProgressBar = findViewById(R.id.progressBar);
         //mvp
-        setupMVP(this, BaseActivity.class);
+        Bundle bundle = new Bundle();
+        DaggerApplication application = (DaggerApplication)getAppContext();
+        bundle.putString(AUTH_STRING, application.getAuthString());
+        setupMVP(this, BaseActivity.class, bundle);
         setupDrawer();
         mFragment = setupRecyclerFragment(savedInstanceState, BaseRecyclerFragment.class.getName(), mPresenter, R.layout.fragment_recycler,R.id.recyclerView);
         initPresenter();
@@ -71,7 +77,11 @@ public class EventsActivity extends BaseRecyclerActivity {
         RecyclerOnClickListener clickListener = new RecyclerOnClickListener(view -> {
             int position = getRecyclerView().getChildAdapterPosition(view);
             if(position == ((PresenterRecycler)mPresenter).getItemCount()-1){
-                getActivityContext().sendBroadcast(new Intent(Constants.EVENTS_LOAD_MORE_BROADCAST));
+                Bundle bundle = new Bundle();
+                bundle.putInt(EventsModel.EVENTS_START, ((EventsPresenter) mPresenter).getItemCount()-1);
+                DaggerApplication application = (DaggerApplication)getAppContext();
+                bundle.putString(AUTH_STRING, application.getAuthString());
+                mPresenter.loadData(bundle);
             }
             IRecyclerItem item = ((PresenterRecycler)mPresenter).getItem(position);
         });
@@ -99,15 +109,12 @@ public class EventsActivity extends BaseRecyclerActivity {
             registerReceiver(mUpdateEventsReceiver, new IntentFilter(
                     Constants.EVENTS_REFRESH_BROADCAST));
         }
-        registerReceiver(mLoadMoreEventsReceiver, new IntentFilter(
-                Constants.EVENTS_LOAD_MORE_BROADCAST));
         super.onResume();
     }
 
     @Override
     public void onPause() {
         unregisterReceiver(mUpdateEventsReceiver);
-        unregisterReceiver(mLoadMoreEventsReceiver);
         super.onPause();
     }
 
@@ -115,19 +122,14 @@ public class EventsActivity extends BaseRecyclerActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(Constants.EVENTS_REFRESH_BROADCAST)) {
-                mPresenter.loadData();
-                onBackPressed();
-            }
-        }
-    };
-
-    private BroadcastReceiver mLoadMoreEventsReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(Constants.EVENTS_LOAD_MORE_BROADCAST)) {
+                if(intent.hasExtra(ACTION_RELOAD_EVENTS)){
+                    EventsModel.INITIAL_EVENTS_LOADED = false;
+                }
+                DaggerApplication application = (DaggerApplication)getAppContext();
                 Bundle bundle = new Bundle();
-                bundle.putInt(EventsModel.EVENTS_START, ((EventsPresenter) mPresenter).getItemCount()-1);
+                bundle.putString(AUTH_STRING, application.getAuthString());
                 mPresenter.loadData(bundle);
+                onBackPressed();
             }
         }
     };

@@ -2,6 +2,7 @@ package org.ucomplex.ucomplex.Modules.Events;
 
 
 import android.os.Bundle;
+import android.provider.SyncStateContract;
 
 import net.oneread.aghanim.components.utility.IRecyclerItem;
 import net.oneread.aghanim.components.utility.MVPCallback;
@@ -10,6 +11,8 @@ import net.oneread.aghanim.mvp.abstractmvp.AbstractModelRecycler;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
+import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
 import org.ucomplex.ucomplex.CommonDependencies.FacadePreferences;
 import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
@@ -17,6 +20,8 @@ import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import static org.ucomplex.ucomplex.CommonDependencies.Constants.AUTH_STRING;
 
 
 /**
@@ -53,17 +58,22 @@ public class EventsModel extends AbstractModelRecycler {
     private static final String EVENT_SEMESTER = "semester";
     private static final String EVENT_YEAR = "year";
     static final String EVENTS_START = "start";
-    static boolean INITIAL_EVENTS_LOADED = false;
+    public static boolean INITIAL_EVENTS_LOADED = false;
 
 
     @Override
     public void loadData(MVPCallback mvpCallback, Bundle... bundle) {
-        final String encodedAuth = FacadePreferences.getLoginDataFromPref(mContext);
+        String encodedAuth = "";
         HashMap<String, String> params = new HashMap<>();
         int start;
         if (bundle.length>0) {
-            start = bundle[0].getInt(EVENTS_START);
-            params.put(EVENTS_START, Integer.toString(start));
+            if(bundle[0].containsKey(AUTH_STRING)){
+                encodedAuth = bundle[0].getString(AUTH_STRING);
+            }
+            if(bundle[0].containsKey(EVENTS_START)){
+                start = bundle[0].getInt(EVENTS_START);
+                params.put(EVENTS_START, Integer.toString(start));
+            }
         }
         HttpFactory.getInstance().httpVolley(HttpFactory.USER_EVENTS_URL,
                 encodedAuth,

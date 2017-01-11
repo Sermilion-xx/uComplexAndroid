@@ -11,6 +11,7 @@ import net.oneread.aghanim.mvp.abstractmvp.AbstractPresenterRecycler;
 import net.oneread.aghanim.mvp.recyclermvp.ModelRecycler;
 import net.oneread.aghanim.mvp.recyclermvp.PresenterRecycler;
 
+import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
 import org.ucomplex.ucomplex.CommonDependencies.FacadePreferences;
@@ -45,7 +46,7 @@ public class RolePresenter extends AbstractPresenterRecycler implements Presente
 
     @Override
     public void bindViewHolder(RecyclerView.ViewHolder aHolder, final int position) {
-        UserInterface user = FacadeCommon.getSharedUserInstance(getActivityContext());
+        UserInterface user = ((DaggerApplication)getAppContext()).getSharedUser();
         RoleViewHolder holder = (RoleViewHolder) aHolder;
         final RoleItem role = (RoleItem) ((ModelRecycler)mModel).getItem(position);
         holder.roleName.setText(role.getRoleName());
@@ -61,7 +62,8 @@ public class RolePresenter extends AbstractPresenterRecycler implements Presente
                     user.setType(user.getType());
                     String encodedAuth = encodeLoginData(login + ":" + password + ":" + role1);
                     FacadePreferences.setLoginDataToPref(getActivityContext(), encodedAuth);
-                    FacadePreferences.setUserDataToPref(getActivityContext(), user);
+                    DaggerApplication application = (DaggerApplication)getAppContext();
+                    application.setSharedUser(user);
                     return null;
                 }
             }.execute();

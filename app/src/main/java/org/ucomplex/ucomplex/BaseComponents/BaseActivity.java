@@ -50,7 +50,7 @@ public class BaseActivity extends MVPBaseActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mUser = FacadeCommon.getSharedUserInstance(this);
+        mUser = ((DaggerApplication)getApplicationContext()).getSharedUser();
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_base);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
