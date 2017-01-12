@@ -39,5 +39,4 @@ public class RoleModel extends AbstractModelRecycler implements ModelRecycler {
         return null;
     }
 
-
 }

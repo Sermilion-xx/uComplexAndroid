@@ -3,6 +3,7 @@ package org.ucomplex.ucomplex.Modules.Events;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -146,13 +147,15 @@ public class EventsPresenter extends AbstractPresenterRecycler {
     }
 
     private void processInitialEvents(String o) {
+        int end = ((ModelRecycler) mModel).getItemCount();
         EventsModel.INITIAL_EVENTS_LOADED = true;
         List<IRecyclerItem> newItems = ((EventsModel) mModel).processJson(o);
-        ((ModelRecycler) mModel).getItems().clear();
+        ((ModelRecycler) mModel).clear();
+        ((ViewRecycler) getView()).notifyItemRangeRemoved(0,end);
         ((ModelRecycler) mModel).addAll(newItems);
         addEmptyElement();
         hasMoreEvents = true;
-        ((ViewRecycler) getView()).notifyDataSetChanged();
+        ((ViewRecycler) getView()).notifyItemRangeChanged(0, newItems.size()+1);
     }
 
     private void processMoreEvents(String o) {
