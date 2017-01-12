@@ -3,7 +3,6 @@ package org.ucomplex.ucomplex.Modules.Events;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -25,8 +24,6 @@ import org.ucomplex.ucomplex.R;
 
 import java.util.List;
 
-import static org.ucomplex.ucomplex.CommonDependencies.Constants.AUTH_STRING;
-
 /**
  * ---------------------------------------------------
  * Created by Sermilion on 07/11/2016.
@@ -44,7 +41,7 @@ public class EventsPresenter extends AbstractPresenterRecycler {
     private static final int TYPE_FOOTER = 1;
 
     @Override
-    public void setModel(MVPModel models, Bundle...bundles) {
+    public void setModel(MVPModel models, Bundle... bundles) {
         super.setModel(models, bundles);
     }
 
@@ -125,8 +122,10 @@ public class EventsPresenter extends AbstractPresenterRecycler {
 
     @Override
     public void loadData(Bundle... bundle) {
-        ((EventsActivity) getView()).showProgress();
-        DaggerApplication application = (DaggerApplication)getAppContext();
+        try {
+            ((EventsActivity) getView()).showProgress();
+        } catch (NullPointerException ignored) {}
+        DaggerApplication application = (DaggerApplication) getAppContext();
         application.getAuthString();
         mModel.loadData(new MVPCallback() {
             @Override
@@ -139,6 +138,7 @@ public class EventsPresenter extends AbstractPresenterRecycler {
                     ((EventsActivity) getView()).hideProgress();
                 }
             }
+
             @Override
             public void onError(Throwable throwable) {
                 throwable.printStackTrace();
@@ -151,11 +151,11 @@ public class EventsPresenter extends AbstractPresenterRecycler {
         EventsModel.INITIAL_EVENTS_LOADED = true;
         List<IRecyclerItem> newItems = ((EventsModel) mModel).processJson(o);
         ((ModelRecycler) mModel).clear();
-        ((ViewRecycler) getView()).notifyItemRangeRemoved(0,end);
+        ((ViewRecycler) getView()).notifyItemRangeRemoved(0, end);
         ((ModelRecycler) mModel).addAll(newItems);
         addEmptyElement();
         hasMoreEvents = true;
-        ((ViewRecycler) getView()).notifyItemRangeChanged(0, newItems.size()+1);
+        ((ViewRecycler) getView()).notifyItemRangeChanged(0, newItems.size() + 1);
     }
 
     private void processMoreEvents(String o) {
@@ -163,7 +163,7 @@ public class EventsPresenter extends AbstractPresenterRecycler {
         int end = ((ModelRecycler) mModel).getItems().size();
         getItems().addAll(end, newItems);
         int itemCount = ((ModelRecycler) mModel).getItemCount();
-        ((ViewRecycler) getView()).notifyItemRangeInserted(end, itemCount-1);
+        ((ViewRecycler) getView()).notifyItemRangeInserted(end, itemCount - 1);
     }
 
     private void addEmptyElement() {

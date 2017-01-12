@@ -56,14 +56,19 @@ public class EventsActivity extends BaseRecyclerActivity {
         super.onCreate(savedInstanceState);
         FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame);
         getLayoutInflater().inflate(R.layout.activity_main, contentFrameLayout);
-        mProgressBar = findViewById(R.id.progressBar);
+
         //mvp
         Bundle bundle = new Bundle();
         DaggerApplication application = (DaggerApplication)getAppContext();
         bundle.putString(AUTH_STRING, application.getAuthString());
+        mFragment = setupRecyclerFragment(savedInstanceState,
+                BaseRecyclerFragment.class.getName(),
+                mPresenter,
+                R.layout.fragment_recycler,
+                R.id.recyclerView);
+        mFragment.setProgressViewId(R.id.progressBar, true);
         setupMVP(this, BaseActivity.class, bundle);
         setupDrawer();
-        mFragment = setupRecyclerFragment(savedInstanceState, BaseRecyclerFragment.class.getName(), mPresenter, R.layout.fragment_recycler,R.id.recyclerView);
         initPresenter();
         if(savedInstanceState!=null){
             updateEventsReceiverRegistered = savedInstanceState.getBoolean("updateEventsReceiverRegistered");
@@ -83,7 +88,6 @@ public class EventsActivity extends BaseRecyclerActivity {
                 bundle.putString(AUTH_STRING, application.getAuthString());
                 mPresenter.loadData(bundle);
             }
-            IRecyclerItem item = ((PresenterRecycler)mPresenter).getItem(position);
         });
         ((PresenterRecycler)mPresenter).setBaseOnClickListener(clickListener);
         ((PresenterRecycler)mPresenter).setCreator((view, i) -> new EventViewHolder(view));
@@ -135,11 +139,11 @@ public class EventsActivity extends BaseRecyclerActivity {
     };
 
     public void showProgress(){
-        mProgressBar.setVisibility(View.VISIBLE);
+        mFragment.showProgress();
     }
 
     public void hideProgress(){
-        mProgressBar.setVisibility(View.GONE);
+        mFragment.hideProgress();
     }
 
 }

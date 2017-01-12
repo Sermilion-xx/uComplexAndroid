@@ -26,16 +26,17 @@ import javax.inject.Inject;
 
 import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.EMPTY_EMAIL;
 import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.INVALID_PASSWORD;
+import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.NO_ERROR;
 import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.PASSWORD_REQUIRED;
 
 
 public class LoginActivityView extends MVPBaseActivity implements View.OnClickListener{
 
-    AutoCompleteTextView mLoginView;
-    EditText mPasswordView;
-    Button mForgotButton;
-    Button mLoginSignInButton;
-    View mProgressView;
+    private AutoCompleteTextView mLoginView;
+    private EditText mPasswordView;
+    private Button mForgotButton;
+    private Button mLoginSignInButton;
+    private View mProgressView;
 
     @Inject public void setPresenter(LoginPresenter presenter) {
         super.mPresenter = presenter;
@@ -57,7 +58,7 @@ public class LoginActivityView extends MVPBaseActivity implements View.OnClickLi
         setContentView(layout);
         this.mLoginView = ((AutoCompleteTextView) findViewById(R.id.login));
         this.mPasswordView = (EditText) findViewById(R.id.password);
-        this.mProgressView = findViewById(R.id.login_progress);
+        this.mProgressView = findViewById(R.id.progressBar);
         this.mForgotButton = (Button) findViewById(R.id.forgot_pass_button);
         this.mLoginSignInButton = (Button) findViewById(R.id.login_sign_in_button);
         mLoginSignInButton.setOnClickListener(this);
@@ -81,6 +82,7 @@ public class LoginActivityView extends MVPBaseActivity implements View.OnClickLi
         user.setLogin(login);
         ((LoginModel)mModel).setUser(user);
 
+        mProgressView.setVisibility(View.VISIBLE);
         ArrayList<LoginErrorType> error = ((LoginPresenter) mPresenter).checkCredentials();
 
         if (error.contains(PASSWORD_REQUIRED)) {
@@ -91,9 +93,13 @@ public class LoginActivityView extends MVPBaseActivity implements View.OnClickLi
         if (error.contains(EMPTY_EMAIL)) {
             mLoginView.setError(getString(R.string.error_field_required));
         }
+        if(!error.contains(NO_ERROR)){
+            mProgressView.setVisibility(View.GONE);
+        }
     }
 
     public void successfulLogin(int flag) {
+        mProgressView.setVisibility(View.GONE);
         Intent intent;
         if(flag == 1 || ((LoginModel)mModel).getUser().getRoles().size() == 1){
             intent = new Intent(getActivityContext(), EventsActivity.class);
@@ -123,4 +129,5 @@ public class LoginActivityView extends MVPBaseActivity implements View.OnClickLi
     public void showToast(Toast toast) {
         toast.show();
     }
+
 }
