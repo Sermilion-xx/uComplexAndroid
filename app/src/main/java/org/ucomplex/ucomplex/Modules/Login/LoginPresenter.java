@@ -17,17 +17,17 @@ import net.oneread.aghanim.mvp.basemvp.MVPModel;
 import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
 import org.ucomplex.ucomplex.CommonDependencies.FacadePreferences;
 import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
-import org.ucomplex.ucomplex.Model.Users.LoginErrorType;
-import org.ucomplex.ucomplex.Model.Users.UserInterface;
+import org.ucomplex.ucomplex.Domain.Users.LoginErrorType;
+import org.ucomplex.ucomplex.Domain.Users.UserInterface;
 import org.ucomplex.ucomplex.R;
 
 import java.util.ArrayList;
 
 import static org.ucomplex.ucomplex.CommonDependencies.HttpFactory.encodeLoginData;
-import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.EMPTY_EMAIL;
-import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.INVALID_PASSWORD;
-import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.NO_ERROR;
-import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.PASSWORD_REQUIRED;
+import static org.ucomplex.ucomplex.Domain.Users.LoginErrorType.EMPTY_EMAIL;
+import static org.ucomplex.ucomplex.Domain.Users.LoginErrorType.INVALID_PASSWORD;
+import static org.ucomplex.ucomplex.Domain.Users.LoginErrorType.NO_ERROR;
+import static org.ucomplex.ucomplex.Domain.Users.LoginErrorType.PASSWORD_REQUIRED;
 
 /**
  * ---------------------------------------------------
@@ -64,6 +64,7 @@ public class LoginPresenter extends AbstractPresenter<String, UserInterface> {
                 FacadePreferences.setLoginDataToPref(getActivityContext(), loginData);
                 DaggerApplication application = (DaggerApplication) getAppContext();
                 FacadePreferences.setUserDataToPref(getActivityContext(), user);
+                FacadePreferences.savePrevLoginInfo(getActivityContext(), user.getLogin(), user.getPassword());
                 application.setAuthString(loginData);
                 application.setSharedUser(user);
                 ((LoginActivityView) getView()).hideProgress();

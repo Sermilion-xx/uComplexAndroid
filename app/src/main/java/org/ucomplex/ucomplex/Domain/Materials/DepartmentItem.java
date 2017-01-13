@@ -1,6 +1,6 @@
-package org.ucomplex.ucomplex.Model.Materials;
+package org.ucomplex.ucomplex.Domain.Materials;
 
-import org.ucomplex.ucomplex.Interfaces.IRecyclerItem;
+import net.oneread.aghanim.components.utility.IRecyclerItem;
 
 /**
  * ---------------------------------------------------

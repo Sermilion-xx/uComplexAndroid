@@ -1,10 +1,8 @@
-package org.ucomplex.ucomplex.Model.Materials;
-
-import org.ucomplex.ucomplex.Interfaces.IRecyclerItem;
+package org.ucomplex.ucomplex.Domain.Users;
 
 /**
  * ---------------------------------------------------
- * Created by Sermilion on 06/12/2016.
+ * Created by Sermilion on 09/11/2016.
  * Project: uComplex_v_2
  * ---------------------------------------------------
  * <a href="http://www.ucomplex.org">ucomplex.org</a>
@@ -12,5 +10,9 @@ import org.ucomplex.ucomplex.Interfaces.IRecyclerItem;
  * ---------------------------------------------------
  */
 
-public class TimetableEntryItem extends IRecyclerItem {
+public enum LoginErrorType {
+    PASSWORD_REQUIRED,
+    INVALID_PASSWORD,
+    EMPTY_EMAIL,
+    NO_ERROR
 }

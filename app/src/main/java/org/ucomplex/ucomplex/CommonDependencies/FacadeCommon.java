@@ -4,13 +4,10 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.text.Html;
-import android.text.Spannable;
 import android.text.Spanned;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
-import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.R;
 
 import java.math.BigDecimal;

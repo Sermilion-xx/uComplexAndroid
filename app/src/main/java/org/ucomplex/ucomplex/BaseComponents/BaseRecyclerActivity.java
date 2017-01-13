@@ -46,7 +46,7 @@ public class BaseRecyclerActivity extends BaseActivity implements MVPBaseRecycle
 
     @Override
     public RecyclerView getRecyclerView() {
-        throw new UnsupportedOperationException("Method not implemented yet.");
+        return mFragment.getRecyclerView();
     }
 
     @Override

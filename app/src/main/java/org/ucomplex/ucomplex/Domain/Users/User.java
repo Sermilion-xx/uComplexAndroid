@@ -1,4 +1,4 @@
-package org.ucomplex.ucomplex.Model.Users;
+package org.ucomplex.ucomplex.Domain.Users;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

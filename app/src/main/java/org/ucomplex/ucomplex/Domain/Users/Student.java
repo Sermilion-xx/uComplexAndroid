@@ -1,8 +1,10 @@
-package org.ucomplex.ucomplex.Interfaces;
+package org.ucomplex.ucomplex.Domain.Users;
+
+import android.os.Parcelable;
 
 /**
  * ---------------------------------------------------
- * Created by Sermilion on 27/11/2016.
+ * Created by Sermilion on 06/12/2016.
  * Project: uComplex_v_2
  * ---------------------------------------------------
  * <a href="http://www.ucomplex.org">ucomplex.org</a>
@@ -10,6 +12,5 @@ package org.ucomplex.ucomplex.Interfaces;
  * ---------------------------------------------------
  */
 
-public interface OnDataLoadedListener {
-    void dataLoaded(boolean loaded, int...startEndOldEnd);
+public class Student extends User implements Parcelable{
 }

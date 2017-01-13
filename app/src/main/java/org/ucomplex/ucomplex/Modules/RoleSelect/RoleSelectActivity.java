@@ -3,10 +3,9 @@ package org.ucomplex.ucomplex.Modules.RoleSelect;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.view.View;
 
 import net.oneread.aghanim.components.base.BaseRecyclerFragment;
-import net.oneread.aghanim.components.utility.OnFragmentLoadedListener;
+import net.oneread.aghanim.components.utility.OnClickStrategy;
 import net.oneread.aghanim.components.utility.RecyclerOnClickListener;
 import net.oneread.aghanim.mvp.recyclermvp.PresenterRecycler;
 import net.oneread.aghanim.mvp.recyclermvp.ViewRecycler;
@@ -16,7 +15,7 @@ import org.ucomplex.ucomplex.BaseComponents.BaseRecyclerActivity;
 import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.CommonDependencies.FacadePreferences;
-import org.ucomplex.ucomplex.Model.Users.UserInterface;
+import org.ucomplex.ucomplex.Domain.Users.UserInterface;
 import org.ucomplex.ucomplex.Modules.Events.EventsActivity;
 import org.ucomplex.ucomplex.R;
 
@@ -42,25 +41,25 @@ public class RoleSelectActivity extends BaseRecyclerActivity implements ViewRecy
         setContentView(R.layout.activity_role_select);
         DaggerApplication application = (DaggerApplication) getAppContext();
         application.getRoleDiComponent().inject(this);
-        //mvp
+
         mFragment = setupRecyclerFragment(savedInstanceState,
                 BaseRecyclerFragment.class.getName(),
                 mPresenter,
                 R.layout.fragment_recycler,
                 R.id.recyclerView);
+        mFragment.setProgressViewId(R.id.progressBar);
         Bundle bundle = new Bundle();
         bundle.putParcelable(Constants.EXTRA_KEY_USER, (Parcelable) application.getSharedUser());
         mFragment.setOnFragmentLoadedListener(views -> {
-            mFragment.setProgressViewId(R.id.progressBar, true);
             RoleSelectActivity.this.setupMVP(RoleSelectActivity.this, BaseActivity.class, bundle);
             initPresenter();
         });
     }
 
-    //mvp
     private void initPresenter() {
-        RecyclerOnClickListener clickListener = new RecyclerOnClickListener(view -> {
-            int position = getRecyclerView().getChildAdapterPosition(view);
+        RecyclerOnClickListener clickListener = new RecyclerOnClickListener();
+        OnClickStrategy strategy = view -> {
+            int position = clickListener.getPosition();
             if (position == ((PresenterRecycler) mPresenter).getItemCount() - 1) {
                 UserInterface user = ((DaggerApplication) getAppContext()).getSharedUser();
                 persistUser(user, position);
@@ -68,7 +67,8 @@ public class RoleSelectActivity extends BaseRecyclerActivity implements ViewRecy
                 intent.putExtra(Constants.EXTRA_KEY_USER, (Parcelable) user);
                 getActivityContext().startActivity(intent);
             }
-        });
+        };
+        clickListener.setStrategy(strategy);
         ((PresenterRecycler) mPresenter).setBaseOnClickListener(clickListener);
         ((PresenterRecycler) mPresenter).setCreator((view, i) -> new RoleViewHolder(view));
         ((PresenterRecycler) mPresenter).setItemLayout(R.layout.list_item_role);

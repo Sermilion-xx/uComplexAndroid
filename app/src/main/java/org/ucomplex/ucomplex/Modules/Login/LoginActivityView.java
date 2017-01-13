@@ -11,11 +11,13 @@ import android.widget.Toast;
 
 import net.oneread.aghanim.components.base.MVPBaseActivity;
 
+import org.javatuples.Pair;
 import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
-import org.ucomplex.ucomplex.Model.Users.LoginErrorType;
-import org.ucomplex.ucomplex.Model.Users.User;
-import org.ucomplex.ucomplex.Model.Users.UserInterface;
+import org.ucomplex.ucomplex.CommonDependencies.FacadePreferences;
+import org.ucomplex.ucomplex.Domain.Users.LoginErrorType;
+import org.ucomplex.ucomplex.Domain.Users.User;
+import org.ucomplex.ucomplex.Domain.Users.UserInterface;
 import org.ucomplex.ucomplex.Modules.Events.EventsActivity;
 import org.ucomplex.ucomplex.Modules.RoleSelect.RoleSelectActivity;
 import org.ucomplex.ucomplex.R;
@@ -24,9 +26,9 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 
-import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.EMPTY_EMAIL;
-import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.INVALID_PASSWORD;
-import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.PASSWORD_REQUIRED;
+import static org.ucomplex.ucomplex.Domain.Users.LoginErrorType.EMPTY_EMAIL;
+import static org.ucomplex.ucomplex.Domain.Users.LoginErrorType.INVALID_PASSWORD;
+import static org.ucomplex.ucomplex.Domain.Users.LoginErrorType.PASSWORD_REQUIRED;
 
 
 public class LoginActivityView extends MVPBaseActivity implements View.OnClickListener {
@@ -45,6 +47,13 @@ public class LoginActivityView extends MVPBaseActivity implements View.OnClickLi
         super.mModel = model;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Pair<String, String> prevLogin = FacadePreferences.getPrevLoginInfo(this);
+        this.mLoginView.setText(prevLogin.getValue0());
+        this.mPasswordView.setText(prevLogin.getValue1());
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -96,7 +105,6 @@ public class LoginActivityView extends MVPBaseActivity implements View.OnClickLi
     }
 
     public void successfulLogin(int flag) {
-
         Intent intent;
         if (flag == 1 || ((LoginModel) mModel).getUser().getRoles().size() == 1) {
             intent = new Intent(getActivityContext(), EventsActivity.class);

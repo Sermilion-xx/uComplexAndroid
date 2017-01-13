@@ -1,10 +1,7 @@
 package org.ucomplex.ucomplex.Modules.RoleSelect.RoleSelectDagger;
 
-import org.ucomplex.ucomplex.Modules.Login.LoginModel;
-import org.ucomplex.ucomplex.Modules.Login.LoginPresenter;
 import org.ucomplex.ucomplex.Modules.RoleSelect.RoleModel;
 import org.ucomplex.ucomplex.Modules.RoleSelect.RolePresenter;
-import org.ucomplex.ucomplex.Modules.RoleSelect.RoleRepository;
 
 import javax.inject.Singleton;
 
@@ -33,11 +30,5 @@ public class RoleModule {
     @Singleton
     public RoleModel getRoleModel(){
         return new RoleModel();
-    }
-
-    @Provides
-    @Singleton
-    public RoleRepository getRoleRepository(){
-        return new RoleRepository();
     }
 }

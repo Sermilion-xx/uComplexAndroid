@@ -6,8 +6,9 @@ import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 
-import org.ucomplex.ucomplex.Model.Users.User;
-import org.ucomplex.ucomplex.Model.Users.UserInterface;
+import org.javatuples.Pair;
+import org.ucomplex.ucomplex.Domain.Users.User;
+import org.ucomplex.ucomplex.Domain.Users.UserInterface;
 
 /**
  * ---------------------------------------------------
@@ -25,6 +26,8 @@ public class FacadePreferences {
     private static final String KEY_PREF_LOGIN_DATA = "userRole";
     private static final String KEY_PREF_LOGGED_USER = "loggedUser";
     public static final String KEY_PREF_PROFILE_PHOTO = "profilePhoto";
+    private static final String KEY_PREF_LOGIN = "login";
+    private static final String KEY_PREF_PASSWORD = "password";
 
     public static void setRoleToPref(Context mContext, int role) {
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
@@ -73,6 +76,19 @@ public class FacadePreferences {
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
         editor.clear();
         editor.apply();
+    }
+
+    public static void savePrevLoginInfo(Context context, String login, String password){
+        SharedPreferences pref = context.getSharedPreferences("prevLogin",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString(KEY_PREF_LOGIN, login);
+        editor.putString(KEY_PREF_PASSWORD, password);
+        editor.apply();
+    }
+
+    public static Pair<String, String> getPrevLoginInfo(Context context){
+        SharedPreferences pref = context.getSharedPreferences("prevLogin",Context.MODE_PRIVATE);
+        return new Pair<>(pref.getString(KEY_PREF_LOGIN,""),pref.getString(KEY_PREF_PASSWORD,""));
     }
 
 }

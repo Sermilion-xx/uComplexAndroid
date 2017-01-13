@@ -1,4 +1,4 @@
-package org.ucomplex.ucomplex.Modules;
+package org.ucomplex.ucomplex.CommonDependencies;
 
 import net.oneread.aghanim.components.base.BaseRecyclerFragment;
 import net.oneread.aghanim.components.utility.IFragment;

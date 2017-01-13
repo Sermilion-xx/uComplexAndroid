@@ -78,6 +78,7 @@ public class EventsPresenter extends AbstractPresenterRecycler<String> {
             holder.eventTextView.setText(event.getEventText());
             holder.eventTime.setText(event.getTime());
 
+
             Drawable textDrawable = FacadeMedia.getTextDrawable(event.getParams().getId(),
                     event.getParams().getName(),
                     getActivityContext());
@@ -101,6 +102,7 @@ public class EventsPresenter extends AbstractPresenterRecycler<String> {
             if (holder.loadMoreEventsButton != null) {
                 if (hasMoreEvents) {
                     holder.loadMoreEventsButton.setVisibility(View.VISIBLE);
+                    baseOnClickListener.setPosition(holder.getAdapterPosition());
                     holder.loadMoreEventsButton.setOnClickListener(baseOnClickListener);
                 } else {
                     holder.loadMoreEventsButton.setVisibility(View.GONE);
@@ -119,11 +121,10 @@ public class EventsPresenter extends AbstractPresenterRecycler<String> {
         this.itemLayout = i;
     }
 
-    @Override @SuppressWarnings("unchecked")
+    @Override
+    @SuppressWarnings("unchecked")
     public void loadData(Bundle... bundle) {
-        try {
-            ((EventsActivity) getView()).showProgress();
-        } catch (NullPointerException ignored) {}
+        ((EventsActivity) getView()).showProgress();
         DaggerApplication application = (DaggerApplication) getAppContext();
         application.getAuthString();
         mModel.loadData(new MVPCallback<List<IRecyclerItem>>() {

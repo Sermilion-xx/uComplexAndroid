@@ -2,9 +2,8 @@ package org.ucomplex.ucomplex.BaseComponents;
 
 import android.app.Application;
 
-import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
 import org.ucomplex.ucomplex.CommonDependencies.FacadePreferences;
-import org.ucomplex.ucomplex.Model.Users.UserInterface;
+import org.ucomplex.ucomplex.Domain.Users.UserInterface;
 import org.ucomplex.ucomplex.Modules.Events.EventsDagger.DaggerEventsDiComponent;
 import org.ucomplex.ucomplex.Modules.Events.EventsDagger.EventsDiComponent;
 import org.ucomplex.ucomplex.Modules.Login.LoginDagger.DaggerLoginDiComponent;

@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
-
-android {
+ android {
 
     configurations.all {
         resolutionStrategy.force 'org.hamcrest:hamcrest-core:1.3'

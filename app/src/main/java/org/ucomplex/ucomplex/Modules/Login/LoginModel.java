@@ -6,7 +6,6 @@ import android.os.Bundle;
 
 import com.google.gson.Gson;
 
-import net.oneread.aghanim.components.utility.IRecyclerItem;
 import net.oneread.aghanim.components.utility.MVPCallback;
 import net.oneread.aghanim.mvp.abstractmvp.AbstractModel;
 
@@ -16,10 +15,8 @@ import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeMedia;
 import org.ucomplex.ucomplex.CommonDependencies.FacadePreferences;
 import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
-import org.ucomplex.ucomplex.Model.Users.User;
-import org.ucomplex.ucomplex.Model.Users.UserInterface;
-
-import java.util.List;
+import org.ucomplex.ucomplex.Domain.Users.User;
+import org.ucomplex.ucomplex.Domain.Users.UserInterface;
 
 /**
  * Model layer on Model View PresenterToViewInterface Pattern

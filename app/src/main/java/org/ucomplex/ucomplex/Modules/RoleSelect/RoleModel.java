@@ -1,17 +1,14 @@
 package org.ucomplex.ucomplex.Modules.RoleSelect;
 
 import android.os.Bundle;
-import android.os.Parcelable;
 
-import net.oneread.aghanim.components.utility.IRecyclerItem;
 import net.oneread.aghanim.components.utility.MVPCallback;
 import net.oneread.aghanim.mvp.abstractmvp.AbstractModelRecycler;
 import net.oneread.aghanim.mvp.recyclermvp.ModelRecycler;
 
-import org.json.JSONException;
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
-import org.ucomplex.ucomplex.Model.Users.Role;
-import org.ucomplex.ucomplex.Model.Users.UserInterface;
+import org.ucomplex.ucomplex.Domain.Users.Role;
+import org.ucomplex.ucomplex.Domain.Users.UserInterface;
 import org.ucomplex.ucomplex.R;
 
 import java.util.ArrayList;

@@ -1,10 +1,10 @@
-package org.ucomplex.ucomplex.Model.Users;
+package org.ucomplex.ucomplex.Domain.Users;
 
 import android.os.Parcelable;
 
-import org.ucomplex.ucomplex.Model.Materials.DepartmentItem;
-import org.ucomplex.ucomplex.Model.Materials.MaterialItem;
-import org.ucomplex.ucomplex.Model.Materials.TimetableEntryItem;
+import org.ucomplex.ucomplex.Domain.Materials.DepartmentItem;
+import org.ucomplex.ucomplex.Domain.Materials.MaterialItem;
+import org.ucomplex.ucomplex.Domain.Materials.TimetableEntryItem;
 
 import java.util.ArrayList;
 

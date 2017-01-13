@@ -20,16 +20,12 @@ import android.widget.FrameLayout;
 import net.oneread.aghanim.components.base.BaseRecyclerFragment;
 import net.oneread.aghanim.components.base.MVPBaseActivity;
 import net.oneread.aghanim.components.utility.IFragment;
-import net.oneread.aghanim.components.utility.IRecyclerItem;
-import net.oneread.aghanim.mvp.abstractmvp.AbstractPresenterRecycler;
 import net.oneread.aghanim.mvp.basemvp.MVPPresenter;
-import net.oneread.aghanim.mvp.recyclermvp.PresenterRecycler;
-import net.oneread.aghanim.mvp.recyclermvp.ViewRecycler;
 
 import org.javatuples.Pair;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
-import org.ucomplex.ucomplex.Model.Users.UserInterface;
-import org.ucomplex.ucomplex.Modules.FragmentFactory;
+import org.ucomplex.ucomplex.Domain.Users.UserInterface;
+import org.ucomplex.ucomplex.CommonDependencies.FragmentFactory;
 import org.ucomplex.ucomplex.NavDrawer.DrawerAdapter;
 import org.ucomplex.ucomplex.NavDrawer.DrawerListItem;
 import org.ucomplex.ucomplex.NavDrawer.FacadeDrawer;

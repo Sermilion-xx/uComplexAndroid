@@ -1,8 +1,10 @@
-package org.ucomplex.ucomplex.Interfaces;
+package org.ucomplex.ucomplex.Domain.Materials;
+
+import net.oneread.aghanim.components.utility.IRecyclerItem;
 
 /**
  * ---------------------------------------------------
- * Created by Sermilion on 01/12/2016.
+ * Created by Sermilion on 06/12/2016.
  * Project: uComplex_v_2
  * ---------------------------------------------------
  * <a href="http://www.ucomplex.org">ucomplex.org</a>
@@ -10,9 +12,5 @@ package org.ucomplex.ucomplex.Interfaces;
  * ---------------------------------------------------
  */
 
-public abstract class IRecyclerItem {
-
-    public boolean isEmpty(){
-        return false;
-    }
+public class TimetableEntryItem extends IRecyclerItem {
 }

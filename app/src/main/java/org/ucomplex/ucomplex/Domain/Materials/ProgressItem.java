@@ -1,7 +1,8 @@
-package org.ucomplex.ucomplex.Model.Materials;
+package org.ucomplex.ucomplex.Domain.Materials;
 
-import org.ucomplex.ucomplex.Interfaces.IRecyclerItem;
-import org.ucomplex.ucomplex.Model.Users.User;
+import net.oneread.aghanim.components.utility.IRecyclerItem;
+
+import org.ucomplex.ucomplex.Domain.Users.User;
 //import org.ucomplex.ucomplex.Modules.Subject.SubjectItem;
 
 /**
