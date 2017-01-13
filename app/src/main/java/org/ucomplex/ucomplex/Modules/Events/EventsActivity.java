@@ -100,12 +100,6 @@ public class EventsActivity extends BaseRecyclerActivity {
         return mFragment.getRecyclerView();
     }
 
-    //mvp
-    @Override
-    public RecyclerView.Adapter<RecyclerView.ViewHolder> getAdapter() {
-        return mFragment.getListAdapter();
-    }
-
 
     @Override
     public void onResume() {

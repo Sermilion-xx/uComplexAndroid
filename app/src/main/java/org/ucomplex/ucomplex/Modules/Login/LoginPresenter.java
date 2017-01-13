@@ -15,7 +15,6 @@ import net.oneread.aghanim.mvp.abstractmvp.AbstractPresenter;
 import net.oneread.aghanim.mvp.basemvp.MVPModel;
 
 import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
-import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
 import org.ucomplex.ucomplex.CommonDependencies.FacadePreferences;
 import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
 import org.ucomplex.ucomplex.Model.Users.LoginErrorType;
@@ -40,41 +39,42 @@ import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.PASSWORD_REQUIRED
  * ---------------------------------------------------
  */
 
-public class LoginPresenter extends AbstractPresenter {
+public class LoginPresenter extends AbstractPresenter<String, UserInterface> {
 
     @Override
-    public void setModel(MVPModel model, Bundle...bundles) {
+    public void setModel(MVPModel model, Bundle... bundles) {
         mModel = model;
         mModel.setContext(getActivityContext());
-        UserInterface user = ((DaggerApplication)getAppContext()).getSharedUser();
-        if(user!=null){
-            ((LoginActivityView)getView()).successfulLogin(1);
+        UserInterface user = ((DaggerApplication) getAppContext()).getSharedUser();
+        if (user != null) {
+            ((LoginActivityView) getView()).successfulLogin(1);
         }
     }
 
     @Override
     public void loadData(Bundle... bundle) {
-        mModel.loadData(new MVPCallback() {
+        ((LoginActivityView) getView()).showProgress();
+        mModel.loadData(new MVPCallback<UserInterface>() {
             @Override
-            public void onSuccess(Object o) {
-                mModel.processJson((String)o);
-                UserInterface user = (UserInterface) mModel.processJson((String)o);
-                user.setPassword(((LoginModel)mModel).getTempPassword());
-                if(user.getRoles().size() == 1){
-                    user.setType(user.getRoles().get(0).getType());
-                    ((DaggerApplication)getAppContext()).setSharedUser(user);
-                    String loginData = encodeLoginData(user.getLogin()+":"+user.getPassword()+":"+user.getRoles().get(0).getId());
-                    FacadePreferences.setLoginDataToPref(getActivityContext(), loginData);
-                    DaggerApplication application = (DaggerApplication)getAppContext();
-                    FacadePreferences.setUserDataToPref(getActivityContext(), user);
-                    application.setAuthString(loginData);
-                    application.setSharedUser(user);
-                }
-                ((LoginActivityView)getView()).successfulLogin(0);
+            public void onSuccess(UserInterface user) {
+                user.setPassword(((LoginModel) mModel).getTempPassword());
+                user.setType(user.getRoles().get(0).getType());
+                ((DaggerApplication) getAppContext()).setSharedUser(user);
+                String loginData = encodeLoginData(user.getLogin() + ":" + user.getPassword() + ":" + user.getRoles().get(0).getId());
+                FacadePreferences.setLoginDataToPref(getActivityContext(), loginData);
+                DaggerApplication application = (DaggerApplication) getAppContext();
+                FacadePreferences.setUserDataToPref(getActivityContext(), user);
+                application.setAuthString(loginData);
+                application.setSharedUser(user);
+                ((LoginActivityView) getView()).hideProgress();
+                ((LoginActivityView) getView()).successfulLogin(0);
             }
+
             @Override
             public void onError(Throwable throwable) {
-                ((LoginActivityView)getView()).showToast(makeToast(getActivityContext().getString(R.string.error_login)));
+                throwable.printStackTrace();
+                ((LoginActivityView) getView()).showToast(makeToast(getActivityContext().getString(R.string.error_login)));
+                ((LoginActivityView) getView()).hideProgress();
             }
         });
     }
@@ -93,7 +93,7 @@ public class LoginPresenter extends AbstractPresenter {
                             new AsyncTask<Void, Void, String>() {
                                 @Override
                                 protected String doInBackground(Void... params) {
-                                    return ((LoginModel)mModel).sendResetRequest(email);
+                                    return ((LoginModel) mModel).sendResetRequest(email);
                                 }
 
                                 @Override
@@ -116,7 +116,7 @@ public class LoginPresenter extends AbstractPresenter {
     }
 
     private ArrayList<LoginErrorType> runCheck() {
-        UserInterface user = ((LoginModel)mModel).getUser();
+        UserInterface user = ((LoginModel) mModel).getUser();
         ArrayList<LoginErrorType> errors = new ArrayList<>();
         String password = user.getPassword();
         String login = user.getLogin();
@@ -128,7 +128,7 @@ public class LoginPresenter extends AbstractPresenter {
         if (TextUtils.isEmpty(login)) {
             errors.add(EMPTY_EMAIL);
         }
-        if(errors.size()==0){
+        if (errors.size() == 0) {
             errors.add(NO_ERROR);
         }
         return errors;
@@ -141,7 +141,7 @@ public class LoginPresenter extends AbstractPresenter {
 
     public ArrayList<LoginErrorType> checkCredentials() {
         ArrayList<LoginErrorType> error = runCheck();
-        if (error.get(0)==NO_ERROR) {
+        if (error.get(0) == NO_ERROR) {
             loadData();
         }
         return error;

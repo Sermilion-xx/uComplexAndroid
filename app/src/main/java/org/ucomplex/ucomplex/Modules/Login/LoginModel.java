@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.google.gson.Gson;
 
+import net.oneread.aghanim.components.utility.IRecyclerItem;
 import net.oneread.aghanim.components.utility.MVPCallback;
 import net.oneread.aghanim.mvp.abstractmvp.AbstractModel;
 
@@ -18,6 +19,8 @@ import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
 import org.ucomplex.ucomplex.Model.Users.User;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 
+import java.util.List;
+
 /**
  * Model layer on Model View PresenterToViewInterface Pattern
  * <p>
@@ -29,7 +32,7 @@ import org.ucomplex.ucomplex.Model.Users.UserInterface;
  * <a href="http://www.github.com/sermilion>github</a>
  * ---------------------------------------------------
  */
-public class LoginModel extends AbstractModel {
+public class LoginModel extends AbstractModel<String, UserInterface> {
 
     private UserInterface mUser;
     private String tempPassword;
@@ -37,7 +40,7 @@ public class LoginModel extends AbstractModel {
     private static final String JSON_SESSION_KEY = "session";
     private static final String JSON_ROLES_KEY = "roles";
 
-    public String getTempPassword() {
+    String getTempPassword() {
         String password = tempPassword;
         tempPassword = null;
         return password;
@@ -56,15 +59,26 @@ public class LoginModel extends AbstractModel {
     }
 
     @Override
-    public void loadData(MVPCallback mvpCallback, Bundle... bundles) {
+    public void loadData(MVPCallback<UserInterface> mvpCallback, Bundle... bundles) {
         tempPassword = mUser.getPassword();
         final String encodedAuth = HttpFactory.encodeLoginData(mUser.getLogin() + Constants.AUTH_DELIMETER + mUser.getPassword());
         HttpFactory.getInstance().httpVolley(HttpFactory.AUTHENTICATIO_URL,
                 encodedAuth,
                 mContext,
                 null,
-                mvpCallback
-                );
+                new MVPCallback<String>() {
+                    @Override
+                    public void onSuccess(String s) {
+                        mUser = processJson(s);
+                        mvpCallback.onSuccess(mUser);
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        mvpCallback.onError(throwable);
+                    }
+                }
+        );
     }
 
     @Override

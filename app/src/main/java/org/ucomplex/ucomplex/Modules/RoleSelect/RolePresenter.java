@@ -4,19 +4,23 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
 
+import net.oneread.aghanim.components.utility.IRecyclerItem;
+import net.oneread.aghanim.components.utility.MVPCallback;
 import net.oneread.aghanim.mvp.abstractmvp.AbstractPresenterRecycler;
 import net.oneread.aghanim.mvp.recyclermvp.ModelRecycler;
 import net.oneread.aghanim.mvp.recyclermvp.PresenterRecycler;
 
 import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
-import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
 import org.ucomplex.ucomplex.CommonDependencies.FacadePreferences;
 import org.ucomplex.ucomplex.Model.Users.UserInterface;
 import org.ucomplex.ucomplex.Modules.Events.EventsActivity;
+
+import java.util.List;
 
 import static org.ucomplex.ucomplex.CommonDependencies.HttpFactory.encodeLoginData;
 
@@ -30,7 +34,7 @@ import static org.ucomplex.ucomplex.CommonDependencies.HttpFactory.encodeLoginDa
  * ---------------------------------------------------
  */
 
-public class RolePresenter extends AbstractPresenterRecycler implements PresenterRecycler {
+public class RolePresenter extends AbstractPresenterRecycler<List<RoleItem>>{
 
     public RolePresenter() {
 
@@ -45,31 +49,27 @@ public class RolePresenter extends AbstractPresenterRecycler implements Presente
     }
 
     @Override
+    public void loadData(Bundle... bundle) {
+        mModel.loadData(new MVPCallback<List<IRecyclerItem>>() {
+            @Override
+            public void onSuccess(List<IRecyclerItem> iRecyclerItems) {
+                populateRecyclerView(iRecyclerItems);
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                throwable.printStackTrace();
+            }
+        }, bundle);
+    }
+
+    @Override
     public void bindViewHolder(RecyclerView.ViewHolder aHolder, final int position) {
-        UserInterface user = ((DaggerApplication)getAppContext()).getSharedUser();
         RoleViewHolder holder = (RoleViewHolder) aHolder;
         final RoleItem role = (RoleItem) ((ModelRecycler)mModel).getItem(position);
         holder.roleName.setText(role.getRoleName());
         holder.roleIcon.setImageResource(role.getRoleIcon());
-        holder.roleIcon.setOnClickListener(view -> {
-            new AsyncTask<Void, Void, Void>() {
-                @Override
-                protected Void doInBackground(Void... voids) {
-                    String login = user.getLogin();
-                    String password = user.getPassword();
-                    int role1 = user.getRoles().get(position).getId();
-                    user.setType(user.getRoles().get(position).getType());
-                    user.setType(user.getType());
-                    String encodedAuth = encodeLoginData(login + ":" + password + ":" + role1);
-                    FacadePreferences.setLoginDataToPref(getActivityContext(), encodedAuth);
-                    DaggerApplication application = (DaggerApplication)getAppContext();
-                    application.setSharedUser(user);
-                    return null;
-                }
-            }.execute();
-            Intent intent = new Intent(getActivityContext(), EventsActivity.class);
-            intent.putExtra(Constants.EXTRA_KEY_USER, (Parcelable) user);
-            getActivityContext().startActivity(intent);
-        });
+        holder.roleIcon.setOnClickListener(baseOnClickListener);
     }
+
 }

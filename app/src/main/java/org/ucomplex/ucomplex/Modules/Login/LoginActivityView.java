@@ -26,22 +26,22 @@ import javax.inject.Inject;
 
 import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.EMPTY_EMAIL;
 import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.INVALID_PASSWORD;
-import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.NO_ERROR;
 import static org.ucomplex.ucomplex.Model.Users.LoginErrorType.PASSWORD_REQUIRED;
 
 
-public class LoginActivityView extends MVPBaseActivity implements View.OnClickListener{
+public class LoginActivityView extends MVPBaseActivity implements View.OnClickListener {
 
     private AutoCompleteTextView mLoginView;
     private EditText mPasswordView;
-    private Button mForgotButton;
-    private Button mLoginSignInButton;
     private View mProgressView;
 
-    @Inject public void setPresenter(LoginPresenter presenter) {
+    @Inject
+    public void setPresenter(LoginPresenter presenter) {
         super.mPresenter = presenter;
     }
-    @Inject public void setModel(LoginModel model) {
+
+    @Inject
+    public void setModel(LoginModel model) {
         super.mModel = model;
     }
 
@@ -59,8 +59,8 @@ public class LoginActivityView extends MVPBaseActivity implements View.OnClickLi
         this.mLoginView = ((AutoCompleteTextView) findViewById(R.id.login));
         this.mPasswordView = (EditText) findViewById(R.id.password);
         this.mProgressView = findViewById(R.id.progressBar);
-        this.mForgotButton = (Button) findViewById(R.id.forgot_pass_button);
-        this.mLoginSignInButton = (Button) findViewById(R.id.login_sign_in_button);
+        Button mForgotButton = (Button) findViewById(R.id.forgot_pass_button);
+        Button mLoginSignInButton = (Button) findViewById(R.id.login_sign_in_button);
         mLoginSignInButton.setOnClickListener(this);
         mForgotButton.setOnClickListener(this);
     }
@@ -80,9 +80,8 @@ public class LoginActivityView extends MVPBaseActivity implements View.OnClickLi
         UserInterface user = new User();
         user.setPassword(password);
         user.setLogin(login);
-        ((LoginModel)mModel).setUser(user);
+        ((LoginModel) mModel).setUser(user);
 
-        mProgressView.setVisibility(View.VISIBLE);
         ArrayList<LoginErrorType> error = ((LoginPresenter) mPresenter).checkCredentials();
 
         if (error.contains(PASSWORD_REQUIRED)) {
@@ -93,20 +92,18 @@ public class LoginActivityView extends MVPBaseActivity implements View.OnClickLi
         if (error.contains(EMPTY_EMAIL)) {
             mLoginView.setError(getString(R.string.error_field_required));
         }
-        if(!error.contains(NO_ERROR)){
-            mProgressView.setVisibility(View.GONE);
-        }
+
     }
 
     public void successfulLogin(int flag) {
-        mProgressView.setVisibility(View.GONE);
+
         Intent intent;
-        if(flag == 1 || ((LoginModel)mModel).getUser().getRoles().size() == 1){
+        if (flag == 1 || ((LoginModel) mModel).getUser().getRoles().size() == 1) {
             intent = new Intent(getActivityContext(), EventsActivity.class);
-        }else {
+        } else {
             intent = new Intent(getActivityContext(), RoleSelectActivity.class);
         }
-        intent.putExtra(Constants.EXTRA_KEY_USER, (Parcelable) ((LoginModel)mModel).getUser());
+        intent.putExtra(Constants.EXTRA_KEY_USER, (Parcelable) ((LoginModel) mModel).getUser());
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         getActivityContext().startActivity(intent);
         finish();
@@ -115,7 +112,7 @@ public class LoginActivityView extends MVPBaseActivity implements View.OnClickLi
     @Override
     public void onClick(View view) {
         int id = view.getId();
-        switch (id){
+        switch (id) {
             case R.id.login_sign_in_button:
                 clickLoginButton();
                 break;
@@ -123,6 +120,14 @@ public class LoginActivityView extends MVPBaseActivity implements View.OnClickLi
                 clickForgotButton();
                 break;
         }
+    }
+
+    public void showProgress(){
+        mProgressView.setVisibility(View.VISIBLE);
+    }
+
+    public void hideProgress(){
+        mProgressView.setVisibility(View.GONE);
     }
 
 

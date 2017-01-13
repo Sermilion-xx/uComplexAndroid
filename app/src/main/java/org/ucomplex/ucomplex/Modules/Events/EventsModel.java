@@ -2,7 +2,6 @@ package org.ucomplex.ucomplex.Modules.Events;
 
 
 import android.os.Bundle;
-import android.provider.SyncStateContract;
 
 import net.oneread.aghanim.components.utility.IRecyclerItem;
 import net.oneread.aghanim.components.utility.MVPCallback;
@@ -11,10 +10,7 @@ import net.oneread.aghanim.mvp.abstractmvp.AbstractModelRecycler;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
-import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
-import org.ucomplex.ucomplex.CommonDependencies.FacadePreferences;
 import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
 
 import java.util.ArrayList;
@@ -35,7 +31,7 @@ import static org.ucomplex.ucomplex.CommonDependencies.Constants.AUTH_STRING;
  * <a href="http://www.github.com/sermilion>github</a>
  * ---------------------------------------------------
  */
-public class EventsModel extends AbstractModelRecycler {
+public class EventsModel extends AbstractModelRecycler<String, List<IRecyclerItem>> {
 
     private static final String KEY_JSON_EVENTS = "events";
     private static final String EVENT_PARAMS = "params";
@@ -62,7 +58,7 @@ public class EventsModel extends AbstractModelRecycler {
 
 
     @Override
-    public void loadData(MVPCallback mvpCallback, Bundle... bundle) {
+    public void loadData(MVPCallback<List<IRecyclerItem>> mvpCallback, Bundle... bundle) {
         String encodedAuth = "";
         HashMap<String, String> params = new HashMap<>();
         int start;
@@ -79,12 +75,33 @@ public class EventsModel extends AbstractModelRecycler {
                 encodedAuth,
                 mContext,
                 params,
-                mvpCallback);
+                new MVPCallback<String>() {
+                    @Override
+                    public void onSuccess(String s) {
+                        List<IRecyclerItem> newItems = processJson(s);
+                        newItems.add(new IRecyclerItem() {
+                            @Override
+                            public boolean isEmpty() {
+                                return true;
+                            }
+                        });
+                        mvpCallback.onSuccess(newItems);
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        mvpCallback.onError(throwable);
+                    }
+                });
+
+
+
     }
 
+
     @Override
-    public ArrayList<IRecyclerItem> processJson(String s) {
-        ArrayList<IRecyclerItem> displayEventsArray = new ArrayList<>();
+    public List<IRecyclerItem> processJson(String s) {
+        List<IRecyclerItem> displayEventsArray = new ArrayList<>();
         try {
             JSONObject eventJson = new JSONObject(s);
             JSONArray eventsArray = eventJson.getJSONArray(KEY_JSON_EVENTS);

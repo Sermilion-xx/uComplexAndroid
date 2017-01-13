@@ -14,6 +14,7 @@ import net.oneread.aghanim.components.utility.MVPCallback;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * ---------------------------------------------------
@@ -80,7 +81,7 @@ public class HttpFactory {
                            final String encodedAuth,
                            Context context,
                            HashMap<String, String> params,
-                           MVPCallback callback) {
+                           MVPCallback<String> callback) {
         if (params == null) {
             params = new HashMap<>();
         }

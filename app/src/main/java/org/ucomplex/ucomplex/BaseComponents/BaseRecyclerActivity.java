@@ -25,6 +25,11 @@ public class BaseRecyclerActivity extends BaseActivity implements MVPBaseRecycle
     }
 
     @Override
+    public RecyclerView.Adapter<RecyclerView.ViewHolder> getAdapter() {
+        return mFragment.getListAdapter();
+    }
+
+    @Override
     public void notifyItemRangeRemoved(int start, int end) {
         getAdapter().notifyItemRangeRemoved(start, end);
     }
@@ -41,11 +46,6 @@ public class BaseRecyclerActivity extends BaseActivity implements MVPBaseRecycle
 
     @Override
     public RecyclerView getRecyclerView() {
-        throw new UnsupportedOperationException("Method not implemented yet.");
-    }
-
-    @Override
-    public RecyclerView.Adapter<RecyclerView.ViewHolder> getAdapter() {
         throw new UnsupportedOperationException("Method not implemented yet.");
     }
 

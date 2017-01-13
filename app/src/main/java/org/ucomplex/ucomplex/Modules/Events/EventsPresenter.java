@@ -13,7 +13,6 @@ import net.oneread.aghanim.components.utility.MVPCallback;
 import net.oneread.aghanim.mvp.abstractmvp.AbstractPresenterRecycler;
 import net.oneread.aghanim.mvp.basemvp.MVPModel;
 import net.oneread.aghanim.mvp.recyclermvp.ModelRecycler;
-import net.oneread.aghanim.mvp.recyclermvp.ViewRecycler;
 
 import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
@@ -34,19 +33,19 @@ import java.util.List;
  * ---------------------------------------------------
  */
 
-public class EventsPresenter extends AbstractPresenterRecycler {
+public class EventsPresenter extends AbstractPresenterRecycler<String> {
 
     private boolean hasMoreEvents = true;
     private static final int TYPE_COMMON = 0;
     private static final int TYPE_FOOTER = 1;
 
     @Override
-    public void setModel(MVPModel models, Bundle... bundles) {
-        super.setModel(models, bundles);
+    public void setModel(MVPModel<String, List<IRecyclerItem>> models, Bundle... bundle) {
+        super.setModel(models, bundle);
     }
 
     private int isAvailableListViewItem() {
-        IRecyclerItem item = ((ModelRecycler) mModel).getItems().get(0);
+        IRecyclerItem item = (IRecyclerItem) ((ModelRecycler) mModel).getItems().get(0);
         if (!FacadeCommon.isNetworkConnected(getActivityContext()) && item.isEmpty()) {
             return R.layout.list_item_no_internet;
         } else if (item.isEmpty()) {
@@ -120,21 +119,23 @@ public class EventsPresenter extends AbstractPresenterRecycler {
         this.itemLayout = i;
     }
 
-    @Override
+    @Override @SuppressWarnings("unchecked")
     public void loadData(Bundle... bundle) {
         try {
             ((EventsActivity) getView()).showProgress();
         } catch (NullPointerException ignored) {}
         DaggerApplication application = (DaggerApplication) getAppContext();
         application.getAuthString();
-        mModel.loadData(new MVPCallback() {
+        mModel.loadData(new MVPCallback<List<IRecyclerItem>>() {
             @Override
-            public void onSuccess(Object o) {
+            public void onSuccess(List<IRecyclerItem> o) {
                 if (!EventsModel.INITIAL_EVENTS_LOADED) {
-                    processInitialEvents((String) o);
+                    EventsModel.INITIAL_EVENTS_LOADED = true;
+                    hasMoreEvents = true;
+                    populateRecyclerView(o);
                     ((EventsActivity) getView()).hideProgress();
                 } else {
-                    processMoreEvents((String) o);
+                    addMoreToRecyclerView(o);
                     ((EventsActivity) getView()).hideProgress();
                 }
             }
@@ -146,33 +147,5 @@ public class EventsPresenter extends AbstractPresenterRecycler {
         }, bundle);
     }
 
-    private void processInitialEvents(String o) {
-        int end = ((ModelRecycler) mModel).getItemCount();
-        EventsModel.INITIAL_EVENTS_LOADED = true;
-        List<IRecyclerItem> newItems = ((EventsModel) mModel).processJson(o);
-        ((ModelRecycler) mModel).clear();
-        ((ViewRecycler) getView()).notifyItemRangeRemoved(0, end);
-        ((ModelRecycler) mModel).addAll(newItems);
-        addEmptyElement();
-        hasMoreEvents = true;
-        ((ViewRecycler) getView()).notifyItemRangeChanged(0, newItems.size() + 1);
-    }
-
-    private void processMoreEvents(String o) {
-        List<IRecyclerItem> newItems = ((EventsModel) mModel).processJson(o);
-        int end = ((ModelRecycler) mModel).getItems().size();
-        getItems().addAll(end, newItems);
-        int itemCount = ((ModelRecycler) mModel).getItemCount();
-        ((ViewRecycler) getView()).notifyItemRangeInserted(end, itemCount - 1);
-    }
-
-    private void addEmptyElement() {
-        ((ModelRecycler) mModel).getItems().add(new IRecyclerItem() {
-            @Override
-            public boolean isEmpty() {
-                return true;
-            }
-        });
-    }
 }
 
