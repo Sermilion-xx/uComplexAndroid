@@ -3,6 +3,8 @@ package org.ucomplex.ucomplex.Modules.Events;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -58,11 +60,21 @@ public class EventsPresenter extends AbstractPresenterRecycler<String> {
 
     @Override
     public EventViewHolder createViewHolder(ViewGroup parent, int viewType) {
-        itemLayout = isAvailableListViewItem();
-        if (itemLayout != R.layout.list_item_no_content && itemLayout != R.layout.list_item_no_internet) {
-            itemLayout = viewType == 0 ? itemLayout : R.layout.list_item_event_footer;
+        int tempLayout = isAvailableListViewItem();
+        View viewTaskRow;
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        if (tempLayout != R.layout.list_item_no_content && tempLayout != R.layout.list_item_no_internet) {
+            tempLayout = viewType == 0 ? itemLayout : R.layout.list_item_event_footer;
+            if(viewType == 0){
+                viewTaskRow = inflater.inflate(itemLayout, parent, false);
+            }else{
+                viewTaskRow = inflater.inflate(R.layout.list_item_event_footer, parent, false);
+            }
+        }else{
+            viewTaskRow = inflater.inflate(tempLayout, parent, false);
         }
-        return (EventViewHolder) super.createViewHolder(parent, viewType);
+        viewTaskRow.setOnClickListener(this.baseOnClickListener);
+        return (EventViewHolder) this.creator.getViewHolder(viewTaskRow, tempLayout);
     }
 
     @Override
@@ -100,14 +112,12 @@ public class EventsPresenter extends AbstractPresenterRecycler<String> {
 ////                Intent intent = new Intent(getActivityContext(), null);
 //            });
         } else {
-            if (holder.loadMoreEventsButton != null) {
-                if (hasMoreEvents) {
-                    holder.loadMoreEventsButton.setVisibility(View.VISIBLE);
-                    baseOnClickListener.setPosition(holder.getAdapterPosition());
-                    holder.loadMoreEventsButton.setOnClickListener(baseOnClickListener);
-                } else {
-                    holder.loadMoreEventsButton.setVisibility(View.GONE);
-                }
+            if (hasMoreEvents) {
+                holder.loadMoreEventsButton.setVisibility(View.VISIBLE);
+                baseOnClickListener.setPosition(holder.getAdapterPosition());
+                holder.loadMoreEventsButton.setOnClickListener(baseOnClickListener);
+            } else {
+                holder.loadMoreEventsButton.setVisibility(View.GONE);
             }
         }
     }
@@ -131,24 +141,37 @@ public class EventsPresenter extends AbstractPresenterRecycler<String> {
         mModel.loadData(new MVPCallback<List<IRecyclerItem>>() {
             @Override
             public void onSuccess(List<IRecyclerItem> o) {
+                if(o.size()<10){
+                    hasMoreEvents = false;
+                }else{
+                    addEmptyItem(o);
+                }
                 if (!EventsModel.INITIAL_EVENTS_LOADED) {
                     EventsModel.INITIAL_EVENTS_LOADED = true;
                     hasMoreEvents = true;
                     populateRecyclerView(o);
                     ((EventsActivity) getView()).hideProgress();
                 } else {
-                    getItems().remove(getItems().size()-1);
-                    ((ViewRecycler)getView()).notifyItemRemoved(getItems().size()-1);
+                    getItems().remove(getItems().size() - 1);
+                    ((ViewRecycler) getView()).notifyItemRemoved(getItems().size() + 1);
                     addMoreToRecyclerView(o);
                     ((EventsActivity) getView()).hideProgress();
                 }
             }
-
             @Override
             public void onError(Throwable throwable) {
                 throwable.printStackTrace();
             }
         }, bundle);
+    }
+
+    private void addEmptyItem(List<IRecyclerItem> o) {
+        o.add(new IRecyclerItem() {
+            @Override
+            public boolean isEmpty() {
+                return true;
+            }
+        });
     }
 
 }

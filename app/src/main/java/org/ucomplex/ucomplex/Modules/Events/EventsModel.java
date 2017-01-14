@@ -79,12 +79,6 @@ public class EventsModel extends AbstractModelRecycler<String, List<IRecyclerIte
                     @Override
                     public void onSuccess(String s) {
                         List<IRecyclerItem> newItems = processJson(s);
-                        newItems.add(new IRecyclerItem() {
-                            @Override
-                            public boolean isEmpty() {
-                                return true;
-                            }
-                        });
                         mvpCallback.onSuccess(newItems);
                     }
 

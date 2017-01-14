@@ -28,7 +28,7 @@ public class RoleViewHolder extends RecyclerView.ViewHolder {
     public RoleViewHolder(View view){
         super(view);
         setupViews(view);
-        view.setTag(this);
+        roleIcon.setTag(this);
     }
 
     private void setupViews(View view) {
