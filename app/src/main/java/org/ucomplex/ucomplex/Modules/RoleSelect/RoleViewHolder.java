@@ -22,11 +22,13 @@ public class RoleViewHolder extends RecyclerView.ViewHolder {
 
     TextView        roleName;
     CircleImageView roleIcon;
+    int             position;
 
 
     public RoleViewHolder(View view){
         super(view);
         setupViews(view);
+        view.setTag(this);
     }
 
     private void setupViews(View view) {
@@ -34,4 +36,11 @@ public class RoleViewHolder extends RecyclerView.ViewHolder {
         roleIcon = (CircleImageView) view.findViewById(R.id.roleIcon);
     }
 
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public int getItemPosition() {
+        return position;
+    }
 }

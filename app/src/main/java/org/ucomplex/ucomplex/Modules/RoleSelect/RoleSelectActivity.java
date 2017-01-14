@@ -59,14 +59,12 @@ public class RoleSelectActivity extends BaseRecyclerActivity implements ViewRecy
     private void initPresenter() {
         RecyclerOnClickListener clickListener = new RecyclerOnClickListener();
         OnClickStrategy strategy = view -> {
-            int position = clickListener.getPosition();
-            if (position == ((PresenterRecycler) mPresenter).getItemCount() - 1) {
-                UserInterface user = ((DaggerApplication) getAppContext()).getSharedUser();
-                persistUser(user, position);
-                Intent intent = new Intent(getActivityContext(), EventsActivity.class);
-                intent.putExtra(Constants.EXTRA_KEY_USER, (Parcelable) user);
-                getActivityContext().startActivity(intent);
-            }
+            int position = (((RoleViewHolder) view.getTag()).getItemPosition());
+            UserInterface user = ((DaggerApplication) getAppContext()).getSharedUser();
+            persistUser(user, position);
+            Intent intent = new Intent(getActivityContext(), EventsActivity.class);
+            intent.putExtra(Constants.EXTRA_KEY_USER, (Parcelable) user);
+            getActivityContext().startActivity(intent);
         };
         clickListener.setStrategy(strategy);
         ((PresenterRecycler) mPresenter).setBaseOnClickListener(clickListener);
@@ -77,13 +75,13 @@ public class RoleSelectActivity extends BaseRecyclerActivity implements ViewRecy
     private void persistUser(UserInterface user, int position) {
         String login = user.getLogin();
         String password = user.getPassword();
-        int role1 = user.getRoles().get(position).getId();
+        int roleId = user.getRoles().get(position).getId();
         user.setType(user.getRoles().get(position).getType());
-        user.setType(user.getType());
-        String encodedAuth = encodeLoginData(login + ":" + password + ":" + role1);
+        String encodedAuth = encodeLoginData(login + ":" + password + ":" + roleId);
         FacadePreferences.setLoginDataToPref(getActivityContext(), encodedAuth);
         DaggerApplication application = (DaggerApplication) getAppContext();
         application.setSharedUser(user);
+        application.setAuthString(encodedAuth);
     }
 
 

@@ -14,6 +14,7 @@ import net.oneread.aghanim.components.utility.MVPCallback;
 import net.oneread.aghanim.mvp.abstractmvp.AbstractPresenter;
 import net.oneread.aghanim.mvp.basemvp.MVPModel;
 
+import org.ucomplex.ucomplex.BaseComponents.BaseAsyncTask;
 import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
 import org.ucomplex.ucomplex.CommonDependencies.FacadePreferences;
 import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
@@ -41,6 +42,8 @@ import static org.ucomplex.ucomplex.Domain.Users.LoginErrorType.PASSWORD_REQUIRE
 
 public class LoginPresenter extends AbstractPresenter<String, UserInterface> {
 
+    private BaseAsyncTask<Void, Void, Void> savePref;
+
     @Override
     public void setModel(MVPModel model, Bundle... bundles) {
         mModel = model;
@@ -57,18 +60,25 @@ public class LoginPresenter extends AbstractPresenter<String, UserInterface> {
         mModel.loadData(new MVPCallback<UserInterface>() {
             @Override
             public void onSuccess(UserInterface user) {
-                user.setPassword(((LoginModel) mModel).getTempPassword());
-                user.setType(user.getRoles().get(0).getType());
-                ((DaggerApplication) getAppContext()).setSharedUser(user);
-                String loginData = encodeLoginData(user.getLogin() + ":" + user.getPassword() + ":" + user.getRoles().get(0).getId());
-                FacadePreferences.setLoginDataToPref(getActivityContext(), loginData);
                 DaggerApplication application = (DaggerApplication) getAppContext();
-                FacadePreferences.setUserDataToPref(getActivityContext(), user);
-                FacadePreferences.savePrevLoginInfo(getActivityContext(), user.getLogin(), user.getPassword());
-                application.setAuthString(loginData);
-                application.setSharedUser(user);
+                savePref = new BaseAsyncTask<>();
+                savePref.setBackgroundWork(arg -> {
+                    if (user.getRoles().size() == 1) {
+                        String loginData = encodeLoginData(user.getLogin() + ":" + user.getPassword() + ":" + user.getRoles().get(0).getId());
+                        FacadePreferences.setLoginDataToPref(getActivityContext(), loginData);
+                        application.setAuthString(loginData);
+                        user.setType(user.getRoles().get(0).getType());
+                        FacadePreferences.setUserDataToPref(getActivityContext(), user);
+                    }
+                    application.setSharedUser(user);
+                    user.setPassword(((LoginModel) mModel).getTempPassword());
+                    FacadePreferences.savePrevLoginInfo(getActivityContext(), user.getLogin(), user.getPassword());
+
+                    ((LoginActivityView) getView()).successfulLogin(0);
+                    return null;
+                });
+                savePref.execute();
                 ((LoginActivityView) getView()).hideProgress();
-                ((LoginActivityView) getView()).successfulLogin(0);
             }
 
             @Override
@@ -151,4 +161,5 @@ public class LoginPresenter extends AbstractPresenter<String, UserInterface> {
     private Toast makeToast(String msg) {
         return Toast.makeText(getView().getAppContext(), msg, Toast.LENGTH_SHORT);
     }
+
 }

@@ -13,6 +13,7 @@ import net.oneread.aghanim.components.utility.MVPCallback;
 import net.oneread.aghanim.mvp.abstractmvp.AbstractPresenterRecycler;
 import net.oneread.aghanim.mvp.basemvp.MVPModel;
 import net.oneread.aghanim.mvp.recyclermvp.ModelRecycler;
+import net.oneread.aghanim.mvp.recyclermvp.ViewRecycler;
 
 import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
@@ -136,6 +137,8 @@ public class EventsPresenter extends AbstractPresenterRecycler<String> {
                     populateRecyclerView(o);
                     ((EventsActivity) getView()).hideProgress();
                 } else {
+                    getItems().remove(getItems().size()-1);
+                    ((ViewRecycler)getView()).notifyItemRemoved(getItems().size()-1);
                     addMoreToRecyclerView(o);
                     ((EventsActivity) getView()).hideProgress();
                 }

@@ -47,7 +47,7 @@ public class RolePresenter extends AbstractPresenterRecycler<List<RoleItem>>{
         final RoleItem role = (RoleItem) ((ModelRecycler)mModel).getItem(position);
         holder.roleName.setText(role.getRoleName());
         holder.roleIcon.setImageResource(role.getRoleIcon());
-        baseOnClickListener.setPosition(position);
+        holder.setPosition(position);
         holder.roleIcon.setOnClickListener(baseOnClickListener);
     }
 
