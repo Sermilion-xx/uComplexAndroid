@@ -10,6 +10,8 @@ import org.ucomplex.ucomplex.Modules.Login.LoginDagger.DaggerLoginDiComponent;
 import org.ucomplex.ucomplex.Modules.Login.LoginDagger.LoginDiComponent;
 import org.ucomplex.ucomplex.Modules.RoleSelect.RoleSelectDagger.DaggerRoleDiComponent;
 import org.ucomplex.ucomplex.Modules.RoleSelect.RoleSelectDagger.RoleDiComponent;
+import org.ucomplex.ucomplex.Modules.SubjectsList.SubjectsListDagger.DaggerSubjectsListDiComponent;
+import org.ucomplex.ucomplex.Modules.SubjectsList.SubjectsListDagger.SubjectsListDiComponent;
 
 /**
  * ---------------------------------------------------
@@ -28,14 +30,16 @@ public class DaggerApplication extends Application{
     private LoginDiComponent loginDiComponent;
     private RoleDiComponent roleDiComponent;
     private EventsDiComponent eventsDiComponent;
+    private SubjectsListDiComponent subjectsListDiComponent;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        sharedUser          = FacadePreferences.getUserDataFromPref(this);
-        loginDiComponent    = DaggerLoginDiComponent.builder().build();
-        roleDiComponent     = DaggerRoleDiComponent.builder().build();
-        eventsDiComponent   = DaggerEventsDiComponent.builder().build();
+        sharedUser              = FacadePreferences.getUserDataFromPref(this);
+        loginDiComponent        = DaggerLoginDiComponent.builder().build();
+        roleDiComponent         = DaggerRoleDiComponent.builder().build();
+        eventsDiComponent       = DaggerEventsDiComponent.builder().build();
+        subjectsListDiComponent = DaggerSubjectsListDiComponent.builder().build();
     }
 
     public LoginDiComponent getLoginDiComponent() {
@@ -48,6 +52,10 @@ public class DaggerApplication extends Application{
 
     public EventsDiComponent getEventsDiComponent() {
         return eventsDiComponent;
+    }
+
+    public SubjectsListDiComponent getSubjectsListDiComponent() {
+        return subjectsListDiComponent;
     }
 
     public UserInterface getSharedUser() {

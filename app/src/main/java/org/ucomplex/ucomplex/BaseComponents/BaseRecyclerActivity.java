@@ -7,7 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import net.oneread.aghanim.components.base.MVPBaseRecyclerActivity;
 
 //implements MVPBaseRecyclerActivity for mvp
-public class BaseRecyclerActivity extends BaseActivity implements MVPBaseRecyclerActivity{
+public class BaseRecyclerActivity extends BaseActivity implements MVPBaseRecyclerActivity {
 
     @Override
     public void notifyItemRemoved(int position) {
@@ -69,6 +69,16 @@ public class BaseRecyclerActivity extends BaseActivity implements MVPBaseRecycle
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mPresenter.onConfigurationChanged(this);
+    }
+
+    public void showProgress() {
+        if (mFragment != null)
+            mFragment.showProgress();
+    }
+
+    public void hideProgress() {
+        if (mFragment != null)
+            mFragment.hideProgress();
     }
 
 }

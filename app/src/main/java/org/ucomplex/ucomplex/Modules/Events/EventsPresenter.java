@@ -18,10 +18,12 @@ import net.oneread.aghanim.mvp.recyclermvp.ModelRecycler;
 import net.oneread.aghanim.mvp.recyclermvp.ViewRecycler;
 
 import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
+import org.ucomplex.ucomplex.BaseComponents.MVPUtility;
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeMedia;
 import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
+import org.ucomplex.ucomplex.Modules.SubjectsList.SubjectListViewHolder;
 import org.ucomplex.ucomplex.R;
 
 import java.util.List;
@@ -60,19 +62,10 @@ public class EventsPresenter extends AbstractPresenterRecycler<String> {
 
     @Override
     public EventViewHolder createViewHolder(ViewGroup parent, int viewType) {
-        int tempLayout = isAvailableListViewItem();
         View viewTaskRow;
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        if (tempLayout != R.layout.list_item_no_content && tempLayout != R.layout.list_item_no_internet) {
-            tempLayout = viewType == 0 ? itemLayout : R.layout.list_item_event_footer;
-            if(viewType == 0){
-                viewTaskRow = inflater.inflate(itemLayout, parent, false);
-            }else{
-                viewTaskRow = inflater.inflate(R.layout.list_item_event_footer, parent, false);
-            }
-        }else{
-            viewTaskRow = inflater.inflate(tempLayout, parent, false);
-        }
+        int tempLayout = MVPUtility.isAvailableListViewItem((ModelRecycler) mModel, getActivityContext(), itemLayout);
+        viewTaskRow = MVPUtility.resolveLayout(tempLayout, itemLayout, viewType,inflater, parent);
         viewTaskRow.setOnClickListener(this.baseOnClickListener);
         return (EventViewHolder) this.creator.getViewHolder(viewTaskRow, tempLayout);
     }
@@ -133,11 +126,8 @@ public class EventsPresenter extends AbstractPresenterRecycler<String> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void loadData(Bundle... bundle) {
         ((EventsActivity) getView()).showProgress();
-        DaggerApplication application = (DaggerApplication) getAppContext();
-        application.getAuthString();
         mModel.loadData(new MVPCallback<List<IRecyclerItem>>() {
             @Override
             public void onSuccess(List<IRecyclerItem> o) {
@@ -161,6 +151,7 @@ public class EventsPresenter extends AbstractPresenterRecycler<String> {
             @Override
             public void onError(Throwable throwable) {
                 throwable.printStackTrace();
+                ((EventsActivity) getView()).hideProgress();
             }
         }, bundle);
     }

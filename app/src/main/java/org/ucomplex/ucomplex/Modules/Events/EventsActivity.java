@@ -52,8 +52,7 @@ public class EventsActivity extends BaseRecyclerActivity {
     protected void onCreate(Bundle savedInstanceState) {
         ((DaggerApplication) getApplication()).getEventsDiComponent().inject(this);
         super.onCreate(savedInstanceState);
-        FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame);
-        getLayoutInflater().inflate(R.layout.activity_main, contentFrameLayout);
+        setContentViewWithNavDrawer(R.layout.activity_main);
 
         if(savedInstanceState!=null){
             updateEventsReceiverRegistered = savedInstanceState.getBoolean("updateEventsReceiverRegistered");
@@ -134,13 +133,5 @@ public class EventsActivity extends BaseRecyclerActivity {
             }
         }
     };
-
-    public void showProgress(){
-        mFragment.showProgress();
-    }
-
-    public void hideProgress(){
-        mFragment.hideProgress();
-    }
 
 }

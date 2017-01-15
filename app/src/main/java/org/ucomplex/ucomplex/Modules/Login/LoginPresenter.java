@@ -64,10 +64,11 @@ public class LoginPresenter extends AbstractPresenter<String, UserInterface> {
                 savePref = new BaseAsyncTask<>();
                 savePref.setBackgroundWork(arg -> {
                     if (user.getRoles().size() == 1) {
-                        String loginData = encodeLoginData(user.getLogin() + ":" + user.getPassword() + ":" + user.getRoles().get(0).getId());
+                        user.setPassword(((LoginModel) mModel).getTempPassword());
+                        user.setType(user.getRoles().get(0).getType());
+                        String loginData = encodeLoginData(user.getLogin().substring(2) + ":" + user.getPassword() + ":" + user.getRoles().get(0).getId());
                         FacadePreferences.setLoginDataToPref(getActivityContext(), loginData);
                         application.setAuthString(loginData);
-                        user.setType(user.getRoles().get(0).getType());
                         FacadePreferences.setUserDataToPref(getActivityContext(), user);
                     }
                     application.setSharedUser(user);

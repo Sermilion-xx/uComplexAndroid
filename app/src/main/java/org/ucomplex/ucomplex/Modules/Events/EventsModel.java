@@ -62,15 +62,12 @@ public class EventsModel extends AbstractModelRecycler<String, List<IRecyclerIte
         String encodedAuth = "";
         HashMap<String, String> params = new HashMap<>();
         int start;
-        if (bundle.length>0) {
-            if(bundle[0].containsKey(AUTH_STRING)){
-                encodedAuth = bundle[0].getString(AUTH_STRING);
-            }
-            if(bundle[0].containsKey(EVENTS_START)){
-                start = bundle[0].getInt(EVENTS_START);
-                params.put(EVENTS_START, Integer.toString(start));
-            }
+        encodedAuth = bundle[0].getString(AUTH_STRING);
+        if (bundle[0].containsKey(EVENTS_START)) {
+            start = bundle[0].getInt(EVENTS_START);
+            params.put(EVENTS_START, Integer.toString(start));
         }
+
         HttpFactory.getInstance().httpVolley(HttpFactory.USER_EVENTS_URL,
                 encodedAuth,
                 mContext,
@@ -87,9 +84,6 @@ public class EventsModel extends AbstractModelRecycler<String, List<IRecyclerIte
                         mvpCallback.onError(throwable);
                     }
                 });
-
-
-
     }
 
 

@@ -8,6 +8,8 @@ import net.oneread.aghanim.components.utility.MVPCallback;
 import net.oneread.aghanim.mvp.abstractmvp.AbstractPresenterRecycler;
 import net.oneread.aghanim.mvp.recyclermvp.ModelRecycler;
 
+import org.ucomplex.ucomplex.Modules.Events.EventsActivity;
+
 import java.util.List;
 
 /**
