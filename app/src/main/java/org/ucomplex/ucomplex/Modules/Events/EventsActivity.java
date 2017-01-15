@@ -9,10 +9,10 @@ import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.widget.FrameLayout;
 
-import net.oneread.aghanim.components.base.BaseRecyclerFragment;
+import net.oneread.aghanim.components.base.MVPBaseRecyclerFragment;
 import net.oneread.aghanim.components.utility.OnClickStrategy;
 import net.oneread.aghanim.components.utility.RecyclerOnClickListener;
-import net.oneread.aghanim.mvp.recyclermvp.PresenterRecycler;
+import net.oneread.aghanim.mvp.recyclermvp.MVPPresenterRecycler;
 
 import org.ucomplex.ucomplex.BaseComponents.BaseActivity;
 import org.ucomplex.ucomplex.BaseComponents.BaseRecyclerActivity;
@@ -65,7 +65,7 @@ public class EventsActivity extends BaseRecyclerActivity {
         DaggerApplication application = (DaggerApplication)getAppContext();
         bundle.putString(AUTH_STRING, application.getAuthString());
         mFragment = setupRecyclerFragment(savedInstanceState,
-                BaseRecyclerFragment.class.getName(),
+                MVPBaseRecyclerFragment.class.getName(),
                 mPresenter,
                 R.layout.fragment_recycler,
                 R.id.recyclerView);
@@ -83,7 +83,7 @@ public class EventsActivity extends BaseRecyclerActivity {
         RecyclerOnClickListener clickListener = new RecyclerOnClickListener();
         OnClickStrategy strategy = view -> {
             int position = clickListener.getPosition();
-            if(position == ((PresenterRecycler)mPresenter).getItemCount()-1){
+            if(position == ((MVPPresenterRecycler)mPresenter).getItemCount()-1){
                 Bundle bundle = new Bundle();
                 bundle.putInt(EventsModel.EVENTS_START, ((EventsPresenter) mPresenter).getItemCount()-1);
                 DaggerApplication application = (DaggerApplication)getAppContext();
@@ -92,9 +92,9 @@ public class EventsActivity extends BaseRecyclerActivity {
             }
         };
         clickListener.setStrategy(strategy);
-        ((PresenterRecycler) mPresenter).setBaseOnClickListener(clickListener);
-        ((PresenterRecycler)mPresenter).setCreator((view, i) -> new EventViewHolder(view));
-        ((PresenterRecycler)mPresenter).setItemLayout(R.layout.list_item_event);
+        ((MVPPresenterRecycler) mPresenter).setBaseOnClickListener(clickListener);
+        ((MVPPresenterRecycler)mPresenter).setCreator((view, i) -> new EventViewHolder(view));
+        ((MVPPresenterRecycler)mPresenter).setItemLayout(R.layout.list_item_event);
     }
 
     //mvp

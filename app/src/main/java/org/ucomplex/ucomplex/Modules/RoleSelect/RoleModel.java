@@ -3,8 +3,8 @@ package org.ucomplex.ucomplex.Modules.RoleSelect;
 import android.os.Bundle;
 
 import net.oneread.aghanim.components.utility.MVPCallback;
-import net.oneread.aghanim.mvp.abstractmvp.AbstractModelRecycler;
-import net.oneread.aghanim.mvp.recyclermvp.ModelRecycler;
+import net.oneread.aghanim.mvp.abstractmvp.MVPAbstractModelRecycler;
+import net.oneread.aghanim.mvp.recyclermvp.MVPModelRecycler;
 
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.Domain.Users.Role;
@@ -25,7 +25,7 @@ import java.util.Random;
  * ---------------------------------------------------
  */
 
-public class RoleModel extends AbstractModelRecycler<UserInterface, List<RoleItem>> implements ModelRecycler<UserInterface, List<RoleItem>> {
+public class RoleModel extends MVPAbstractModelRecycler<UserInterface, List<RoleItem>> implements MVPModelRecycler<UserInterface, List<RoleItem>> {
 
     private int[] roleIcons = {
             R.drawable.role_select_1,

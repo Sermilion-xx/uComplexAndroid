@@ -4,13 +4,13 @@ import android.os.Bundle;
 
 import net.oneread.aghanim.components.utility.IRecyclerItem;
 import net.oneread.aghanim.components.utility.MVPCallback;
-import net.oneread.aghanim.mvp.abstractmvp.AbstractModelRecycler;
+import net.oneread.aghanim.mvp.abstractmvp.MVPAbstractModelRecycler;
 
 import org.javatuples.Pair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.ucomplex.ucomplex.BaseComponents.MVPUtility;
+import org.ucomplex.ucomplex.CommonDependencies.MVPUtility;
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
 import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
@@ -33,7 +33,7 @@ import static org.ucomplex.ucomplex.CommonDependencies.Constants.USER_TYPE_TEACH
  * ---------------------------------------------------
  */
 
-public class SubjectsListModel extends AbstractModelRecycler<String, List<IRecyclerItem>> {
+public class SubjectsListModel extends MVPAbstractModelRecycler<String, List<IRecyclerItem>> {
 
     private final int[] assessmentType = {R.string.zachet, R.string.exam, R.string.samostoyatelnaya, R.string.empty};
     private int userType;

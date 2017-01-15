@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 import net.oneread.aghanim.components.utility.IRecyclerItem;
 import net.oneread.aghanim.components.utility.MVPCallback;
-import net.oneread.aghanim.mvp.abstractmvp.AbstractModelRecycler;
+import net.oneread.aghanim.mvp.abstractmvp.MVPAbstractModelRecycler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,7 +31,7 @@ import static org.ucomplex.ucomplex.CommonDependencies.Constants.AUTH_STRING;
  * <a href="http://www.github.com/sermilion>github</a>
  * ---------------------------------------------------
  */
-public class EventsModel extends AbstractModelRecycler<String, List<IRecyclerItem>> {
+public class EventsModel extends MVPAbstractModelRecycler<String, List<IRecyclerItem>> {
 
     private static final String KEY_JSON_EVENTS = "events";
     private static final String EVENT_PARAMS = "params";
@@ -59,7 +59,7 @@ public class EventsModel extends AbstractModelRecycler<String, List<IRecyclerIte
 
     @Override
     public void loadData(MVPCallback<List<IRecyclerItem>> mvpCallback, Bundle... bundle) {
-        String encodedAuth = "";
+        String encodedAuth;
         HashMap<String, String> params = new HashMap<>();
         int start;
         encodedAuth = bundle[0].getString(AUTH_STRING);

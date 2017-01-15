@@ -1,4 +1,4 @@
-package org.ucomplex.ucomplex.BaseComponents;
+package org.ucomplex.ucomplex.CommonDependencies;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -6,10 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import net.oneread.aghanim.components.utility.IRecyclerItem;
-import net.oneread.aghanim.mvp.basemvp.MVPModel;
-import net.oneread.aghanim.mvp.recyclermvp.ModelRecycler;
+import net.oneread.aghanim.mvp.recyclermvp.MVPModelRecycler;
 
-import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
 import org.ucomplex.ucomplex.R;
 
 import java.util.List;
@@ -39,7 +37,7 @@ public class MVPUtility {
         });
     }
 
-    public static int isAvailableListViewItem(ModelRecycler model, Context context, int defaultLayout) {
+    public static int isAvailableListViewItem(MVPModelRecycler model, Context context, int defaultLayout) {
         IRecyclerItem item = (IRecyclerItem) model.getItems().get(0);
         if (!FacadeCommon.isNetworkConnected(context) && item.isEmpty()) {
             return R.layout.list_item_no_internet;

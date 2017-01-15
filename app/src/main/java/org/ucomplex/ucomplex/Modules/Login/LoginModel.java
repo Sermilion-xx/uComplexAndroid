@@ -7,7 +7,7 @@ import android.os.Bundle;
 import com.google.gson.Gson;
 
 import net.oneread.aghanim.components.utility.MVPCallback;
-import net.oneread.aghanim.mvp.abstractmvp.AbstractModel;
+import net.oneread.aghanim.mvp.abstractmvp.MVPAbstractModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,7 +29,7 @@ import org.ucomplex.ucomplex.Domain.Users.UserInterface;
  * <a href="http://www.github.com/sermilion>github</a>
  * ---------------------------------------------------
  */
-public class LoginModel extends AbstractModel<String, UserInterface> {
+public class LoginModel extends MVPAbstractModel<String, UserInterface> {
 
     private UserInterface mUser;
     private String tempPassword;

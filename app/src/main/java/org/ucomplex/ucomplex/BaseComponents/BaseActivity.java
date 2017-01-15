@@ -17,7 +17,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.FrameLayout;
 
-import net.oneread.aghanim.components.base.BaseRecyclerFragment;
+import net.oneread.aghanim.components.base.MVPBaseRecyclerFragment;
 import net.oneread.aghanim.components.base.MVPBaseActivity;
 import net.oneread.aghanim.components.utility.IFragment;
 import net.oneread.aghanim.mvp.basemvp.MVPPresenter;
@@ -90,7 +90,7 @@ public class BaseActivity extends MVPBaseActivity{
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         if (inState != null) {
-            fragment = (BaseRecyclerFragment) manager.getFragment(inState, name);
+            fragment = (MVPBaseRecyclerFragment) manager.getFragment(inState, name);
         } else {
             fragment = FragmentFactory.getFragmentWithName(name, presenter, fragmentLayout, recyclerId);
             transaction.add(R.id.container, (Fragment) fragment , name);

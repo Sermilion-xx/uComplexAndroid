@@ -10,14 +10,13 @@ import android.view.ViewGroup;
 import net.oneread.aghanim.components.utility.IRecyclerItem;
 import net.oneread.aghanim.components.utility.MVPCallback;
 import net.oneread.aghanim.components.utility.RecyclerOnClickListener;
-import net.oneread.aghanim.mvp.abstractmvp.AbstractPresenterRecycler;
-import net.oneread.aghanim.mvp.recyclermvp.ModelRecycler;
-import net.oneread.aghanim.mvp.recyclermvp.ViewRecycler;
+import net.oneread.aghanim.mvp.abstractmvp.MVPAbstractPresenterRecycler;
+import net.oneread.aghanim.mvp.recyclermvp.MVPModelRecycler;
+import net.oneread.aghanim.mvp.recyclermvp.MVPViewRecycler;
 
 import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
-import org.ucomplex.ucomplex.BaseComponents.MVPUtility;
+import org.ucomplex.ucomplex.CommonDependencies.MVPUtility;
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
-import org.ucomplex.ucomplex.R;
 
 import java.util.List;
 
@@ -32,15 +31,15 @@ import java.util.List;
  * ---------------------------------------------------
  */
 
-public class SubjectsListPresenter extends AbstractPresenterRecycler<String> {
+public class SubjectsListPresenter extends MVPAbstractPresenterRecycler<String> {
 
     public SubjectsListPresenter() {
         baseOnClickListener = new RecyclerOnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivityContext(), SubjectsListActivity.class);
-                int itemPosition = ((ViewRecycler) getView()).getRecyclerView().indexOfChild(v);
-                SubjectListItem item = (SubjectListItem) ((ModelRecycler) mModel).getItem(itemPosition);
+                int itemPosition = ((MVPViewRecycler) getView()).getRecyclerView().indexOfChild(v);
+                SubjectListItem item = (SubjectListItem) ((MVPModelRecycler) mModel).getItem(itemPosition);
 
                 int userType = ((DaggerApplication) getAppContext()).getSharedUser().getType();
                 if (userType == Constants.USER_TYPE_STUDENT) {
@@ -76,7 +75,7 @@ public class SubjectsListPresenter extends AbstractPresenterRecycler<String> {
     public SubjectListViewHolder createViewHolder(ViewGroup parent, int viewType) {
         View viewTaskRow;
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        int tempLayout = MVPUtility.isAvailableListViewItem((ModelRecycler) mModel, getActivityContext(), itemLayout);
+        int tempLayout = MVPUtility.isAvailableListViewItem((MVPModelRecycler) mModel, getActivityContext(), itemLayout);
         viewTaskRow = MVPUtility.resolveLayout(tempLayout, itemLayout, viewType,inflater, parent);
         viewTaskRow.setOnClickListener(this.baseOnClickListener);
         return (SubjectListViewHolder) this.creator.getViewHolder(viewTaskRow, tempLayout);
@@ -84,7 +83,7 @@ public class SubjectsListPresenter extends AbstractPresenterRecycler<String> {
 
     @Override
     public void bindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        IRecyclerItem aItem = ((ModelRecycler) mModel).getItem(position);
+        IRecyclerItem aItem = ((MVPModelRecycler) mModel).getItem(position);
         if (aItem instanceof SubjectListItem) {
             SubjectListItem item = (SubjectListItem) aItem;
             SubjectListViewHolder aHolder = (SubjectListViewHolder) holder;

@@ -3,7 +3,6 @@ package org.ucomplex.ucomplex.Modules.Events;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,18 +11,16 @@ import com.bumptech.glide.Glide;
 
 import net.oneread.aghanim.components.utility.IRecyclerItem;
 import net.oneread.aghanim.components.utility.MVPCallback;
-import net.oneread.aghanim.mvp.abstractmvp.AbstractPresenterRecycler;
+import net.oneread.aghanim.mvp.abstractmvp.MVPAbstractPresenterRecycler;
 import net.oneread.aghanim.mvp.basemvp.MVPModel;
-import net.oneread.aghanim.mvp.recyclermvp.ModelRecycler;
-import net.oneread.aghanim.mvp.recyclermvp.ViewRecycler;
+import net.oneread.aghanim.mvp.recyclermvp.MVPModelRecycler;
+import net.oneread.aghanim.mvp.recyclermvp.MVPViewRecycler;
 
-import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
-import org.ucomplex.ucomplex.BaseComponents.MVPUtility;
+import org.ucomplex.ucomplex.CommonDependencies.MVPUtility;
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeMedia;
 import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
-import org.ucomplex.ucomplex.Modules.SubjectsList.SubjectListViewHolder;
 import org.ucomplex.ucomplex.R;
 
 import java.util.List;
@@ -38,7 +35,7 @@ import java.util.List;
  * ---------------------------------------------------
  */
 
-public class EventsPresenter extends AbstractPresenterRecycler<String> {
+public class EventsPresenter extends MVPAbstractPresenterRecycler<String> {
 
     private boolean hasMoreEvents = true;
     private static final int TYPE_COMMON = 0;
@@ -49,22 +46,11 @@ public class EventsPresenter extends AbstractPresenterRecycler<String> {
         super.setModel(models, bundle);
     }
 
-    private int isAvailableListViewItem() {
-        IRecyclerItem item = (IRecyclerItem) ((ModelRecycler) mModel).getItems().get(0);
-        if (!FacadeCommon.isNetworkConnected(getActivityContext()) && item.isEmpty()) {
-            return R.layout.list_item_no_internet;
-        } else if (item.isEmpty()) {
-            return R.layout.list_item_no_content;
-        } else {
-            return itemLayout;
-        }
-    }
-
     @Override
     public EventViewHolder createViewHolder(ViewGroup parent, int viewType) {
         View viewTaskRow;
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        int tempLayout = MVPUtility.isAvailableListViewItem((ModelRecycler) mModel, getActivityContext(), itemLayout);
+        int tempLayout = MVPUtility.isAvailableListViewItem((MVPModelRecycler) mModel, getActivityContext(), itemLayout);
         viewTaskRow = MVPUtility.resolveLayout(tempLayout, itemLayout, viewType,inflater, parent);
         viewTaskRow.setOnClickListener(this.baseOnClickListener);
         return (EventViewHolder) this.creator.getViewHolder(viewTaskRow, tempLayout);
@@ -73,7 +59,7 @@ public class EventsPresenter extends AbstractPresenterRecycler<String> {
     @Override
     public void bindViewHolder(final RecyclerView.ViewHolder aHolder, int position) {
         EventViewHolder holder = (EventViewHolder) aHolder;
-        final IRecyclerItem item = ((ModelRecycler) mModel).getItem(position);
+        final IRecyclerItem item = ((MVPModelRecycler) mModel).getItem(position);
         if (!holder.allNullElements() && item instanceof EventItem) {
             EventItem event = (EventItem) item;
             String personName = event.getParams().getName();
@@ -143,7 +129,7 @@ public class EventsPresenter extends AbstractPresenterRecycler<String> {
                     ((EventsActivity) getView()).hideProgress();
                 } else {
                     getItems().remove(getItems().size() - 1);
-                    ((ViewRecycler) getView()).notifyItemRemoved(getItems().size() + 1);
+                    ((MVPViewRecycler) getView()).notifyItemRemoved(getItems().size() + 1);
                     addMoreToRecyclerView(o);
                     ((EventsActivity) getView()).hideProgress();
                 }

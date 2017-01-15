@@ -1,9 +1,9 @@
 package org.ucomplex.ucomplex.CommonDependencies;
 
-import net.oneread.aghanim.components.base.BaseRecyclerFragment;
+import net.oneread.aghanim.components.base.MVPBaseRecyclerFragment;
 import net.oneread.aghanim.components.utility.IFragment;
 import net.oneread.aghanim.mvp.basemvp.MVPPresenter;
-import net.oneread.aghanim.mvp.recyclermvp.PresenterRecycler;
+import net.oneread.aghanim.mvp.recyclermvp.MVPPresenterRecycler;
 
 /**
  * ---------------------------------------------------
@@ -21,8 +21,8 @@ public class FragmentFactory {
                                                 MVPPresenter presenter,
                                                 int fragmentLayout,
                                                 int recyclerId) {
-        if (name.equals(BaseRecyclerFragment.class.getName())) {
-            return BaseRecyclerFragment.getInstance((PresenterRecycler) presenter, fragmentLayout, recyclerId);
+        if (name.equals(MVPBaseRecyclerFragment.class.getName())) {
+            return MVPBaseRecyclerFragment.getInstance((MVPPresenterRecycler) presenter, fragmentLayout, recyclerId);
         }
         return null;
     }

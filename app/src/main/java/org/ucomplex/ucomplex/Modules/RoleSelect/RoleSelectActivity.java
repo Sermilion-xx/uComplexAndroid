@@ -4,11 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 
-import net.oneread.aghanim.components.base.BaseRecyclerFragment;
+import net.oneread.aghanim.components.base.MVPBaseRecyclerFragment;
 import net.oneread.aghanim.components.utility.OnClickStrategy;
 import net.oneread.aghanim.components.utility.RecyclerOnClickListener;
-import net.oneread.aghanim.mvp.recyclermvp.PresenterRecycler;
-import net.oneread.aghanim.mvp.recyclermvp.ViewRecycler;
+import net.oneread.aghanim.mvp.recyclermvp.MVPPresenterRecycler;
+import net.oneread.aghanim.mvp.recyclermvp.MVPViewRecycler;
 
 import org.ucomplex.ucomplex.BaseComponents.BaseActivity;
 import org.ucomplex.ucomplex.BaseComponents.BaseRecyclerActivity;
@@ -23,7 +23,7 @@ import javax.inject.Inject;
 
 import static org.ucomplex.ucomplex.CommonDependencies.HttpFactory.encodeLoginData;
 
-public class RoleSelectActivity extends BaseRecyclerActivity implements ViewRecycler {
+public class RoleSelectActivity extends BaseRecyclerActivity implements MVPViewRecycler {
 
     @Inject
     public void setPresenter(RolePresenter presenter) {
@@ -43,7 +43,7 @@ public class RoleSelectActivity extends BaseRecyclerActivity implements ViewRecy
         application.getRoleDiComponent().inject(this);
 
         mFragment = setupRecyclerFragment(savedInstanceState,
-                BaseRecyclerFragment.class.getName(),
+                MVPBaseRecyclerFragment.class.getName(),
                 mPresenter,
                 R.layout.fragment_recycler,
                 R.id.recyclerView);
@@ -67,9 +67,9 @@ public class RoleSelectActivity extends BaseRecyclerActivity implements ViewRecy
             getActivityContext().startActivity(intent);
         };
         clickListener.setStrategy(strategy);
-        ((PresenterRecycler) mPresenter).setBaseOnClickListener(clickListener);
-        ((PresenterRecycler) mPresenter).setCreator((view, i) -> new RoleViewHolder(view));
-        ((PresenterRecycler) mPresenter).setItemLayout(R.layout.list_item_role);
+        ((MVPPresenterRecycler) mPresenter).setBaseOnClickListener(clickListener);
+        ((MVPPresenterRecycler) mPresenter).setCreator((view, i) -> new RoleViewHolder(view));
+        ((MVPPresenterRecycler) mPresenter).setItemLayout(R.layout.list_item_role);
     }
 
     private void persistUser(UserInterface user, int position) {

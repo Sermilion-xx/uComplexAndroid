@@ -5,7 +5,6 @@ import org.ucomplex.ucomplex.Modules.RoleSelect.RoleSelectActivity;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import dagger.Provides;
 
 /**
  * ---------------------------------------------------

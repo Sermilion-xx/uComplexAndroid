@@ -11,7 +11,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import net.oneread.aghanim.components.utility.MVPCallback;
-import net.oneread.aghanim.mvp.abstractmvp.AbstractPresenter;
+import net.oneread.aghanim.mvp.abstractmvp.MVPAbstractPresenter;
 import net.oneread.aghanim.mvp.basemvp.MVPModel;
 
 import org.ucomplex.ucomplex.BaseComponents.BaseAsyncTask;
@@ -40,7 +40,7 @@ import static org.ucomplex.ucomplex.Domain.Users.LoginErrorType.PASSWORD_REQUIRE
  * ---------------------------------------------------
  */
 
-public class LoginPresenter extends AbstractPresenter<String, UserInterface> {
+public class LoginPresenter extends MVPAbstractPresenter<String, UserInterface> {
 
     private BaseAsyncTask<Void, Void, Void> savePref;
 

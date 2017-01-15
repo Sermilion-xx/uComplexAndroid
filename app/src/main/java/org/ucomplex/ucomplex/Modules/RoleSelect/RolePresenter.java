@@ -5,8 +5,8 @@ import android.support.v7.widget.RecyclerView;
 
 import net.oneread.aghanim.components.utility.IRecyclerItem;
 import net.oneread.aghanim.components.utility.MVPCallback;
-import net.oneread.aghanim.mvp.abstractmvp.AbstractPresenterRecycler;
-import net.oneread.aghanim.mvp.recyclermvp.ModelRecycler;
+import net.oneread.aghanim.mvp.abstractmvp.MVPAbstractPresenterRecycler;
+import net.oneread.aghanim.mvp.recyclermvp.MVPModelRecycler;
 
 import org.ucomplex.ucomplex.Modules.Events.EventsActivity;
 
@@ -22,7 +22,7 @@ import java.util.List;
  * ---------------------------------------------------
  */
 
-public class RolePresenter extends AbstractPresenterRecycler<List<RoleItem>>{
+public class RolePresenter extends MVPAbstractPresenterRecycler<List<RoleItem>>{
 
     public RolePresenter() {
 
@@ -46,7 +46,7 @@ public class RolePresenter extends AbstractPresenterRecycler<List<RoleItem>>{
     @Override
     public void bindViewHolder(RecyclerView.ViewHolder aHolder, final int position) {
         RoleViewHolder holder = (RoleViewHolder) aHolder;
-        final RoleItem role = (RoleItem) ((ModelRecycler)mModel).getItem(position);
+        final RoleItem role = (RoleItem) ((MVPModelRecycler)mModel).getItem(position);
         holder.roleName.setText(role.getRoleName());
         holder.roleIcon.setImageResource(role.getRoleIcon());
         holder.setPosition(position);
