@@ -20,13 +20,12 @@ import static org.ucomplex.ucomplex.CommonDependencies.Constants.AUTH_STRING;
 
 public class SubjectActivity extends BaseRecyclerActivity {
 
-    private static final String EXTRA_KEY_GCOURSE = "gcourse";
     private static final String EXTRA_KEY_COURSE_NAME = "courseName";
 
     public static void receiveIntent(Context context, int courseId, String courseName){
         Intent intent = new Intent(context, SubjectActivity.class);
         Bundle extras = new Bundle();
-        extras.putInt(EXTRA_KEY_GCOURSE, courseId);
+        extras.putInt(SubjectModel.EXTRA_KEY_SUBJECT_ID, courseId);
         extras.putString(EXTRA_KEY_COURSE_NAME, courseName);
         intent.putExtras(extras);
         context.startActivity(intent);
@@ -47,10 +46,13 @@ public class SubjectActivity extends BaseRecyclerActivity {
     protected void onCreate(Bundle savedInstanceState) {
         ((DaggerApplication) getApplication()).getSubjectDiComponent().inject(this);
         super.onCreate(savedInstanceState);
-        setupToolbar(getResourceString(R.string.subject));
+
         setContentViewWithNavDrawer(R.layout.activity_subject);
+        Intent intent = getIntent();
         //mvp
         Bundle bundle = new Bundle();
+        bundle.putInt(SubjectModel.EXTRA_KEY_SUBJECT_ID, intent.getIntExtra(SubjectModel.EXTRA_KEY_SUBJECT_ID,-1));
+        setupToolbar(intent.getStringExtra(EXTRA_KEY_COURSE_NAME));
         DaggerApplication application = (DaggerApplication)getAppContext();
         bundle.putString(AUTH_STRING, application.getAuthString());
         mFragment = setupRecyclerFragment(savedInstanceState,
@@ -77,7 +79,7 @@ public class SubjectActivity extends BaseRecyclerActivity {
         };
         clickListener.setStrategy(strategy);
         ((MVPPresenterRecycler) mPresenter).setBaseOnClickListener(clickListener);
-        ((MVPPresenterRecycler)mPresenter).setCreator((view, i) -> new SubjectViewHolder(view,0));
-        ((MVPPresenterRecycler)mPresenter).setItemLayout(R.layout.list_item_subject);
+        ((MVPPresenterRecycler)mPresenter).setCreator((view, i) -> new SubjectViewHolder(view,clickListener.getViewType()));
+        ((MVPPresenterRecycler)mPresenter).setItemLayout(R.layout.list_item_subject_teacher);
     }
 }

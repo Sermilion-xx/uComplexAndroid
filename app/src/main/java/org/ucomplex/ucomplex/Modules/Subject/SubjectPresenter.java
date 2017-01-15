@@ -1,6 +1,7 @@
 package org.ucomplex.ucomplex.Modules.Subject;
 
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,8 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 
+import net.oneread.aghanim.components.utility.IRecyclerItem;
+import net.oneread.aghanim.components.utility.MVPCallback;
 import net.oneread.aghanim.mvp.abstractmvp.MVPAbstractPresenterRecycler;
 import net.oneread.aghanim.mvp.recyclermvp.MVPModelRecycler;
 
@@ -16,8 +19,10 @@ import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeMedia;
 import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
 import org.ucomplex.ucomplex.CommonDependencies.MVPUtility;
-import org.ucomplex.ucomplex.Modules.Events.EventViewHolder;
+import org.ucomplex.ucomplex.Modules.Events.EventsActivity;
 import org.ucomplex.ucomplex.R;
+
+import java.util.List;
 
 /**
  * ---------------------------------------------------
@@ -39,6 +44,26 @@ public class SubjectPresenter extends MVPAbstractPresenterRecycler<String> {
 
     }
 
+
+    @Override
+    public void loadData(Bundle... bundle) {
+        ((SubjectActivity) getView()).showProgress();
+        mModel.loadData(new MVPCallback<List<IRecyclerItem>>() {
+            @Override
+            public void onSuccess(List<IRecyclerItem> o) {
+                populateRecyclerView(o);
+                ((SubjectActivity) getView()).hideProgress();
+
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                throwable.printStackTrace();
+                ((SubjectActivity) getView()).hideProgress();
+            }
+        }, bundle);
+    }
+
     @Override
     public int getItemViewType(int position) {
         if (position == 0) {
@@ -52,30 +77,37 @@ public class SubjectPresenter extends MVPAbstractPresenterRecycler<String> {
 
     @Override
     public SubjectViewHolder createViewHolder(ViewGroup parent, int viewType) {
-        View viewTaskRow;
+        View viewRow;
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         int tempLayout = MVPUtility.isAvailableListViewItem((MVPModelRecycler) mModel, getActivityContext(), itemLayout);
-        viewTaskRow = MVPUtility.resolveLayout(tempLayout, itemLayout, viewType,inflater, parent);
-        viewTaskRow.setOnClickListener(this.baseOnClickListener);
-        if (itemLayout != R.layout.list_item_no_content && itemLayout != R.layout.list_item_no_internet) {
-            itemLayout = viewType == 0 ? R.layout.list_item_event : R.layout.list_item_event_footer;
-            switch (viewType) {
-                case TYPE_0:
-                    itemLayout = R.layout.list_item_subject_header;
-                    break;
-                case TYPE_1:
-                    itemLayout = R.layout.list_item_subject_teacher;
-                    break;
-                case TYPE_2:
-                    itemLayout = R.layout.list_item_subject_info;
-                    break;
+        MVPUtility.LayoutResolveStrategy layoutResolveStrategy = viewType1 -> {
+            int temp = -1;
+            if (itemLayout != R.layout.list_item_no_content && itemLayout != R.layout.list_item_no_internet) {
+                switch (viewType1) {
+                    case TYPE_0:
+                        temp = R.layout.list_item_subject_header;
+                        break;
+                    case TYPE_1:
+                        temp = R.layout.list_item_subject_teacher;
+                        break;
+                    case TYPE_2:
+                        temp = R.layout.list_item_subject_info;
+                        break;
+                }
             }
-        }
-        SubjectViewHolder holder = (SubjectViewHolder) this.creator.getViewHolder(viewTaskRow, tempLayout);
+            return temp;
+        };
+        tempLayout = MVPUtility.resolveLayout(tempLayout, viewType, layoutResolveStrategy);
+        viewRow = inflater.inflate(tempLayout, parent, false);
+        viewRow.setOnClickListener(this.baseOnClickListener);
+
+        SubjectViewHolder holder = (SubjectViewHolder) this.creator.getViewHolder(viewRow, itemLayout);
         baseOnClickListener.setPosition(holder.getAdapterPosition());
         baseOnClickListener.setViewType(viewType);
-        holder.mTeachersName.setOnClickListener(baseOnClickListener);
-        return (SubjectViewHolder) this.creator.getViewHolder(viewTaskRow, tempLayout);
+        if(viewType==TYPE_1){
+            holder.mTeachersName.setOnClickListener(baseOnClickListener);
+        }
+        return holder;
     }
 
     @Override
@@ -90,11 +122,11 @@ public class SubjectPresenter extends MVPAbstractPresenterRecycler<String> {
                 case TYPE_1:
                     String url = HttpFactory.GET_PHOTO_URL + subjectItem.getCode() + Constants.IMAGE_FORMAT_JPG;
                     aHolder.mTeachersName.setText(subjectItem.getTextOne());
-                    if(subjectItem.getCode()!=null){
+                    if (subjectItem.getCode() != null) {
                         Glide.with(getActivityContext())
                                 .load(url)
                                 .into(aHolder.mIcon);
-                    }else{
+                    } else {
                         Drawable drawable = FacadeMedia.getTextDrawable(Integer.valueOf(subjectItem.getTextTwo()), subjectItem.getTextOne(), getActivityContext());
                         aHolder.mIcon.setImageDrawable(drawable);
                     }

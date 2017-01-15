@@ -51,7 +51,10 @@ public class EventsPresenter extends MVPAbstractPresenterRecycler<String> {
         View viewTaskRow;
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         int tempLayout = MVPUtility.isAvailableListViewItem((MVPModelRecycler) mModel, getActivityContext(), itemLayout);
-        viewTaskRow = MVPUtility.resolveLayout(tempLayout, itemLayout, viewType,inflater, parent);
+        MVPUtility.LayoutResolveStrategy layoutResolveStrategy =
+                (viewType1) -> viewType1 == 0 ? itemLayout : R.layout.list_item_event_footer;
+        tempLayout = MVPUtility.resolveLayout(tempLayout, viewType, layoutResolveStrategy);
+        viewTaskRow = inflater.inflate(tempLayout, parent, false);
         viewTaskRow.setOnClickListener(this.baseOnClickListener);
         return (EventViewHolder) this.creator.getViewHolder(viewTaskRow, tempLayout);
     }

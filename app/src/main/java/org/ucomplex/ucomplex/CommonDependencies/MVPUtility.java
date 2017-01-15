@@ -48,15 +48,16 @@ public class MVPUtility {
         }
     }
 
-    public static View resolveLayout(int tempLayout,
-                              int defaultLayout,
-                              int viewType,
-                              LayoutInflater inflater,
-                              ViewGroup parent) {
+    public static int resolveLayout(int tempLayout,
+                              int viewType, LayoutResolveStrategy strategy) {
         if (tempLayout != R.layout.list_item_no_content && tempLayout != R.layout.list_item_no_internet) {
-            tempLayout = viewType == 0 ? defaultLayout : R.layout.list_item_event_footer;
+            tempLayout = strategy.resolve(viewType);
         }
-        return inflater.inflate(tempLayout, parent, false);
+        return tempLayout;
+    }
+
+    public interface LayoutResolveStrategy{
+        int resolve(int viewType);
     }
 
 }

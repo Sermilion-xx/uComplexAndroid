@@ -76,7 +76,8 @@ public class SubjectsListPresenter extends MVPAbstractPresenterRecycler<String> 
         View viewTaskRow;
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         int tempLayout = MVPUtility.isAvailableListViewItem((MVPModelRecycler) mModel, getActivityContext(), itemLayout);
-        viewTaskRow = MVPUtility.resolveLayout(tempLayout, itemLayout, viewType,inflater, parent);
+        tempLayout = MVPUtility.resolveLayout(tempLayout, viewType, viewType1 -> itemLayout);
+        viewTaskRow = inflater.inflate(tempLayout, parent, false);
         viewTaskRow.setOnClickListener(this.baseOnClickListener);
         return (SubjectListViewHolder) this.creator.getViewHolder(viewTaskRow, tempLayout);
     }
