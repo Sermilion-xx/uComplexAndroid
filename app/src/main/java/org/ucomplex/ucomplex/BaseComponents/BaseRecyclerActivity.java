@@ -2,12 +2,33 @@ package org.ucomplex.ucomplex.BaseComponents;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 
 import net.oneread.aghanim.components.base.MVPBaseRecyclerActivity;
+import net.oneread.aghanim.components.base.MVPBaseRecyclerFragment;
+import net.oneread.aghanim.mvp.basemvp.MVPView;
 
 //implements MVPBaseRecyclerActivity for mvp
 public class BaseRecyclerActivity extends BaseActivity implements MVPBaseRecyclerActivity {
+
+    protected void setupFragment(MVPView mvpView,
+                                 Bundle savedInstanceState,
+                                 Bundle bundle,
+                                 int fragmentLayout,
+                                 int recyclerViewId,
+                                 int progressBarId) {
+        mFragment = setupRecyclerFragment(savedInstanceState,
+                MVPBaseRecyclerFragment.class.getName(),
+                mPresenter,
+                fragmentLayout,
+                recyclerViewId);
+        mFragment.setProgressViewId(progressBarId);
+        mFragment.setOnFragmentLoadedListener(views -> {
+            setupMVP(mvpView, BaseActivity.class, bundle);
+            setupDrawer();
+        });
+    }
 
     @Override
     public void notifyItemRemoved(int position) {

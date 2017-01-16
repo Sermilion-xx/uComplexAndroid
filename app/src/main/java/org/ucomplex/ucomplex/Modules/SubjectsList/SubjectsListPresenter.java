@@ -2,6 +2,7 @@ package org.ucomplex.ucomplex.Modules.SubjectsList;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,16 +10,23 @@ import android.view.ViewGroup;
 
 import net.oneread.aghanim.components.utility.IRecyclerItem;
 import net.oneread.aghanim.components.utility.MVPCallback;
+import net.oneread.aghanim.components.utility.OnClickStrategy;
 import net.oneread.aghanim.components.utility.RecyclerOnClickListener;
 import net.oneread.aghanim.mvp.abstractmvp.MVPAbstractPresenterRecycler;
 import net.oneread.aghanim.mvp.recyclermvp.MVPModelRecycler;
+import net.oneread.aghanim.mvp.recyclermvp.MVPPresenterRecycler;
 import net.oneread.aghanim.mvp.recyclermvp.MVPViewRecycler;
 
 import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
 import org.ucomplex.ucomplex.CommonDependencies.MVPUtility;
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
+import org.ucomplex.ucomplex.Modules.Subject.SubjectActivity;
+import org.ucomplex.ucomplex.R;
 
 import java.util.List;
+
+import static org.ucomplex.ucomplex.CommonDependencies.Constants.USER_TYPE_STUDENT;
+import static org.ucomplex.ucomplex.CommonDependencies.Constants.USER_TYPE_TEACHER;
 
 
 /**
@@ -75,11 +83,35 @@ public class SubjectsListPresenter extends MVPAbstractPresenterRecycler<String> 
     public SubjectListViewHolder createViewHolder(ViewGroup parent, int viewType) {
         View viewTaskRow;
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        int tempLayout = MVPUtility.isAvailableListViewItem((MVPModelRecycler) mModel, getActivityContext(), itemLayout);
-        tempLayout = MVPUtility.resolveLayout(tempLayout, viewType, viewType1 -> itemLayout);
+        int tempLayout = MVPUtility.isAvailableListViewItem((MVPModelRecycler) mModel, getActivityContext(), R.layout.list_item_subject);
+        tempLayout = MVPUtility.resolveLayout(tempLayout, viewType, viewType1 -> R.layout.list_item_subject);
         viewTaskRow = inflater.inflate(tempLayout, parent, false);
-        viewTaskRow.setOnClickListener(this.baseOnClickListener);
-        return (SubjectListViewHolder) this.creator.getViewHolder(viewTaskRow, tempLayout);
+
+        setCreator((view, i) -> new SubjectListViewHolder(view));
+        SubjectListViewHolder holder =  (SubjectListViewHolder) this.creator.getViewHolder(viewTaskRow, tempLayout);
+        holder.mSubjectName.setOnClickListener(setupOnClickListener());
+        return holder;
+    }
+
+    @NonNull
+    private RecyclerOnClickListener setupOnClickListener() {
+        DaggerApplication mApplication = (DaggerApplication) getAppContext();
+        RecyclerOnClickListener clickListener = new RecyclerOnClickListener();
+        OnClickStrategy strategy = view -> {
+            int position = clickListener.getPosition();
+            SubjectListItem item = (SubjectListItem) ((MVPModelRecycler) mModel).getItem(position);
+            if (mApplication.getSharedUser().getType() == USER_TYPE_STUDENT) {
+                SubjectActivity.receiveIntent(getActivityContext(), item.getCourseId(), item.getCourseName());
+            } else if (mApplication.getSharedUser().getType() == USER_TYPE_TEACHER) {
+//                    Intent intent = new Intent(getBaseContext(), null);
+//                    Bundle extras = new Bundle();
+//                    extras.putString("gcourse", String.valueOf(mItems.get(position).getValue2()));
+//                    intent.putExtras(extras);
+//                    startActivity(intent);
+            }
+        };
+        clickListener.setStrategy(strategy);
+        return clickListener;
     }
 
     @Override

@@ -21,11 +21,13 @@ import net.oneread.aghanim.components.base.MVPBaseRecyclerFragment;
 import net.oneread.aghanim.components.base.MVPBaseActivity;
 import net.oneread.aghanim.components.utility.IFragment;
 import net.oneread.aghanim.mvp.basemvp.MVPPresenter;
+import net.oneread.aghanim.mvp.basemvp.MVPView;
 
 import org.javatuples.Pair;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
 import org.ucomplex.ucomplex.Domain.Users.UserInterface;
 import org.ucomplex.ucomplex.CommonDependencies.FragmentFactory;
+import org.ucomplex.ucomplex.Modules.Events.EventsActivity;
 import org.ucomplex.ucomplex.NavDrawer.DrawerAdapter;
 import org.ucomplex.ucomplex.NavDrawer.DrawerListItem;
 import org.ucomplex.ucomplex.NavDrawer.FacadeDrawer;
@@ -174,6 +176,7 @@ public class BaseActivity extends MVPBaseActivity{
     public Context getActivityContext() {
         return this;
     }
+
 }
 
 

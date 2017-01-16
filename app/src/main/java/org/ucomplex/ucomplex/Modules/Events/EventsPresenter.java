@@ -11,19 +11,23 @@ import com.bumptech.glide.Glide;
 
 import net.oneread.aghanim.components.utility.IRecyclerItem;
 import net.oneread.aghanim.components.utility.MVPCallback;
+import net.oneread.aghanim.components.utility.OnClickStrategy;
+import net.oneread.aghanim.components.utility.RecyclerOnClickListener;
 import net.oneread.aghanim.mvp.abstractmvp.MVPAbstractPresenterRecycler;
 import net.oneread.aghanim.mvp.basemvp.MVPModel;
 import net.oneread.aghanim.mvp.recyclermvp.MVPModelRecycler;
 import net.oneread.aghanim.mvp.recyclermvp.MVPViewRecycler;
 
-import org.ucomplex.ucomplex.CommonDependencies.MVPUtility;
+import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
-import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeMedia;
 import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
+import org.ucomplex.ucomplex.CommonDependencies.MVPUtility;
 import org.ucomplex.ucomplex.R;
 
 import java.util.List;
+
+import static org.ucomplex.ucomplex.CommonDependencies.Constants.AUTH_STRING;
 
 /**
  * ---------------------------------------------------
@@ -50,13 +54,31 @@ public class EventsPresenter extends MVPAbstractPresenterRecycler<String> {
     public EventViewHolder createViewHolder(ViewGroup parent, int viewType) {
         View viewTaskRow;
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        int tempLayout = MVPUtility.isAvailableListViewItem((MVPModelRecycler) mModel, getActivityContext(), itemLayout);
-        MVPUtility.LayoutResolveStrategy layoutResolveStrategy =
-                (viewType1) -> viewType1 == 0 ? itemLayout : R.layout.list_item_event_footer;
-        tempLayout = MVPUtility.resolveLayout(tempLayout, viewType, layoutResolveStrategy);
+        int tempLayout = MVPUtility.isAvailableListViewItem((MVPModelRecycler) mModel, getActivityContext(), R.layout.list_item_event);
+        tempLayout = MVPUtility.resolveLayout(tempLayout,
+                viewType,
+                (viewType1) -> viewType1 == 0 ? R.layout.list_item_event : R.layout.list_item_event_footer);
         viewTaskRow = inflater.inflate(tempLayout, parent, false);
-        viewTaskRow.setOnClickListener(this.baseOnClickListener);
-        return (EventViewHolder) this.creator.getViewHolder(viewTaskRow, tempLayout);
+
+        setCreator((view, i) -> new EventViewHolder(view));
+        EventViewHolder holder = (EventViewHolder) this.creator.getViewHolder(viewTaskRow, tempLayout);
+        if (viewType == TYPE_FOOTER) {
+            setupOnClickListener(holder);
+        }
+        return holder;
+    }
+
+    private void setupOnClickListener(EventViewHolder holder) {
+        RecyclerOnClickListener clickListener = new RecyclerOnClickListener();
+        OnClickStrategy strategy = view -> {
+            Bundle bundle = new Bundle();
+            bundle.putInt(EventsModel.EVENTS_START, getItemCount() - 1);
+            DaggerApplication application = (DaggerApplication) getAppContext();
+            bundle.putString(AUTH_STRING, application.getAuthString());
+            loadData(bundle);
+        };
+        clickListener.setStrategy(strategy);
+        holder.loadMoreEventsButton.setOnClickListener(clickListener);
     }
 
     @Override
@@ -96,8 +118,6 @@ public class EventsPresenter extends MVPAbstractPresenterRecycler<String> {
         } else {
             if (hasMoreEvents) {
                 holder.loadMoreEventsButton.setVisibility(View.VISIBLE);
-                baseOnClickListener.setPosition(holder.getAdapterPosition());
-                holder.loadMoreEventsButton.setOnClickListener(baseOnClickListener);
             } else {
                 holder.loadMoreEventsButton.setVisibility(View.GONE);
             }
@@ -120,9 +140,9 @@ public class EventsPresenter extends MVPAbstractPresenterRecycler<String> {
         mModel.loadData(new MVPCallback<List<IRecyclerItem>>() {
             @Override
             public void onSuccess(List<IRecyclerItem> o) {
-                if(o.size()<10){
+                if (o.size() < 10) {
                     hasMoreEvents = false;
-                }else{
+                } else {
                     addEmptyItem(o);
                 }
                 if (!EventsModel.INITIAL_EVENTS_LOADED) {
@@ -137,6 +157,7 @@ public class EventsPresenter extends MVPAbstractPresenterRecycler<String> {
                     ((EventsActivity) getView()).hideProgress();
                 }
             }
+
             @Override
             public void onError(Throwable throwable) {
                 throwable.printStackTrace();

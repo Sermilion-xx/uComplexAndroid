@@ -50,39 +50,13 @@ public class SubjectsListActivity extends BaseRecyclerActivity implements MVPVie
         DaggerApplication application = (DaggerApplication) getAppContext();
         bundle.putString(AUTH_STRING, application.getAuthString());
         bundle.putInt(Constants.EXTRA_KEYT_USER_TYPE, application.getSharedUser().getType());
-        mFragment = setupRecyclerFragment(savedInstanceState,
-                MVPBaseRecyclerFragment.class.getName(),
-                mPresenter,
-                R.layout.fragment_recycler,
-                R.id.recyclerView);
-        mFragment.hasDivider(true);
-        mFragment.setProgressViewId(R.id.progressBar);
-        mFragment.setOnFragmentLoadedListener(views -> {
-            setupMVP(this, BaseActivity.class, bundle);
-            setupDrawer();
-            initPresenter();
-        });
-    }
 
-    private void initPresenter() {
-        RecyclerOnClickListener clickListener = new RecyclerOnClickListener();
-        OnClickStrategy strategy = view -> {
-            int position = clickListener.getPosition();
-            SubjectListItem item = (SubjectListItem) ((MVPModelRecycler) mModel).getItem(position);
-            if (mApplication.getSharedUser().getType() == USER_TYPE_STUDENT) {
-                SubjectActivity.receiveIntent(getActivityContext(), item.getCourseId(), item.getCourseName());
-            } else if (mApplication.getSharedUser().getType() == USER_TYPE_TEACHER) {
-//                    Intent intent = new Intent(getBaseContext(), null);
-//                    Bundle extras = new Bundle();
-//                    extras.putString("gcourse", String.valueOf(mItems.get(position).getValue2()));
-//                    intent.putExtras(extras);
-//                    startActivity(intent);
-            }
-        };
-        clickListener.setStrategy(strategy);
-        ((MVPPresenterRecycler) mPresenter).setBaseOnClickListener(clickListener);
-        ((MVPPresenterRecycler) mPresenter).setCreator((view, i) -> new SubjectListViewHolder(view));
-        ((MVPPresenterRecycler) mPresenter).setItemLayout(R.layout.list_item_subject);
+        setupFragment(this,
+                savedInstanceState,
+                bundle,
+                R.layout.fragment_recycler,
+                R.id.recyclerView,
+                R.id.progressBar);
     }
 
 }

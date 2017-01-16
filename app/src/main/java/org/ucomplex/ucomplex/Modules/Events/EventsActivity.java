@@ -64,37 +64,13 @@ public class EventsActivity extends BaseRecyclerActivity {
         Bundle bundle = new Bundle();
         DaggerApplication application = (DaggerApplication)getAppContext();
         bundle.putString(AUTH_STRING, application.getAuthString());
-        mFragment = setupRecyclerFragment(savedInstanceState,
-                MVPBaseRecyclerFragment.class.getName(),
-                mPresenter,
+
+        setupFragment(this,
+                savedInstanceState,
+                bundle,
                 R.layout.fragment_recycler,
-                R.id.recyclerView);
-        mFragment.setProgressViewId(R.id.progressBar);
-        mFragment.setOnFragmentLoadedListener(views -> {
-            setupMVP(EventsActivity.this, BaseActivity.class, bundle);
-            setupDrawer();
-            initPresenter();
-        });
-
-    }
-
-    //mvp
-    private void initPresenter() {
-        RecyclerOnClickListener clickListener = new RecyclerOnClickListener();
-        OnClickStrategy strategy = view -> {
-            int position = clickListener.getPosition();
-            if(position == ((MVPPresenterRecycler)mPresenter).getItemCount()-1){
-                Bundle bundle = new Bundle();
-                bundle.putInt(EventsModel.EVENTS_START, ((EventsPresenter) mPresenter).getItemCount()-1);
-                DaggerApplication application = (DaggerApplication)getAppContext();
-                bundle.putString(AUTH_STRING, application.getAuthString());
-                mPresenter.loadData(bundle);
-            }
-        };
-        clickListener.setStrategy(strategy);
-        ((MVPPresenterRecycler) mPresenter).setBaseOnClickListener(clickListener);
-        ((MVPPresenterRecycler)mPresenter).setCreator((view, i) -> new EventViewHolder(view));
-        ((MVPPresenterRecycler)mPresenter).setItemLayout(R.layout.list_item_event);
+                R.id.recyclerView,
+                R.id.progressBar);
     }
 
     //mvp

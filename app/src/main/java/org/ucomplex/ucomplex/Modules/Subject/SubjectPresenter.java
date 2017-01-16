@@ -11,8 +11,11 @@ import com.bumptech.glide.Glide;
 
 import net.oneread.aghanim.components.utility.IRecyclerItem;
 import net.oneread.aghanim.components.utility.MVPCallback;
+import net.oneread.aghanim.components.utility.OnClickStrategy;
+import net.oneread.aghanim.components.utility.RecyclerOnClickListener;
 import net.oneread.aghanim.mvp.abstractmvp.MVPAbstractPresenterRecycler;
 import net.oneread.aghanim.mvp.recyclermvp.MVPModelRecycler;
+import net.oneread.aghanim.mvp.recyclermvp.MVPPresenterRecycler;
 
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
@@ -79,7 +82,7 @@ public class SubjectPresenter extends MVPAbstractPresenterRecycler<String> {
     public SubjectViewHolder createViewHolder(ViewGroup parent, int viewType) {
         View viewRow;
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        int tempLayout = MVPUtility.isAvailableListViewItem((MVPModelRecycler) mModel, getActivityContext(), itemLayout);
+        int tempLayout = MVPUtility.isAvailableListViewItem((MVPModelRecycler) mModel, getActivityContext(), 0);
         MVPUtility.LayoutResolveStrategy layoutResolveStrategy = viewType1 -> {
             int temp = -1;
             if (itemLayout != R.layout.list_item_no_content && itemLayout != R.layout.list_item_no_internet) {
@@ -99,12 +102,19 @@ public class SubjectPresenter extends MVPAbstractPresenterRecycler<String> {
         };
         tempLayout = MVPUtility.resolveLayout(tempLayout, viewType, layoutResolveStrategy);
         viewRow = inflater.inflate(tempLayout, parent, false);
-        viewRow.setOnClickListener(this.baseOnClickListener);
 
-        SubjectViewHolder holder = (SubjectViewHolder) this.creator.getViewHolder(viewRow, itemLayout);
-        baseOnClickListener.setPosition(holder.getAdapterPosition());
-        baseOnClickListener.setViewType(viewType);
+        setCreator((view, i) -> new SubjectViewHolder(view,viewType));
+        SubjectViewHolder holder = (SubjectViewHolder) this.creator.getViewHolder(viewRow, tempLayout);
+
         if(viewType==TYPE_1){
+            RecyclerOnClickListener clickListener = new RecyclerOnClickListener();
+            clickListener.setStrategy(view -> {
+                final int position = holder.getAdapterPosition();
+                if(position == getItemCount()-1){
+
+                }
+            });
+            setBaseOnClickListener(clickListener);
             holder.mTeachersName.setOnClickListener(baseOnClickListener);
         }
         return holder;

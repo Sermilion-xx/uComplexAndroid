@@ -55,31 +55,13 @@ public class SubjectActivity extends BaseRecyclerActivity {
         setupToolbar(intent.getStringExtra(EXTRA_KEY_COURSE_NAME));
         DaggerApplication application = (DaggerApplication)getAppContext();
         bundle.putString(AUTH_STRING, application.getAuthString());
-        mFragment = setupRecyclerFragment(savedInstanceState,
-                MVPBaseRecyclerFragment.class.getName(),
-                mPresenter,
+
+        setupFragment(this,
+                savedInstanceState,
+                bundle,
                 R.layout.fragment_recycler,
-                R.id.recyclerView);
-        mFragment.setProgressViewId(R.id.progressBar);
-        mFragment.setOnFragmentLoadedListener(views -> {
-            setupMVP(this, BaseActivity.class, bundle);
-            setupDrawer();
-            initPresenter();
-        });
+                R.id.recyclerView,
+                R.id.progressBar);
 
-    }
-    //mvp
-    private void initPresenter() {
-        RecyclerOnClickListener clickListener = new RecyclerOnClickListener();
-        OnClickStrategy strategy = view -> {
-            int position = clickListener.getPosition();
-            if(position == ((MVPPresenterRecycler)mPresenter).getItemCount()-1){
-
-            }
-        };
-        clickListener.setStrategy(strategy);
-        ((MVPPresenterRecycler) mPresenter).setBaseOnClickListener(clickListener);
-        ((MVPPresenterRecycler)mPresenter).setCreator((view, i) -> new SubjectViewHolder(view,clickListener.getViewType()));
-        ((MVPPresenterRecycler)mPresenter).setItemLayout(R.layout.list_item_subject_teacher);
     }
 }
