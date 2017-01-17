@@ -5,6 +5,7 @@ import android.os.Bundle;
 import net.oneread.aghanim.components.base.MVPBaseRecyclerFragment;
 import net.oneread.aghanim.components.utility.OnClickStrategy;
 import net.oneread.aghanim.components.utility.RecyclerOnClickListener;
+import net.oneread.aghanim.mvp.basemvp.MVPView;
 import net.oneread.aghanim.mvp.recyclermvp.MVPModelRecycler;
 import net.oneread.aghanim.mvp.recyclermvp.MVPPresenterRecycler;
 import net.oneread.aghanim.mvp.recyclermvp.MVPViewRecycler;
@@ -57,6 +58,26 @@ public class SubjectsListActivity extends BaseRecyclerActivity implements MVPVie
                 R.layout.fragment_recycler,
                 R.id.recyclerView,
                 R.id.progressBar);
+    }
+
+    @Override
+    protected void setupFragment(MVPView mvpView,
+                                 Bundle savedInstanceState,
+                                 Bundle bundle,
+                                 int fragmentLayout,
+                                 int recyclerViewId,
+                                 int progressBarId) {
+        mFragment = setupRecyclerFragment(savedInstanceState,
+                MVPBaseRecyclerFragment.class.getName(),
+                mPresenter,
+                fragmentLayout,
+                recyclerViewId);
+        mFragment.setProgressViewId(progressBarId);
+        mFragment.hasDivider(true);
+        mFragment.setOnFragmentLoadedListener(views -> {
+            setupMVP(mvpView, BaseActivity.class, bundle);
+            setupDrawer();
+        });
     }
 
 }

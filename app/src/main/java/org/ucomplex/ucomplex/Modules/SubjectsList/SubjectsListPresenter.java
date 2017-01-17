@@ -89,16 +89,16 @@ public class SubjectsListPresenter extends MVPAbstractPresenterRecycler<String> 
 
         setCreator((view, i) -> new SubjectListViewHolder(view));
         SubjectListViewHolder holder =  (SubjectListViewHolder) this.creator.getViewHolder(viewTaskRow, tempLayout);
-        holder.mSubjectName.setOnClickListener(setupOnClickListener());
+        holder.mSubjectName.setOnClickListener(setupOnClickListener(holder));
         return holder;
     }
 
     @NonNull
-    private RecyclerOnClickListener setupOnClickListener() {
+    private RecyclerOnClickListener setupOnClickListener(SubjectListViewHolder holder) {
         DaggerApplication mApplication = (DaggerApplication) getAppContext();
         RecyclerOnClickListener clickListener = new RecyclerOnClickListener();
         OnClickStrategy strategy = view -> {
-            int position = clickListener.getPosition();
+            int position = holder.getAdapterPosition();
             SubjectListItem item = (SubjectListItem) ((MVPModelRecycler) mModel).getItem(position);
             if (mApplication.getSharedUser().getType() == USER_TYPE_STUDENT) {
                 SubjectActivity.receiveIntent(getActivityContext(), item.getCourseId(), item.getCourseName());
