@@ -20,29 +20,29 @@ import org.ucomplex.ucomplex.R;
  */
 public class EventViewHolder extends RecyclerView.ViewHolder {
 
-   ImageView      eventsImageView;
-   TextView       eventTextView;
-   TextView       eventTime;
-   TextView       eventPersonName;
-   RelativeLayout eventDetailsLayout;
-   Button         loadMoreEventsButton;
+    ImageView eventsImageView;
+    TextView eventTextView;
+    TextView eventTime;
+    TextView eventPersonName;
+    RelativeLayout eventDetailsLayout;
+    Button loadMoreEventsButton;
 
-    public EventViewHolder(View view){
+    public EventViewHolder(View view) {
         super(view);
-        eventsImageView      = (ImageView) view.findViewById(R.id.list_events_item_image);
-        eventTextView        = (TextView) view.findViewById(R.id.list_events_item_text);
-        eventTime            = (TextView) view.findViewById(R.id.list_events_item_date);
-        eventPersonName      = (TextView) view.findViewById(R.id.list_events_item_name);
-        eventDetailsLayout   = (RelativeLayout) view.findViewById(R.id.event_details_layout);
+        eventsImageView = (ImageView) view.findViewById(R.id.list_events_item_image);
+        eventTextView = (TextView) view.findViewById(R.id.list_events_item_text);
+        eventTime = (TextView) view.findViewById(R.id.list_events_item_date);
+        eventPersonName = (TextView) view.findViewById(R.id.list_events_item_name);
+        eventDetailsLayout = (RelativeLayout) view.findViewById(R.id.event_details_layout);
         loadMoreEventsButton = (Button) view.findViewById(R.id.loadMoreEventsButton);
     }
 
-    boolean allNullElements(){
-        return eventsImageView       == null &&
-                eventTextView        == null &&
-                eventTime            == null &&
-                eventPersonName      == null &&
-                eventDetailsLayout   == null &&
+    boolean allNullElements() {
+        return eventsImageView == null &&
+                eventTextView == null &&
+                eventTime == null &&
+                eventPersonName == null &&
+                eventDetailsLayout == null &&
                 loadMoreEventsButton != null;
 
     }

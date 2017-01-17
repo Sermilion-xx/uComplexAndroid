@@ -23,6 +23,7 @@ import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeMedia;
 import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
 import org.ucomplex.ucomplex.CommonDependencies.MVPUtility;
+import org.ucomplex.ucomplex.Modules.Subject.SubjectActivity;
 import org.ucomplex.ucomplex.R;
 
 import java.util.List;
@@ -63,12 +64,14 @@ public class EventsPresenter extends MVPAbstractPresenterRecycler<String> {
         setCreator((view, i) -> new EventViewHolder(view));
         EventViewHolder holder = (EventViewHolder) this.creator.getViewHolder(viewTaskRow, tempLayout);
         if (viewType == TYPE_FOOTER) {
+            setupLoadMoreOnClickListener(holder);
+        }else {
             setupOnClickListener(holder);
         }
         return holder;
     }
 
-    private void setupOnClickListener(EventViewHolder holder) {
+    private void setupLoadMoreOnClickListener(EventViewHolder holder) {
         RecyclerOnClickListener clickListener = new RecyclerOnClickListener();
         OnClickStrategy strategy = view -> {
             Bundle bundle = new Bundle();
@@ -79,6 +82,16 @@ public class EventsPresenter extends MVPAbstractPresenterRecycler<String> {
         };
         clickListener.setStrategy(strategy);
         holder.loadMoreEventsButton.setOnClickListener(clickListener);
+    }
+
+    private void setupOnClickListener(EventViewHolder holder) {
+        RecyclerOnClickListener clickListener = new RecyclerOnClickListener();
+        OnClickStrategy strategy = view -> {
+            EventItem item = (EventItem) ((MVPModelRecycler)mModel).getItem(holder.getAdapterPosition());
+            SubjectActivity.receiveIntent(getActivityContext(), item.getParams().getGcourse(), item.getParams().getCourseName());
+        };
+        clickListener.setStrategy(strategy);
+        holder.eventDetailsLayout.setOnClickListener(clickListener);
     }
 
     @Override

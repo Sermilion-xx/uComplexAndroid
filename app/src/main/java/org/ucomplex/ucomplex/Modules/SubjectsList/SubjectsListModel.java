@@ -38,8 +38,6 @@ public class SubjectsListModel extends MVPAbstractModelRecycler<String, List<IRe
     private final int[] assessmentType = {R.string.zachet, R.string.exam, R.string.samostoyatelnaya, R.string.empty};
     private int userType;
 
-
-
     @Override
     public void loadData(MVPCallback<List<IRecyclerItem>> mvpCallback, Bundle... bundle) {
         String encodedAuth = bundle[0].getString(AUTH_STRING);

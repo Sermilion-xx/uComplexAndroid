@@ -2,6 +2,7 @@ package org.ucomplex.ucomplex.Modules.SubjectsList;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.ucomplex.ucomplex.R;
@@ -19,9 +20,12 @@ public class SubjectListViewHolder extends RecyclerView.ViewHolder {
 
     TextView mSubjectName;
     TextView mAssessmentType;
+    RelativeLayout subjectLayout;
+
 
     public SubjectListViewHolder(View itemView) {
         super(itemView);
+        subjectLayout = (RelativeLayout) itemView.findViewById(R.id.subject_layout);
         mSubjectName = (TextView) itemView.findViewById(R.id.subject_name);
         mAssessmentType = (TextView) itemView.findViewById(R.id.subject_assessment_type);
     }

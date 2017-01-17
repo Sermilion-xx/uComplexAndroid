@@ -17,7 +17,6 @@
         card_view:cardElevation="0dp">
 
         <RelativeLayout
-            android:id="@+id/event_details_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/list_item_border_with_shadow">
@@ -33,6 +32,7 @@
                 android:paddingRight="15dp" />
 
                 <RelativeLayout
+                    android:id="@+id/event_details_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/list_events_item_text"

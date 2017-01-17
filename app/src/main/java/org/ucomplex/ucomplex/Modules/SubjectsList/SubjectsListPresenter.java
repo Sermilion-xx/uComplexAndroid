@@ -89,7 +89,7 @@ public class SubjectsListPresenter extends MVPAbstractPresenterRecycler<String> 
 
         setCreator((view, i) -> new SubjectListViewHolder(view));
         SubjectListViewHolder holder =  (SubjectListViewHolder) this.creator.getViewHolder(viewTaskRow, tempLayout);
-        holder.mSubjectName.setOnClickListener(setupOnClickListener(holder));
+        holder.subjectLayout.setOnClickListener(setupOnClickListener(holder));
         return holder;
     }
 
