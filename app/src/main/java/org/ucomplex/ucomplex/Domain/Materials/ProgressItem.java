@@ -3,8 +3,8 @@ package org.ucomplex.ucomplex.Domain.Materials;
 import net.oneread.aghanim.components.utility.IRecyclerItem;
 
 import org.ucomplex.ucomplex.Domain.Users.User;
-import org.ucomplex.ucomplex.Modules.Subject.SubjectItem;
-//import org.ucomplex.ucomplex.Modules.Subject.SubjectItem;
+import org.ucomplex.ucomplex.Modules.Subject.SubjectModel;
+//import org.ucomplex.ucomplex.Modules.Subject.Subjectdetails.SubjectModel;
 
 /**
  * ---------------------------------------------------
@@ -18,7 +18,7 @@ import org.ucomplex.ucomplex.Modules.Subject.SubjectItem;
 
 public class ProgressItem extends IRecyclerItem {
     private int student;
-    private SubjectItem course;
+    private SubjectModel course;
     private User teacher;
     private int table;
     private int time;
@@ -41,11 +41,11 @@ public class ProgressItem extends IRecyclerItem {
         this.student = student;
     }
 
-    public SubjectItem getCourse() {
+    public SubjectModel getCourse() {
         return course;
     }
 
-    public void setCourse(SubjectItem course) {
+    public void setCourse(SubjectModel course) {
         this.course = course;
     }
 

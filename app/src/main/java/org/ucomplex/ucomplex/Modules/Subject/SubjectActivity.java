@@ -3,15 +3,15 @@ package org.ucomplex.ucomplex.Modules.Subject;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 
-import net.oneread.aghanim.components.base.MVPBaseRecyclerFragment;
-import net.oneread.aghanim.components.utility.OnClickStrategy;
-import net.oneread.aghanim.components.utility.RecyclerOnClickListener;
-import net.oneread.aghanim.mvp.recyclermvp.MVPPresenterRecycler;
+import com.astuetz.PagerSlidingTabStrip;
 
-import org.ucomplex.ucomplex.BaseComponents.BaseActivity;
 import org.ucomplex.ucomplex.BaseComponents.BaseRecyclerActivity;
 import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
+import org.ucomplex.ucomplex.CommonDependencies.ViewPagerAdapter;
+import org.ucomplex.ucomplex.Modules.Subject.SubjectDetails.SubjectDetailsModel;
+import org.ucomplex.ucomplex.Modules.Subject.SubjectDetails.SubjectDetailsPresenter;
 import org.ucomplex.ucomplex.R;
 
 import javax.inject.Inject;
@@ -25,7 +25,7 @@ public class SubjectActivity extends BaseRecyclerActivity {
     public static void receiveIntent(Context context, int courseId, String courseName){
         Intent intent = new Intent(context, SubjectActivity.class);
         Bundle extras = new Bundle();
-        extras.putInt(SubjectModel.EXTRA_KEY_SUBJECT_ID, courseId);
+        extras.putInt(SubjectDetailsModel.EXTRA_KEY_SUBJECT_ID, courseId);
         extras.putString(EXTRA_KEY_COURSE_NAME, courseName);
         intent.putExtras(extras);
         context.startActivity(intent);
@@ -33,12 +33,12 @@ public class SubjectActivity extends BaseRecyclerActivity {
 
 
     @Inject
-    public void setPresenter(SubjectPresenter presenter) {
+    public void setPresenter(SubjectDetailsPresenter presenter) {
         super.mPresenter = presenter;
     }
 
     @Inject
-    public void setModel(SubjectModel model) {
+    public void setModel(SubjectDetailsModel model) {
         super.mModel = model;
     }
 
@@ -51,17 +51,40 @@ public class SubjectActivity extends BaseRecyclerActivity {
         Intent intent = getIntent();
         //mvp
         Bundle bundle = new Bundle();
-        bundle.putInt(SubjectModel.EXTRA_KEY_SUBJECT_ID, intent.getIntExtra(SubjectModel.EXTRA_KEY_SUBJECT_ID,-1));
+        bundle.putInt(SubjectDetailsModel.EXTRA_KEY_SUBJECT_ID, intent.getIntExtra(SubjectDetailsModel.EXTRA_KEY_SUBJECT_ID,-1));
         setupToolbar(intent.getStringExtra(EXTRA_KEY_COURSE_NAME));
         DaggerApplication application = (DaggerApplication)getAppContext();
         bundle.putString(AUTH_STRING, application.getAuthString());
 
-        setupFragment(this,
+        mFragment = setupFragment(this,
                 savedInstanceState,
                 bundle,
                 R.layout.fragment_recycler,
                 R.id.recyclerView,
                 R.id.progressBar);
 
+        ViewPager pager = (ViewPager) findViewById(R.id.viewPager);
+        pager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager()));
+        PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+        tabs.setViewPager(pager);
+        tabs.setOnPageChangeListener(pageChangeListener);
+
     }
+
+    ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+        }
+    };
 }

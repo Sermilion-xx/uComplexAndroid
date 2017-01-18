@@ -1,4 +1,4 @@
-package org.ucomplex.ucomplex.Modules.Subject;
+package org.ucomplex.ucomplex.Modules.Subject.SubjectDetails;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -18,7 +18,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * ---------------------------------------------------
  */
 
-class SubjectViewHolder extends RecyclerView.ViewHolder {
+class SubjectDetailsViewHolder extends RecyclerView.ViewHolder {
+
     TextView mTitle;
 
     CircleImageView mIcon;
@@ -27,7 +28,7 @@ class SubjectViewHolder extends RecyclerView.ViewHolder {
     TextView mAttendance;
     TextView mAverageGrade;
 
-    SubjectViewHolder(View itemView, int viewType) {
+    SubjectDetailsViewHolder(View itemView, int viewType) {
         super(itemView);
         switch (viewType) {
             case 0:

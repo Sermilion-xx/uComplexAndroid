@@ -3,6 +3,7 @@ package org.ucomplex.ucomplex.Modules.SubjectsList;
 import android.os.Bundle;
 
 import net.oneread.aghanim.components.base.MVPBaseRecyclerFragment;
+import net.oneread.aghanim.components.utility.IFragment;
 import net.oneread.aghanim.components.utility.OnClickStrategy;
 import net.oneread.aghanim.components.utility.RecyclerOnClickListener;
 import net.oneread.aghanim.mvp.basemvp.MVPView;
@@ -52,7 +53,7 @@ public class SubjectsListActivity extends BaseRecyclerActivity implements MVPVie
         bundle.putString(AUTH_STRING, application.getAuthString());
         bundle.putInt(Constants.EXTRA_KEYT_USER_TYPE, application.getSharedUser().getType());
 
-        setupFragment(this,
+        mFragment = setupFragment(this,
                 savedInstanceState,
                 bundle,
                 R.layout.fragment_recycler,
@@ -61,13 +62,13 @@ public class SubjectsListActivity extends BaseRecyclerActivity implements MVPVie
     }
 
     @Override
-    protected void setupFragment(MVPView mvpView,
-                                 Bundle savedInstanceState,
-                                 Bundle bundle,
-                                 int fragmentLayout,
-                                 int recyclerViewId,
-                                 int progressBarId) {
-        mFragment = setupRecyclerFragment(savedInstanceState,
+    protected IFragment setupFragment(MVPView mvpView,
+                                      Bundle savedInstanceState,
+                                      Bundle bundle,
+                                      int fragmentLayout,
+                                      int recyclerViewId,
+                                      int progressBarId) {
+        IFragment mFragment = setupRecyclerFragment(savedInstanceState,
                 MVPBaseRecyclerFragment.class.getName(),
                 mPresenter,
                 fragmentLayout,
@@ -78,6 +79,7 @@ public class SubjectsListActivity extends BaseRecyclerActivity implements MVPVie
             setupMVP(mvpView, BaseActivity.class, bundle);
             setupDrawer();
         });
+        return mFragment;
     }
 
 }

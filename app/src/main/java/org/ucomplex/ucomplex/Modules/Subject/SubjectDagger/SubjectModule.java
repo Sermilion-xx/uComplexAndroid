@@ -1,7 +1,7 @@
 package org.ucomplex.ucomplex.Modules.Subject.SubjectDagger;
 
-import org.ucomplex.ucomplex.Modules.Subject.SubjectModel;
-import org.ucomplex.ucomplex.Modules.Subject.SubjectPresenter;
+import org.ucomplex.ucomplex.Modules.Subject.SubjectDetails.SubjectDetailsModel;
+import org.ucomplex.ucomplex.Modules.Subject.SubjectDetails.SubjectDetailsPresenter;
 
 import javax.inject.Singleton;
 
@@ -22,13 +22,13 @@ import dagger.Provides;
 public class SubjectModule {
     @Provides
     @Singleton
-    SubjectPresenter getSubjectPresenter(){
-        return new SubjectPresenter();
+    SubjectDetailsPresenter getSubjectPresenter(){
+        return new SubjectDetailsPresenter();
     }
 
     @Provides
     @Singleton
-    SubjectModel getSubjectModel(){
-        return new SubjectModel();
+    SubjectDetailsModel getSubjectModel(){
+        return new SubjectDetailsModel();
     }
 }

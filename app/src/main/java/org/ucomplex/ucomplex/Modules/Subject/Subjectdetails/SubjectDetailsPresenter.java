@@ -1,4 +1,4 @@
-package org.ucomplex.ucomplex.Modules.Subject;
+package org.ucomplex.ucomplex.Modules.Subject.SubjectDetails;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -11,18 +11,17 @@ import com.bumptech.glide.Glide;
 
 import net.oneread.aghanim.components.utility.IRecyclerItem;
 import net.oneread.aghanim.components.utility.MVPCallback;
-import net.oneread.aghanim.components.utility.OnClickStrategy;
 import net.oneread.aghanim.components.utility.RecyclerOnClickListener;
 import net.oneread.aghanim.mvp.abstractmvp.MVPAbstractPresenterRecycler;
 import net.oneread.aghanim.mvp.recyclermvp.MVPModelRecycler;
-import net.oneread.aghanim.mvp.recyclermvp.MVPPresenterRecycler;
 
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeMedia;
 import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
 import org.ucomplex.ucomplex.CommonDependencies.MVPUtility;
-import org.ucomplex.ucomplex.Modules.Events.EventsActivity;
+import org.ucomplex.ucomplex.Modules.Subject.SubjectActivity;
+
 import org.ucomplex.ucomplex.R;
 
 import java.util.List;
@@ -37,13 +36,13 @@ import java.util.List;
  * ---------------------------------------------------
  */
 
-public class SubjectPresenter extends MVPAbstractPresenterRecycler<String> {
+public class SubjectDetailsPresenter extends MVPAbstractPresenterRecycler<String> {
 
     private static final int TYPE_0 = 0;
     private static final int TYPE_1 = 1;
     private static final int TYPE_2 = 2;
 
-    public SubjectPresenter() {
+    public SubjectDetailsPresenter() {
 
     }
 
@@ -79,7 +78,7 @@ public class SubjectPresenter extends MVPAbstractPresenterRecycler<String> {
     }
 
     @Override
-    public SubjectViewHolder createViewHolder(ViewGroup parent, int viewType) {
+    public SubjectDetailsViewHolder createViewHolder(ViewGroup parent, int viewType) {
         View viewRow;
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         int tempLayout = MVPUtility.isAvailableListViewItem((MVPModelRecycler) mModel, getActivityContext(), 0);
@@ -103,8 +102,8 @@ public class SubjectPresenter extends MVPAbstractPresenterRecycler<String> {
         tempLayout = MVPUtility.resolveLayout(tempLayout, viewType, layoutResolveStrategy);
         viewRow = inflater.inflate(tempLayout, parent, false);
 
-        setCreator((view, i) -> new SubjectViewHolder(view,viewType));
-        SubjectViewHolder holder = (SubjectViewHolder) this.creator.getViewHolder(viewRow, tempLayout);
+        setCreator((view, i) -> new SubjectDetailsViewHolder(view,viewType));
+        SubjectDetailsViewHolder holder = (SubjectDetailsViewHolder) this.creator.getViewHolder(viewRow, tempLayout);
 
         if(viewType==TYPE_1){
             RecyclerOnClickListener clickListener = new RecyclerOnClickListener();
@@ -122,8 +121,8 @@ public class SubjectPresenter extends MVPAbstractPresenterRecycler<String> {
 
     @Override
     public void bindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        final SubjectViewHolder aHolder = (SubjectViewHolder) holder;
-        SubjectItemForList subjectItem = (SubjectItemForList) ((MVPModelRecycler) mModel).getItems().get(position);
+        final SubjectDetailsViewHolder aHolder = (SubjectDetailsViewHolder) holder;
+        SubjectDetailsItemForList subjectItem = (SubjectDetailsItemForList) ((MVPModelRecycler) mModel).getItems().get(position);
         if (subjectItem != null) {
             switch (getItemViewType(position)) {
                 case TYPE_0:

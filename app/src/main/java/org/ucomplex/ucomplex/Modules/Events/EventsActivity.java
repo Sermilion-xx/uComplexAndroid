@@ -65,7 +65,7 @@ public class EventsActivity extends BaseRecyclerActivity {
         DaggerApplication application = (DaggerApplication)getAppContext();
         bundle.putString(AUTH_STRING, application.getAuthString());
 
-        setupFragment(this,
+        mFragment = setupFragment(this,
                 savedInstanceState,
                 bundle,
                 R.layout.fragment_recycler,

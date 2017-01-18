@@ -7,18 +7,20 @@ import android.support.v7.widget.RecyclerView;
 
 import net.oneread.aghanim.components.base.MVPBaseRecyclerActivity;
 import net.oneread.aghanim.components.base.MVPBaseRecyclerFragment;
+import net.oneread.aghanim.components.utility.IFragment;
 import net.oneread.aghanim.mvp.basemvp.MVPView;
 
 //implements MVPBaseRecyclerActivity for mvp
 public class BaseRecyclerActivity extends BaseActivity implements MVPBaseRecyclerActivity {
 
-    protected void setupFragment(MVPView mvpView,
-                                 Bundle savedInstanceState,
-                                 Bundle bundle,
-                                 int fragmentLayout,
-                                 int recyclerViewId,
-                                 int progressBarId) {
-        mFragment = setupRecyclerFragment(savedInstanceState,
+    protected IFragment setupFragment(MVPView mvpView,
+                                      Bundle savedInstanceState,
+                                      Bundle bundle,
+                                      int fragmentLayout,
+                                      int recyclerViewId,
+                                      int progressBarId) {
+
+        IFragment mFragment = setupRecyclerFragment(savedInstanceState,
                 MVPBaseRecyclerFragment.class.getName(),
                 mPresenter,
                 fragmentLayout,
@@ -28,6 +30,7 @@ public class BaseRecyclerActivity extends BaseActivity implements MVPBaseRecycle
             setupMVP(mvpView, BaseActivity.class, bundle);
             setupDrawer();
         });
+        return mFragment;
     }
 
     @Override
