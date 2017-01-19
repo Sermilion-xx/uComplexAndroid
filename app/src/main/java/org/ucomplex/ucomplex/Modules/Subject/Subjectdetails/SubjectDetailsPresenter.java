@@ -67,7 +67,7 @@ public class SubjectDetailsPresenter extends MVPAbstractPresenterRecycler<String
             public void onSuccess(List<IRecyclerItem> o) {
                 populateRecyclerView(o);
                 ((SubjectActivity) getView()).hideProgress();
-
+                ((SubjectActivity) getView()).subjectModelLoaded();
             }
 
             @Override

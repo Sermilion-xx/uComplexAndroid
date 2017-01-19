@@ -10,6 +10,7 @@ import net.oneread.aghanim.components.utility.IRecyclerItem;
 import net.oneread.aghanim.components.utility.MVPCallback;
 import net.oneread.aghanim.components.utility.RecyclerOnClickListener;
 import net.oneread.aghanim.mvp.abstractmvp.MVPAbstractPresenterRecycler;
+import net.oneread.aghanim.mvp.basemvp.MVPModel;
 import net.oneread.aghanim.mvp.recyclermvp.MVPModelRecycler;
 
 import org.ucomplex.ucomplex.CommonDependencies.MVPUtility;
@@ -32,6 +33,12 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
 
     static final int TYPE_FILE = 0;
     static final int TYPE_FOLDER = 1;
+
+    @Override
+    public void setModel(MVPModel<String, List<IRecyclerItem>> models, Bundle... bundle) {
+        this.mModel = models;
+        this.mModel.setContext(this.getActivityContext());
+    }
 
     @Override
     public SubjectMaterialsViewHolder createViewHolder(ViewGroup parent, int viewType) {
@@ -58,7 +65,7 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
         SubjectMaterialsViewHolder holder = (SubjectMaterialsViewHolder) this.creator.getViewHolder(viewRow, tempLayout);
         RecyclerOnClickListener clickListener = new RecyclerOnClickListener();
         final int position = holder.getAdapterPosition();
-        SubjectMaterialsItem item = (SubjectMaterialsItem) ((MVPModelRecycler)mModel).getItem(position);
+//        SubjectMaterialsItem item = (SubjectMaterialsItem) ((MVPModelRecycler)mModel).getItem(position);
         if(viewType==TYPE_FILE){
             clickListener.setStrategy(view -> {
 
@@ -82,9 +89,6 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
             @Override
             public void onSuccess(List<IRecyclerItem> o) {
                 populateRecyclerView(o);
-                if(((MVPModelRecycler)mModel).getItemCount()==0){
-                    ((MVPModelRecycler)mModel).addAll(o);
-                }
             }
 
             @Override
@@ -102,12 +106,21 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
             holder.mFileName.setText(item.getName());
             switch (getItemViewType(position)) {
                 case TYPE_FILE:
-                    holder.mSize.setText(item.getSize());
+                    holder.mSize.setText(String.valueOf(item.getSize()));
                     break;
                 case TYPE_FOLDER:
                     holder.mFileCount.setText("not set yet");
             }
 
         }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        SubjectMaterialsItem item = (SubjectMaterialsItem) ((MVPModelRecycler)mModel).getItem(position);
+        if(item.getType().equals("f")){
+            return TYPE_FOLDER;
+        }
+        return TYPE_FILE;
     }
 }

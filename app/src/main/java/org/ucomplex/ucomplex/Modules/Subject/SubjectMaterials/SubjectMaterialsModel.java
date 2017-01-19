@@ -9,6 +9,7 @@ import net.oneread.aghanim.mvp.abstractmvp.MVPAbstractModelRecycler;
 import org.ucomplex.ucomplex.Domain.Materials.MaterialItem;
 import org.ucomplex.ucomplex.Modules.Subject.SubjectModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,7 +42,7 @@ public class SubjectMaterialsModel extends MVPAbstractModelRecycler<String, List
         }catch (Exception e){
             mvpCallback.onError(e);
         }
-        mvpCallback.onSuccess(mItems);
+        mvpCallback.onSuccess(new ArrayList<>(mItems));
     }
 
     @Override

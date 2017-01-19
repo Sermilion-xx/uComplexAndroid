@@ -62,10 +62,6 @@ public class SubjectActivity extends BaseRecyclerActivity {
         context.startActivity(intent);
     }
 
-    private List<MVPPresenter<String, List<IRecyclerItem>>> mPresenters = new ArrayList<>();
-    private List<MVPModel<String, List<IRecyclerItem>>> mModels = new ArrayList<>();
-    private List<MVPStateMaintainer> mStateMaintainers = new ArrayList<>();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         intent = getIntent();
@@ -81,18 +77,11 @@ public class SubjectActivity extends BaseRecyclerActivity {
         tabLayout.setupWithViewPager(viewPager);
         viewPager.setOnPageChangeListener(pageChangeListener);
 
-
-//        IFragment subjectMaterialsFragment = setupMaterialsFragment(bundle);
-//        IFragment subjectTimelineFragment = setupTimelineFragment(bundle);
-
-//        mFragments.add(subjectMaterialsFragment);
-//        mFragments.add(subjectTimelineFragment);
-
         viewPagerAdapter.addFragment(subjectDetailsFragment, "Дисциплина");
-//        viewPagerAdapter.addFragment((Fragment) subjectMaterialsFragment, "Материалы");
-//        viewPagerAdapter.addFragment((Fragment) subjectTimelineFragment, "Лента");
+        viewPagerAdapter.addFragment(subjectMaterialsFragment, "Материалы");
+        mFragments.add(subjectDetailsFragment);
+        mFragments.add(subjectMaterialsFragment);
         viewPager.setAdapter(viewPagerAdapter);
-
     }
 
     ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
@@ -104,15 +93,7 @@ public class SubjectActivity extends BaseRecyclerActivity {
         @Override
         public void onPageSelected(int position) {
             mFragment = mFragments.get(position);
-            mPresenter = mStateMaintainers.get(position).get(BaseActivity.class.getName() + position);
-            mModel = mPresenter.getModel();
             currentFragmentIndex = position;
-            if(position==1){
-                if(((MVPModelRecycler)mModel).getItemCount()==0){
-                    mPresenter.loadData();
-                }
-            }
-
         }
 
         @Override
@@ -143,6 +124,10 @@ public class SubjectActivity extends BaseRecyclerActivity {
         mFragment = subjectDetailsFragment;
     }
 
+    public void subjectModelLoaded(){
+        subjectMaterialsFragment.getPresenter().loadData();
+    }
+
     @Inject @SuppressWarnings("unchecked")
     public void setSubjectDetailsModel(SubjectDetailsModel model) {
         Bundle bundle = new Bundle();
@@ -155,13 +140,19 @@ public class SubjectActivity extends BaseRecyclerActivity {
     @Inject
     public void setSubjectMaterialPresenter(SubjectMaterialsPresenter presenter) {
         presenter.setView(this);
-        mPresenters.add(presenter);
         subjectMaterialsFragment = createFragment(presenter);
+        subjectMaterialsFragment.setOnFragmentLoadedListener(new OnFragmentLoadedListener() {
+            @Override
+            public void onFragmentLoaded(View... views) {
+                System.out.println();
+            }
+        });
     }
 
     @Inject @SuppressWarnings("unchecked")
     public void setSubjectMaterialModel(SubjectMaterialsModel model) {
-//        subjectMaterialsFragment.getPresenter().setModel(model);
+        subjectMaterialsFragment.getPresenter().setModel(model);
+
     }
 
     @Inject
