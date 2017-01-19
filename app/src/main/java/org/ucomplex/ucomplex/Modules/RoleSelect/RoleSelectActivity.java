@@ -46,7 +46,7 @@ public class RoleSelectActivity extends BaseRecyclerActivity implements MVPViewR
                 MVPBaseRecyclerFragment.class.getName(),
                 mPresenter,
                 R.layout.fragment_recycler,
-                R.id.recyclerView);
+                R.id.recyclerView, R.id.container);
         mFragment.setProgressViewId(R.id.progressBar);
         Bundle bundle = new Bundle();
         bundle.putParcelable(Constants.EXTRA_KEY_USER, (Parcelable) application.getSharedUser());

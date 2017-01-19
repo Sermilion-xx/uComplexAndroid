@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:id="@+id/clickArea">
+
+    <ImageView
+        android:id="@+id/course_material_listview_item_image_file"
+        android:layout_width="34dp"
+        android:layout_height="43dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="12dp"
+        android:src="@drawable/ic_file"
+        />
+
+    <TextView
+        android:id="@+id/file_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="34dp"
+        android:layout_marginEnd="28dp"
+        android:layout_marginTop="16dp"
+        android:layout_toEndOf="@+id/course_material_listview_item_image_file"
+        android:lines="1"
+        android:text="Название какого-то беспонтового документа dsfdsf dsfsdf sdf ds fs dfds f"
+        android:textColor="#000000"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/file_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/file_name"
+        android:layout_toEndOf="@+id/course_material_listview_item_image_file"
+        android:lines="1"
+        android:text="время"
+        android:textSize="13sp"
+        android:paddingBottom="14dp"
+        android:layout_marginStart="34dp" />
+
+    <TextView
+        android:id="@+id/file_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:lines="1"
+        android:text="58 kb"
+        android:layout_below="@+id/file_name"
+        android:layout_toEndOf="@+id/file_time"
+        android:textSize="13sp"
+        android:layout_marginStart="10dp" />
+
+    <Button
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_centerInParent="true"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/ic_more"
+        android:id="@+id/file_menu_button"
+        android:focusable="false"
+        />
+
+
+</RelativeLayout>

@@ -87,7 +87,7 @@ public class BaseActivity extends MVPBaseActivity{
         super.onSaveInstanceState(outState);
     }
 
-    protected IFragment setupRecyclerFragment(Bundle inState, String name, MVPPresenter presenter, int fragmentLayout, int recyclerId) {
+    protected IFragment setupRecyclerFragment(Bundle inState, String name, MVPPresenter presenter, int fragmentLayout, int recyclerId, int containerId) {
         IFragment fragment;
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
@@ -95,7 +95,7 @@ public class BaseActivity extends MVPBaseActivity{
             fragment = (MVPBaseRecyclerFragment) manager.getFragment(inState, name);
         } else {
             fragment = FragmentFactory.getFragmentWithName(name, presenter, fragmentLayout, recyclerId);
-            transaction.add(R.id.container, (Fragment) fragment , name);
+            transaction.add(containerId, (Fragment) fragment , name);
             transaction.commit();
         }
         return fragment;

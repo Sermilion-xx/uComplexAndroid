@@ -18,13 +18,14 @@ public class BaseRecyclerActivity extends BaseActivity implements MVPBaseRecycle
                                       Bundle bundle,
                                       int fragmentLayout,
                                       int recyclerViewId,
-                                      int progressBarId) {
+                                      int progressBarId,
+                                      int containerId) {
 
         IFragment mFragment = setupRecyclerFragment(savedInstanceState,
                 MVPBaseRecyclerFragment.class.getName(),
                 mPresenter,
                 fragmentLayout,
-                recyclerViewId);
+                recyclerViewId, containerId);
         mFragment.setProgressViewId(progressBarId);
         mFragment.setOnFragmentLoadedListener(views -> {
             setupMVP(mvpView, BaseActivity.class, bundle);

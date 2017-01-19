@@ -13,6 +13,7 @@ import net.oneread.aghanim.components.utility.IRecyclerItem;
 import net.oneread.aghanim.components.utility.MVPCallback;
 import net.oneread.aghanim.components.utility.RecyclerOnClickListener;
 import net.oneread.aghanim.mvp.abstractmvp.MVPAbstractPresenterRecycler;
+import net.oneread.aghanim.mvp.basemvp.MVPModel;
 import net.oneread.aghanim.mvp.recyclermvp.MVPModelRecycler;
 
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
@@ -41,11 +42,22 @@ public class SubjectDetailsPresenter extends MVPAbstractPresenterRecycler<String
     private static final int TYPE_0 = 0;
     private static final int TYPE_1 = 1;
     private static final int TYPE_2 = 2;
+    private Bundle modelBundle;
+
+    public Bundle getModelBundle() {
+        return modelBundle;
+    }
 
     public SubjectDetailsPresenter() {
 
     }
 
+    @Override
+    public void setModel(MVPModel<String, List<IRecyclerItem>> models, Bundle... bundle) {
+        this.mModel = models;
+        this.mModel.setContext(this.getActivityContext());
+        this.modelBundle = bundle[0];
+    }
 
     @Override
     public void loadData(Bundle... bundle) {
@@ -113,8 +125,7 @@ public class SubjectDetailsPresenter extends MVPAbstractPresenterRecycler<String
 
                 }
             });
-            setBaseOnClickListener(clickListener);
-            holder.mTeachersName.setOnClickListener(baseOnClickListener);
+            holder.mTeachersName.setOnClickListener(clickListener);
         }
         return holder;
     }
@@ -150,8 +161,4 @@ public class SubjectDetailsPresenter extends MVPAbstractPresenterRecycler<String
         }
     }
 
-    @Override
-    public int getItemCount() {
-        return ((MVPModelRecycler) mModel).getItems().size();
-    }
 }

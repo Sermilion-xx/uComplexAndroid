@@ -58,7 +58,8 @@ public class SubjectsListActivity extends BaseRecyclerActivity implements MVPVie
                 bundle,
                 R.layout.fragment_recycler,
                 R.id.recyclerView,
-                R.id.progressBar);
+                R.id.progressBar,
+                R.id.container);
     }
 
     @Override
@@ -67,12 +68,13 @@ public class SubjectsListActivity extends BaseRecyclerActivity implements MVPVie
                                       Bundle bundle,
                                       int fragmentLayout,
                                       int recyclerViewId,
-                                      int progressBarId) {
+                                      int progressBarId,
+                                      int containerId) {
         IFragment mFragment = setupRecyclerFragment(savedInstanceState,
                 MVPBaseRecyclerFragment.class.getName(),
                 mPresenter,
                 fragmentLayout,
-                recyclerViewId);
+                recyclerViewId, containerId);
         mFragment.setProgressViewId(progressBarId);
         mFragment.hasDivider(true);
         mFragment.setOnFragmentLoadedListener(views -> {

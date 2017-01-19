@@ -1,18 +1,38 @@
 package org.ucomplex.ucomplex.Modules.Subject;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.view.View;
 
-import com.astuetz.PagerSlidingTabStrip;
+import net.oneread.aghanim.components.base.MVPBaseRecyclerFragment;
+import net.oneread.aghanim.components.utility.IFragment;
+import net.oneread.aghanim.components.utility.IRecyclerItem;
+import net.oneread.aghanim.components.utility.MVPStateMaintainer;
+import net.oneread.aghanim.components.utility.OnFragmentLoadedListener;
+import net.oneread.aghanim.mvp.basemvp.MVPModel;
+import net.oneread.aghanim.mvp.basemvp.MVPPresenter;
+import net.oneread.aghanim.mvp.basemvp.MVPView;
+import net.oneread.aghanim.mvp.recyclermvp.MVPModelRecycler;
 
+import org.ucomplex.ucomplex.BaseComponents.BaseActivity;
 import org.ucomplex.ucomplex.BaseComponents.BaseRecyclerActivity;
 import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
+import org.ucomplex.ucomplex.CommonDependencies.FragmentFactory;
 import org.ucomplex.ucomplex.CommonDependencies.ViewPagerAdapter;
 import org.ucomplex.ucomplex.Modules.Subject.SubjectDetails.SubjectDetailsModel;
 import org.ucomplex.ucomplex.Modules.Subject.SubjectDetails.SubjectDetailsPresenter;
+import org.ucomplex.ucomplex.Modules.Subject.SubjectMaterials.SubjectMaterialsModel;
+import org.ucomplex.ucomplex.Modules.Subject.SubjectMaterials.SubjectMaterialsPresenter;
+import org.ucomplex.ucomplex.Modules.Subject.SubjectTimeline.SubjectTimelineModel;
+import org.ucomplex.ucomplex.Modules.Subject.SubjectTimeline.SubjectTimelinePresenter;
 import org.ucomplex.ucomplex.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -21,8 +41,19 @@ import static org.ucomplex.ucomplex.CommonDependencies.Constants.AUTH_STRING;
 public class SubjectActivity extends BaseRecyclerActivity {
 
     private static final String EXTRA_KEY_COURSE_NAME = "courseName";
+    private int currentFragmentIndex = 0;
+    private List<IFragment> mFragments = new ArrayList<>();
+    private MVPBaseRecyclerFragment subjectDetailsFragment;
+    private MVPBaseRecyclerFragment subjectMaterialsFragment;
+    private MVPBaseRecyclerFragment subjectTimelineFragment;
+    private Intent intent;
 
-    public static void receiveIntent(Context context, int courseId, String courseName){
+    @Override
+    protected IFragment setupFragment(MVPView mvpView, Bundle savedInstanceState, Bundle bundle, int fragmentLayout, int recyclerViewId, int progressBarId, int containerId) {
+        return super.setupFragment(mvpView, savedInstanceState, bundle, fragmentLayout, recyclerViewId, progressBarId, containerId);
+    }
+
+    public static void receiveIntent(Context context, int courseId, String courseName) {
         Intent intent = new Intent(context, SubjectActivity.class);
         Bundle extras = new Bundle();
         extras.putInt(SubjectDetailsModel.EXTRA_KEY_SUBJECT_ID, courseId);
@@ -31,43 +62,36 @@ public class SubjectActivity extends BaseRecyclerActivity {
         context.startActivity(intent);
     }
 
-
-    @Inject
-    public void setPresenter(SubjectDetailsPresenter presenter) {
-        super.mPresenter = presenter;
-    }
-
-    @Inject
-    public void setModel(SubjectDetailsModel model) {
-        super.mModel = model;
-    }
+    private List<MVPPresenter<String, List<IRecyclerItem>>> mPresenters = new ArrayList<>();
+    private List<MVPModel<String, List<IRecyclerItem>>> mModels = new ArrayList<>();
+    private List<MVPStateMaintainer> mStateMaintainers = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        intent = getIntent();
         ((DaggerApplication) getApplication()).getSubjectDiComponent().inject(this);
         super.onCreate(savedInstanceState);
-
         setContentViewWithNavDrawer(R.layout.activity_subject);
-        Intent intent = getIntent();
-        //mvp
-        Bundle bundle = new Bundle();
-        bundle.putInt(SubjectDetailsModel.EXTRA_KEY_SUBJECT_ID, intent.getIntExtra(SubjectDetailsModel.EXTRA_KEY_SUBJECT_ID,-1));
         setupToolbar(intent.getStringExtra(EXTRA_KEY_COURSE_NAME));
-        DaggerApplication application = (DaggerApplication)getAppContext();
-        bundle.putString(AUTH_STRING, application.getAuthString());
 
-        mFragment = setupFragment(this,
-                savedInstanceState,
-                bundle,
-                R.layout.fragment_recycler,
-                R.id.recyclerView,
-                R.id.progressBar);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager.setAdapter(new ViewPagerAdapter(getFragmentManager()));
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getFragmentManager());
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
+        viewPager.setOnPageChangeListener(pageChangeListener);
 
-        ViewPager pager = (ViewPager) findViewById(R.id.viewPager);
-        pager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager()));
-        PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
-        tabs.setViewPager(pager);
-        tabs.setOnPageChangeListener(pageChangeListener);
+
+//        IFragment subjectMaterialsFragment = setupMaterialsFragment(bundle);
+//        IFragment subjectTimelineFragment = setupTimelineFragment(bundle);
+
+//        mFragments.add(subjectMaterialsFragment);
+//        mFragments.add(subjectTimelineFragment);
+
+        viewPagerAdapter.addFragment(subjectDetailsFragment, "Дисциплина");
+//        viewPagerAdapter.addFragment((Fragment) subjectMaterialsFragment, "Материалы");
+//        viewPagerAdapter.addFragment((Fragment) subjectTimelineFragment, "Лента");
+        viewPager.setAdapter(viewPagerAdapter);
 
     }
 
@@ -79,6 +103,15 @@ public class SubjectActivity extends BaseRecyclerActivity {
 
         @Override
         public void onPageSelected(int position) {
+            mFragment = mFragments.get(position);
+            mPresenter = mStateMaintainers.get(position).get(BaseActivity.class.getName() + position);
+            mModel = mPresenter.getModel();
+            currentFragmentIndex = position;
+            if(position==1){
+                if(((MVPModelRecycler)mModel).getItemCount()==0){
+                    mPresenter.loadData();
+                }
+            }
 
         }
 
@@ -87,4 +120,58 @@ public class SubjectActivity extends BaseRecyclerActivity {
 
         }
     };
+
+    private MVPBaseRecyclerFragment createFragment(MVPPresenter presenter){
+        MVPBaseRecyclerFragment fragment = (MVPBaseRecyclerFragment) FragmentFactory.getFragmentWithName(
+                MVPBaseRecyclerFragment.class.getName(),
+                presenter,
+                R.layout.fragment_recycler,
+                R.id.recyclerView);
+        fragment.setProgressViewId(R.id.progressBar);
+        return fragment;
+    }
+
+    @Inject
+    public void setSubjectDetailsPresenter(SubjectDetailsPresenter presenter) {
+        presenter.setView(this);
+        subjectDetailsFragment = createFragment(presenter);
+        subjectDetailsFragment.setOnFragmentLoadedListener(views -> {
+            Bundle bundle = ((SubjectDetailsPresenter)subjectDetailsFragment.getPresenter()).getModelBundle();
+            subjectDetailsFragment.getPresenter().loadData(bundle);
+            setupDrawer();
+        });
+        mFragment = subjectDetailsFragment;
+    }
+
+    @Inject @SuppressWarnings("unchecked")
+    public void setSubjectDetailsModel(SubjectDetailsModel model) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(SubjectDetailsModel.EXTRA_KEY_SUBJECT_ID, intent.getIntExtra(SubjectDetailsModel.EXTRA_KEY_SUBJECT_ID, -1));
+        DaggerApplication application = (DaggerApplication) getAppContext();
+        bundle.putString(AUTH_STRING, application.getAuthString());
+        subjectDetailsFragment.getPresenter().setModel(model, bundle);
+    }
+
+    @Inject
+    public void setSubjectMaterialPresenter(SubjectMaterialsPresenter presenter) {
+        presenter.setView(this);
+        mPresenters.add(presenter);
+        subjectMaterialsFragment = createFragment(presenter);
+    }
+
+    @Inject @SuppressWarnings("unchecked")
+    public void setSubjectMaterialModel(SubjectMaterialsModel model) {
+//        subjectMaterialsFragment.getPresenter().setModel(model);
+    }
+
+    @Inject
+    public void setSubjectTimelinePresenter(SubjectTimelinePresenter presenter) {
+//        mPresenters.add(presenter);
+    }
+
+    @Inject
+    public void setSubjectTimelinelModel(SubjectTimelineModel model) {
+//        mModels.add(model);
+    }
+
 }

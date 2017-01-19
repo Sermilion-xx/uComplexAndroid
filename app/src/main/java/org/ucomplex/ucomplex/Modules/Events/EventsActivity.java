@@ -70,7 +70,8 @@ public class EventsActivity extends BaseRecyclerActivity {
                 bundle,
                 R.layout.fragment_recycler,
                 R.id.recyclerView,
-                R.id.progressBar);
+                R.id.progressBar,
+                R.id.container);
     }
 
     //mvp
