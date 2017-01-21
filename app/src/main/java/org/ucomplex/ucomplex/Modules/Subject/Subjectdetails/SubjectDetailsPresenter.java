@@ -42,38 +42,25 @@ public class SubjectDetailsPresenter extends MVPAbstractPresenterRecycler<String
     private static final int TYPE_0 = 0;
     private static final int TYPE_1 = 1;
     private static final int TYPE_2 = 2;
-    private Bundle modelBundle;
-
-    public Bundle getModelBundle() {
-        return modelBundle;
-    }
 
     public SubjectDetailsPresenter() {
 
     }
 
     @Override
-    public void setModel(MVPModel<String, List<IRecyclerItem>> models, Bundle... bundle) {
-        this.mModel = models;
-        this.mModel.setContext(this.getActivityContext());
-        this.modelBundle = bundle[0];
-    }
-
-    @Override
     public void loadData(Bundle... bundle) {
-        ((SubjectActivity) getView()).showProgress();
+        ((SubjectDetailsFragment) getView()).showProgress();
         mModel.loadData(new MVPCallback<List<IRecyclerItem>>() {
             @Override
             public void onSuccess(List<IRecyclerItem> o) {
                 populateRecyclerView(o);
-                ((SubjectActivity) getView()).hideProgress();
-                ((SubjectActivity) getView()).subjectModelLoaded();
+                ((SubjectDetailsFragment) getView()).hideProgress();
             }
 
             @Override
             public void onError(Throwable throwable) {
                 throwable.printStackTrace();
-                ((SubjectActivity) getView()).hideProgress();
+                ((SubjectDetailsFragment) getView()).hideProgress();
             }
         }, bundle);
     }

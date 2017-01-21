@@ -31,7 +31,7 @@ public class FragmentFactory {
                     (MVPPresenterRecycler) presenter,
                     fragmentLayout,
                     recyclerId);
-        }else {
+        } else {
             return MVPBaseRecyclerFragment.getInstance(
                     (MVPPresenterRecycler) presenter,
                     fragmentLayout,

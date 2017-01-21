@@ -1,8 +1,6 @@
 package org.ucomplex.ucomplex.Modules.Subject.SubjectDagger;
 
-import org.ucomplex.ucomplex.Modules.Login.LoginActivityView;
-import org.ucomplex.ucomplex.Modules.Login.LoginDagger.LoginModule;
-import org.ucomplex.ucomplex.Modules.Subject.SubjectActivity;
+import org.ucomplex.ucomplex.Modules.Subject.SubjectDetails.SubjectDetailsFragment;
 
 import javax.inject.Singleton;
 
@@ -10,7 +8,7 @@ import dagger.Component;
 
 /**
  * ---------------------------------------------------
- * Created by Sermilion on 06/12/2016.
+ * Created by Sermilion on 19/01/2017.
  * Project: uComplex_v_2
  * ---------------------------------------------------
  * <a href="http://www.ucomplex.org">ucomplex.org</a>
@@ -19,7 +17,7 @@ import dagger.Component;
  */
 
 @Singleton
-@Component(modules = {SubjectModule.class})
-public interface SubjectDiComponent {
-    void inject(SubjectActivity activity);
+@Component(modules = {SubjectDetailsModule.class})
+public interface SubjectDetailsDiComponent {
+    void inject(SubjectDetailsFragment fragment);
 }
