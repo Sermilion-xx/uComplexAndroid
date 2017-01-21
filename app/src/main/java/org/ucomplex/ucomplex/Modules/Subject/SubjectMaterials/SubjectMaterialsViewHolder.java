@@ -26,6 +26,7 @@ class SubjectMaterialsViewHolder extends RecyclerView.ViewHolder {
     TextView mFileName;
     TextView mSize;
     TextView mFileCount;
+    TextView mFileTime;
     TextView mOwnersName;
     Button mMenuButton;
     RelativeLayout mClickArea;
@@ -35,13 +36,14 @@ class SubjectMaterialsViewHolder extends RecyclerView.ViewHolder {
         mClickArea = (RelativeLayout) itemView.findViewById(R.id.clickArea);
         mFileName = (TextView) itemView.findViewById(R.id.file_name);
         mMenuButton = (Button) itemView.findViewById(R.id.file_menu_button);
+        mFileTime = (TextView) itemView.findViewById(R.id.file_time);
 
         switch (viewType) {
             case TYPE_FILE:
-                mSize = (TextView) itemView.findViewById(R.id.file_time);
+                mSize = (TextView) itemView.findViewById(R.id.file_size);
                 break;
             case TYPE_FOLDER:
-                mFileCount = (TextView) itemView.findViewById(R.id.file_count);
+                mOwnersName = (TextView) itemView.findViewById(R.id.file_owner);
                 break;
         }
     }

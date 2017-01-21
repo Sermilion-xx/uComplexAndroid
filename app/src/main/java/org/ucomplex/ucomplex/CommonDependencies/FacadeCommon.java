@@ -162,6 +162,14 @@ public class FacadeCommon {
         return r;
     }
 
+    public static String readableFileSize(long bytes, boolean si) {
+        int unit = si ? 1000 : 1024;
+        if (bytes < unit) return bytes + " б";
+        int exp = (int) (Math.log(bytes) / Math.log(unit));
+        String pre = (si ? "кмгтпе" : "кмгтпе").charAt(exp - 1) + (si ? "" : "");
+        return String.format(new Locale("Ru"),"%.1f %sб", bytes / Math.pow(unit, exp), pre);
+    }
+
     public static Map<String, String> parseJsonKV(JSONObject jObject) throws JSONException {
         Map<String, String> map = new HashMap<>();
         Iterator iter = jObject.keys();

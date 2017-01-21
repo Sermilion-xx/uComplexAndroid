@@ -1,30 +1,21 @@
 package org.ucomplex.ucomplex.Modules.Subject.SubjectDetails;
 
 import android.app.Activity;
-import android.content.Context;
+import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
+import android.support.v4.view.ViewPager;
 
-import net.oneread.aghanim.components.base.MVPBaseRecyclerFragment;
 import net.oneread.aghanim.components.base.MVPViewBaseFragment;
-import net.oneread.aghanim.components.utility.IFragment;
 import net.oneread.aghanim.components.utility.IRecyclerItem;
-import net.oneread.aghanim.components.utility.OnFragmentLoadedListener;
-import net.oneread.aghanim.mvp.basemvp.MVPModel;
 import net.oneread.aghanim.mvp.recyclermvp.MVPModelRecycler;
 import net.oneread.aghanim.mvp.recyclermvp.MVPPresenterRecycler;
-import net.oneread.aghanim.mvp.recyclermvp.MVPViewRecycler;
 
 import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
-import org.ucomplex.ucomplex.Modules.Subject.SubjectModel;
 import org.ucomplex.ucomplex.R;
 
 import java.util.List;
 
 import javax.inject.Inject;
-
-import static org.ucomplex.ucomplex.CommonDependencies.Constants.AUTH_STRING;
 
 /**
  * ---------------------------------------------------
@@ -47,10 +38,16 @@ public class SubjectDetailsFragment extends MVPViewBaseFragment<String, List<IRe
         super.setPresenter(presenter);
     }
 
+
     public static SubjectDetailsFragment getInstance(Activity mContext) {
         SubjectDetailsFragment fragment = new SubjectDetailsFragment();
         fragment.setContext(mContext);
         return fragment;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
@@ -61,6 +58,10 @@ public class SubjectDetailsFragment extends MVPViewBaseFragment<String, List<IRe
         this.mRecyclerViewId = R.id.recyclerView;
         this.mProgressViewId = R.id.progressBar;
         ((DaggerApplication)mContext.getApplication()).getSubjectDetailsDiComponent().inject(this);
-        this.setOnFragmentLoadedListener(views -> mPresenter.setModel(mModel, getArguments()));
+        this.setOnFragmentLoadedListener(views -> {
+            if(mPresenter.getModel()==null){
+                mPresenter.setModel(mModel, getArguments());
+            }
+        });
     }
 }

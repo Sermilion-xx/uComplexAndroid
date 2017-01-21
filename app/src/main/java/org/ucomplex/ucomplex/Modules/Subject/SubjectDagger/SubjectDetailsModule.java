@@ -27,13 +27,11 @@ import dagger.Provides;
 public class SubjectDetailsModule {
 
     @Provides
-    @Singleton
     MVPPresenterRecycler<String, List<IRecyclerItem>> getSubjectDetailsPresenter(){
         return new SubjectDetailsPresenter();
     }
 
     @Provides
-    @Singleton
     MVPModelRecycler<String, List<IRecyclerItem>> getSubjectDetailsModel(){
         return new SubjectDetailsModel();
     }

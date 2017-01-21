@@ -7,12 +7,9 @@ import android.content.IntentFilter;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.widget.FrameLayout;
+import android.view.View;
 
-import net.oneread.aghanim.components.base.MVPBaseRecyclerFragment;
-import net.oneread.aghanim.components.utility.OnClickStrategy;
-import net.oneread.aghanim.components.utility.RecyclerOnClickListener;
-import net.oneread.aghanim.mvp.recyclermvp.MVPPresenterRecycler;
+import net.oneread.aghanim.components.utility.OnFragmentLoadedListener;
 
 import org.ucomplex.ucomplex.BaseComponents.BaseActivity;
 import org.ucomplex.ucomplex.BaseComponents.BaseRecyclerActivity;
@@ -26,7 +23,7 @@ import static org.ucomplex.ucomplex.CommonDependencies.Constants.AUTH_STRING;
 
 public class EventsActivity extends BaseRecyclerActivity {
 
-    public static final String ACTION_RELOAD_EVENTS = Constants.PREFIX+"refresh_events";
+    public static final String ACTION_RELOAD_EVENTS = Constants.PREFIX + "refresh_events";
     private MediaPlayer mAlert;
     private Boolean updateEventsReceiverRegistered = false;
 
@@ -54,7 +51,7 @@ public class EventsActivity extends BaseRecyclerActivity {
         super.onCreate(savedInstanceState);
         setContentViewWithNavDrawer(R.layout.activity_main);
 
-        if(savedInstanceState!=null){
+        if (savedInstanceState != null) {
             updateEventsReceiverRegistered = savedInstanceState.getBoolean("updateEventsReceiverRegistered");
         }
         setupToolbar(getResourceString(R.string.events));
@@ -62,7 +59,7 @@ public class EventsActivity extends BaseRecyclerActivity {
 
         //mvp
         Bundle bundle = new Bundle();
-        DaggerApplication application = (DaggerApplication)getAppContext();
+        DaggerApplication application = (DaggerApplication) getAppContext();
         bundle.putString(AUTH_STRING, application.getAuthString());
 
         mFragment = setupFragment(this,
@@ -72,6 +69,12 @@ public class EventsActivity extends BaseRecyclerActivity {
                 R.id.recyclerView,
                 R.id.progressBar,
                 R.id.container);
+        mFragment.setOnFragmentLoadedListener(views -> {
+            setupMVP(EventsActivity.this, BaseActivity.class, bundle);
+            setupDrawer();
+            mFragment.getRecyclerView().setBackgroundColor(getResources().getColor(R.color.color_uc_activity_background));
+        });
+
     }
 
     //mvp
@@ -82,7 +85,7 @@ public class EventsActivity extends BaseRecyclerActivity {
 
     @Override
     public void onResume() {
-        if(!updateEventsReceiverRegistered){
+        if (!updateEventsReceiverRegistered) {
             registerReceiver(mUpdateEventsReceiver, new IntentFilter(
                     Constants.EVENTS_REFRESH_BROADCAST));
         }
@@ -99,10 +102,10 @@ public class EventsActivity extends BaseRecyclerActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(Constants.EVENTS_REFRESH_BROADCAST)) {
-                if(intent.hasExtra(ACTION_RELOAD_EVENTS)){
+                if (intent.hasExtra(ACTION_RELOAD_EVENTS)) {
                     EventsModel.INITIAL_EVENTS_LOADED = false;
                 }
-                DaggerApplication application = (DaggerApplication)getAppContext();
+                DaggerApplication application = (DaggerApplication) getAppContext();
                 Bundle bundle = new Bundle();
                 bundle.putString(AUTH_STRING, application.getAuthString());
                 mPresenter.loadData(bundle);

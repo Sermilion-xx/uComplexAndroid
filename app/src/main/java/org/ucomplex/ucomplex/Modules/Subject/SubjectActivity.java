@@ -20,6 +20,7 @@ public class SubjectActivity extends BaseActivity {
 
     private static final String EXTRA_KEY_COURSE_NAME = "courseName";
     private SubjectMaterialsFragment subjectMaterialsFragment;
+    private SubjectDetailsFragment subjectDetailsFragment;
 
     public static void receiveIntent(Context context, int courseId, String courseName) {
         Intent intent = new Intent(context, SubjectActivity.class);
@@ -31,32 +32,48 @@ public class SubjectActivity extends BaseActivity {
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        getFragmentManager().putFragment(outState, "subjectMaterialsFragment", subjectMaterialsFragment);
+        getFragmentManager().putFragment(outState, "subjectDetailsFragment", subjectDetailsFragment);
+        super.onSaveInstanceState(outState);
+    }
+
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         DaggerApplication application = (DaggerApplication) getAppContext();
         setContentViewWithNavDrawer(R.layout.activity_subject);
         Intent intent = getIntent();
         setupToolbar(intent.getStringExtra(EXTRA_KEY_COURSE_NAME));
+
         setupDrawer();
+
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setAdapter(new ViewPagerAdapter(getFragmentManager()));
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getFragmentManager());
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         viewPager.addOnPageChangeListener(pageChangeListener);
+        viewPager.setOffscreenPageLimit(2);
         tabLayout.setupWithViewPager(viewPager);
 
-        SubjectDetailsFragment subjectDetailsFragment = SubjectDetailsFragment.getInstance(this);
-        Bundle bundle = new Bundle();
-        bundle.putInt(SubjectDetailsModel.EXTRA_KEY_SUBJECT_ID, intent.getIntExtra(SubjectDetailsModel.EXTRA_KEY_SUBJECT_ID, -1));
-        bundle.putString(AUTH_STRING, application.getAuthString());
-        subjectDetailsFragment.setArguments(bundle);
+        if (savedInstanceState != null) {
+            subjectDetailsFragment = (SubjectDetailsFragment) getFragmentManager().getFragment(savedInstanceState, "subjectDetailsFragment");
+            subjectMaterialsFragment = (SubjectMaterialsFragment) getFragmentManager().getFragment(savedInstanceState, "subjectMaterialsFragment");
+        } else {
+            subjectDetailsFragment = SubjectDetailsFragment.getInstance(this);
+            subjectMaterialsFragment = SubjectMaterialsFragment.getFragment(this);
+            Bundle bundle = new Bundle();
+            bundle.putInt(SubjectDetailsModel.EXTRA_KEY_SUBJECT_ID, intent.getIntExtra(SubjectDetailsModel.EXTRA_KEY_SUBJECT_ID, -1));
+            bundle.putString(AUTH_STRING, application.getAuthString());
+            subjectDetailsFragment.setArguments(bundle);
+        }
+
         viewPagerAdapter.addFragment(subjectDetailsFragment, "Дисциплина");
-
-        subjectMaterialsFragment = SubjectMaterialsFragment.getInstance(this);
         viewPagerAdapter.addFragment(subjectMaterialsFragment, "Материалы");
-
         viewPager.setAdapter(viewPagerAdapter);
     }
+
 
     ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
@@ -78,5 +95,11 @@ public class SubjectActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
     }
 }

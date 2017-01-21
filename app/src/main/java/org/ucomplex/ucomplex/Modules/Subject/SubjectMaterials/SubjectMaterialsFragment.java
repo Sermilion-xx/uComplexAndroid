@@ -27,12 +27,14 @@ import javax.inject.Inject;
 
 public class SubjectMaterialsFragment extends MVPViewBaseFragment<String, List<IRecyclerItem>> {
 
+    public static final String DATA_REQUESTED = "dataRequested";
     private boolean dataRequested;
 
-    @Inject @Override
+    @Inject
+    @Override
     public void setPresenter(MVPPresenterRecycler<String, List<IRecyclerItem>> presenter) {
         presenter.setView(this);
-        super.setPresenter(presenter);
+        mPresenter = presenter;
     }
 
     @Inject
@@ -40,8 +42,7 @@ public class SubjectMaterialsFragment extends MVPViewBaseFragment<String, List<I
         this.mPresenter.setModel(mModel);
     }
 
-
-    public static SubjectMaterialsFragment getInstance(Activity mContext) {
+    public static SubjectMaterialsFragment getFragment(Activity mContext) {
         SubjectMaterialsFragment fragment = new SubjectMaterialsFragment();
         fragment.setContext(mContext);
         return fragment;
@@ -49,15 +50,23 @@ public class SubjectMaterialsFragment extends MVPViewBaseFragment<String, List<I
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRetainInstance(true);
+        if (savedInstanceState != null) {
+            dataRequested = savedInstanceState.getBoolean(DATA_REQUESTED);
+        }
+        ((DaggerApplication) mContext.getApplication()).getSubjectMaterialsDiComponent().inject(this);
         this.mFragmentLayout = R.layout.fragment_recycler;
         this.mRecyclerViewId = R.id.recyclerView;
         this.mProgressViewId = R.id.progressBar;
-        ((DaggerApplication)mContext.getApplication()).getSubjectMaterialsDiComponent().inject(this);
     }
 
-    public void onFragmentVisible(){
-        if(mPresenter.getItemCount() == 0 && !dataRequested){
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean(DATA_REQUESTED, dataRequested);
+        super.onSaveInstanceState(outState);
+    }
+
+    public void onFragmentVisible() {
+        if (!dataRequested) {
             mPresenter.loadData();
             dataRequested = true;
         }

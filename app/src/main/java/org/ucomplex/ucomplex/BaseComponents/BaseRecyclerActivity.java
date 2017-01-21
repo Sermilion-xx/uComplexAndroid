@@ -10,6 +10,8 @@ import net.oneread.aghanim.components.base.MVPBaseRecyclerFragment;
 import net.oneread.aghanim.components.utility.IFragment;
 import net.oneread.aghanim.mvp.basemvp.MVPView;
 
+import org.ucomplex.ucomplex.R;
+
 //implements MVPBaseRecyclerActivity for mvp
 public class BaseRecyclerActivity extends BaseActivity implements MVPBaseRecyclerActivity {
 

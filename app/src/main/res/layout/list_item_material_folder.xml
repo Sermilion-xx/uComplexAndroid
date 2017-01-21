@@ -17,30 +17,31 @@
 
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/file_name"
             android:text="Тема 1"
             android:layout_toEndOf="@+id/list_course_material_item_imageview_folder"
-            android:textSize="15sp"
-            android:textColor="#000000"
             android:layout_marginTop="18dp"
             android:layout_marginStart="24dp"
-            android:layout_marginEnd="21dp"
-            android:lines="1"/>
+            style="@style/StyleRecyclerText" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/file_count"
-            android:text="12"
+            android:id="@+id/file_time"
+            android:text="время"
             android:layout_below="@+id/file_name"
             android:layout_toEndOf="@+id/list_course_material_item_imageview_folder"
-            android:textSize="13sp"
             android:layout_marginStart="24dp"
             android:layout_marginEnd="21dp"
             android:paddingBottom="14dp"
-            android:lines="1"/>
+            style="@style/StyleRecyclerSubText"/>
+
+    <TextView
+        android:id="@+id/file_owner"
+        android:text="имя"
+        android:layout_below="@+id/file_name"
+        android:layout_toEndOf="@+id/file_time"
+        android:layout_marginEnd="21dp"
+        android:paddingBottom="14dp"
+        style="@style/StyleRecyclerSubText"/>
 
     <Button
         android:layout_width="30dp"

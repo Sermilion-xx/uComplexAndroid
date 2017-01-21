@@ -13,6 +13,7 @@ import net.oneread.aghanim.mvp.abstractmvp.MVPAbstractPresenterRecycler;
 import net.oneread.aghanim.mvp.basemvp.MVPModel;
 import net.oneread.aghanim.mvp.recyclermvp.MVPModelRecycler;
 
+import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
 import org.ucomplex.ucomplex.CommonDependencies.MVPUtility;
 import org.ucomplex.ucomplex.Modules.Subject.SubjectActivity;
 import org.ucomplex.ucomplex.R;
@@ -104,12 +105,13 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
         SubjectMaterialsItem item = (SubjectMaterialsItem) ((MVPModelRecycler)mModel).getItem(position);
         if(item!=null){
             holder.mFileName.setText(item.getName());
+            holder.mFileTime.setText(FacadeCommon.makeDate(item.getTime()));
             switch (getItemViewType(position)) {
                 case TYPE_FILE:
-                    holder.mSize.setText(String.valueOf(item.getSize()));
+                    holder.mSize.setText(FacadeCommon.readableFileSize(item.getSize(), false));
                     break;
                 case TYPE_FOLDER:
-                    holder.mFileCount.setText("not set yet");
+                    holder.mOwnersName.setText(item.getOwnersName());
             }
 
         }
