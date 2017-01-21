@@ -6,20 +6,20 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 
-import net.oneread.aghanim.components.base.MVPBaseRecyclerFragment;
-import net.oneread.aghanim.components.utility.IFragment;
-
 import org.ucomplex.ucomplex.BaseComponents.BaseActivity;
 import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
 import org.ucomplex.ucomplex.CommonDependencies.ViewPagerAdapter;
 import org.ucomplex.ucomplex.Modules.Subject.SubjectDetails.SubjectDetailsFragment;
 import org.ucomplex.ucomplex.Modules.Subject.SubjectDetails.SubjectDetailsModel;
+import org.ucomplex.ucomplex.Modules.Subject.SubjectMaterials.SubjectMaterialsFragment;
 import org.ucomplex.ucomplex.R;
+
 import static org.ucomplex.ucomplex.CommonDependencies.Constants.AUTH_STRING;
 
 public class SubjectActivity extends BaseActivity {
 
     private static final String EXTRA_KEY_COURSE_NAME = "courseName";
+    private SubjectMaterialsFragment subjectMaterialsFragment;
 
     public static void receiveIntent(Context context, int courseId, String courseName) {
         Intent intent = new Intent(context, SubjectActivity.class);
@@ -37,11 +37,12 @@ public class SubjectActivity extends BaseActivity {
         setContentViewWithNavDrawer(R.layout.activity_subject);
         Intent intent = getIntent();
         setupToolbar(intent.getStringExtra(EXTRA_KEY_COURSE_NAME));
-
+        setupDrawer();
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setAdapter(new ViewPagerAdapter(getFragmentManager()));
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getFragmentManager());
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        viewPager.addOnPageChangeListener(pageChangeListener);
         tabLayout.setupWithViewPager(viewPager);
 
         SubjectDetailsFragment subjectDetailsFragment = SubjectDetailsFragment.getInstance(this);
@@ -50,6 +51,32 @@ public class SubjectActivity extends BaseActivity {
         bundle.putString(AUTH_STRING, application.getAuthString());
         subjectDetailsFragment.setArguments(bundle);
         viewPagerAdapter.addFragment(subjectDetailsFragment, "Дисциплина");
+
+        subjectMaterialsFragment = SubjectMaterialsFragment.getInstance(this);
+        viewPagerAdapter.addFragment(subjectMaterialsFragment, "Материалы");
+
         viewPager.setAdapter(viewPagerAdapter);
+    }
+
+    ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            subjectMaterialsFragment.onFragmentVisible();
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+        }
+    };
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }

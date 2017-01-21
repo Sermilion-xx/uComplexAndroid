@@ -82,8 +82,10 @@ public class BaseActivity extends MVPBaseActivity{
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        FragmentManager manager = getFragmentManager();
-        manager.putFragment(outState, mFragment.getClass().getName(), (Fragment) mFragment);
+        if(mFragment!=null){
+            FragmentManager manager = getFragmentManager();
+            manager.putFragment(outState, mFragment.getClass().getName(), (Fragment) mFragment);
+        }
         super.onSaveInstanceState(outState);
     }
 
@@ -156,6 +158,8 @@ public class BaseActivity extends MVPBaseActivity{
     public void onBackPressed() {
         if (this.mDrawer.isDrawerOpen(GravityCompat.START)) {
             this.mDrawer.closeDrawer(GravityCompat.START);
+        }else{
+            super.onBackPressed();
         }
     }
 

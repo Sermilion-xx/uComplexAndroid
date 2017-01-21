@@ -11,7 +11,9 @@ import org.ucomplex.ucomplex.Modules.Login.LoginDagger.LoginDiComponent;
 import org.ucomplex.ucomplex.Modules.RoleSelect.RoleSelectDagger.DaggerRoleDiComponent;
 import org.ucomplex.ucomplex.Modules.RoleSelect.RoleSelectDagger.RoleDiComponent;
 import org.ucomplex.ucomplex.Modules.Subject.SubjectDagger.DaggerSubjectDetailsDiComponent;
+import org.ucomplex.ucomplex.Modules.Subject.SubjectDagger.DaggerSubjectMaterialsDiComponent;
 import org.ucomplex.ucomplex.Modules.Subject.SubjectDagger.SubjectDetailsDiComponent;
+import org.ucomplex.ucomplex.Modules.Subject.SubjectDagger.SubjectMaterialsDiComponent;
 import org.ucomplex.ucomplex.Modules.SubjectsList.SubjectsListDagger.DaggerSubjectsListDiComponent;
 import org.ucomplex.ucomplex.Modules.SubjectsList.SubjectsListDagger.SubjectsListDiComponent;
 
@@ -34,16 +36,18 @@ public class DaggerApplication extends Application{
     private EventsDiComponent eventsDiComponent;
     private SubjectsListDiComponent subjectsListDiComponent;
     private SubjectDetailsDiComponent subjectDetailsDiComponent;
+    private SubjectMaterialsDiComponent subjectMaterialsDiComponent;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        sharedUser                = FacadePreferences.getUserDataFromPref(this);
-        loginDiComponent          = DaggerLoginDiComponent.builder().build();
-        roleDiComponent           = DaggerRoleDiComponent.builder().build();
-        eventsDiComponent         = DaggerEventsDiComponent.builder().build();
-        subjectsListDiComponent   = DaggerSubjectsListDiComponent.builder().build();
-        subjectDetailsDiComponent = DaggerSubjectDetailsDiComponent.builder().build();
+        sharedUser                  = FacadePreferences.getUserDataFromPref(this);
+        loginDiComponent            = DaggerLoginDiComponent.builder().build();
+        roleDiComponent             = DaggerRoleDiComponent.builder().build();
+        eventsDiComponent           = DaggerEventsDiComponent.builder().build();
+        subjectsListDiComponent     = DaggerSubjectsListDiComponent.builder().build();
+        subjectDetailsDiComponent   = DaggerSubjectDetailsDiComponent.builder().build();
+        subjectMaterialsDiComponent = DaggerSubjectMaterialsDiComponent.builder().build();
     }
 
     public LoginDiComponent getLoginDiComponent() {
@@ -65,6 +69,10 @@ public class DaggerApplication extends Application{
 
     public SubjectDetailsDiComponent getSubjectDetailsDiComponent(){
         return subjectDetailsDiComponent;
+    }
+
+    public SubjectMaterialsDiComponent getSubjectMaterialsDiComponent() {
+        return subjectMaterialsDiComponent;
     }
 
     public UserInterface getSharedUser() {
