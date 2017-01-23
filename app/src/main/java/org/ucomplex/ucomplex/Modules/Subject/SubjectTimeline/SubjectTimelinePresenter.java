@@ -23,8 +23,8 @@ import org.ucomplex.ucomplex.R;
 
 import java.util.List;
 
-import static java.security.AccessController.getContext;
 import static org.ucomplex.ucomplex.CommonDependencies.FacadeMedia.getLetter;
+import static org.ucomplex.ucomplex.Modules.Subject.SubjectTimeline.SubjectTimelineModel.EXTRA_KEY_GCOURSE_START;
 
 /**
  * ---------------------------------------------------
@@ -39,6 +39,10 @@ import static org.ucomplex.ucomplex.CommonDependencies.FacadeMedia.getLetter;
 public class SubjectTimelinePresenter extends MVPAbstractPresenterRecycler<String> {
 
     private String[] colors = {"#51cde7", "#fecd71", "#9ece2b", "#d18ec0"};
+    private static final int TYPE_ITEM = 0;
+    private static final int TYPE_FOOTER = 1;
+    private Bundle mBundle;
+    private boolean hasMoreItems = true;
 
 
     @Override
@@ -48,12 +52,29 @@ public class SubjectTimelinePresenter extends MVPAbstractPresenterRecycler<Strin
     }
 
     @Override
+    public int getItemViewType(int position) {
+        return getItem(position).isEmpty() ? TYPE_FOOTER : TYPE_ITEM;
+    }
+
+    @Override
     public void loadData(Bundle... bundle) {
         ((MVPViewBaseFragment) getView()).showProgress();
+        mBundle = bundle[0];
         mModel.loadData(new MVPCallback<List<IRecyclerItem>>() {
             @Override
             public void onSuccess(List<IRecyclerItem> o) {
-                populateRecyclerView(o);
+                if (o.size() < 20) {
+                    hasMoreItems = false;
+                } else {
+                    addEmptyElement(o);
+                }
+                if(getItemCount()>0){
+                    ((MVPModelRecycler)mModel).remove(((MVPModelRecycler)mModel).getItemCount()-1);
+                    ((SubjectTimelineFragment)getView()).notifyItemRemoved(((MVPModelRecycler)mModel).getItemCount()-1);
+                    addMoreToRecyclerView(o);
+                }else {
+                    populateRecyclerView(o);
+                }
                 ((MVPViewBaseFragment) getView()).hideProgress();
             }
 
@@ -62,7 +83,16 @@ public class SubjectTimelinePresenter extends MVPAbstractPresenterRecycler<Strin
                 throwable.printStackTrace();
                 ((MVPViewBaseFragment) getView()).hideProgress();
             }
-        }, bundle);
+
+            void addEmptyElement(List<IRecyclerItem> o) {
+                o.add(new IRecyclerItem() {
+                    @Override
+                    public boolean isEmpty() {
+                        return true;
+                    }
+                });
+            }
+        }, mBundle);
     }
 
     @Override
@@ -73,21 +103,25 @@ public class SubjectTimelinePresenter extends MVPAbstractPresenterRecycler<Strin
         MVPUtility.LayoutResolveStrategy layoutResolveStrategy = viewType1 -> {
             int temp = -1;
             if (itemLayout != R.layout.list_item_no_content && itemLayout != R.layout.list_item_no_internet) {
-                temp = R.layout.list_item_subject_timeline;
+                if (viewType == TYPE_ITEM) {
+                    temp = R.layout.list_item_subject_timeline;
+                } else {
+                    temp = R.layout.list_item_footer;
+                }
             }
             return temp;
         };
         tempLayout = MVPUtility.resolveLayout(tempLayout, viewType, layoutResolveStrategy);
         viewRow = inflater.inflate(tempLayout, parent, false);
-        setCreator((view, i) -> new SubjectTimelineViewHolder(view));
-        return  (SubjectTimelineViewHolder) this.creator.getViewHolder(viewRow, tempLayout);
+        setCreator((view, i) -> new SubjectTimelineViewHolder(view, viewType));
+        return (SubjectTimelineViewHolder) this.creator.getViewHolder(viewRow, tempLayout);
     }
 
     @Override
     public void bindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         final SubjectTimelineViewHolder aHolder = (SubjectTimelineViewHolder) viewHolder;
-        SubjectTimelineItem item = (SubjectTimelineItem) ((MVPModelRecycler) mModel).getItems().get(position);
-        if (item != null) {
+        if (getItemViewType(position) == TYPE_ITEM) {
+            SubjectTimelineItem item = (SubjectTimelineItem) ((MVPModelRecycler) mModel).getItems().get(position);
             aHolder.mName.setText(item.getmName());
             aHolder.mTime.setText(item.getmTime());
 
@@ -95,16 +129,21 @@ public class SubjectTimelinePresenter extends MVPAbstractPresenterRecycler<Strin
             long thisCol = Long.decode(hexColor) + 4278190080L;
             Drawable drawable;
             Typeface typeface = Typeface.createFromAsset(getActivityContext().getAssets(), "fonts/fontawesome-webfont.ttf");
-            if(item.getmMark()==0){
-                drawable = TextDrawable.builder().beginConfig().useFont(typeface).textColor((int)thisCol).endConfig()
+            if (item.getmMark() == 0) {
+                drawable = TextDrawable.builder().beginConfig().useFont(typeface).textColor((int) thisCol).endConfig()
                         .buildRound(String.valueOf(getLetter(item.getmMark())), Color.WHITE);
-            }else {
+            } else {
                 drawable = TextDrawable.builder()
-                        .buildRound(String.valueOf(getLetter(item.getmMark())), (int)thisCol);
+                        .buildRound(String.valueOf(getLetter(item.getmMark())), (int) thisCol);
             }
             aHolder.mMarkImage.setImageDrawable(drawable);
             aHolder.mTimeIcon.setTypeface(typeface);
             aHolder.mTimeIcon.setText("\uF017");
+        } else {
+            aHolder.loadMoreButton.setOnClickListener(view -> {
+                mBundle.putString(EXTRA_KEY_GCOURSE_START, String.valueOf(getItemCount()+1));
+                loadData(mBundle);
+            });
         }
     }
 }

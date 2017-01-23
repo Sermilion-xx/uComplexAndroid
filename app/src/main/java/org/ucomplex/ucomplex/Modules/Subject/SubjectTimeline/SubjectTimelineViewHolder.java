@@ -2,6 +2,7 @@ package org.ucomplex.ucomplex.Modules.Subject.SubjectTimeline;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,18 +20,23 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * ---------------------------------------------------
  */
 
-public class SubjectTimelineViewHolder extends RecyclerView.ViewHolder{
+class SubjectTimelineViewHolder extends RecyclerView.ViewHolder{
 
     ImageView mMarkImage;
     TextView mName;
     TextView mTime;
     TextView mTimeIcon;
+    Button loadMoreButton;
 
-    public SubjectTimelineViewHolder(View itemView) {
+    SubjectTimelineViewHolder(View itemView, int itemType) {
         super(itemView);
-        mMarkImage = (ImageView) itemView.findViewById(R.id.subject_mark_image);
-        mName      = (TextView) itemView.findViewById(R.id.subject_name);
-        mTime      = (TextView) itemView.findViewById(R.id.subject_time);
-        mTimeIcon  = (TextView) itemView.findViewById(R.id.subject_time_icon);
+        if(itemType == 0) {
+            mMarkImage = (ImageView) itemView.findViewById(R.id.subject_mark_image);
+            mName = (TextView) itemView.findViewById(R.id.subject_name);
+            mTime = (TextView) itemView.findViewById(R.id.subject_time);
+            mTimeIcon = (TextView) itemView.findViewById(R.id.subject_time_icon);
+        }else if(itemType == 1) {
+            loadMoreButton = (Button) itemView.findViewById(R.id.loadMoreButton);
+        }
     }
 }

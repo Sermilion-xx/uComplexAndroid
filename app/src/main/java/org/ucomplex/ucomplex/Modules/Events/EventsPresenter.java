@@ -58,7 +58,7 @@ public class EventsPresenter extends MVPAbstractPresenterRecycler<String> {
         int tempLayout = MVPUtility.isAvailableListViewItem((MVPModelRecycler) mModel, getActivityContext(), R.layout.list_item_event);
         tempLayout = MVPUtility.resolveLayout(tempLayout,
                 viewType,
-                (viewType1) -> viewType1 == 0 ? R.layout.list_item_event : R.layout.list_item_event_footer);
+                (viewType1) -> viewType1 == 0 ? R.layout.list_item_event : R.layout.list_item_footer);
         viewTaskRow = inflater.inflate(tempLayout, parent, false);
 
         setCreator((view, i) -> new EventViewHolder(view));
@@ -88,7 +88,9 @@ public class EventsPresenter extends MVPAbstractPresenterRecycler<String> {
         RecyclerOnClickListener clickListener = new RecyclerOnClickListener();
         OnClickStrategy strategy = view -> {
             EventItem item = (EventItem) ((MVPModelRecycler)mModel).getItem(holder.getAdapterPosition());
-            SubjectActivity.receiveIntent(getActivityContext(), item.getParams().getGcourse(), item.getParams().getCourseName());
+            if(!item.getParams().getName().equals("UComplex")){
+                SubjectActivity.receiveIntent(getActivityContext(), item.getParams().getGcourse(), item.getParams().getCourseName());
+            }
         };
         clickListener.setStrategy(strategy);
         holder.eventDetailsLayout.setOnClickListener(clickListener);

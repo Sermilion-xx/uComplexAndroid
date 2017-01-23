@@ -60,8 +60,10 @@ public class SubjectDetailsModel extends MVPAbstractModelRecycler<String, List<I
                 new MVPCallback<String>() {
                     @Override
                     public void onSuccess(String s) {
-                        List<IRecyclerItem> newItems = processJson(s);
-                        mvpCallback.onSuccess(newItems);
+                        if (s != null && !s.equals("null")) {
+                            List<IRecyclerItem> newItems = processJson(s);
+                            mvpCallback.onSuccess(newItems);
+                        }
                     }
 
                     @Override

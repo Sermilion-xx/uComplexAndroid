@@ -34,7 +34,7 @@ public class EventViewHolder extends RecyclerView.ViewHolder {
         eventTime = (TextView) view.findViewById(R.id.list_events_item_date);
         eventPersonName = (TextView) view.findViewById(R.id.list_events_item_name);
         eventDetailsLayout = (RelativeLayout) view.findViewById(R.id.event_details_layout);
-        loadMoreEventsButton = (Button) view.findViewById(R.id.loadMoreEventsButton);
+        loadMoreEventsButton = (Button) view.findViewById(R.id.loadMoreButton);
     }
 
     boolean allNullElements() {

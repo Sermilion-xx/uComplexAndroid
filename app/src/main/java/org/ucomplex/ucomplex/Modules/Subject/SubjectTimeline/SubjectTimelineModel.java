@@ -35,14 +35,14 @@ import static org.ucomplex.ucomplex.Modules.Subject.SubjectDetails.SubjectDetail
 public class SubjectTimelineModel extends MVPAbstractModelRecycler<String, List<IRecyclerItem>> {
 
     private static final String EXTRA_KEY_GCOURSE = "gcourse";
-    private static final String EXTRA_KEY_GCOURSE_START = "start";
+    public static final String EXTRA_KEY_GCOURSE_START = "start";
 
     @Override
     public void loadData(MVPCallback<List<IRecyclerItem>> mvpCallback, Bundle... bundle) {
         String encodedAuth = bundle[0].getString(AUTH_STRING);
         HashMap<String, String> params = new HashMap<>();
-        int gcourse = bundle[0].getInt(EXTRA_KEY_SUBJECT_ID);
-        params.put(EXTRA_KEY_SUBJECT_ID, Integer.toString(gcourse));
+        params.put(EXTRA_KEY_SUBJECT_ID, Integer.toString(bundle[0].getInt(EXTRA_KEY_SUBJECT_ID)));
+
         if(bundle[0].containsKey(EXTRA_KEY_GCOURSE_START)){
             params.put(EXTRA_KEY_GCOURSE_START, bundle[0].getString(EXTRA_KEY_GCOURSE_START));
         }

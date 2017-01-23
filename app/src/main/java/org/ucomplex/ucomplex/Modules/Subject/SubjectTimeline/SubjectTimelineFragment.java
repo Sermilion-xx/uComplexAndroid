@@ -2,6 +2,7 @@ package org.ucomplex.ucomplex.Modules.Subject.SubjectTimeline;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 
 import net.oneread.aghanim.components.base.MVPViewBaseFragment;
 import net.oneread.aghanim.components.utility.IRecyclerItem;
@@ -9,11 +10,14 @@ import net.oneread.aghanim.mvp.recyclermvp.MVPModelRecycler;
 import net.oneread.aghanim.mvp.recyclermvp.MVPPresenterRecycler;
 
 import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
+import org.ucomplex.ucomplex.Modules.Subject.SubjectDetails.SubjectDetailsModel;
 import org.ucomplex.ucomplex.R;
 
 import java.util.List;
 
 import javax.inject.Inject;
+
+import static org.ucomplex.ucomplex.CommonDependencies.Constants.AUTH_STRING;
 
 /**
  * ---------------------------------------------------
@@ -72,3 +76,5 @@ public class SubjectTimelineFragment extends MVPViewBaseFragment<String, List<IR
         }
     }
 }
+
+
