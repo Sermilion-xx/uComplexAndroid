@@ -12,6 +12,7 @@ import org.ucomplex.ucomplex.CommonDependencies.ViewPagerAdapter;
 import org.ucomplex.ucomplex.Modules.Subject.SubjectDetails.SubjectDetailsFragment;
 import org.ucomplex.ucomplex.Modules.Subject.SubjectDetails.SubjectDetailsModel;
 import org.ucomplex.ucomplex.Modules.Subject.SubjectMaterials.SubjectMaterialsFragment;
+import org.ucomplex.ucomplex.Modules.Subject.SubjectTimeline.SubjectTimelineFragment;
 import org.ucomplex.ucomplex.R;
 
 import static org.ucomplex.ucomplex.CommonDependencies.Constants.AUTH_STRING;
@@ -21,6 +22,7 @@ public class SubjectActivity extends BaseActivity {
     private static final String EXTRA_KEY_COURSE_NAME = "courseName";
     private SubjectMaterialsFragment subjectMaterialsFragment;
     private SubjectDetailsFragment subjectDetailsFragment;
+    private SubjectTimelineFragment subjectTimelineFragment;
 
     public static void receiveIntent(Context context, int courseId, String courseName) {
         Intent intent = new Intent(context, SubjectActivity.class);
@@ -35,6 +37,7 @@ public class SubjectActivity extends BaseActivity {
     protected void onSaveInstanceState(Bundle outState) {
         getFragmentManager().putFragment(outState, "subjectMaterialsFragment", subjectMaterialsFragment);
         getFragmentManager().putFragment(outState, "subjectDetailsFragment", subjectDetailsFragment);
+        getFragmentManager().putFragment(outState, "subjectTimelineFragment", subjectTimelineFragment);
         super.onSaveInstanceState(outState);
     }
 
@@ -46,9 +49,7 @@ public class SubjectActivity extends BaseActivity {
         setContentViewWithNavDrawer(R.layout.activity_subject);
         Intent intent = getIntent();
         setupToolbar(intent.getStringExtra(EXTRA_KEY_COURSE_NAME));
-
         setupDrawer();
-
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setAdapter(new ViewPagerAdapter(getFragmentManager()));
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getFragmentManager());
@@ -60,17 +61,26 @@ public class SubjectActivity extends BaseActivity {
         if (savedInstanceState != null) {
             subjectDetailsFragment = (SubjectDetailsFragment) getFragmentManager().getFragment(savedInstanceState, "subjectDetailsFragment");
             subjectMaterialsFragment = (SubjectMaterialsFragment) getFragmentManager().getFragment(savedInstanceState, "subjectMaterialsFragment");
+            subjectTimelineFragment = (SubjectTimelineFragment) getFragmentManager().getFragment(savedInstanceState, "subjectTimelineFragment");
         } else {
             subjectDetailsFragment = SubjectDetailsFragment.getInstance(this);
             subjectMaterialsFragment = SubjectMaterialsFragment.getFragment(this);
+            subjectTimelineFragment = SubjectTimelineFragment.getFragment(this);
+
             Bundle bundle = new Bundle();
             bundle.putInt(SubjectDetailsModel.EXTRA_KEY_SUBJECT_ID, intent.getIntExtra(SubjectDetailsModel.EXTRA_KEY_SUBJECT_ID, -1));
             bundle.putString(AUTH_STRING, application.getAuthString());
             subjectDetailsFragment.setArguments(bundle);
+
+            Bundle timelineFragmentBundle = new Bundle();
+            timelineFragmentBundle.putInt(SubjectDetailsModel.EXTRA_KEY_SUBJECT_ID, intent.getIntExtra(SubjectDetailsModel.EXTRA_KEY_SUBJECT_ID, -1));
+            timelineFragmentBundle.putString(AUTH_STRING, application.getAuthString());
+            subjectTimelineFragment.setArguments(timelineFragmentBundle);
         }
 
         viewPagerAdapter.addFragment(subjectDetailsFragment, "Дисциплина");
         viewPagerAdapter.addFragment(subjectMaterialsFragment, "Материалы");
+        viewPagerAdapter.addFragment(subjectTimelineFragment, "Лента");
         viewPager.setAdapter(viewPagerAdapter);
     }
 
@@ -83,7 +93,12 @@ public class SubjectActivity extends BaseActivity {
 
         @Override
         public void onPageSelected(int position) {
-            subjectMaterialsFragment.onFragmentVisible();
+            if(position==1){
+                subjectMaterialsFragment.onFragmentVisible();
+            }else if(position==2){
+                subjectTimelineFragment.onFragmentVisible();
+            }
+
         }
 
         @Override
@@ -92,14 +107,4 @@ public class SubjectActivity extends BaseActivity {
         }
     };
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-    }
 }

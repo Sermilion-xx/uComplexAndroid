@@ -18,7 +18,6 @@ import org.ucomplex.ucomplex.Modules.Subject.SubjectModel;
 
 public class ProgressItem extends IRecyclerItem {
     private int student;
-    private SubjectModel course;
     private User teacher;
     private int table;
     private int time;
@@ -39,14 +38,6 @@ public class ProgressItem extends IRecyclerItem {
 
     public void setStudent(int student) {
         this.student = student;
-    }
-
-    public SubjectModel getCourse() {
-        return course;
-    }
-
-    public void setCourse(SubjectModel course) {
-        this.course = course;
     }
 
     public User getTeacher() {

@@ -15,15 +15,12 @@
 
     <TextView
         android:id="@+id/file_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_marginStart="34dp"
         android:layout_marginEnd="28dp"
         android:layout_marginTop="16dp"
         android:layout_toEndOf="@+id/course_material_listview_item_image_file"
         android:text="Название какого-то беспонтового документа dsfdsf dsfsdf sdf ds fs dfds f"
-        android:textColor="#000000"
-        style="@style/StyleRecyclerText"/>
+        style="@style/StyleTextViewPrimary"/>
 
     <TextView
         android:id="@+id/file_time"
@@ -36,8 +33,6 @@
 
     <TextView
         android:id="@+id/file_size"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="размер"
         android:layout_below="@+id/file_name"
         android:layout_toEndOf="@+id/file_time"

@@ -12,8 +12,10 @@ import org.ucomplex.ucomplex.Modules.RoleSelect.RoleSelectDagger.DaggerRoleDiCom
 import org.ucomplex.ucomplex.Modules.RoleSelect.RoleSelectDagger.RoleDiComponent;
 import org.ucomplex.ucomplex.Modules.Subject.SubjectDagger.DaggerSubjectDetailsDiComponent;
 import org.ucomplex.ucomplex.Modules.Subject.SubjectDagger.DaggerSubjectMaterialsDiComponent;
+import org.ucomplex.ucomplex.Modules.Subject.SubjectDagger.DaggerSubjectTimelineDiComponent;
 import org.ucomplex.ucomplex.Modules.Subject.SubjectDagger.SubjectDetailsDiComponent;
 import org.ucomplex.ucomplex.Modules.Subject.SubjectDagger.SubjectMaterialsDiComponent;
+import org.ucomplex.ucomplex.Modules.Subject.SubjectDagger.SubjectTimelineDiComponent;
 import org.ucomplex.ucomplex.Modules.SubjectsList.SubjectsListDagger.DaggerSubjectsListDiComponent;
 import org.ucomplex.ucomplex.Modules.SubjectsList.SubjectsListDagger.SubjectsListDiComponent;
 
@@ -37,6 +39,7 @@ public class DaggerApplication extends Application{
     private SubjectsListDiComponent subjectsListDiComponent;
     private SubjectDetailsDiComponent subjectDetailsDiComponent;
     private SubjectMaterialsDiComponent subjectMaterialsDiComponent;
+    private SubjectTimelineDiComponent subjectTimelineDiComponent;
 
     @Override
     public void onCreate() {
@@ -48,6 +51,7 @@ public class DaggerApplication extends Application{
         subjectsListDiComponent     = DaggerSubjectsListDiComponent.builder().build();
         subjectDetailsDiComponent   = DaggerSubjectDetailsDiComponent.builder().build();
         subjectMaterialsDiComponent = DaggerSubjectMaterialsDiComponent.builder().build();
+        subjectTimelineDiComponent  = DaggerSubjectTimelineDiComponent.builder().build();
     }
 
     public LoginDiComponent getLoginDiComponent() {
@@ -73,6 +77,10 @@ public class DaggerApplication extends Application{
 
     public SubjectMaterialsDiComponent getSubjectMaterialsDiComponent() {
         return subjectMaterialsDiComponent;
+    }
+
+    public SubjectTimelineDiComponent getSubjectTimelineDiComponent() {
+        return subjectTimelineDiComponent;
     }
 
     public UserInterface getSharedUser() {

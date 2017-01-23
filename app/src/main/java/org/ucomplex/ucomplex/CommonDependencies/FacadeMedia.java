@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -13,6 +14,7 @@ import android.util.Log;
 
 import com.amulyakhare.textdrawable.TextDrawable;
 
+import org.ucomplex.ucomplex.Domain.Users.UserInterface;
 import org.ucomplex.ucomplex.R;
 
 import java.io.File;
@@ -167,4 +169,30 @@ public class FacadeMedia {
             throw new NullPointerException("Bitmap file is null");
         }
     }
+
+    public static Drawable getDrawable(UserInterface user) {
+        final int colorsCount = 16;
+        final int number = (user.getPerson() <= colorsCount) ? user.getPerson() : user.getPerson() % colorsCount;
+        char firstLetter = user.getName().split(" ").length > 1 ? user.getName().split(" ")[1].charAt(0) : user.getName().split(" ")[0].charAt(0);
+
+        return TextDrawable.builder().beginConfig()
+                .width(120)
+                .height(120)
+                .endConfig()
+                .buildRound(String.valueOf(firstLetter), getColor(number));
+    }
+
+    public static String getLetter(int mark) {
+        if (mark == -1) {
+            return "н";
+        } else if (mark == 0) {
+            return "\uF00C";
+        } else if (mark == -3) {
+            return "б";
+        } else {
+            return String.valueOf(mark);
+        }
+    }
+
+
 }

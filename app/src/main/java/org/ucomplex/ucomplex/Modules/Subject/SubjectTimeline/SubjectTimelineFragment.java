@@ -1,9 +1,7 @@
-package org.ucomplex.ucomplex.Modules.Subject.SubjectDetails;
+package org.ucomplex.ucomplex.Modules.Subject.SubjectTimeline;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 
 import net.oneread.aghanim.components.base.MVPViewBaseFragment;
 import net.oneread.aghanim.components.utility.IRecyclerItem;
@@ -19,7 +17,7 @@ import javax.inject.Inject;
 
 /**
  * ---------------------------------------------------
- * Created by Sermilion on 19/01/2017.
+ * Created by Sermilion on 22/01/2017.
  * Project: uComplex_v_2
  * ---------------------------------------------------
  * <a href="http://www.ucomplex.org">ucomplex.org</a>
@@ -27,36 +25,50 @@ import javax.inject.Inject;
  * ---------------------------------------------------
  */
 
-public class SubjectDetailsFragment extends MVPViewBaseFragment<String, List<IRecyclerItem>> {
+public class SubjectTimelineFragment extends MVPViewBaseFragment<String, List<IRecyclerItem>> {
+
+    public static final String DATA_REQUESTED = "dataRequested";
+    protected boolean dataRequested;
 
     @Inject
-    MVPModelRecycler<String, List<IRecyclerItem>> mModel;
-
-    @Inject @Override
+    @Override
     public void setPresenter(MVPPresenterRecycler<String, List<IRecyclerItem>> presenter) {
         presenter.setView(this);
-        super.setPresenter(presenter);
+        mPresenter = presenter;
     }
 
+    @Inject
+    public void setModel(MVPModelRecycler<String, List<IRecyclerItem>> mModel) {
+        this.mPresenter.setModel(mModel);
+    }
 
-    public static SubjectDetailsFragment getInstance(Activity mContext) {
-        SubjectDetailsFragment fragment = new SubjectDetailsFragment();
+    public static SubjectTimelineFragment getFragment(Activity mContext) {
+        SubjectTimelineFragment fragment = new SubjectTimelineFragment();
         fragment.setContext(mContext);
         return fragment;
     }
 
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRetainInstance(true);
+        if (savedInstanceState != null) {
+            dataRequested = savedInstanceState.getBoolean(DATA_REQUESTED);
+        }
+        ((DaggerApplication) mContext.getApplication()).getSubjectTimelineDiComponent().inject(this);
         this.mFragmentLayout = R.layout.fragment_recycler;
         this.mRecyclerViewId = R.id.recyclerView;
         this.mProgressViewId = R.id.progressBar;
-        ((DaggerApplication)mContext.getApplication()).getSubjectDetailsDiComponent().inject(this);
-        this.setOnFragmentLoadedListener(views -> {
-            if(mPresenter.getModel()==null){
-                mPresenter.setModel(mModel, getArguments());
-            }
-        });
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean(DATA_REQUESTED, dataRequested);
+        super.onSaveInstanceState(outState);
+    }
+
+    public void onFragmentVisible() {
+        if (!dataRequested) {
+            mPresenter.loadData(getArguments());
+            dataRequested = true;
+        }
     }
 }

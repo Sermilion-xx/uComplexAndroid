@@ -79,6 +79,8 @@
     <string name="absence" formatted="false">Посещаемость: %1$s</string>
     <string name="average_mark">Средняя успеваемость: %1$s</string>
     <string name="attendance">Посещаемость по предмету:</string>
+    <string name="subject_image">Subject Image</string>
+    <string name="clock_icon"></string>
 
 
 </resources>

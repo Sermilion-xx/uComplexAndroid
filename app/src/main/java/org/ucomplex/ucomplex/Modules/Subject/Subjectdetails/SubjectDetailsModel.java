@@ -214,7 +214,6 @@ public class SubjectDetailsModel extends MVPAbstractModelRecycler<String, List<I
             progress.set_mark(progressArray.getInt("_mark"));
             progress.setMark(progressArray.getInt("mark"));
             progress.setAbsence(progressArray.getInt("absence"));
-            progress.setCourse(null);
             progress.setHours(progressArray.getInt("hours"));
             progress.setIndivid(progressArray.getInt("individ"));
             progress.setMarkCount(progressArray.getInt("marksCount"));

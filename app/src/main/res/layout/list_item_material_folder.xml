@@ -22,7 +22,7 @@
             android:layout_toEndOf="@+id/list_course_material_item_imageview_folder"
             android:layout_marginTop="18dp"
             android:layout_marginStart="24dp"
-            style="@style/StyleRecyclerText" />
+            style="@style/StyleTextViewPrimary" />
 
         <TextView
             android:id="@+id/file_time"

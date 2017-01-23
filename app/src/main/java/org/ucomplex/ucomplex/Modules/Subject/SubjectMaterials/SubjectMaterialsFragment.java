@@ -28,7 +28,7 @@ import javax.inject.Inject;
 public class SubjectMaterialsFragment extends MVPViewBaseFragment<String, List<IRecyclerItem>> {
 
     public static final String DATA_REQUESTED = "dataRequested";
-    private boolean dataRequested;
+    protected boolean dataRequested;
 
     @Inject
     @Override
