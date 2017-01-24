@@ -12,6 +12,7 @@ import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
 import org.ucomplex.ucomplex.R;
 
 import java.util.List;
+import java.util.Stack;
 
 import javax.inject.Inject;
 
@@ -30,11 +31,20 @@ public class SubjectMaterialsFragment extends MVPViewBaseFragment<String, List<I
     public static final String DATA_REQUESTED = "dataRequested";
     protected boolean dataRequested;
 
+
     @Inject
     @Override
     public void setPresenter(MVPPresenterRecycler<String, List<IRecyclerItem>> presenter) {
         presenter.setView(this);
         mPresenter = presenter;
+    }
+
+    public void onBackPress(){
+        ((SubjectMaterialsPresenter)mPresenter).pageDown();
+    }
+
+    public int getCurrentPage(){
+        return ((SubjectMaterialsPresenter)mPresenter).getCurrentPage();
     }
 
     @Inject

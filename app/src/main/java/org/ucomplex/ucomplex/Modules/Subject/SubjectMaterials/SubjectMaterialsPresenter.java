@@ -8,17 +8,20 @@ import android.view.ViewGroup;
 
 import net.oneread.aghanim.components.utility.IRecyclerItem;
 import net.oneread.aghanim.components.utility.MVPCallback;
+import net.oneread.aghanim.components.utility.OnClickStrategy;
 import net.oneread.aghanim.components.utility.RecyclerOnClickListener;
 import net.oneread.aghanim.mvp.abstractmvp.MVPAbstractPresenterRecycler;
 import net.oneread.aghanim.mvp.basemvp.MVPModel;
 import net.oneread.aghanim.mvp.recyclermvp.MVPModelRecycler;
 
+import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
 import org.ucomplex.ucomplex.CommonDependencies.MVPUtility;
-import org.ucomplex.ucomplex.Modules.Subject.SubjectActivity;
 import org.ucomplex.ucomplex.R;
 
 import java.util.List;
+
+import static org.ucomplex.ucomplex.CommonDependencies.Constants.AUTH_STRING;
 
 /**
  * ---------------------------------------------------
@@ -34,11 +37,56 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
 
     static final int TYPE_FILE = 0;
     static final int TYPE_FOLDER = 1;
+    public static final String EXTRA_KEY_FOLDER = "folder";
+    private static final String EXTRA_KEY_GET_FOLDER = "get_folder";
+
+    private void pageUp(){
+        ((SubjectMaterialsModel)mModel).pageUp();
+    }
+
+    void pageDown(){
+        ((SubjectMaterialsModel)mModel).pageDown();
+        populateRecyclerView(getHistory(((SubjectMaterialsModel)mModel).getCurrentPage()));
+    }
+
+    public int getCurrentPage(){
+        return ((SubjectMaterialsModel)mModel).getCurrentPage();
+    }
+
+    private void addHistory(List<IRecyclerItem> list){
+        ((SubjectMaterialsModel)mModel).addHistory(list);
+    }
+
+    public int getHistoryCount(){
+        return ((SubjectMaterialsModel)mModel).getHistoryCount();
+    }
+
+    private List<IRecyclerItem> getHistory(int index){
+        return ((SubjectMaterialsModel)mModel).getHistory(index);
+    }
 
     @Override
     public void setModel(MVPModel<String, List<IRecyclerItem>> models, Bundle... bundle) {
         this.mModel = models;
         this.mModel.setContext(this.getActivityContext());
+    }
+
+    private void setupOnClickListener(SubjectMaterialsViewHolder holder, int viewType) {
+        RecyclerOnClickListener clickListener = new RecyclerOnClickListener();
+        OnClickStrategy strategy = view -> {
+            SubjectMaterialsItem item = (SubjectMaterialsItem) ((MVPModelRecycler)mModel).getItem(holder.getAdapterPosition());
+            if(viewType==TYPE_FILE){
+
+            }else {
+                Bundle bundle = new Bundle();
+                bundle.putString(AUTH_STRING, ((DaggerApplication)getAppContext()).getAuthString());
+                bundle.putString(EXTRA_KEY_FOLDER, item.getAddress());
+                bundle.putBoolean(EXTRA_KEY_GET_FOLDER, true);
+                loadData(bundle);
+            }
+        };
+        clickListener.setStrategy(strategy);
+        holder.mClickArea.setOnClickListener(clickListener);
     }
 
     @Override
@@ -64,20 +112,7 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
         viewRow = inflater.inflate(tempLayout, parent, false);
         setCreator((view, i) -> new SubjectMaterialsViewHolder(view,viewType));
         SubjectMaterialsViewHolder holder = (SubjectMaterialsViewHolder) this.creator.getViewHolder(viewRow, tempLayout);
-        RecyclerOnClickListener clickListener = new RecyclerOnClickListener();
-        final int position = holder.getAdapterPosition();
-//        SubjectMaterialsItem item = (SubjectMaterialsItem) ((MVPModelRecycler)mModel).getItem(position);
-        if(viewType==TYPE_FILE){
-            clickListener.setStrategy(view -> {
-
-
-            });
-        }else {
-            clickListener.setStrategy(view -> {
-
-            });
-        }
-        holder.mClickArea.setOnClickListener(clickListener);
+        setupOnClickListener(holder, viewType);
         holder.mMenuButton.setOnClickListener(view -> {
 
         });
@@ -86,17 +121,23 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
 
     @Override
     public void loadData(Bundle... bundle) {
-        mModel.loadData(new MVPCallback<List<IRecyclerItem>>() {
-            @Override
-            public void onSuccess(List<IRecyclerItem> o) {
-                populateRecyclerView(o);
-            }
+        if(bundle.length>0 && !bundle[0].containsKey(EXTRA_KEY_GET_FOLDER)){
+            populateRecyclerView(((SubjectMaterialsModel)mModel).getHistory(getItemCount()));
+        }else {
+            mModel.loadData(new MVPCallback<List<IRecyclerItem>>() {
+                @Override
+                public void onSuccess(List<IRecyclerItem> o) {
+                    populateRecyclerView(o);
+                    addHistory(o);
+                    pageUp();
+                }
 
-            @Override
-            public void onError(Throwable throwable) {
-                throwable.printStackTrace();
-            }
-        }, bundle);
+                @Override
+                public void onError(Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+            }, bundle);
+        }
     }
 
     @Override
@@ -112,6 +153,7 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
                     break;
                 case TYPE_FOLDER:
                     holder.mOwnersName.setText(item.getOwnersName());
+                    break;
             }
 
         }

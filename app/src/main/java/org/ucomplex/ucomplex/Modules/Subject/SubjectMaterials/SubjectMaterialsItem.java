@@ -21,6 +21,15 @@ public class SubjectMaterialsItem extends IRecyclerItem {
     private String time;
     private String ownersName;
     private String address;
+    private int ownersId;
+
+    public int getOwnersId() {
+        return ownersId;
+    }
+
+    public void setOwnersId(int ownersId) {
+        this.ownersId = ownersId;
+    }
 
     public String getId() {
         return id;

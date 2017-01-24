@@ -15,6 +15,8 @@ import org.ucomplex.ucomplex.Modules.Subject.SubjectMaterials.SubjectMaterialsFr
 import org.ucomplex.ucomplex.Modules.Subject.SubjectTimeline.SubjectTimelineFragment;
 import org.ucomplex.ucomplex.R;
 
+import java.util.Stack;
+
 import static org.ucomplex.ucomplex.CommonDependencies.Constants.AUTH_STRING;
 
 public class SubjectActivity extends BaseActivity {
@@ -23,6 +25,8 @@ public class SubjectActivity extends BaseActivity {
     private SubjectMaterialsFragment subjectMaterialsFragment;
     private SubjectDetailsFragment subjectDetailsFragment;
     private SubjectTimelineFragment subjectTimelineFragment;
+    private int currentPage;
+
 
     public static void receiveIntent(Context context, int courseId, String courseName) {
         Intent intent = new Intent(context, SubjectActivity.class);
@@ -41,12 +45,12 @@ public class SubjectActivity extends BaseActivity {
         super.onSaveInstanceState(outState);
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         DaggerApplication application = (DaggerApplication) getAppContext();
         setContentViewWithNavDrawer(R.layout.activity_subject);
+
         Intent intent = getIntent();
         setupToolbar(intent.getStringExtra(EXTRA_KEY_COURSE_NAME));
         setupDrawer();
@@ -70,12 +74,10 @@ public class SubjectActivity extends BaseActivity {
             Bundle bundle = new Bundle();
             bundle.putInt(SubjectDetailsModel.EXTRA_KEY_SUBJECT_ID, intent.getIntExtra(SubjectDetailsModel.EXTRA_KEY_SUBJECT_ID, -1));
             bundle.putString(AUTH_STRING, application.getAuthString());
-            subjectDetailsFragment.setArguments(bundle);
 
-            Bundle timelineFragmentBundle = new Bundle();
-            timelineFragmentBundle.putInt(SubjectDetailsModel.EXTRA_KEY_SUBJECT_ID, intent.getIntExtra(SubjectDetailsModel.EXTRA_KEY_SUBJECT_ID, -1));
-            timelineFragmentBundle.putString(AUTH_STRING, application.getAuthString());
-            subjectTimelineFragment.setArguments(timelineFragmentBundle);
+            subjectDetailsFragment.setArguments(bundle);
+            subjectMaterialsFragment.setArguments(bundle);
+            subjectTimelineFragment.setArguments(bundle);
         }
 
         viewPagerAdapter.addFragment(subjectDetailsFragment, "Дисциплина");
@@ -86,25 +88,28 @@ public class SubjectActivity extends BaseActivity {
 
 
     ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
-        @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-        }
 
         @Override
         public void onPageSelected(int position) {
+            currentPage = position;
             if(position==1){
                 subjectMaterialsFragment.onFragmentVisible();
             }else if(position==2){
                 subjectTimelineFragment.onFragmentVisible();
             }
-
         }
-
         @Override
-        public void onPageScrollStateChanged(int state) {
-
-        }
+        public void onPageScrollStateChanged(int state) {}
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
     };
 
+    @Override
+    public void onBackPressed() {
+        if(currentPage==1 && subjectMaterialsFragment.getCurrentPage()>0){
+            subjectMaterialsFragment.onBackPress();
+        }else{
+            super.onBackPressed();
+        }
+    }
 }

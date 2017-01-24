@@ -42,6 +42,11 @@ public class SubjectDetailsPresenter extends MVPAbstractPresenterRecycler<String
     private static final int TYPE_0 = 0;
     private static final int TYPE_1 = 1;
     private static final int TYPE_2 = 2;
+    private Bundle mBundle;
+
+    public void setBundle(Bundle mBundle) {
+        this.mBundle = mBundle;
+    }
 
     public SubjectDetailsPresenter() {
 

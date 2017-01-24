@@ -59,7 +59,7 @@ public class HttpFactory {
     public static final String USER_SUBJECT_URL = BASE_URL + "student/ajax/my_subjects?mobile=1";
     public static final String GET_PHOTO_URL = BASE_URL + "files/photos/";
     public static final String CALENDAR_BELT_URL = BASE_URL + "student/ajax/calendar_belt?mobile=1";
-
+    public static final String TEACHERS_FILES_URL = BASE_URL + "student/ajax/teacher_files?mobile=1";
 
     public static String encodeLoginData(String loginData) {
         byte[] authBytes;
