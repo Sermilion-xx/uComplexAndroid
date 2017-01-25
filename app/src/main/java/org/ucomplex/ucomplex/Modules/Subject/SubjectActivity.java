@@ -3,7 +3,9 @@ package org.ucomplex.ucomplex.Modules.Subject;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.widget.Toast;
@@ -18,10 +20,8 @@ import org.ucomplex.ucomplex.Modules.Subject.SubjectMaterials.SubjectMaterialsFr
 import org.ucomplex.ucomplex.Modules.Subject.SubjectTimeline.SubjectTimelineFragment;
 import org.ucomplex.ucomplex.R;
 
-import java.util.Stack;
-
 import static org.ucomplex.ucomplex.CommonDependencies.Constants.AUTH_STRING;
-import static org.ucomplex.ucomplex.CommonDependencies.Constants.PERMISSIONS_REQUEST_WRITE_STORAGE;
+import static org.ucomplex.ucomplex.CommonDependencies.FacadeCommon.REQUEST_EXTERNAL_STORAGE;
 
 public class SubjectActivity extends BaseActivity {
 
@@ -69,8 +69,11 @@ public class SubjectActivity extends BaseActivity {
 
         if (savedInstanceState != null) {
             subjectDetailsFragment = (SubjectDetailsFragment) getFragmentManager().getFragment(savedInstanceState, "subjectDetailsFragment");
+            subjectDetailsFragment.setContext(this);
             subjectMaterialsFragment = (SubjectMaterialsFragment) getFragmentManager().getFragment(savedInstanceState, "subjectMaterialsFragment");
+            subjectMaterialsFragment.setContext(this);
             subjectTimelineFragment = (SubjectTimelineFragment) getFragmentManager().getFragment(savedInstanceState, "subjectTimelineFragment");
+            subjectTimelineFragment.setContext(this);
         } else {
             subjectDetailsFragment = SubjectDetailsFragment.getInstance(this);
             subjectMaterialsFragment = SubjectMaterialsFragment.getFragment(this);
@@ -89,7 +92,9 @@ public class SubjectActivity extends BaseActivity {
         viewPagerAdapter.addFragment(subjectMaterialsFragment, "Материалы");
         viewPagerAdapter.addFragment(subjectTimelineFragment, "Лента");
         viewPager.setAdapter(viewPagerAdapter);
-        FacadeCommon.checkStoragePermissions(this);
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            FacadeCommon.checkPermissions(this);
+        }
     }
 
 
@@ -121,13 +126,13 @@ public class SubjectActivity extends BaseActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+                                           @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
-            case PERMISSIONS_REQUEST_WRITE_STORAGE: {
+            case REQUEST_EXTERNAL_STORAGE: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                 } else {
-                    Toast.makeText(this, "Вы не разрешили доступ к пямяти. Загрузка файлов будет не возможна.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Вы не разрешили доступ к пямяти. Открытие загруженных файлов будет не возможна.", Toast.LENGTH_LONG).show();
                 }
             }
         }

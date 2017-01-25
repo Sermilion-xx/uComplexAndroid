@@ -1,21 +1,16 @@
 package org.ucomplex.ucomplex.Modules.Events;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.widget.Toast;
-
-import net.oneread.aghanim.components.utility.OnFragmentLoadedListener;
 
 import org.ucomplex.ucomplex.BaseComponents.BaseActivity;
 import org.ucomplex.ucomplex.BaseComponents.BaseRecyclerActivity;
@@ -27,7 +22,7 @@ import org.ucomplex.ucomplex.R;
 import javax.inject.Inject;
 
 import static org.ucomplex.ucomplex.CommonDependencies.Constants.AUTH_STRING;
-import static org.ucomplex.ucomplex.CommonDependencies.Constants.PERMISSIONS_REQUEST_WRITE_STORAGE;
+import static org.ucomplex.ucomplex.CommonDependencies.FacadeCommon.REQUEST_EXTERNAL_STORAGE;
 
 public class EventsActivity extends BaseRecyclerActivity {
 
@@ -57,7 +52,9 @@ public class EventsActivity extends BaseRecyclerActivity {
     protected void onCreate(Bundle savedInstanceState) {
         ((DaggerApplication) getApplication()).getEventsDiComponent().inject(this);
         super.onCreate(savedInstanceState);
-        FacadeCommon.checkStoragePermissions(this);
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            FacadeCommon.checkPermissions(this);
+        }
         setContentViewWithNavDrawer(R.layout.activity_main);
 
         if (savedInstanceState != null) {
@@ -125,13 +122,13 @@ public class EventsActivity extends BaseRecyclerActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+                                           @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
-            case PERMISSIONS_REQUEST_WRITE_STORAGE: {
+            case REQUEST_EXTERNAL_STORAGE: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                 } else {
-                    Toast.makeText(this, "Вы не разрешили доступ к пямяти.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Вы не разрешили доступ к пямяти. Загрузка файлов будет не возможна.", Toast.LENGTH_LONG).show();
                 }
             }
         }

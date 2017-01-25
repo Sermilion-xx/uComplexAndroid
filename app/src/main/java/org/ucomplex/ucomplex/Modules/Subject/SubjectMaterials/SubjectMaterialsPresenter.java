@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.content.ContextCompat;
@@ -41,7 +42,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.List;
 
+import static android.app.DownloadManager.ACTION_DOWNLOAD_COMPLETE;
 import static org.ucomplex.ucomplex.CommonDependencies.Constants.AUTH_STRING;
+import static org.ucomplex.ucomplex.CommonDependencies.Constants.UC_ACTION_DOWNLOAD_COMPLETE;
 import static org.ucomplex.ucomplex.CommonDependencies.NotificationService.DOWNLOAD_COMPLETE;
 import static org.ucomplex.ucomplex.CommonDependencies.NotificationService.EXTRA_BODY;
 import static org.ucomplex.ucomplex.CommonDependencies.NotificationService.EXTRA_TITLE;
@@ -234,11 +237,17 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
                 FileOutputStream out = new FileOutputStream(file.getPath());
                 out.write(response);
                 out.close();
-                //if(sdk>24)
-                Uri fileUri = FileProvider.getUriForFile(getActivityContext(), getAppContext().getPackageName() + ".provider", file);
-                //else Uri.parce(file)
+                Uri fileUri;
+                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                    fileUri = FileProvider.getUriForFile(getActivityContext(), getAppContext().getPackageName() + ".provider", file);
+                }else {
+                    fileUri = Uri.parse(file.toString());
+                }
                 Toast.makeText(getActivityContext(),getActivityContext().getString(R.string.file_saved_to_downloads),Toast.LENGTH_LONG).show();
-                startNotificationService(filename, getActivityContext().getString(R.string.file_download_complete), true, fileUri);
+                Intent intent = new Intent();
+                intent.setAction(UC_ACTION_DOWNLOAD_COMPLETE);
+                getActivityContext().sendBroadcast(intent);
+//                startNotificationService(filename, getActivityContext().getString(R.string.file_download_complete), true, fileUri);
             }
         } catch (Exception e) {
             Toast.makeText(getActivityContext(),getActivityContext().getString(R.string.error_loadig_file),Toast.LENGTH_LONG).show();

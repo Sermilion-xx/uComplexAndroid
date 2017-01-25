@@ -11,8 +11,6 @@ import android.support.v4.content.ContextCompat;
 import android.text.Html;
 import android.text.Spanned;
 
-import com.android.volley.Response;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.ucomplex.ucomplex.R;
@@ -25,10 +23,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
-import static org.ucomplex.ucomplex.CommonDependencies.Constants.PERMISSIONS_REQUEST_WRITE_STORAGE;
 
 /**
  * ---------------------------------------------------
@@ -221,14 +218,49 @@ public class FacadeCommon {
         }
     }
 
-    public static void checkStoragePermissions(Activity activity) {
-        if(ContextCompat.checkSelfPermission(activity,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(activity,
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    PERMISSIONS_REQUEST_WRITE_STORAGE);
+//    public static void checkWriteStoragePermissions(Activity activity) {
+//        if(ContextCompat.checkSelfPermission(activity,
+//                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+//                != PackageManager.PERMISSION_GRANTED){
+//            ActivityCompat.requestPermissions(activity,
+//                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+//                    PERMISSIONS_REQUEST_WRITE_STORAGE);
+//        }
+//    }
+
+//    public static void checkReadStoragePermissions(Activity activity) {
+//        if(ContextCompat.checkSelfPermission(activity,
+//                Manifest.permission.READ_EXTERNAL_STORAGE)
+//                != PackageManager.PERMISSION_GRANTED){
+//            ActivityCompat.requestPermissions(activity,
+//                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+//                    PERMISSIONS_REQUEST_READ_STORAGE);
+//        }
+//    }
+
+
+    public static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+
+    public static boolean checkPermissions(Activity activity) {
+        int result;
+        List<String> listPermissionsNeeded = new ArrayList<>();
+        for (String p : PERMISSIONS_STORAGE) {
+            result = ContextCompat.checkSelfPermission(activity, p);
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                listPermissionsNeeded.add(p);
+            }
         }
+        if (!listPermissionsNeeded.isEmpty()) {
+            ActivityCompat.requestPermissions(activity,
+                    listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]),
+                    REQUEST_EXTERNAL_STORAGE);
+            return false;
+        }
+        return true;
     }
 
 }
