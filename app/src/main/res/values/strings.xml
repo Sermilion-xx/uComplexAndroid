@@ -88,6 +88,7 @@
     <string name="attendance">Посещаемость по предмету:</string>
     <string name="subject_image">Subject Image</string>
     <string name="clock_icon"></string>
+    <string name="open_file_with">Открыть используя</string>
 
 
 </resources>

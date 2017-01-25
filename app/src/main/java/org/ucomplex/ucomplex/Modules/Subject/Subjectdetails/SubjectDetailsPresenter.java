@@ -13,15 +13,13 @@ import net.oneread.aghanim.components.utility.IRecyclerItem;
 import net.oneread.aghanim.components.utility.MVPCallback;
 import net.oneread.aghanim.components.utility.RecyclerOnClickListener;
 import net.oneread.aghanim.mvp.abstractmvp.MVPAbstractPresenterRecycler;
-import net.oneread.aghanim.mvp.basemvp.MVPModel;
 import net.oneread.aghanim.mvp.recyclermvp.MVPModelRecycler;
 
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeMedia;
-import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
+import org.ucomplex.ucomplex.CommonDependencies.Network.HttpFactory;
 import org.ucomplex.ucomplex.CommonDependencies.MVPUtility;
-import org.ucomplex.ucomplex.Modules.Subject.SubjectActivity;
 
 import org.ucomplex.ucomplex.R;
 

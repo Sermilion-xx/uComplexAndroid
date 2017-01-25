@@ -9,7 +9,7 @@ import net.oneread.aghanim.mvp.abstractmvp.MVPAbstractModelRecycler;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
+import org.ucomplex.ucomplex.CommonDependencies.Network.HttpFactory;
 import org.ucomplex.ucomplex.Domain.Materials.MaterialItem;
 import org.ucomplex.ucomplex.Modules.Subject.SubjectModel;
 

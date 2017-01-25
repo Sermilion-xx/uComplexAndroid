@@ -13,7 +13,7 @@ import org.json.JSONObject;
 import org.ucomplex.ucomplex.CommonDependencies.MVPUtility;
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
-import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
+import org.ucomplex.ucomplex.CommonDependencies.Network.HttpFactory;
 import org.ucomplex.ucomplex.R;
 
 import java.util.ArrayList;

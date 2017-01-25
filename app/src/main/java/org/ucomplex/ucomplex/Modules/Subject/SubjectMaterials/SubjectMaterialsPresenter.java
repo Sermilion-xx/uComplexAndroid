@@ -3,9 +3,11 @@ package org.ucomplex.ucomplex.Modules.Subject.SubjectMaterials;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,8 +31,8 @@ import net.oneread.aghanim.mvp.recyclermvp.MVPModelRecycler;
 
 import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
-import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
-import org.ucomplex.ucomplex.CommonDependencies.InputStreamVolleyRequest;
+import org.ucomplex.ucomplex.CommonDependencies.Network.HttpFactory;
+import org.ucomplex.ucomplex.CommonDependencies.Network.InputStreamVolleyRequest;
 import org.ucomplex.ucomplex.CommonDependencies.MVPUtility;
 import org.ucomplex.ucomplex.CommonDependencies.NotificationService;
 import org.ucomplex.ucomplex.R;
@@ -40,8 +42,10 @@ import java.io.FileOutputStream;
 import java.util.List;
 
 import static org.ucomplex.ucomplex.CommonDependencies.Constants.AUTH_STRING;
+import static org.ucomplex.ucomplex.CommonDependencies.NotificationService.DOWNLOAD_COMPLETE;
 import static org.ucomplex.ucomplex.CommonDependencies.NotificationService.EXTRA_BODY;
 import static org.ucomplex.ucomplex.CommonDependencies.NotificationService.EXTRA_TITLE;
+import static org.ucomplex.ucomplex.CommonDependencies.NotificationService.EXTRA_URI;
 
 /**
  * ---------------------------------------------------
@@ -59,7 +63,9 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
     static final int TYPE_FOLDER = 1;
     static final String EXTRA_KEY_FOLDER = "folder";
     private static final String EXTRA_KEY_GET_FOLDER = "get_folder";
+    private String filename;
     private InputStreamVolleyRequest request;
+
 
 
     private void pageUp() {
@@ -89,8 +95,6 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
         this.mModel.setContext(this.getActivityContext());
     }
 
-
-
     private void setupOnClickListener(SubjectMaterialsViewHolder holder, int viewType) {
         RecyclerOnClickListener clickListener = new RecyclerOnClickListener();
         OnClickStrategy strategy = view -> {
@@ -99,16 +103,11 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
                 if(ContextCompat.checkSelfPermission(getActivityContext(),
                         Manifest.permission.WRITE_EXTERNAL_STORAGE)
                         != PackageManager.PERMISSION_GRANTED){
-            Toast.makeText(getActivityContext(),getActivityContext().getString(R.string.need_storage_permissions), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivityContext(),getActivityContext().getString(R.string.need_storage_permissions), Toast.LENGTH_LONG).show();
                 }
                 Toast.makeText(getActivityContext(),getActivityContext().getString(R.string.file_download_started),Toast.LENGTH_SHORT).show();
-                String filename = item.getAddress() + "." + item.getType();
-
-                Intent notificationIntent = new Intent(getActivityContext(), NotificationService.class);
-                notificationIntent.putExtra(EXTRA_TITLE, filename);
-                notificationIntent.putExtra(EXTRA_BODY, "Загрузка файла началась.");
-                getActivityContext().startService(notificationIntent);
-
+                filename = item.getAddress() + "." + item.getType();
+                startNotificationService(filename, "Загрузка файла началась.", false, null);
                 String mUrl = HttpFactory.DOWNLOAD_MATERIAL_URL;
                 mUrl = mUrl + item.getOwnersId() + "/" + filename;
                 request = new InputStreamVolleyRequest(Request.Method.GET, mUrl, this, this, null);
@@ -128,13 +127,17 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
         holder.mClickArea.setOnClickListener(clickListener);
     }
 
+    private void startNotificationService(String filename, String message, boolean downloadComplete, Uri fileUri) {
+        Intent notificationIntent = new Intent(getActivityContext(), NotificationService.class);
+        notificationIntent.putExtra(EXTRA_TITLE, filename);
+        notificationIntent.putExtra(EXTRA_BODY, message);
+        if(downloadComplete){
+            notificationIntent.putExtra(DOWNLOAD_COMPLETE, true);
+            notificationIntent.putExtra(EXTRA_URI, fileUri);
+        }
+        getActivityContext().startService(notificationIntent);
+    }
 
-
-
-
-//    notification.flags = Notification.DEFAULT_LIGHTS | Notification.FLAG_AUTO_CANCEL;
-//    NotificationManager manager = (NotificationManager) getActivityContext().getSystemService(NOTIFICATION_SERVICE);
-//    manager.notify(NOTIFY_ID, notification);
 
     @Override
     public SubjectMaterialsViewHolder createViewHolder(ViewGroup parent, int viewType) {
@@ -203,7 +206,6 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
                     holder.mOwnersName.setText(item.getOwnersName());
                     break;
             }
-
         }
     }
 
@@ -230,10 +232,13 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
                 String name = tempName[tempName.length-1];
                 File file =new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), name);
                 FileOutputStream out = new FileOutputStream(file.getPath());
-                out.write(response[0]);
+                out.write(response);
                 out.close();
+                //if(sdk>24)
+                Uri fileUri = FileProvider.getUriForFile(getActivityContext(), getAppContext().getPackageName() + ".provider", file);
+                //else Uri.parce(file)
                 Toast.makeText(getActivityContext(),getActivityContext().getString(R.string.file_saved_to_downloads),Toast.LENGTH_LONG).show();
-                getActivityContext().stopService(new Intent(getActivityContext(), NotificationService.class));
+                startNotificationService(filename, getActivityContext().getString(R.string.file_download_complete), true, fileUri);
             }
         } catch (Exception e) {
             Toast.makeText(getActivityContext(),getActivityContext().getString(R.string.error_loadig_file),Toast.LENGTH_LONG).show();

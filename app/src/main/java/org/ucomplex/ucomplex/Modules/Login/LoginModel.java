@@ -14,7 +14,7 @@ import org.json.JSONObject;
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeMedia;
 import org.ucomplex.ucomplex.CommonDependencies.FacadePreferences;
-import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
+import org.ucomplex.ucomplex.CommonDependencies.Network.HttpFactory;
 import org.ucomplex.ucomplex.Domain.Users.User;
 import org.ucomplex.ucomplex.Domain.Users.UserInterface;
 

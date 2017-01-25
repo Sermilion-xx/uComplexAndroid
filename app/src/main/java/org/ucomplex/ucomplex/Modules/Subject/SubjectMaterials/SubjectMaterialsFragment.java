@@ -1,6 +1,10 @@
 package org.ucomplex.ucomplex.Modules.Subject.SubjectMaterials;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 
 import net.oneread.aghanim.components.base.MVPViewBaseFragment;
@@ -9,6 +13,7 @@ import net.oneread.aghanim.mvp.recyclermvp.MVPModelRecycler;
 import net.oneread.aghanim.mvp.recyclermvp.MVPPresenterRecycler;
 
 import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
+import org.ucomplex.ucomplex.CommonDependencies.NotificationService;
 import org.ucomplex.ucomplex.R;
 
 import java.util.List;
@@ -30,6 +35,7 @@ public class SubjectMaterialsFragment extends MVPViewBaseFragment<String, List<I
 
     public static final String DATA_REQUESTED = "dataRequested";
     protected boolean dataRequested;
+
 
 
     @Inject

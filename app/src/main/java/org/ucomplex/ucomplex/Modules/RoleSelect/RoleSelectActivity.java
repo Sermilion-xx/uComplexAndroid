@@ -21,7 +21,7 @@ import org.ucomplex.ucomplex.R;
 
 import javax.inject.Inject;
 
-import static org.ucomplex.ucomplex.CommonDependencies.HttpFactory.encodeLoginData;
+import static org.ucomplex.ucomplex.CommonDependencies.Network.HttpFactory.encodeLoginData;
 
 public class RoleSelectActivity extends BaseRecyclerActivity implements MVPViewRecycler {
 

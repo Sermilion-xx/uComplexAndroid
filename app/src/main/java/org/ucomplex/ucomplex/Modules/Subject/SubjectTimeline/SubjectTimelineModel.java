@@ -10,7 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
-import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
+import org.ucomplex.ucomplex.CommonDependencies.Network.HttpFactory;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

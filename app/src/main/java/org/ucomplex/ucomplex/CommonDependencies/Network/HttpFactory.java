@@ -1,4 +1,4 @@
-package org.ucomplex.ucomplex.CommonDependencies;
+package org.ucomplex.ucomplex.CommonDependencies.Network;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -14,10 +14,6 @@ import net.oneread.aghanim.components.utility.MVPCallback;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
-
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
 /**
  * ---------------------------------------------------

@@ -17,14 +17,14 @@ import net.oneread.aghanim.mvp.basemvp.MVPModel;
 import org.ucomplex.ucomplex.BaseComponents.BaseAsyncTask;
 import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
 import org.ucomplex.ucomplex.CommonDependencies.FacadePreferences;
-import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
+import org.ucomplex.ucomplex.CommonDependencies.Network.HttpFactory;
 import org.ucomplex.ucomplex.Domain.Users.LoginErrorType;
 import org.ucomplex.ucomplex.Domain.Users.UserInterface;
 import org.ucomplex.ucomplex.R;
 
 import java.util.ArrayList;
 
-import static org.ucomplex.ucomplex.CommonDependencies.HttpFactory.encodeLoginData;
+import static org.ucomplex.ucomplex.CommonDependencies.Network.HttpFactory.encodeLoginData;
 import static org.ucomplex.ucomplex.Domain.Users.LoginErrorType.EMPTY_EMAIL;
 import static org.ucomplex.ucomplex.Domain.Users.LoginErrorType.INVALID_PASSWORD;
 import static org.ucomplex.ucomplex.Domain.Users.LoginErrorType.NO_ERROR;

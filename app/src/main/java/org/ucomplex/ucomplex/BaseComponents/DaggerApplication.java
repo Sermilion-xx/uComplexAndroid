@@ -1,14 +1,9 @@
 package org.ucomplex.ucomplex.BaseComponents;
 
-import android.Manifest;
 import android.app.Application;
-import android.content.pm.PackageManager;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 
 import org.ucomplex.ucomplex.CommonDependencies.FacadePreferences;
-import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
-import org.ucomplex.ucomplex.CommonDependencies.NullHostNameVerifier;
+import org.ucomplex.ucomplex.CommonDependencies.Network.NullHostNameVerifier;
 import org.ucomplex.ucomplex.Domain.Users.UserInterface;
 import org.ucomplex.ucomplex.Modules.Events.EventsDagger.DaggerEventsDiComponent;
 import org.ucomplex.ucomplex.Modules.Events.EventsDagger.EventsDiComponent;
@@ -32,8 +27,6 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-
-import static org.ucomplex.ucomplex.CommonDependencies.Constants.PERMISSIONS_REQUEST_WRITE_STORAGE;
 
 /**
  * ---------------------------------------------------

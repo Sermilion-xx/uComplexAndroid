@@ -1,4 +1,4 @@
-package org.ucomplex.ucomplex.CommonDependencies;
+package org.ucomplex.ucomplex.CommonDependencies.Network;
 
 import android.util.Log;
 

@@ -21,7 +21,7 @@ import net.oneread.aghanim.mvp.recyclermvp.MVPViewRecycler;
 import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeMedia;
-import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
+import org.ucomplex.ucomplex.CommonDependencies.Network.HttpFactory;
 import org.ucomplex.ucomplex.CommonDependencies.MVPUtility;
 import org.ucomplex.ucomplex.Modules.Subject.SubjectActivity;
 import org.ucomplex.ucomplex.R;

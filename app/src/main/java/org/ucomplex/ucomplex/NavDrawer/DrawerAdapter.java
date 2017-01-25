@@ -2,7 +2,6 @@ package org.ucomplex.ucomplex.NavDrawer;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,13 +11,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.gson.reflect.TypeToken;
 
 import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
-import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
+import org.ucomplex.ucomplex.CommonDependencies.Network.HttpFactory;
 import org.ucomplex.ucomplex.Modules.Events.EventsActivity;
 import org.ucomplex.ucomplex.Modules.Events.EventsModel;
 import org.ucomplex.ucomplex.Modules.Login.LoginActivityView;
