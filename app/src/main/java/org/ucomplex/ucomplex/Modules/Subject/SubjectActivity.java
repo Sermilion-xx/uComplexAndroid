@@ -2,12 +2,15 @@ package org.ucomplex.ucomplex.Modules.Subject;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.widget.Toast;
 
 import org.ucomplex.ucomplex.BaseComponents.BaseActivity;
 import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
+import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
 import org.ucomplex.ucomplex.CommonDependencies.ViewPagerAdapter;
 import org.ucomplex.ucomplex.Modules.Subject.SubjectDetails.SubjectDetailsFragment;
 import org.ucomplex.ucomplex.Modules.Subject.SubjectDetails.SubjectDetailsModel;
@@ -18,6 +21,7 @@ import org.ucomplex.ucomplex.R;
 import java.util.Stack;
 
 import static org.ucomplex.ucomplex.CommonDependencies.Constants.AUTH_STRING;
+import static org.ucomplex.ucomplex.CommonDependencies.Constants.PERMISSIONS_REQUEST_WRITE_STORAGE;
 
 public class SubjectActivity extends BaseActivity {
 
@@ -48,6 +52,7 @@ public class SubjectActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         DaggerApplication application = (DaggerApplication) getAppContext();
         setContentViewWithNavDrawer(R.layout.activity_subject);
 
@@ -84,6 +89,7 @@ public class SubjectActivity extends BaseActivity {
         viewPagerAdapter.addFragment(subjectMaterialsFragment, "Материалы");
         viewPagerAdapter.addFragment(subjectTimelineFragment, "Лента");
         viewPager.setAdapter(viewPagerAdapter);
+        FacadeCommon.checkStoragePermissions(this);
     }
 
 
@@ -112,4 +118,19 @@ public class SubjectActivity extends BaseActivity {
             super.onBackPressed();
         }
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_WRITE_STORAGE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                } else {
+                    Toast.makeText(this, "Вы не разрешили доступ к пямяти. Загрузка файлов будет не возможна.", Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+    }
+
 }

@@ -39,5 +39,7 @@ public class Constants {
 
     public static final String AUTH_DELIMETER = ":";
 
+    public static final int PERMISSIONS_REQUEST_WRITE_STORAGE = 0;
+
 
 }

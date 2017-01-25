@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:id="@+id/clickArea">
+    android:id="@+id/clickArea"
+    android:background="@drawable/ripple_with_border">
 
     <ImageView
         android:id="@+id/course_material_listview_item_image_file"

@@ -31,6 +31,7 @@
         <activity android:name=".Modules.SubjectsList.SubjectsListActivity" />
         <activity android:name=".BaseComponents.BaseRecyclerActivity" />
         <activity android:name=".Modules.Subject.SubjectActivity"></activity>
+        <service android:name=".CommonDependencies.NotificationService"/>
     </application>
 
 </manifest>

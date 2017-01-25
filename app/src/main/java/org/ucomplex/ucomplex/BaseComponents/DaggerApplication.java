@@ -1,8 +1,14 @@
 package org.ucomplex.ucomplex.BaseComponents;
 
+import android.Manifest;
 import android.app.Application;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 
 import org.ucomplex.ucomplex.CommonDependencies.FacadePreferences;
+import org.ucomplex.ucomplex.CommonDependencies.HttpFactory;
+import org.ucomplex.ucomplex.CommonDependencies.NullHostNameVerifier;
 import org.ucomplex.ucomplex.Domain.Users.UserInterface;
 import org.ucomplex.ucomplex.Modules.Events.EventsDagger.DaggerEventsDiComponent;
 import org.ucomplex.ucomplex.Modules.Events.EventsDagger.EventsDiComponent;
@@ -18,6 +24,16 @@ import org.ucomplex.ucomplex.Modules.Subject.SubjectDagger.SubjectMaterialsDiCom
 import org.ucomplex.ucomplex.Modules.Subject.SubjectDagger.SubjectTimelineDiComponent;
 import org.ucomplex.ucomplex.Modules.SubjectsList.SubjectsListDagger.DaggerSubjectsListDiComponent;
 import org.ucomplex.ucomplex.Modules.SubjectsList.SubjectsListDagger.SubjectsListDiComponent;
+
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
+import static org.ucomplex.ucomplex.CommonDependencies.Constants.PERMISSIONS_REQUEST_WRITE_STORAGE;
 
 /**
  * ---------------------------------------------------
@@ -52,6 +68,19 @@ public class DaggerApplication extends Application{
         subjectDetailsDiComponent   = DaggerSubjectDetailsDiComponent.builder().build();
         subjectMaterialsDiComponent = DaggerSubjectMaterialsDiComponent.builder().build();
         subjectTimelineDiComponent  = DaggerSubjectTimelineDiComponent.builder().build();
+        configureConnectionTrust();
+    }
+
+    void configureConnectionTrust(){
+        HttpsURLConnection.setDefaultHostnameVerifier(new NullHostNameVerifier());
+        SSLContext context;
+        try {
+            context = SSLContext.getInstance("TLS");
+            context.init(null, trustAllCerts, new java.security.SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(context.getSocketFactory());
+        } catch (NoSuchAlgorithmException | KeyManagementException e) {
+            e.printStackTrace();
+        }
     }
 
     public LoginDiComponent getLoginDiComponent() {
@@ -104,5 +133,27 @@ public class DaggerApplication extends Application{
     public void setAuthString(String authString) {
         this.authString = authString;
     }
+
+
+    private static TrustManager[] trustAllCerts = new TrustManager[] {
+            new X509TrustManager() {
+
+                @Override
+                public void checkClientTrusted(java.security.cert.X509Certificate[] x509Certificates, String s) throws java.security.cert.CertificateException {
+                    // not implemented
+                }
+
+                @Override
+                public void checkServerTrusted(java.security.cert.X509Certificate[] x509Certificates, String s) throws java.security.cert.CertificateException {
+                    // not implemented
+                }
+
+                @Override
+                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                    return null;
+                }
+
+            }
+    };
 
 }

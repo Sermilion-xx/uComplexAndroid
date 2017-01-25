@@ -78,6 +78,7 @@ public class SubjectMaterialsModel extends MVPAbstractModelRecycler<String, List
                     materialsItem.setTime(item.getTime());
                     materialsItem.setName(item.getName());
                     materialsItem.setOwnersName(item.getOwner().getName());
+                    materialsItem.setOwnersId(item.getOwner().getId());
                     materialsItem.setSize(item.getSize());
                     materialsItem.setType(item.getType());
                     materialsItem.setId(item.getId());

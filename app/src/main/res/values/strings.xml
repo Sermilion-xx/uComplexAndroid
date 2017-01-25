@@ -62,6 +62,13 @@
     <string name="error_loading_data">Error loading data</string>
     <string name="load_more">Загрузить еще</string>
     <string name="error_loadig_data">Ошибка при загрузке данных</string>
+    <string name="error_loadig_file">Ошибка при загрузке файла</string>
+    <string name="file_download_started">Загрузка файла началась</string>
+    <string name="file_download_complete">Загрузка файла завершена</string>
+    <string name="file_saved_to_downloads">Файл сохранен в папку "Загрузки"</string>
+    <string name="file_is_downloading">Загрузка файла из Ucomplex</string>
+    <string name="downloading">Загрузка</string>
+    <string name="need_storage_permissions">Необходимо разрешить доступ к хранилищу в для данного приложения</string>
     <string name="subjects">Дисциплины</string>
 
     <string name="zachet">Зачет</string>

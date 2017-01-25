@@ -108,12 +108,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
                 }else {
                     String url = HttpFactory.PROFILE_IMAGE_URL + row.getProfileBitmapCode() + Constants.IMAGE_FORMAT_JPG;
                     RequestQueue requestQueue = Volley.newRequestQueue(mContext);
-                    ImageRequest imageRequest = new ImageRequest(url, new Response.Listener<Bitmap>() {
-                        @Override
-                        public void onResponse(Bitmap response) {
-                            mProfileImageView.setImageBitmap(response);
-                        }
-                    }, 0, 0, null, null);
+                    ImageRequest imageRequest = new ImageRequest(url, response -> mProfileImageView.setImageBitmap(response), 0, 0, null, null);
                     requestQueue.add(imageRequest);
                 }
             }else{

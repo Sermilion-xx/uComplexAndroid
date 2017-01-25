@@ -16,6 +16,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
 /**
  * ---------------------------------------------------
  * Created by Sermilion on 20/09/16.
@@ -60,6 +63,8 @@ public class HttpFactory {
     public static final String GET_PHOTO_URL = BASE_URL + "files/photos/";
     public static final String CALENDAR_BELT_URL = BASE_URL + "student/ajax/calendar_belt?mobile=1";
     public static final String TEACHERS_FILES_URL = BASE_URL + "student/ajax/teacher_files?mobile=1";
+    public static final String DOWNLOAD_MATERIAL_URL = SCHEMA + "storage.ucomplex.org//files/users/";
+
 
     public static String encodeLoginData(String loginData) {
         byte[] authBytes;
