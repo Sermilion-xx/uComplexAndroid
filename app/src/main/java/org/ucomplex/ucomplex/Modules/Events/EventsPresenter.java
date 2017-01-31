@@ -21,11 +21,12 @@ import net.oneread.aghanim.mvp.recyclermvp.MVPViewRecycler;
 import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeMedia;
-import org.ucomplex.ucomplex.CommonDependencies.Network.HttpFactory;
 import org.ucomplex.ucomplex.CommonDependencies.MVPUtility;
+import org.ucomplex.ucomplex.CommonDependencies.Network.HttpFactory;
 import org.ucomplex.ucomplex.Modules.Subject.SubjectActivity;
 import org.ucomplex.ucomplex.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.ucomplex.ucomplex.CommonDependencies.Constants.AUTH_STRING;
@@ -63,10 +64,12 @@ public class EventsPresenter extends MVPAbstractPresenterRecycler<String> {
 
         setCreator((view, i) -> new EventViewHolder(view));
         EventViewHolder holder = (EventViewHolder) this.creator.getViewHolder(viewTaskRow, tempLayout);
-        if (viewType == TYPE_FOOTER) {
-            setupLoadMoreOnClickListener(holder);
-        }else {
-            setupOnClickListener(holder);
+        if (tempLayout != R.layout.list_item_no_internet && tempLayout != R.layout.list_item_no_content) {
+            if (viewType == TYPE_FOOTER) {
+                setupLoadMoreOnClickListener(holder);
+            } else {
+                setupOnClickListener(holder);
+            }
         }
         return holder;
     }
@@ -87,8 +90,8 @@ public class EventsPresenter extends MVPAbstractPresenterRecycler<String> {
     private void setupOnClickListener(EventViewHolder holder) {
         RecyclerOnClickListener clickListener = new RecyclerOnClickListener();
         OnClickStrategy strategy = view -> {
-            EventItem item = (EventItem) ((MVPModelRecycler)mModel).getItem(holder.getAdapterPosition());
-            if(!item.getParams().getName().equals("UComplex")){
+            EventItem item = (EventItem) ((MVPModelRecycler) mModel).getItem(holder.getAdapterPosition());
+            if (!item.getParams().getName().equals("UComplex")) {
                 SubjectActivity.receiveIntent(getActivityContext(), item.getParams().getGcourse(), item.getParams().getCourseName());
             }
         };
@@ -110,11 +113,9 @@ public class EventsPresenter extends MVPAbstractPresenterRecycler<String> {
             holder.eventTextView.setText(event.getEventText());
             holder.eventTime.setText(event.getTime());
 
-
             Drawable textDrawable = FacadeMedia.getTextDrawable(event.getParams().getId(),
                     event.getParams().getName(),
                     getActivityContext());
-            holder.eventsImageView.setImageDrawable(textDrawable);
             if (event.getEventImageBitmap() != null) {
                 holder.eventsImageView.setImageBitmap(event.getEventImageBitmap());
             } else {
@@ -126,17 +127,15 @@ public class EventsPresenter extends MVPAbstractPresenterRecycler<String> {
                             .into(holder.eventsImageView);
                 }
             }
-            //TODO: implement "go to course click"
-//            holder.eventDetailsLayout.setOnClickListener(view -> {
-////                Intent intent = new Intent(getActivityContext(), null);
-//            });
         } else {
-            if (hasMoreEvents) {
-                holder.loadMoreEventsButton.setVisibility(View.VISIBLE);
-            } else {
-                holder.loadMoreEventsButton.setVisibility(View.GONE);
+            if(!item.isEmpty()) {
+                if (hasMoreEvents) {
+                    holder.loadMoreEventsButton.setVisibility(View.VISIBLE);
+                } else {
+                    holder.loadMoreEventsButton.setVisibility(View.GONE);
+                }
             }
-        }
+        }//else this means that returned result is empty
     }
 
     @Override
@@ -166,9 +165,11 @@ public class EventsPresenter extends MVPAbstractPresenterRecycler<String> {
                     populateRecyclerView(o);
                     ((EventsActivity) getView()).hideProgress();
                 } else {
-                    getItems().remove(getItems().size() - 1);
-                    ((MVPViewRecycler) getView()).notifyItemRemoved(getItems().size() + 1);
-                    addMoreToRecyclerView(o);
+                    if (getItemCount() > 0) {
+                        getItems().remove(getItems().size() - 1);
+                        ((MVPViewRecycler) getView()).notifyItemRemoved(getItems().size() + 1);
+                        addMoreToRecyclerView(o);
+                    }
                     ((EventsActivity) getView()).hideProgress();
                 }
             }
@@ -176,6 +177,7 @@ public class EventsPresenter extends MVPAbstractPresenterRecycler<String> {
             @Override
             public void onError(Throwable throwable) {
                 throwable.printStackTrace();
+                populateRecyclerView(MVPUtility.initNoContent());
                 ((EventsActivity) getView()).hideProgress();
             }
         }, bundle);

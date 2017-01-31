@@ -21,6 +21,7 @@ import org.ucomplex.ucomplex.Modules.Events.EventsModel;
 import org.ucomplex.ucomplex.Modules.Login.LoginActivityView;
 //import org.ucomplex.ucomplex.Modules.Subject.SubjectActivity;
 //import org.ucomplex.ucomplex.Modules.SubjectsList.SubjectsListActivity;
+import org.ucomplex.ucomplex.Modules.Materials.MaterialsActivity;
 import org.ucomplex.ucomplex.Modules.SubjectsList.SubjectsListActivity;
 import org.ucomplex.ucomplex.R;
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
@@ -130,7 +131,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
             }else if(position==2){
                 onDrawerItemPressed(SubjectsListActivity.class);
             }else if(position==3){
-//                onDrawerItemPressed(SubjectActivity.class);
+                onDrawerItemPressed(MaterialsActivity.class);
             }
         }
 

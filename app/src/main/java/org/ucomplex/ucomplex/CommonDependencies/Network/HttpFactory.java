@@ -5,6 +5,7 @@ import android.net.ConnectivityManager;
 import android.util.Base64;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -59,7 +60,8 @@ public class HttpFactory {
     public static final String GET_PHOTO_URL = BASE_URL + "files/photos/";
     public static final String CALENDAR_BELT_URL = BASE_URL + "student/ajax/calendar_belt?mobile=1";
     public static final String TEACHERS_FILES_URL = BASE_URL + "student/ajax/teacher_files?mobile=1";
-    public static final String DOWNLOAD_MATERIAL_URL = SCHEMA + "storage.ucomplex.org//files/users/";
+    public static final String STUDENTS_FILES_URL = BASE_URL + "student/my_files?mobile=1";
+    public static final String DOWNLOAD_MATERIAL_URL = SCHEMA + "storage.ucomplex.org/files/users/";
 
 
     public static String encodeLoginData(String loginData) {
@@ -90,7 +92,6 @@ public class HttpFactory {
 
         final HashMap<String, String> finalParams = params;
         RequestQueue queue = Volley.newRequestQueue(context);
-
         stringRequest = new StringRequest(com.android.volley.Request.Method.POST, url,
                 response -> {
                     String utf8String;
@@ -118,6 +119,10 @@ public class HttpFactory {
                 return header;
             }
         };
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(stringRequest);
     }
 }

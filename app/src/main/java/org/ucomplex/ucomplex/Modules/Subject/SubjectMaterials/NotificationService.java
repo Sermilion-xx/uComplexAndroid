@@ -1,4 +1,4 @@
-package org.ucomplex.ucomplex.CommonDependencies;
+package org.ucomplex.ucomplex.Modules.Subject.SubjectMaterials;
 
 import android.app.Notification;
 import android.app.Service;
@@ -42,13 +42,8 @@ public class NotificationService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         String mTitle = intent.getStringExtra(EXTRA_TITLE);
         String mMessage = intent.getStringExtra(EXTRA_BODY);
-        Notification notification = null;
-//        if (intent.hasExtra(DOWNLOAD_COMPLETE)) {
-//            Uri uri = intent.getParcelableExtra(EXTRA_URI);
-////            notification = downloadCompleteNotification(mTitle, mMessage, uri);
-//        } else {
+        Notification notification;
         notification = downloadStartedNotification(mTitle, mMessage);
-//        }
         startForeground(NOTIFY_ID, notification);
         return START_STICKY;
     }
@@ -83,18 +78,6 @@ public class NotificationService extends Service {
         builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_u));
         return builder.build();
     }
-
-//    private Notification downloadCompleteNotification(String title, String message, Uri uri) {
-//        Intent intent = new Intent(Intent.ACTION_VIEW);
-//        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//        intent.setDataAndType(uri, "*/*");
-//        Intent chooser = Intent.createChooser(intent, getResources().getString(R.string.open_file_with));
-//        NotificationCompat.Builder builder = initBasicBuilder(title, message, intent);
-//        builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_u));
-//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, chooser, 0);
-//        builder.setContentIntent(pendingIntent);
-//        return builder.build();
-//    }
 
     private NotificationCompat.Builder initBasicBuilder(String title, String text, Intent intent) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);

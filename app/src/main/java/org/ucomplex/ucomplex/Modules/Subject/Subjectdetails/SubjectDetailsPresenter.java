@@ -18,9 +18,8 @@ import net.oneread.aghanim.mvp.recyclermvp.MVPModelRecycler;
 import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeMedia;
-import org.ucomplex.ucomplex.CommonDependencies.Network.HttpFactory;
 import org.ucomplex.ucomplex.CommonDependencies.MVPUtility;
-
+import org.ucomplex.ucomplex.CommonDependencies.Network.HttpFactory;
 import org.ucomplex.ucomplex.R;
 
 import java.util.List;
@@ -104,14 +103,14 @@ public class SubjectDetailsPresenter extends MVPAbstractPresenterRecycler<String
         tempLayout = MVPUtility.resolveLayout(tempLayout, viewType, layoutResolveStrategy);
         viewRow = inflater.inflate(tempLayout, parent, false);
 
-        setCreator((view, i) -> new SubjectDetailsViewHolder(view,viewType));
+        setCreator((view, i) -> new SubjectDetailsViewHolder(view, viewType));
         SubjectDetailsViewHolder holder = (SubjectDetailsViewHolder) this.creator.getViewHolder(viewRow, tempLayout);
 
-        if(viewType==TYPE_1){
+        if (viewType == TYPE_1) {
             RecyclerOnClickListener clickListener = new RecyclerOnClickListener();
             clickListener.setStrategy(view -> {
                 final int position = holder.getAdapterPosition();
-                if(position == getItemCount()-1){
+                if (position == getItemCount() - 1) {
 
                 }
             });
@@ -124,7 +123,7 @@ public class SubjectDetailsPresenter extends MVPAbstractPresenterRecycler<String
     public void bindViewHolder(RecyclerView.ViewHolder holder, int position) {
         final SubjectDetailsViewHolder aHolder = (SubjectDetailsViewHolder) holder;
         SubjectDetailsItemForList subjectItem = (SubjectDetailsItemForList) ((MVPModelRecycler) mModel).getItems().get(position);
-        if (subjectItem != null) {
+        if (subjectItem != null && !subjectItem.isEmpty()) {
             switch (getItemViewType(position)) {
                 case TYPE_0:
                     aHolder.mTitle.setText(getActivityContext().getString(subjectItem.getResourceString()));

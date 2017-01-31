@@ -35,7 +35,7 @@ public class FacadeDrawer {
         String[] titles = new String[] {
                 getString(R.string.events),
                 getString(R.string.users),
-                getString(R.string.materials),
+                getString(R.string.portfolio),
                 getString(R.string.settings),
                 getString(R.string.logout)};
         return new Pair<>(icons, titles);
@@ -55,7 +55,7 @@ public class FacadeDrawer {
         String[] titles = new String[]{
                 getString(R.string.events),
                 getString(R.string.disciplines),
-                getString(R.string.materials),
+                getString(R.string.portfolio),
                 getString(R.string.users),
                 getString(R.string.messages),
                 getString(R.string.calendar),

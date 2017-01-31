@@ -4,11 +4,9 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,20 +33,19 @@ import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
 import org.ucomplex.ucomplex.CommonDependencies.Network.HttpFactory;
 import org.ucomplex.ucomplex.CommonDependencies.Network.InputStreamVolleyRequest;
 import org.ucomplex.ucomplex.CommonDependencies.MVPUtility;
-import org.ucomplex.ucomplex.CommonDependencies.NotificationService;
 import org.ucomplex.ucomplex.R;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.List;
 
-import static android.app.DownloadManager.ACTION_DOWNLOAD_COMPLETE;
 import static org.ucomplex.ucomplex.CommonDependencies.Constants.AUTH_STRING;
 import static org.ucomplex.ucomplex.CommonDependencies.Constants.UC_ACTION_DOWNLOAD_COMPLETE;
-import static org.ucomplex.ucomplex.CommonDependencies.NotificationService.DOWNLOAD_COMPLETE;
-import static org.ucomplex.ucomplex.CommonDependencies.NotificationService.EXTRA_BODY;
-import static org.ucomplex.ucomplex.CommonDependencies.NotificationService.EXTRA_TITLE;
-import static org.ucomplex.ucomplex.CommonDependencies.NotificationService.EXTRA_URI;
+import static org.ucomplex.ucomplex.Modules.Subject.SubjectMaterials.NotificationService.DOWNLOAD_COMPLETE;
+import static org.ucomplex.ucomplex.Modules.Subject.SubjectMaterials.NotificationService.EXTRA_BODY;
+import static org.ucomplex.ucomplex.Modules.Subject.SubjectMaterials.NotificationService.EXTRA_TITLE;
+import static org.ucomplex.ucomplex.Modules.Subject.SubjectMaterials.NotificationService.EXTRA_URI;
+import static org.ucomplex.ucomplex.Modules.Subject.SubjectMaterials.SubjectMaterialsModel.EXTRA_KEY_MY_MATERIALS;
 
 /**
  * ---------------------------------------------------
@@ -68,8 +65,6 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
     private static final String EXTRA_KEY_GET_FOLDER = "get_folder";
     private String filename;
     private InputStreamVolleyRequest request;
-
-
 
     private void pageUp() {
         ((SubjectMaterialsModel) mModel).pageUp();
@@ -117,12 +112,12 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
                 RequestQueue mRequestQueue = Volley.newRequestQueue(getAppContext(),
                         new HurlStack());
                 mRequestQueue.add(request);
-
             } else {
                 Bundle bundle = new Bundle();
                 bundle.putString(AUTH_STRING, ((DaggerApplication) getAppContext()).getAuthString());
                 bundle.putString(EXTRA_KEY_FOLDER, item.getAddress());
                 bundle.putBoolean(EXTRA_KEY_GET_FOLDER, true);
+                bundle.putBoolean(EXTRA_KEY_MY_MATERIALS, false);
                 loadData(bundle);
             }
         };
@@ -175,7 +170,9 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
 
     @Override
     public void loadData(Bundle... bundle) {
-        if (bundle.length > 0 && !bundle[0].containsKey(EXTRA_KEY_GET_FOLDER)) {
+        if (bundle.length > 0 &&
+                !bundle[0].containsKey(EXTRA_KEY_GET_FOLDER) &&
+                !bundle[0].containsKey(EXTRA_KEY_MY_MATERIALS)) {
             populateRecyclerView(((SubjectMaterialsModel) mModel).getHistory(getItemCount()));
         } else {
             mModel.loadData(new MVPCallback<List<IRecyclerItem>>() {
@@ -224,11 +221,16 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
     @Override
     public void onErrorResponse(VolleyError error) {
         error.printStackTrace();
+        Intent intent = new Intent();
+        intent.setAction(UC_ACTION_DOWNLOAD_COMPLETE);
+        getActivityContext().sendBroadcast(intent);
         Toast.makeText(getActivityContext(), getActivityContext().getString(R.string.error_loadig_file), Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void onResponse(byte[] response) {
+        Intent intent = new Intent();
+        intent.setAction(UC_ACTION_DOWNLOAD_COMPLETE);
         try {
             if (response!=null) {
                 String[] tempName = request.getUrl().split("/");
@@ -237,20 +239,12 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
                 FileOutputStream out = new FileOutputStream(file.getPath());
                 out.write(response);
                 out.close();
-                Uri fileUri;
-                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-                    fileUri = FileProvider.getUriForFile(getActivityContext(), getAppContext().getPackageName() + ".provider", file);
-                }else {
-                    fileUri = Uri.parse(file.toString());
-                }
                 Toast.makeText(getActivityContext(),getActivityContext().getString(R.string.file_saved_to_downloads),Toast.LENGTH_LONG).show();
-                Intent intent = new Intent();
-                intent.setAction(UC_ACTION_DOWNLOAD_COMPLETE);
                 getActivityContext().sendBroadcast(intent);
-//                startNotificationService(filename, getActivityContext().getString(R.string.file_download_complete), true, fileUri);
-            }
+            } else throw new Exception();
         } catch (Exception e) {
             Toast.makeText(getActivityContext(),getActivityContext().getString(R.string.error_loadig_file),Toast.LENGTH_LONG).show();
+            getActivityContext().sendBroadcast(intent);
             e.printStackTrace();
         }
     }

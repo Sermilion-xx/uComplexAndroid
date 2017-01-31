@@ -32,6 +32,7 @@ import static org.ucomplex.ucomplex.Modules.Subject.SubjectMaterials.SubjectMate
 
 public class SubjectMaterialsModel extends MVPAbstractModelRecycler<String, List<IRecyclerItem>> {
 
+    public static final String EXTRA_KEY_MY_MATERIALS = "myMaterials";
     private List<List<IRecyclerItem>> mPageHistory;
     private int currentPage=-1;
 
@@ -47,10 +48,6 @@ public class SubjectMaterialsModel extends MVPAbstractModelRecycler<String, List
         currentPage--;
     }
 
-    int getHistoryCount() {
-        return mPageHistory.size();
-    }
-
     void addHistory(List<IRecyclerItem> list) {
         this.mPageHistory.add(list);
     }
@@ -63,14 +60,11 @@ public class SubjectMaterialsModel extends MVPAbstractModelRecycler<String, List
         return this.mPageHistory.get(index);
     }
 
-    void swapHistory(int currentPage) {
-        mItems = mPageHistory.get(currentPage);
-    }
-
     @Override
     public void loadData(MVPCallback<List<IRecyclerItem>> mvpCallback, Bundle... bundles) {
         List<MaterialItem> files = SubjectModel.getInstance().getFiles();
-        if (getItemCount() == 0) {
+        boolean myMaterials = bundles[0].getBoolean(EXTRA_KEY_MY_MATERIALS);
+        if (getItemCount() == 0 && !myMaterials) {
             try {
                 for (MaterialItem item : files) {
                     SubjectMaterialsItem materialsItem = new SubjectMaterialsItem();
@@ -92,9 +86,14 @@ public class SubjectMaterialsModel extends MVPAbstractModelRecycler<String, List
             String encodedAuth;
             HashMap<String, String> params = new HashMap<>();
             encodedAuth = bundles[0].getString(AUTH_STRING);
-            params.put(EXTRA_KEY_FOLDER, bundles[0].getString(EXTRA_KEY_FOLDER));
 
-            HttpFactory.getInstance().httpVolley(HttpFactory.TEACHERS_FILES_URL,
+            String url = HttpFactory.TEACHERS_FILES_URL;
+            if(myMaterials){
+                url = HttpFactory.STUDENTS_FILES_URL;
+            }else{
+                params.put(EXTRA_KEY_FOLDER, bundles[0].getString(EXTRA_KEY_FOLDER));
+            }
+            HttpFactory.getInstance().httpVolley(url,
                     encodedAuth,
                     mContext,
                     params,

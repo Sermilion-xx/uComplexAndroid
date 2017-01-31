@@ -30,8 +30,9 @@
         <activity android:name=".Modules.RoleSelect.RoleSelectActivity" />
         <activity android:name=".Modules.SubjectsList.SubjectsListActivity" />
         <activity android:name=".BaseComponents.BaseRecyclerActivity" />
-        <activity android:name=".Modules.Subject.SubjectActivity"></activity>
-        <service android:name=".CommonDependencies.NotificationService"/>
+        <activity android:name=".Modules.Subject.SubjectActivity" />
+
+        <service android:name=".Modules.Subject.SubjectMaterials.NotificationService" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -40,9 +41,10 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"/>
+                android:resource="@xml/provider_paths" />
         </provider>
 
+        <activity android:name=".Modules.Materials.MaterialsActivity"></activity>
     </application>
 
 </manifest>

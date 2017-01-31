@@ -23,6 +23,7 @@ import org.ucomplex.ucomplex.CommonDependencies.Constants;
 import org.ucomplex.ucomplex.Modules.Subject.SubjectActivity;
 import org.ucomplex.ucomplex.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.ucomplex.ucomplex.CommonDependencies.Constants.USER_TYPE_STUDENT;
@@ -73,11 +74,11 @@ public class SubjectsListPresenter extends MVPAbstractPresenterRecycler<String> 
             @Override
             public void onError(Throwable throwable) {
                 throwable.printStackTrace();
+                populateRecyclerView(MVPUtility.initNoContent());
                 ((SubjectsListActivity) getView()).hideProgress();
             }
         }, bundle);
     }
-
 
     @Override
     public SubjectListViewHolder createViewHolder(ViewGroup parent, int viewType) {
@@ -89,7 +90,9 @@ public class SubjectsListPresenter extends MVPAbstractPresenterRecycler<String> 
 
         setCreator((view, i) -> new SubjectListViewHolder(view));
         SubjectListViewHolder holder =  (SubjectListViewHolder) this.creator.getViewHolder(viewTaskRow, tempLayout);
-        holder.subjectLayout.setOnClickListener(setupOnClickListener(holder));
+        if(!holder.allNullElements()) {
+            holder.subjectLayout.setOnClickListener(setupOnClickListener(holder));
+        }
         return holder;
     }
 

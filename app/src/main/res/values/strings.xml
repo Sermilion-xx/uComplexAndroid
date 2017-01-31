@@ -4,7 +4,7 @@
     <string name="events">События</string>
     <string name="disciplines">Дисциплины</string>
     <string name="users">Пользователи</string>
-    <string name="materials">Материалы</string>
+    <string name="portfolio">Портфолио</string>
     <string name="messages">Сообщения</string>
     <string name="calendar">Календарь</string>
     <string name="settings">Настройки</string>
@@ -89,6 +89,7 @@
     <string name="subject_image">Subject Image</string>
     <string name="clock_icon"></string>
     <string name="open_file_with">Открыть используя</string>
+    <string name="storage_access_denied">Вы не разрешили доступ к пямяти. Открытие загруженных файлов будет не возможна.</string>
 
 
 </resources>

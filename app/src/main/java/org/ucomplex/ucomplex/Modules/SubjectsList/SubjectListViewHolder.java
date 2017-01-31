@@ -16,17 +16,23 @@ import org.ucomplex.ucomplex.R;
  * <a href="http://www.github.com/sermilion>github</a>
  * ---------------------------------------------------
  */
-public class SubjectListViewHolder extends RecyclerView.ViewHolder {
+class SubjectListViewHolder extends RecyclerView.ViewHolder {
 
     TextView mSubjectName;
     TextView mAssessmentType;
     RelativeLayout subjectLayout;
 
-
-    public SubjectListViewHolder(View itemView) {
+    SubjectListViewHolder(View itemView) {
         super(itemView);
         subjectLayout = (RelativeLayout) itemView.findViewById(R.id.subject_layout);
         mSubjectName = (TextView) itemView.findViewById(R.id.subject_name);
         mAssessmentType = (TextView) itemView.findViewById(R.id.subject_assessment_type);
+    }
+
+    boolean allNullElements() {
+        return subjectLayout == null &&
+                mSubjectName == null &&
+                mAssessmentType == null;
+
     }
 }

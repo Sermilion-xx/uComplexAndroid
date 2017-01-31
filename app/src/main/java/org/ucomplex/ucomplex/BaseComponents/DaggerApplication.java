@@ -9,6 +9,8 @@ import org.ucomplex.ucomplex.Modules.Events.EventsDagger.DaggerEventsDiComponent
 import org.ucomplex.ucomplex.Modules.Events.EventsDagger.EventsDiComponent;
 import org.ucomplex.ucomplex.Modules.Login.LoginDagger.DaggerLoginDiComponent;
 import org.ucomplex.ucomplex.Modules.Login.LoginDagger.LoginDiComponent;
+import org.ucomplex.ucomplex.Modules.Materials.MaterialsDagger.DaggerMaterialsDiComponent;
+import org.ucomplex.ucomplex.Modules.Materials.MaterialsDagger.MaterialsDiComponent;
 import org.ucomplex.ucomplex.Modules.RoleSelect.RoleSelectDagger.DaggerRoleDiComponent;
 import org.ucomplex.ucomplex.Modules.RoleSelect.RoleSelectDagger.RoleDiComponent;
 import org.ucomplex.ucomplex.Modules.Subject.SubjectDagger.DaggerSubjectDetailsDiComponent;
@@ -49,6 +51,7 @@ public class DaggerApplication extends Application{
     private SubjectDetailsDiComponent subjectDetailsDiComponent;
     private SubjectMaterialsDiComponent subjectMaterialsDiComponent;
     private SubjectTimelineDiComponent subjectTimelineDiComponent;
+    private MaterialsDiComponent materialsDiComponent;
 
     @Override
     public void onCreate() {
@@ -61,6 +64,7 @@ public class DaggerApplication extends Application{
         subjectDetailsDiComponent   = DaggerSubjectDetailsDiComponent.builder().build();
         subjectMaterialsDiComponent = DaggerSubjectMaterialsDiComponent.builder().build();
         subjectTimelineDiComponent  = DaggerSubjectTimelineDiComponent.builder().build();
+        materialsDiComponent        = DaggerMaterialsDiComponent.builder().build();
         configureConnectionTrust();
     }
 
@@ -103,6 +107,10 @@ public class DaggerApplication extends Application{
 
     public SubjectTimelineDiComponent getSubjectTimelineDiComponent() {
         return subjectTimelineDiComponent;
+    }
+
+    public MaterialsDiComponent getMaterialsDiComponent() {
+        return materialsDiComponent;
     }
 
     public UserInterface getSharedUser() {

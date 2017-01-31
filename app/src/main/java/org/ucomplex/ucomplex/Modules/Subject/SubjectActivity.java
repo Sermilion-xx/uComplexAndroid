@@ -132,7 +132,7 @@ public class SubjectActivity extends BaseActivity {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                 } else {
-                    Toast.makeText(this, "Вы не разрешили доступ к пямяти. Открытие загруженных файлов будет не возможна.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, getString(R.string.storage_access_denied), Toast.LENGTH_LONG).show();
                 }
             }
         }

@@ -55,7 +55,7 @@ public class SubjectsListModel extends MVPAbstractModelRecycler<String, List<IRe
                     public void onSuccess(String s) {
                         List<IRecyclerItem> newItems = processJson(s);
                         if (newItems.size() == 0) {
-                            MVPUtility.addEmptyItem(newItems);
+                            newItems = MVPUtility.initNoContent();
                         }
                         mvpCallback.onSuccess(newItems);
                     }

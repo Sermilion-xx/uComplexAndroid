@@ -10,6 +10,7 @@ import net.oneread.aghanim.mvp.recyclermvp.MVPModelRecycler;
 
 import org.ucomplex.ucomplex.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,14 +29,6 @@ public class MVPUtility {
 
     }
 
-    public static void addEmptyItem(List<IRecyclerItem> newItems) {
-        newItems.add(new IRecyclerItem() {
-            @Override
-            public boolean isEmpty() {
-                return true;
-            }
-        });
-    }
 
     public static int isAvailableListViewItem(MVPModelRecycler model, Context context, int defaultLayout) {
         IRecyclerItem item = (IRecyclerItem) model.getItems().get(0);
@@ -56,8 +49,21 @@ public class MVPUtility {
         return tempLayout;
     }
 
+    public static List<IRecyclerItem> initNoContent() {
+        List<IRecyclerItem> emptyList = new ArrayList<>();
+        emptyList.add(new IRecyclerItem() {
+            @Override
+            public boolean isEmpty() {
+                return true;
+            }
+        });
+        return emptyList;
+    }
+
     public interface LayoutResolveStrategy{
         int resolve(int viewType);
     }
+
+
 
 }

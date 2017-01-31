@@ -18,7 +18,7 @@ import org.ucomplex.ucomplex.R;
  * <a href="http://www.github.com/sermilion>github</a>
  * ---------------------------------------------------
  */
-public class EventViewHolder extends RecyclerView.ViewHolder {
+class EventViewHolder extends RecyclerView.ViewHolder {
 
     ImageView eventsImageView;
     TextView eventTextView;
@@ -27,7 +27,7 @@ public class EventViewHolder extends RecyclerView.ViewHolder {
     RelativeLayout eventDetailsLayout;
     Button loadMoreEventsButton;
 
-    public EventViewHolder(View view) {
+    EventViewHolder(View view) {
         super(view);
         eventsImageView = (ImageView) view.findViewById(R.id.list_events_item_image);
         eventTextView = (TextView) view.findViewById(R.id.list_events_item_text);
