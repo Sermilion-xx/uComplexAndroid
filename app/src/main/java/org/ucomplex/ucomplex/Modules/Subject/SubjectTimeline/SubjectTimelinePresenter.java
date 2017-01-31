@@ -81,6 +81,7 @@ public class SubjectTimelinePresenter extends MVPAbstractPresenterRecycler<Strin
             @Override
             public void onError(Throwable throwable) {
                 throwable.printStackTrace();
+                populateRecyclerView(MVPUtility.initNoContent());
                 ((MVPViewBaseFragment) getView()).hideProgress();
             }
 
@@ -120,30 +121,33 @@ public class SubjectTimelinePresenter extends MVPAbstractPresenterRecycler<Strin
     @Override
     public void bindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         final SubjectTimelineViewHolder aHolder = (SubjectTimelineViewHolder) viewHolder;
-        if (getItemViewType(position) == TYPE_ITEM) {
-            SubjectTimelineItem item = (SubjectTimelineItem) ((MVPModelRecycler) mModel).getItems().get(position);
-            aHolder.mName.setText(item.getmName());
-            aHolder.mTime.setText(item.getmTime());
+        IRecyclerItem subjectItem = ((MVPModelRecycler) mModel).getItem(position);
+        if(subjectItem.isEmpty() && subjectItem instanceof SubjectTimelineItem) {
+            SubjectTimelineItem item = (SubjectTimelineItem) subjectItem;
+            if (getItemViewType(position) == TYPE_ITEM) {
+                aHolder.mName.setText(item.getmName());
+                aHolder.mTime.setText(item.getmTime());
 
-            String hexColor = this.colors[item.getType()];
-            long thisCol = Long.decode(hexColor) + 4278190080L;
-            Drawable drawable;
-            Typeface typeface = Typeface.createFromAsset(getActivityContext().getAssets(), "fonts/fontawesome-webfont.ttf");
-            if (item.getmMark() == 0) {
-                drawable = TextDrawable.builder().beginConfig().useFont(typeface).textColor((int) thisCol).endConfig()
-                        .buildRound(String.valueOf(getLetter(item.getmMark())), Color.WHITE);
+                String hexColor = this.colors[item.getType()];
+                long thisCol = Long.decode(hexColor) + 4278190080L;
+                Drawable drawable;
+                Typeface typeface = Typeface.createFromAsset(getActivityContext().getAssets(), "fonts/fontawesome-webfont.ttf");
+                if (item.getmMark() == 0) {
+                    drawable = TextDrawable.builder().beginConfig().useFont(typeface).textColor((int) thisCol).endConfig()
+                            .buildRound(String.valueOf(getLetter(item.getmMark())), Color.WHITE);
+                } else {
+                    drawable = TextDrawable.builder()
+                            .buildRound(String.valueOf(getLetter(item.getmMark())), (int) thisCol);
+                }
+                aHolder.mMarkImage.setImageDrawable(drawable);
+                aHolder.mTimeIcon.setTypeface(typeface);
+                aHolder.mTimeIcon.setText("\uF017");
             } else {
-                drawable = TextDrawable.builder()
-                        .buildRound(String.valueOf(getLetter(item.getmMark())), (int) thisCol);
+                aHolder.loadMoreButton.setOnClickListener(view -> {
+                    mBundle.putString(EXTRA_KEY_GCOURSE_START, String.valueOf(getItemCount() + 1));
+                    loadData(mBundle);
+                });
             }
-            aHolder.mMarkImage.setImageDrawable(drawable);
-            aHolder.mTimeIcon.setTypeface(typeface);
-            aHolder.mTimeIcon.setText("\uF017");
-        } else {
-            aHolder.loadMoreButton.setOnClickListener(view -> {
-                mBundle.putString(EXTRA_KEY_GCOURSE_START, String.valueOf(getItemCount()+1));
-                loadData(mBundle);
-            });
         }
     }
 }

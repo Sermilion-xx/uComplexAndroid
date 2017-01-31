@@ -45,7 +45,7 @@ public class SubjectsListActivity extends BaseRecyclerActivity implements MVPVie
         mApplication.getSubjectsListDiComponent().inject(this);
         super.onCreate(savedInstanceState);
         setContentViewWithNavDrawer(R.layout.activity_subjects_list);
-        setupToolbar(getResourceString(R.string.subjects));
+        setupToolbar(getString(R.string.subjects));
 
         //mvp
         Bundle bundle = new Bundle();

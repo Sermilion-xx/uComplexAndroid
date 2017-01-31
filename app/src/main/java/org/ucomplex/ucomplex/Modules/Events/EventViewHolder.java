@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.ucomplex.ucomplex.Interfaces.IViewHolder;
 import org.ucomplex.ucomplex.R;
 
 /**
@@ -18,7 +19,7 @@ import org.ucomplex.ucomplex.R;
  * <a href="http://www.github.com/sermilion>github</a>
  * ---------------------------------------------------
  */
-class EventViewHolder extends RecyclerView.ViewHolder {
+class EventViewHolder extends RecyclerView.ViewHolder implements IViewHolder {
 
     ImageView eventsImageView;
     TextView eventTextView;
@@ -37,7 +38,7 @@ class EventViewHolder extends RecyclerView.ViewHolder {
         loadMoreEventsButton = (Button) view.findViewById(R.id.loadMoreButton);
     }
 
-    boolean allNullElements() {
+    public boolean allNullElements() {
         return eventsImageView == null &&
                 eventTextView == null &&
                 eventTime == null &&

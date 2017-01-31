@@ -60,7 +60,7 @@ public class EventsActivity extends BaseRecyclerActivity {
         if (savedInstanceState != null) {
             updateEventsReceiverRegistered = savedInstanceState.getBoolean("updateEventsReceiverRegistered");
         }
-        setupToolbar(getResourceString(R.string.events));
+        setupToolbar(getString(R.string.events));
         mAlert = MediaPlayer.create(EventsActivity.this, R.raw.alert);
 
         //mvp

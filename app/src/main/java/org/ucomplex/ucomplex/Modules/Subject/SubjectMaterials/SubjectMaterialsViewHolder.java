@@ -6,6 +6,7 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.ucomplex.ucomplex.Interfaces.IViewHolder;
 import org.ucomplex.ucomplex.R;
 
 import static org.ucomplex.ucomplex.Modules.Subject.SubjectMaterials.SubjectMaterialsPresenter.TYPE_FILE;
@@ -21,7 +22,7 @@ import static org.ucomplex.ucomplex.Modules.Subject.SubjectMaterials.SubjectMate
  * ---------------------------------------------------
  */
 
-class SubjectMaterialsViewHolder extends RecyclerView.ViewHolder {
+class SubjectMaterialsViewHolder extends RecyclerView.ViewHolder implements IViewHolder {
 
     TextView mFileName;
     TextView mSize;
@@ -46,5 +47,13 @@ class SubjectMaterialsViewHolder extends RecyclerView.ViewHolder {
                 mOwnersName = (TextView) itemView.findViewById(R.id.file_owner);
                 break;
         }
+    }
+
+    @Override
+    public boolean allNullElements() {
+        return mClickArea == null &&
+                mFileName == null &&
+                mMenuButton == null &&
+                mFileTime == null;
     }
 }

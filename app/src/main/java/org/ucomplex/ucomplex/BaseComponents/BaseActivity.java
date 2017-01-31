@@ -103,10 +103,6 @@ public class BaseActivity extends MVPBaseActivity{
         return fragment;
     }
 
-    protected String getResourceString(int id) {
-        return getResources().getString(id);
-    }
-
     //=================Setup methods================//
     private ArrayList<DrawerListItem> setupDrawerArrayList(DrawerListItem header, int[] icons, String[] titles) {
         ArrayList<DrawerListItem> drawerListItems = new ArrayList<>();

@@ -36,7 +36,7 @@ public class MaterialsActivity extends BaseRecyclerActivity {
         ((DaggerApplication) getApplication()).getMaterialsDiComponent().inject(this);
         super.onCreate(savedInstanceState);
         setContentViewWithNavDrawer(R.layout.activity_materials);
-        setupToolbar(getResourceString(R.string.portfolio));
+        setupToolbar(getString(R.string.portfolio));
         //mvp
         Bundle bundle = new Bundle();
         DaggerApplication application = (DaggerApplication) getAppContext();

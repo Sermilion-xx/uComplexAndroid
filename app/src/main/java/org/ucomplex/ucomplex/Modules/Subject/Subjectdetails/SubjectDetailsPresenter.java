@@ -39,15 +39,6 @@ public class SubjectDetailsPresenter extends MVPAbstractPresenterRecycler<String
     private static final int TYPE_0 = 0;
     private static final int TYPE_1 = 1;
     private static final int TYPE_2 = 2;
-    private Bundle mBundle;
-
-    public void setBundle(Bundle mBundle) {
-        this.mBundle = mBundle;
-    }
-
-    public SubjectDetailsPresenter() {
-
-    }
 
     @Override
     public void loadData(Bundle... bundle) {
@@ -62,6 +53,7 @@ public class SubjectDetailsPresenter extends MVPAbstractPresenterRecycler<String
             @Override
             public void onError(Throwable throwable) {
                 throwable.printStackTrace();
+                populateRecyclerView(MVPUtility.initNoContent());
                 ((SubjectDetailsFragment) getView()).hideProgress();
             }
         }, bundle);
@@ -105,16 +97,17 @@ public class SubjectDetailsPresenter extends MVPAbstractPresenterRecycler<String
 
         setCreator((view, i) -> new SubjectDetailsViewHolder(view, viewType));
         SubjectDetailsViewHolder holder = (SubjectDetailsViewHolder) this.creator.getViewHolder(viewRow, tempLayout);
+        if (tempLayout != R.layout.list_item_no_internet && tempLayout != R.layout.list_item_no_content) {
+            if (viewType == TYPE_1) {
+                RecyclerOnClickListener clickListener = new RecyclerOnClickListener();
+                clickListener.setStrategy(view -> {
+                    final int position = holder.getAdapterPosition();
+                    if (position == getItemCount() - 1) {
 
-        if (viewType == TYPE_1) {
-            RecyclerOnClickListener clickListener = new RecyclerOnClickListener();
-            clickListener.setStrategy(view -> {
-                final int position = holder.getAdapterPosition();
-                if (position == getItemCount() - 1) {
-
-                }
-            });
-            holder.mTeachersName.setOnClickListener(clickListener);
+                    }
+                });
+                holder.mTeachersName.setOnClickListener(clickListener);
+            }
         }
         return holder;
     }
@@ -122,28 +115,29 @@ public class SubjectDetailsPresenter extends MVPAbstractPresenterRecycler<String
     @Override
     public void bindViewHolder(RecyclerView.ViewHolder holder, int position) {
         final SubjectDetailsViewHolder aHolder = (SubjectDetailsViewHolder) holder;
-        SubjectDetailsItemForList subjectItem = (SubjectDetailsItemForList) ((MVPModelRecycler) mModel).getItems().get(position);
-        if (subjectItem != null && !subjectItem.isEmpty()) {
+        IRecyclerItem subjectItem = ((MVPModelRecycler) mModel).getItem(position);
+        if (!subjectItem.isEmpty() && subjectItem instanceof SubjectDetailsItemForList) {
+            SubjectDetailsItemForList item = (SubjectDetailsItemForList) subjectItem;
             switch (getItemViewType(position)) {
                 case TYPE_0:
-                    aHolder.mTitle.setText(getActivityContext().getString(subjectItem.getResourceString()));
+                    aHolder.mTitle.setText(getActivityContext().getString(item.getResourceString()));
                     break;
                 case TYPE_1:
-                    String url = HttpFactory.GET_PHOTO_URL + subjectItem.getCode() + Constants.IMAGE_FORMAT_JPG;
-                    aHolder.mTeachersName.setText(subjectItem.getTextOne());
-                    if (subjectItem.getCode() != null) {
+                    String url = HttpFactory.GET_PHOTO_URL + item.getCode() + Constants.IMAGE_FORMAT_JPG;
+                    aHolder.mTeachersName.setText(item.getTextOne());
+                    if (item.getCode() != null) {
                         Glide.with(getActivityContext())
                                 .load(url)
                                 .into(aHolder.mIcon);
                     } else {
-                        Drawable drawable = FacadeMedia.getTextDrawable(Integer.valueOf(subjectItem.getTextTwo()), subjectItem.getTextOne(), getActivityContext());
+                        Drawable drawable = FacadeMedia.getTextDrawable(Integer.valueOf(item.getTextTwo()), item.getTextOne(), getActivityContext());
                         aHolder.mIcon.setImageDrawable(drawable);
                     }
                     break;
                 case TYPE_2:
-                    String text = getActivityContext().getString(R.string.absence, subjectItem.getTextOne());
+                    String text = getActivityContext().getString(R.string.absence, item.getTextOne());
                     aHolder.mAttendance.setText(FacadeCommon.fromHtml(text));
-                    String average = getActivityContext().getString(R.string.average_mark, subjectItem.getTextTwo());
+                    String average = getActivityContext().getString(R.string.average_mark, item.getTextTwo());
                     aHolder.mAverageGrade.setText(average);
                     break;
             }

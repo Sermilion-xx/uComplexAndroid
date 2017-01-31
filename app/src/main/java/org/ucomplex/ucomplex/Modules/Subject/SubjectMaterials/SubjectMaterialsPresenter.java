@@ -33,6 +33,8 @@ import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
 import org.ucomplex.ucomplex.CommonDependencies.Network.HttpFactory;
 import org.ucomplex.ucomplex.CommonDependencies.Network.InputStreamVolleyRequest;
 import org.ucomplex.ucomplex.CommonDependencies.MVPUtility;
+import org.ucomplex.ucomplex.Modules.Events.EventsActivity;
+import org.ucomplex.ucomplex.Modules.Materials.MaterialsActivity;
 import org.ucomplex.ucomplex.R;
 
 import java.io.File;
@@ -160,11 +162,12 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
         viewRow = inflater.inflate(tempLayout, parent, false);
         setCreator((view, i) -> new SubjectMaterialsViewHolder(view, viewType));
         SubjectMaterialsViewHolder holder = (SubjectMaterialsViewHolder) this.creator.getViewHolder(viewRow, tempLayout);
-        setupOnClickListener(holder, viewType);
-        holder.mMenuButton.setOnClickListener(view -> {
-
-        });
-        holder.mMenuButton.setVisibility(View.GONE);
+        if (tempLayout != R.layout.list_item_no_internet && tempLayout != R.layout.list_item_no_content) {
+            setupOnClickListener(holder, viewType);
+            holder.mMenuButton.setOnClickListener(view -> {
+            });
+            holder.mMenuButton.setVisibility(View.GONE);
+        }
         return holder;
     }
 
@@ -186,6 +189,8 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
                 @Override
                 public void onError(Throwable throwable) {
                     throwable.printStackTrace();
+                    populateRecyclerView(MVPUtility.initNoContent());
+                    ((SubjectMaterialsFragment) getView()).hideProgress();
                 }
             }, bundle);
         }
@@ -194,16 +199,17 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
     @Override
     public void bindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         SubjectMaterialsViewHolder holder = (SubjectMaterialsViewHolder) viewHolder;
-        SubjectMaterialsItem item = (SubjectMaterialsItem) ((MVPModelRecycler) mModel).getItem(position);
-        if (item != null) {
-            holder.mFileName.setText(item.getName());
-            holder.mFileTime.setText(FacadeCommon.makeDate(item.getTime()));
+        IRecyclerItem item = ((MVPModelRecycler) mModel).getItem(position);
+        if (!holder.allNullElements() && item instanceof SubjectMaterialsItem) {
+            SubjectMaterialsItem mItem = (SubjectMaterialsItem) item;
+            holder.mFileName.setText(mItem.getName());
+            holder.mFileTime.setText(FacadeCommon.makeDate(mItem.getTime()));
             switch (getItemViewType(position)) {
                 case TYPE_FILE:
-                    holder.mSize.setText(FacadeCommon.readableFileSize(item.getSize(), false));
+                    holder.mSize.setText(FacadeCommon.readableFileSize(mItem.getSize(), false));
                     break;
                 case TYPE_FOLDER:
-                    holder.mOwnersName.setText(item.getOwnersName());
+                    holder.mOwnersName.setText(mItem.getOwnersName());
                     break;
             }
         }
@@ -211,9 +217,11 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
 
     @Override
     public int getItemViewType(int position) {
-        SubjectMaterialsItem item = (SubjectMaterialsItem) ((MVPModelRecycler) mModel).getItem(position);
-        if (item.getType().equals("f")) {
-            return TYPE_FOLDER;
+        IRecyclerItem item = ((MVPModelRecycler) mModel).getItem(position);
+        if(item instanceof SubjectMaterialsItem) {
+            if (((SubjectMaterialsItem) item).getType().equals("f")) {
+                return TYPE_FOLDER;
+            }
         }
         return TYPE_FILE;
     }

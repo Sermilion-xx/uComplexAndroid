@@ -34,17 +34,17 @@ public class SubjectMaterialsModel extends MVPAbstractModelRecycler<String, List
 
     public static final String EXTRA_KEY_MY_MATERIALS = "myMaterials";
     private List<List<IRecyclerItem>> mPageHistory;
-    private int currentPage=-1;
+    private int currentPage = -1;
 
     public int getCurrentPage() {
         return currentPage;
     }
 
-    public void pageUp(){
+    public void pageUp() {
         currentPage++;
     }
 
-    public void pageDown(){
+    public void pageDown() {
         currentPage--;
     }
 
@@ -81,16 +81,20 @@ public class SubjectMaterialsModel extends MVPAbstractModelRecycler<String, List
             } catch (Exception e) {
                 mvpCallback.onError(e);
             }
-            mvpCallback.onSuccess(new ArrayList<>(mItems));
+            if(mItems.size()==0) {
+                mvpCallback.onError(new Exception("Нету материалов для отображения"));
+            }else{
+                mvpCallback.onSuccess(new ArrayList<>(mItems));
+            }
         } else {
             String encodedAuth;
             HashMap<String, String> params = new HashMap<>();
             encodedAuth = bundles[0].getString(AUTH_STRING);
 
             String url = HttpFactory.TEACHERS_FILES_URL;
-            if(myMaterials){
+            if (myMaterials) {
                 url = HttpFactory.STUDENTS_FILES_URL;
-            }else{
+            } else {
                 params.put(EXTRA_KEY_FOLDER, bundles[0].getString(EXTRA_KEY_FOLDER));
             }
             HttpFactory.getInstance().httpVolley(url,
