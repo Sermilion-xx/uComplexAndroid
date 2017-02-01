@@ -42,7 +42,6 @@ public class SubjectTimelinePresenter extends MVPAbstractPresenterRecycler<Strin
     private static final int TYPE_ITEM = 0;
     private static final int TYPE_FOOTER = 1;
     private Bundle mBundle;
-    private boolean hasMoreItems = true;
 
 
     @Override
@@ -64,7 +63,7 @@ public class SubjectTimelinePresenter extends MVPAbstractPresenterRecycler<Strin
             @Override
             public void onSuccess(List<IRecyclerItem> o) {
                 if (o.size() < 20) {
-                    hasMoreItems = false;
+
                 } else {
                     addEmptyElement(o);
                 }
@@ -122,7 +121,7 @@ public class SubjectTimelinePresenter extends MVPAbstractPresenterRecycler<Strin
     public void bindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         final SubjectTimelineViewHolder aHolder = (SubjectTimelineViewHolder) viewHolder;
         IRecyclerItem subjectItem = ((MVPModelRecycler) mModel).getItem(position);
-        if(subjectItem.isEmpty() && subjectItem instanceof SubjectTimelineItem) {
+        if(!subjectItem.isEmpty() && subjectItem instanceof SubjectTimelineItem) {
             SubjectTimelineItem item = (SubjectTimelineItem) subjectItem;
             if (getItemViewType(position) == TYPE_ITEM) {
                 aHolder.mName.setText(item.getmName());
