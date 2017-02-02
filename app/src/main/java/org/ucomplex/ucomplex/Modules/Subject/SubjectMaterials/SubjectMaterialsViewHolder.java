@@ -26,7 +26,6 @@ class SubjectMaterialsViewHolder extends RecyclerView.ViewHolder implements IVie
 
     TextView mFileName;
     TextView mSize;
-    TextView mFileCount;
     TextView mFileTime;
     TextView mOwnersName;
     Button mMenuButton;

@@ -1,12 +1,14 @@
 package org.ucomplex.ucomplex.CommonDependencies;
 
+import android.app.Activity;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import net.oneread.aghanim.components.base.MVPBaseRecyclerFragment;
 import net.oneread.aghanim.components.utility.IFragment;
 import net.oneread.aghanim.mvp.basemvp.MVPPresenter;
 import net.oneread.aghanim.mvp.recyclermvp.MVPPresenterRecycler;
+
+import org.ucomplex.ucomplex.Modules.Subject.SubjectMaterials.SubjectMaterialsFragment;
 
 /**
  * ---------------------------------------------------
@@ -20,6 +22,12 @@ import net.oneread.aghanim.mvp.recyclermvp.MVPPresenterRecycler;
 
 public class FragmentFactory {
 
+    public static IFragment getFragmentWithName(String name, Activity activity) {
+        if (name.equals(SubjectMaterialsFragment.class.getName())) {
+            return SubjectMaterialsFragment.getFragment(activity);
+        }
+        return null;
+    }
 
     @NonNull
     public static IFragment getFragmentWithName(String name,

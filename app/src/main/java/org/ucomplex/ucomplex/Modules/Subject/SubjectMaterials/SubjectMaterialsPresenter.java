@@ -7,10 +7,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -27,14 +29,13 @@ import net.oneread.aghanim.components.utility.RecyclerOnClickListener;
 import net.oneread.aghanim.mvp.abstractmvp.MVPAbstractPresenterRecycler;
 import net.oneread.aghanim.mvp.basemvp.MVPModel;
 import net.oneread.aghanim.mvp.recyclermvp.MVPModelRecycler;
+import net.oneread.aghanim.mvp.recyclermvp.MVPViewRecycler;
 
 import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
+import org.ucomplex.ucomplex.CommonDependencies.MVPUtility;
 import org.ucomplex.ucomplex.CommonDependencies.Network.HttpFactory;
 import org.ucomplex.ucomplex.CommonDependencies.Network.InputStreamVolleyRequest;
-import org.ucomplex.ucomplex.CommonDependencies.MVPUtility;
-import org.ucomplex.ucomplex.Modules.Events.EventsActivity;
-import org.ucomplex.ucomplex.Modules.Materials.MaterialsActivity;
 import org.ucomplex.ucomplex.R;
 
 import java.io.File;
@@ -67,6 +68,8 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
     private static final String EXTRA_KEY_GET_FOLDER = "get_folder";
     private String filename;
     private InputStreamVolleyRequest request;
+    private boolean mMyFiles;
+    private String mPreviousName;
 
     private void pageUp() {
         ((SubjectMaterialsModel) mModel).pageUp();
@@ -98,29 +101,31 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
     private void setupOnClickListener(SubjectMaterialsViewHolder holder, int viewType) {
         RecyclerOnClickListener clickListener = new RecyclerOnClickListener();
         OnClickStrategy strategy = view -> {
-            SubjectMaterialsItem item = (SubjectMaterialsItem) ((MVPModelRecycler) mModel).getItem(holder.getAdapterPosition());
-            if (viewType == TYPE_FILE) {
-                if(ContextCompat.checkSelfPermission(getActivityContext(),
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        != PackageManager.PERMISSION_GRANTED){
-                        Toast.makeText(getActivityContext(),getActivityContext().getString(R.string.need_storage_permissions), Toast.LENGTH_LONG).show();
+            if (((MVPModelRecycler) mModel).getItemCount() > 0) {
+                SubjectMaterialsItem item = (SubjectMaterialsItem) ((MVPModelRecycler) mModel).getItem(holder.getAdapterPosition());
+                if (viewType == TYPE_FILE) {
+                    if (ContextCompat.checkSelfPermission(getActivityContext(),
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                            != PackageManager.PERMISSION_GRANTED) {
+                        Toast.makeText(getActivityContext(), getActivityContext().getString(R.string.need_storage_permissions), Toast.LENGTH_LONG).show();
+                    }
+                    Toast.makeText(getActivityContext(), getActivityContext().getString(R.string.file_download_started), Toast.LENGTH_SHORT).show();
+                    filename = item.getAddress() + "." + item.getType();
+                    startNotificationService(filename, "Загрузка файла началась.", false, null);
+                    String mUrl = HttpFactory.DOWNLOAD_MATERIAL_URL;
+                    mUrl = mUrl + item.getOwnersId() + "/" + filename;
+                    request = new InputStreamVolleyRequest(Request.Method.GET, mUrl, this, this, null);
+                    RequestQueue mRequestQueue = Volley.newRequestQueue(getAppContext(),
+                            new HurlStack());
+                    mRequestQueue.add(request);
+                } else {
+                    Bundle bundle = new Bundle();
+                    bundle.putString(AUTH_STRING, ((DaggerApplication) getAppContext()).getAuthString());
+                    bundle.putString(EXTRA_KEY_FOLDER, item.getAddress());
+                    bundle.putBoolean(EXTRA_KEY_GET_FOLDER, true);
+                    bundle.putBoolean(EXTRA_KEY_MY_MATERIALS, false);
+                    loadData(bundle);
                 }
-                Toast.makeText(getActivityContext(),getActivityContext().getString(R.string.file_download_started),Toast.LENGTH_SHORT).show();
-                filename = item.getAddress() + "." + item.getType();
-                startNotificationService(filename, "Загрузка файла началась.", false, null);
-                String mUrl = HttpFactory.DOWNLOAD_MATERIAL_URL;
-                mUrl = mUrl + item.getOwnersId() + "/" + filename;
-                request = new InputStreamVolleyRequest(Request.Method.GET, mUrl, this, this, null);
-                RequestQueue mRequestQueue = Volley.newRequestQueue(getAppContext(),
-                        new HurlStack());
-                mRequestQueue.add(request);
-            } else {
-                Bundle bundle = new Bundle();
-                bundle.putString(AUTH_STRING, ((DaggerApplication) getAppContext()).getAuthString());
-                bundle.putString(EXTRA_KEY_FOLDER, item.getAddress());
-                bundle.putBoolean(EXTRA_KEY_GET_FOLDER, true);
-                bundle.putBoolean(EXTRA_KEY_MY_MATERIALS, false);
-                loadData(bundle);
             }
         };
         clickListener.setStrategy(strategy);
@@ -131,7 +136,7 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
         Intent notificationIntent = new Intent(getActivityContext(), NotificationService.class);
         notificationIntent.putExtra(EXTRA_TITLE, filename);
         notificationIntent.putExtra(EXTRA_BODY, message);
-        if(downloadComplete){
+        if (downloadComplete) {
             notificationIntent.putExtra(DOWNLOAD_COMPLETE, true);
             notificationIntent.putExtra(EXTRA_URI, fileUri);
         }
@@ -164,18 +169,26 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
         SubjectMaterialsViewHolder holder = (SubjectMaterialsViewHolder) this.creator.getViewHolder(viewRow, tempLayout);
         if (tempLayout != R.layout.list_item_no_internet && tempLayout != R.layout.list_item_no_content) {
             setupOnClickListener(holder, viewType);
-            holder.mMenuButton.setOnClickListener(view -> {
-            });
-            holder.mMenuButton.setVisibility(View.GONE);
+            if (mMyFiles) {
+                holder.mMenuButton.setOnClickListener(view -> {
+                    int position = holder.getAdapterPosition();
+                    SubjectMaterialsItem item = (SubjectMaterialsItem) ((MVPModelRecycler) mModel).getItem(position);
+                    showInputDialog(position, item.getName());
+                    holder.mMenuButton.setVisibility(View.VISIBLE);
+                });
+            }else {
+                holder.mMenuButton.setVisibility(View.GONE);
+            }
         }
         return holder;
     }
 
     @Override
     public void loadData(Bundle... bundle) {
+        mMyFiles = bundle[0].getBoolean(EXTRA_KEY_MY_MATERIALS);
         if (bundle.length > 0 &&
                 !bundle[0].containsKey(EXTRA_KEY_GET_FOLDER) &&
-                !bundle[0].containsKey(EXTRA_KEY_MY_MATERIALS)) {
+                !mMyFiles) {
             populateRecyclerView(((SubjectMaterialsModel) mModel).getHistory(getItemCount()));
         } else {
             mModel.loadData(new MVPCallback<List<IRecyclerItem>>() {
@@ -218,7 +231,7 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
     @Override
     public int getItemViewType(int position) {
         IRecyclerItem item = ((MVPModelRecycler) mModel).getItem(position);
-        if(item instanceof SubjectMaterialsItem) {
+        if (item instanceof SubjectMaterialsItem) {
             if (((SubjectMaterialsItem) item).getType().equals("f")) {
                 return TYPE_FOLDER;
             }
@@ -240,20 +253,59 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
         Intent intent = new Intent();
         intent.setAction(UC_ACTION_DOWNLOAD_COMPLETE);
         try {
-            if (response!=null) {
+            if (response != null) {
                 String[] tempName = request.getUrl().split("/");
-                String name = tempName[tempName.length-1];
-                File file =new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), name);
+                String name = tempName[tempName.length - 1];
+                File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), name);
                 FileOutputStream out = new FileOutputStream(file.getPath());
                 out.write(response);
                 out.close();
-                Toast.makeText(getActivityContext(),getActivityContext().getString(R.string.file_saved_to_downloads),Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivityContext(), getActivityContext().getString(R.string.file_saved_to_downloads), Toast.LENGTH_LONG).show();
                 getActivityContext().sendBroadcast(intent);
             } else throw new Exception();
         } catch (Exception e) {
-            Toast.makeText(getActivityContext(),getActivityContext().getString(R.string.error_loadig_file),Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivityContext(), getActivityContext().getString(R.string.error_loadig_file), Toast.LENGTH_LONG).show();
             getActivityContext().sendBroadcast(intent);
             e.printStackTrace();
         }
     }
+
+    protected void showInputDialog(final int position, String oldName) {
+        // get prompts.xml view
+        LayoutInflater layoutInflater = LayoutInflater.from(getActivityContext());
+        View promptView = layoutInflater.inflate(R.layout.dialog_input, null);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivityContext());
+        alertDialogBuilder.setView(promptView);
+        final EditText editText = (EditText) promptView.findViewById(R.id.edittext);
+        editText.setText(oldName);
+        alertDialogBuilder.setCancelable(false)
+                .setPositiveButton("Готово", (dialog, id) -> {
+                    if (FacadeCommon.isNetworkConnected(getActivityContext())) {
+                        String newName = editText.getText().toString();
+                        if (!newName.equals("")) {
+                            renameItem(position, newName);
+                            mPreviousName = ((SubjectMaterialsItem) getItem(position)).getName();
+                            ((SubjectMaterialsItem) getItem(position)).setName(newName);
+                            ((MVPViewRecycler) getView()).notifyItemChanged(position);
+                        } else {
+                            Toast.makeText(getActivityContext(), "Название не может быть пустым.", Toast.LENGTH_LONG).show();
+                        }
+
+                    } else {
+                        Toast.makeText(getActivityContext(), "Проверте интернет соединение.", Toast.LENGTH_LONG).show();
+                    }
+                }).setNegativeButton("Отмена",
+                (dialog, id) -> dialog.cancel());
+        AlertDialog alert = alertDialogBuilder.create();
+        alert.show();
+    }
+
+    private void removeItem(final int position) {
+
+    }
+
+    private void renameItem(final int position, final String newName) {
+
+    }
+
 }

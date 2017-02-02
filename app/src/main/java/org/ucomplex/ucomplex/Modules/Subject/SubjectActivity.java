@@ -104,7 +104,7 @@ public class SubjectActivity extends BaseActivity {
         public void onPageSelected(int position) {
             currentPage = position;
             if(position==1){
-                subjectMaterialsFragment.onFragmentVisible();
+                subjectMaterialsFragment.onFragmentVisible(false);
             }else if(position==2){
                 subjectTimelineFragment.onFragmentVisible();
             }

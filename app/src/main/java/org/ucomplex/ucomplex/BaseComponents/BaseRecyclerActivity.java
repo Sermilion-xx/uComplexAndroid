@@ -57,6 +57,16 @@ public class BaseRecyclerActivity extends BaseActivity implements MVPBaseRecycle
     }
 
     @Override
+    public void notifyItemChanged(int position) {
+        getAdapter().notifyItemChanged(position);
+    }
+
+    @Override
+    public void notifyItemChanged(int position, Object o) {
+        getAdapter().notifyItemChanged(position, o);
+    }
+
+    @Override
     public void notifyItemRangeRemoved(int start, int end) {
         getAdapter().notifyItemRangeRemoved(start, end);
     }
@@ -89,13 +99,17 @@ public class BaseRecyclerActivity extends BaseActivity implements MVPBaseRecycle
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mPresenter.onDestroy(isChangingConfigurations());
+        if(mPresenter!=null){
+            mPresenter.onDestroy(isChangingConfigurations());
+        }
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        mPresenter.onConfigurationChanged(this);
+        if(mPresenter!=null) {
+            mPresenter.onConfigurationChanged(this);
+        }
     }
 
     public void showProgress() {

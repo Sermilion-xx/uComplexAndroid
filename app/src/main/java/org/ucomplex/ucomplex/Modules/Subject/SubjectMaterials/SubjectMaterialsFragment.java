@@ -2,6 +2,9 @@ package org.ucomplex.ucomplex.Modules.Subject.SubjectMaterials;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
+import android.view.View;
 
 import net.oneread.aghanim.components.base.MVPViewBaseFragment;
 import net.oneread.aghanim.components.utility.IRecyclerItem;
@@ -15,6 +18,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import static org.ucomplex.ucomplex.CommonDependencies.Constants.AUTH_STRING;
 import static org.ucomplex.ucomplex.Modules.Subject.SubjectMaterials.SubjectMaterialsModel.EXTRA_KEY_MY_MATERIALS;
 
 /**
@@ -39,17 +43,17 @@ public class SubjectMaterialsFragment extends MVPViewBaseFragment<String, List<I
         mPresenter = presenter;
     }
 
+    @Inject
+    public void setModel(MVPModelRecycler<String, List<IRecyclerItem>> mModel) {
+        this.mPresenter.setModel(mModel);
+    }
+
     public void onBackPress(){
         ((SubjectMaterialsPresenter)mPresenter).pageDown();
     }
 
     public int getCurrentPage(){
         return ((SubjectMaterialsPresenter)mPresenter).getCurrentPage();
-    }
-
-    @Inject
-    public void setModel(MVPModelRecycler<String, List<IRecyclerItem>> mModel) {
-        this.mPresenter.setModel(mModel);
     }
 
     public static SubjectMaterialsFragment getFragment(Activity mContext) {
@@ -75,12 +79,22 @@ public class SubjectMaterialsFragment extends MVPViewBaseFragment<String, List<I
         super.onSaveInstanceState(outState);
     }
 
-    public void onFragmentVisible() {
+    public void onFragmentVisible(boolean myFiles) {
         if (!dataRequested) {
             Bundle bundle = new Bundle();
-            bundle.putBoolean(EXTRA_KEY_MY_MATERIALS, false);
+            bundle.putString(AUTH_STRING, ((DaggerApplication)getActivity().getApplication()).getAuthString());
+            bundle.putBoolean(EXTRA_KEY_MY_MATERIALS, myFiles);
             mPresenter.loadData(bundle);
             dataRequested = true;
+        }
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        if (v.getId() == getRecyclerView().getId()) {
+            MenuInflater inflater = getActivity().getMenuInflater();
+            inflater.inflate(R.menu.menu_my_files_files, menu);
         }
     }
 }
