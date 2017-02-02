@@ -62,6 +62,7 @@ public class HttpFactory {
     public static final String TEACHERS_FILES_URL = BASE_URL + "student/ajax/teacher_files?mobile=1";
     public static final String STUDENTS_FILES_URL = BASE_URL + "student/my_files?mobile=1";
     public static final String DOWNLOAD_MATERIAL_URL = SCHEMA + "storage.ucomplex.org/files/users/";
+    public static final String DELETE_FILE_URL = BASE_URL + "student/my_files/delete_file?mobile=1";
 
 
     public static String encodeLoginData(String loginData) {

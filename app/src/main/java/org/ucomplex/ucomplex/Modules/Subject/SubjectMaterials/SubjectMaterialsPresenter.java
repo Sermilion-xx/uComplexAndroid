@@ -70,6 +70,9 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
     private InputStreamVolleyRequest request;
     private boolean mMyFiles;
     private String mPreviousName;
+    private String authString;
+    private String[] studentMenuActions;
+    private String[] teacherMenuActions;
 
     private void pageUp() {
         ((SubjectMaterialsModel) mModel).pageUp();
@@ -96,6 +99,9 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
     public void setModel(MVPModel<String, List<IRecyclerItem>> models, Bundle... bundle) {
         this.mModel = models;
         this.mModel.setContext(this.getActivityContext());
+        this.authString = ((DaggerApplication) getAppContext()).getAuthString();
+        studentMenuActions = new String[]{getActivityContext().getString(R.string.rename),getActivityContext().getString(R.string.delete)};
+        teacherMenuActions = new String[]{getActivityContext().getString(R.string.rename),getActivityContext().getString(R.string.delete), getActivityContext().getString(R.string.share)};
     }
 
     private void setupOnClickListener(SubjectMaterialsViewHolder holder, int viewType) {
@@ -120,7 +126,7 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
                     mRequestQueue.add(request);
                 } else {
                     Bundle bundle = new Bundle();
-                    bundle.putString(AUTH_STRING, ((DaggerApplication) getAppContext()).getAuthString());
+                    bundle.putString(AUTH_STRING, authString);
                     bundle.putString(EXTRA_KEY_FOLDER, item.getAddress());
                     bundle.putBoolean(EXTRA_KEY_GET_FOLDER, true);
                     bundle.putBoolean(EXTRA_KEY_MY_MATERIALS, false);
@@ -170,13 +176,15 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
         if (tempLayout != R.layout.list_item_no_internet && tempLayout != R.layout.list_item_no_content) {
             setupOnClickListener(holder, viewType);
             if (mMyFiles) {
+                holder.mMenuButton.setVisibility(View.VISIBLE);
                 holder.mMenuButton.setOnClickListener(view -> {
                     int position = holder.getAdapterPosition();
                     SubjectMaterialsItem item = (SubjectMaterialsItem) ((MVPModelRecycler) mModel).getItem(position);
-                    showInputDialog(position, item.getName());
-                    holder.mMenuButton.setVisibility(View.VISIBLE);
+                    String[] menuItems;
+                    menuItems = ((DaggerApplication) getAppContext()).getSharedUser().getType()==3?teacherMenuActions:studentMenuActions;
+                    createItemMenu(item.getAddress(), item.getName(), position, menuItems).show();
                 });
-            }else {
+            } else {
                 holder.mMenuButton.setVisibility(View.GONE);
             }
         }
@@ -270,27 +278,26 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
         }
     }
 
-    protected void showInputDialog(final int position, String oldName) {
-        // get prompts.xml view
+    private void showRenameDialog(String code, String oldName, int position) {
         LayoutInflater layoutInflater = LayoutInflater.from(getActivityContext());
         View promptView = layoutInflater.inflate(R.layout.dialog_input, null);
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivityContext());
         alertDialogBuilder.setView(promptView);
         final EditText editText = (EditText) promptView.findViewById(R.id.edittext);
+        editText.setTextColor(ContextCompat.getColor(getActivityContext(), R.color.color_uc_ListText));
         editText.setText(oldName);
         alertDialogBuilder.setCancelable(false)
                 .setPositiveButton("Готово", (dialog, id) -> {
                     if (FacadeCommon.isNetworkConnected(getActivityContext())) {
                         String newName = editText.getText().toString();
                         if (!newName.equals("")) {
-                            renameItem(position, newName);
+                            ((SubjectMaterialsModel)mModel).renameFile(code, newName);
                             mPreviousName = ((SubjectMaterialsItem) getItem(position)).getName();
                             ((SubjectMaterialsItem) getItem(position)).setName(newName);
                             ((MVPViewRecycler) getView()).notifyItemChanged(position);
                         } else {
                             Toast.makeText(getActivityContext(), "Название не может быть пустым.", Toast.LENGTH_LONG).show();
                         }
-
                     } else {
                         Toast.makeText(getActivityContext(), "Проверте интернет соединение.", Toast.LENGTH_LONG).show();
                     }
@@ -300,12 +307,34 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
         alert.show();
     }
 
-    private void removeItem(final int position) {
+    private AlertDialog.Builder createItemMenu(String code, String name, int position, String[] menuItems) {
+        AlertDialog.Builder build = new AlertDialog.Builder(getActivityContext());
+        build.setItems(menuItems, (dialog, which) -> {
+            switch (which) {
+                case 0:
+                    showRenameDialog(code, name, position);
+                    break;
+                case 1:
+                    ((SubjectMaterialsModel)mModel).deleteFile(this.authString, code, new MVPCallback<String>() {
+                        @Override
+                        public void onSuccess(String s) {
+                            ((SubjectMaterialsModel) mModel).remove(position);
+                            ((SubjectMaterialsFragment)getView()).notifyItemRemoved(position);
+                            Toast.makeText(getActivityContext(), getActivityContext().getString(R.string.file_was_deleted), Toast.LENGTH_LONG).show();
+                        }
 
+                        @Override
+                        public void onError(Throwable throwable) {
+                            Toast.makeText(getActivityContext(), getActivityContext().getString(R.string.error_deleting_file), Toast.LENGTH_LONG).show();
+                            throwable.printStackTrace();
+                        }
+                    });
+                    break;
+                case 2:
+                    ((SubjectMaterialsModel)mModel).shareFile(code);
+                    break;
+            }
+        });
+        return build;
     }
-
-    private void renameItem(final int position, final String newName) {
-
-    }
-
 }

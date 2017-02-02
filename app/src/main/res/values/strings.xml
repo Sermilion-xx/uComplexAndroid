@@ -90,6 +90,9 @@
     <string name="clock_icon"></string>
     <string name="open_file_with">Открыть используя</string>
     <string name="storage_access_denied">Вы не разрешили доступ к пямяти. Открытие загруженных файлов будет не возможна.</string>
+    <string name="file_was_deleted">Файл был удален</string>
+    <string name="error_deleting_file">Ошибка при удалении файла</string>
+    <string name="share">Поделиться</string>
 
 
 </resources>

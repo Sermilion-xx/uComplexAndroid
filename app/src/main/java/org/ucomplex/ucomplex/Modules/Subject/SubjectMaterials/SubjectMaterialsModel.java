@@ -33,6 +33,7 @@ import static org.ucomplex.ucomplex.Modules.Subject.SubjectMaterials.SubjectMate
 public class SubjectMaterialsModel extends MVPAbstractModelRecycler<String, List<IRecyclerItem>> {
 
     public static final String EXTRA_KEY_MY_MATERIALS = "myMaterials";
+    public static final String EXTRA_KEY_FILE = "file";
     private List<List<IRecyclerItem>> mPageHistory;
     private int currentPage = -1;
 
@@ -81,9 +82,9 @@ public class SubjectMaterialsModel extends MVPAbstractModelRecycler<String, List
             } catch (Exception e) {
                 mvpCallback.onError(e);
             }
-            if(mItems.size()==0) {
+            if (mItems.size() == 0) {
                 mvpCallback.onError(new Exception("Нету материалов для отображения"));
-            }else{
+            } else {
                 mvpCallback.onSuccess(new ArrayList<>(mItems));
             }
         } else {
@@ -142,4 +143,34 @@ public class SubjectMaterialsModel extends MVPAbstractModelRecycler<String, List
         }
         return files;
     }
+
+    public void deleteFile(String auth, String file, MVPCallback<String> mvpCallback) {
+        HashMap<String, String> params = new HashMap<>();
+        params.put(EXTRA_KEY_FILE, file);
+        HttpFactory.getInstance().httpVolley(HttpFactory.DELETE_FILE_URL,
+                auth,
+                mContext,
+                params,
+                new MVPCallback<String>() {
+
+                    @Override
+                    public void onSuccess(String result) {
+                        mvpCallback.onSuccess(result);
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        mvpCallback.onError(throwable);
+                    }
+                });
+    }
+
+    public void shareFile(String code) {
+
+    }
+
+    public void renameFile(String code, String newName) {
+
+    }
+
 }
