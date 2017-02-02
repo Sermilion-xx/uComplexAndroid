@@ -93,6 +93,7 @@
     <string name="file_was_deleted">Файл был удален</string>
     <string name="error_deleting_file">Ошибка при удалении файла</string>
     <string name="share">Поделиться</string>
+    <string name="error">Ошибка</string>
 
 
 </resources>

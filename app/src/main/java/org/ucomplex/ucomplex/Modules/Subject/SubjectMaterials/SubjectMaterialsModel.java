@@ -34,6 +34,7 @@ public class SubjectMaterialsModel extends MVPAbstractModelRecycler<String, List
 
     public static final String EXTRA_KEY_MY_MATERIALS = "myMaterials";
     public static final String EXTRA_KEY_FILE = "file";
+    public static final String EXTRA_KEY_FILENAME = "name";
     private List<List<IRecyclerItem>> mPageHistory;
     private int currentPage = -1;
 
@@ -169,8 +170,25 @@ public class SubjectMaterialsModel extends MVPAbstractModelRecycler<String, List
 
     }
 
-    public void renameFile(String code, String newName) {
+    public void renameFile(String auth, String file, String name, MVPCallback<String> mvpCallback) {
+        HashMap<String, String> params = new HashMap<>();
+        params.put(EXTRA_KEY_FILE, file);
+        params.put(EXTRA_KEY_FILENAME, name);
+        HttpFactory.getInstance().httpVolley(HttpFactory.RENAME_FILE_URL,
+                auth,
+                mContext,
+                params,
+                new MVPCallback<String>() {
+                    @Override
+                    public void onSuccess(String result) {
+                        mvpCallback.onSuccess(result);
+                    }
 
+                    @Override
+                    public void onError(Throwable throwable) {
+                        mvpCallback.onError(throwable);
+                    }
+                });
     }
 
 }

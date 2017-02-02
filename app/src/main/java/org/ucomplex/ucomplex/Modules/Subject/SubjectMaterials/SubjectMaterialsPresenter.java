@@ -278,7 +278,7 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
         }
     }
 
-    private void showRenameDialog(String code, String oldName, int position) {
+    private void showRenameDialog(String file, String oldName, int position) {
         LayoutInflater layoutInflater = LayoutInflater.from(getActivityContext());
         View promptView = layoutInflater.inflate(R.layout.dialog_input, null);
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivityContext());
@@ -291,10 +291,20 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
                     if (FacadeCommon.isNetworkConnected(getActivityContext())) {
                         String newName = editText.getText().toString();
                         if (!newName.equals("")) {
-                            ((SubjectMaterialsModel)mModel).renameFile(code, newName);
                             mPreviousName = ((SubjectMaterialsItem) getItem(position)).getName();
-                            ((SubjectMaterialsItem) getItem(position)).setName(newName);
-                            ((MVPViewRecycler) getView()).notifyItemChanged(position);
+                            ((SubjectMaterialsModel)mModel).renameFile(authString, file, newName, new MVPCallback<String>() {
+                                @Override
+                                public void onSuccess(String s) {
+                                    ((SubjectMaterialsItem) getItem(position)).setName(newName);
+                                    ((SubjectMaterialsFragment)getView()).notifyItemChanged(position);
+                                }
+
+                                @Override
+                                public void onError(Throwable throwable) {
+                                    ((SubjectMaterialsItem) getItem(position)).setName(mPreviousName);
+                                    Toast.makeText(getActivityContext(), getActivityContext().getString(R.string.error), Toast.LENGTH_LONG).show();
+                                }
+                            });
                         } else {
                             Toast.makeText(getActivityContext(), "Название не может быть пустым.", Toast.LENGTH_LONG).show();
                         }
