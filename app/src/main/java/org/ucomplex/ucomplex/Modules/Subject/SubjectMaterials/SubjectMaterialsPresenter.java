@@ -29,7 +29,6 @@ import net.oneread.aghanim.components.utility.RecyclerOnClickListener;
 import net.oneread.aghanim.mvp.abstractmvp.MVPAbstractPresenterRecycler;
 import net.oneread.aghanim.mvp.basemvp.MVPModel;
 import net.oneread.aghanim.mvp.recyclermvp.MVPModelRecycler;
-import net.oneread.aghanim.mvp.recyclermvp.MVPViewRecycler;
 
 import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
@@ -100,8 +99,8 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
         this.mModel = models;
         this.mModel.setContext(this.getActivityContext());
         this.authString = ((DaggerApplication) getAppContext()).getAuthString();
-        studentMenuActions = new String[]{getActivityContext().getString(R.string.rename),getActivityContext().getString(R.string.delete)};
-        teacherMenuActions = new String[]{getActivityContext().getString(R.string.rename),getActivityContext().getString(R.string.delete), getActivityContext().getString(R.string.share)};
+        studentMenuActions = new String[]{getActivityContext().getString(R.string.rename), getActivityContext().getString(R.string.delete)};
+        teacherMenuActions = new String[]{getActivityContext().getString(R.string.rename), getActivityContext().getString(R.string.delete), getActivityContext().getString(R.string.share)};
     }
 
     private void setupOnClickListener(SubjectMaterialsViewHolder holder, int viewType) {
@@ -181,7 +180,7 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
                     int position = holder.getAdapterPosition();
                     SubjectMaterialsItem item = (SubjectMaterialsItem) ((MVPModelRecycler) mModel).getItem(position);
                     String[] menuItems;
-                    menuItems = ((DaggerApplication) getAppContext()).getSharedUser().getType()==3?teacherMenuActions:studentMenuActions;
+                    menuItems = ((DaggerApplication) getAppContext()).getSharedUser().getType() == 3 ? teacherMenuActions : studentMenuActions;
                     createItemMenu(item.getAddress(), item.getName(), position, menuItems).show();
                 });
             } else {
@@ -196,7 +195,7 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
         mMyFiles = bundle[0].getBoolean(EXTRA_KEY_MY_MATERIALS);
         if (bundle.length > 0 &&
                 !bundle[0].containsKey(EXTRA_KEY_GET_FOLDER) &&
-                !mMyFiles) {
+                !mMyFiles && ((SubjectMaterialsModel) mModel).getHistoryCount() > 0) {
             populateRecyclerView(((SubjectMaterialsModel) mModel).getHistory(getItemCount()));
         } else {
             mModel.loadData(new MVPCallback<List<IRecyclerItem>>() {
@@ -292,11 +291,11 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
                         String newName = editText.getText().toString();
                         if (!newName.equals("")) {
                             mPreviousName = ((SubjectMaterialsItem) getItem(position)).getName();
-                            ((SubjectMaterialsModel)mModel).renameFile(authString, file, newName, new MVPCallback<String>() {
+                            ((SubjectMaterialsModel) mModel).renameFile(authString, file, newName, new MVPCallback<String>() {
                                 @Override
                                 public void onSuccess(String s) {
                                     ((SubjectMaterialsItem) getItem(position)).setName(newName);
-                                    ((SubjectMaterialsFragment)getView()).notifyItemChanged(position);
+                                    ((SubjectMaterialsFragment) getView()).notifyItemChanged(position);
                                 }
 
                                 @Override
@@ -325,11 +324,11 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
                     showRenameDialog(code, name, position);
                     break;
                 case 1:
-                    ((SubjectMaterialsModel)mModel).deleteFile(this.authString, code, new MVPCallback<String>() {
+                    ((SubjectMaterialsModel) mModel).deleteFile(this.authString, code, new MVPCallback<String>() {
                         @Override
                         public void onSuccess(String s) {
                             ((SubjectMaterialsModel) mModel).remove(position);
-                            ((SubjectMaterialsFragment)getView()).notifyItemRemoved(position);
+                            ((SubjectMaterialsFragment) getView()).notifyItemRemoved(position);
                             Toast.makeText(getActivityContext(), getActivityContext().getString(R.string.file_was_deleted), Toast.LENGTH_LONG).show();
                         }
 
@@ -341,7 +340,7 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
                     });
                     break;
                 case 2:
-                    ((SubjectMaterialsModel)mModel).shareFile(code);
+                    ((SubjectMaterialsModel) mModel).shareFile(code);
                     break;
             }
         });

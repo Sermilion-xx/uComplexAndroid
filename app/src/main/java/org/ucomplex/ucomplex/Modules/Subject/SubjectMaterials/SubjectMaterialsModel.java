@@ -62,6 +62,10 @@ public class SubjectMaterialsModel extends MVPAbstractModelRecycler<String, List
         return this.mPageHistory.get(index);
     }
 
+    int getHistoryCount(){
+        return this.mPageHistory.size();
+    }
+
     @Override
     public void loadData(MVPCallback<List<IRecyclerItem>> mvpCallback, Bundle... bundles) {
         List<MaterialItem> files = SubjectModel.getInstance().getFiles();
