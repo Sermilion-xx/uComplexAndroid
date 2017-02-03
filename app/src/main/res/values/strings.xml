@@ -94,6 +94,7 @@
     <string name="error_deleting_file">Ошибка при удалении файла</string>
     <string name="share">Поделиться</string>
     <string name="error">Ошибка</string>
+    <string name="support">Техподдержка</string>
 
 
 </resources>

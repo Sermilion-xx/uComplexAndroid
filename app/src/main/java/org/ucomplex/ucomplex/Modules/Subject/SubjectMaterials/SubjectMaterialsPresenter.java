@@ -340,7 +340,7 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
                     });
                     break;
                 case 2:
-                    ((SubjectMaterialsModel) mModel).shareFile(code);
+                    ((SubjectMaterialsModel) mModel).shareFile(this.authString, code, null);
                     break;
             }
         });

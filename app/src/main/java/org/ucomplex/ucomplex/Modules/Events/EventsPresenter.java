@@ -26,7 +26,6 @@ import org.ucomplex.ucomplex.CommonDependencies.Network.HttpFactory;
 import org.ucomplex.ucomplex.Modules.Subject.SubjectActivity;
 import org.ucomplex.ucomplex.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.ucomplex.ucomplex.CommonDependencies.Constants.AUTH_STRING;
@@ -123,7 +122,7 @@ public class EventsPresenter extends MVPAbstractPresenterRecycler<String> {
                     holder.eventsImageView.setImageDrawable(textDrawable);
                 } else {
                     Glide.with(getActivityContext())
-                            .load(HttpFactory.LOAD_PROFILE_URL + event.getParams().getCode() + Constants.IMAGE_FORMAT)
+                            .load(HttpFactory.LOAD_PHOTO_URL + event.getParams().getCode() + Constants.IMAGE_FORMAT)
                             .into(holder.eventsImageView);
                 }
             }

@@ -53,7 +53,7 @@ public class HttpFactory {
     public static final String PROFILE_IMAGE_URL = BASE_URL + "files/photos/";
     public static final String AUTHENTICATIO_URL = BASE_URL + "auth?mobile=1";
     public static final String RESTORE_PASSWORD_URL = BASE_URL + "public/password?mobile=1";
-    public static final String LOAD_PROFILE_URL = BASE_URL + "files/photos/";
+    public static final String LOAD_PHOTO_URL = BASE_URL + "files/photos/";
     public static final String USER_SUBJECTS_USER_URL = BASE_URL + "student/subjects_list?mobile=1";
     public static final String USER_SUBJECTS_TEACHER_URL = BASE_URL + "teacher/subjects_list?mobile=1";
     public static final String USER_SUBJECT_URL = BASE_URL + "student/ajax/my_subjects?mobile=1";
@@ -63,8 +63,9 @@ public class HttpFactory {
     public static final String STUDENTS_FILES_URL = BASE_URL + "student/my_files?mobile=1";
     public static final String DOWNLOAD_MATERIAL_URL = SCHEMA + "storage.ucomplex.org/files/users/";
     public static final String DELETE_FILE_URL = BASE_URL + "student/my_files/delete_file?mobile=1";
-    public static final String RENAME_FILE_URL = BASE_URL + "student/my_files/rename_file";
-    public static final String GET_FILE_ACCESS_URL = BASE_URL + "teacher/my_files/get_access";
+    public static final String RENAME_FILE_URL = BASE_URL + "student/my_files/rename_file?mobile=1";
+    public static final String GET_FILE_ACCESS_URL = BASE_URL + "teacher/my_files/get_access?mobile=1";
+    public static final String ONLINE_USERS_URL = BASE_URL +"student/online?mobile=1";
 
 
     public static String encodeLoginData(String loginData) {

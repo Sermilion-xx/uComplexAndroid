@@ -1,5 +1,12 @@
 package org.ucomplex.ucomplex.Modules.Users.UsersDagger;
 
+import org.ucomplex.ucomplex.Modules.Users.UsersBlackList.UsersBlackListFragment;
+import org.ucomplex.ucomplex.Modules.Users.UsersOnline.UsersOnlineFragment;
+
+import javax.inject.Singleton;
+
+import dagger.Component;
+
 /**
  * ---------------------------------------------------
  * Created by Sermilion on 03/02/2017.
@@ -9,6 +16,8 @@ package org.ucomplex.ucomplex.Modules.Users.UsersDagger;
  * <a href="http://www.github.com/sermilion>github</a>
  * ---------------------------------------------------
  */
-
-public class UsersOnlineDiComponent {
+@Singleton
+@Component(modules = {UsersOnlineModule.class})
+public interface UsersOnlineDiComponent {
+    void inject(UsersOnlineFragment fragment);
 }
