@@ -187,8 +187,8 @@ public class FacadeCommon {
         return map;
     }
 
-    public static ArrayList<String> getKeys(JSONObject object) throws JSONException {
-        ArrayList<String> keys = new ArrayList<>();
+    public static List<String> getKeys(JSONObject object) throws JSONException {
+        List<String> keys = new ArrayList<>();
         Iterator iter = object.keys();
         while (iter.hasNext()) {
             String key = (String) iter.next();

@@ -64,6 +64,7 @@ public class HttpFactory {
     public static final String DOWNLOAD_MATERIAL_URL = SCHEMA + "storage.ucomplex.org/files/users/";
     public static final String DELETE_FILE_URL = BASE_URL + "student/my_files/delete_file?mobile=1";
     public static final String RENAME_FILE_URL = BASE_URL + "student/my_files/rename_file";
+    public static final String GET_FILE_ACCESS_URL = BASE_URL + "teacher/my_files/get_access";
 
 
     public static String encodeLoginData(String loginData) {

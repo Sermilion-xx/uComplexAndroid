@@ -1,6 +1,9 @@
 package org.ucomplex.ucomplex.Modules.Subject.SubjectMaterials;
 
 import android.os.Bundle;
+import android.util.Pair;
+
+import com.google.gson.Gson;
 
 import net.oneread.aghanim.components.utility.IRecyclerItem;
 import net.oneread.aghanim.components.utility.MVPCallback;
@@ -9,6 +12,7 @@ import net.oneread.aghanim.mvp.abstractmvp.MVPAbstractModelRecycler;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
 import org.ucomplex.ucomplex.CommonDependencies.Network.HttpFactory;
 import org.ucomplex.ucomplex.Domain.Materials.MaterialItem;
 import org.ucomplex.ucomplex.Modules.Subject.SubjectModel;
@@ -16,6 +20,7 @@ import org.ucomplex.ucomplex.Modules.Subject.SubjectModel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.ucomplex.ucomplex.CommonDependencies.Constants.AUTH_STRING;
 import static org.ucomplex.ucomplex.Modules.Subject.SubjectMaterials.SubjectMaterialsPresenter.EXTRA_KEY_FOLDER;
@@ -170,10 +175,6 @@ public class SubjectMaterialsModel extends MVPAbstractModelRecycler<String, List
                 });
     }
 
-    public void shareFile(String code) {
-
-    }
-
     public void renameFile(String auth, String file, String name, MVPCallback<String> mvpCallback) {
         HashMap<String, String> params = new HashMap<>();
         params.put(EXTRA_KEY_FILE, file);
@@ -195,4 +196,34 @@ public class SubjectMaterialsModel extends MVPAbstractModelRecycler<String, List
                 });
     }
 
+    public void shareFile(String auth, String file, MVPCallback<String> mvpCallback) {
+        HashMap<String, String> params = new HashMap<>();
+        params.put(EXTRA_KEY_FILE, file);
+        HttpFactory.getInstance().httpVolley(HttpFactory.GET_FILE_ACCESS_URL,
+                auth,
+                mContext,
+                params,
+                new MVPCallback<String>() {
+                    @Override
+                    public void onSuccess(String result) {
+                        mvpCallback.onSuccess(result);
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        mvpCallback.onError(throwable);
+                    }
+                });
+    }
+
+    private Map<String, String> processShareInfo(String s){
+        Map<String, String> keys = null;
+        try {
+            JSONObject persons = new JSONObject(s).getJSONObject("persons");
+            keys = FacadeCommon.parseJsonKV(persons);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return keys;
+    }
 }
