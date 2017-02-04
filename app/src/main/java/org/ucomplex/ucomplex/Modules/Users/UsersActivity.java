@@ -68,10 +68,10 @@ public class UsersActivity extends BaseActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         getFragmentManager().putFragment(outState, "mOnlineFragment", mOnlineFragment);
-        getFragmentManager().putFragment(outState, "mFriendsFragment", mFriendsFragment);
-        getFragmentManager().putFragment(outState, "mGroupFragment", mGroupFragment);
-        getFragmentManager().putFragment(outState, "mLecturersFragment", mLecturersFragment);
-        getFragmentManager().putFragment(outState, "mBlackListFragment", mBlackListFragment);
+//        getFragmentManager().putFragment(outState, "mFriendsFragment", mFriendsFragment);
+//        getFragmentManager().putFragment(outState, "mGroupFragment", mGroupFragment);
+//        getFragmentManager().putFragment(outState, "mLecturersFragment", mLecturersFragment);
+//        getFragmentManager().putFragment(outState, "mBlackListFragment", mBlackListFragment);
         super.onSaveInstanceState(outState);
     }
 

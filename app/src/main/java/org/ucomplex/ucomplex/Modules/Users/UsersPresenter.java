@@ -1,6 +1,5 @@
 package org.ucomplex.ucomplex.Modules.Users;
 
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -16,7 +15,6 @@ import net.oneread.aghanim.components.utility.MVPCallback;
 import net.oneread.aghanim.components.utility.OnClickStrategy;
 import net.oneread.aghanim.components.utility.RecyclerOnClickListener;
 import net.oneread.aghanim.mvp.abstractmvp.MVPAbstractPresenterRecycler;
-import net.oneread.aghanim.mvp.basemvp.MVPView;
 import net.oneread.aghanim.mvp.recyclermvp.MVPModelRecycler;
 
 import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
@@ -25,7 +23,6 @@ import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeMedia;
 import org.ucomplex.ucomplex.CommonDependencies.MVPUtility;
 import org.ucomplex.ucomplex.CommonDependencies.Network.HttpFactory;
-import org.ucomplex.ucomplex.Modules.Subject.SubjectTimeline.SubjectTimelineFragment;
 import org.ucomplex.ucomplex.Modules.Users.UsersOnline.UsersOnlineModel;
 import org.ucomplex.ucomplex.R;
 
@@ -47,11 +44,12 @@ public class UsersPresenter extends MVPAbstractPresenterRecycler<String> {
 
     public static final int TYPE_USER = 0;
     public static final int TYPE_FOOTER = 1;
+    private boolean hasMoreItems;
 
 
     @Override
     public int getItemViewType(int position) {
-        return position == getItemCount() - 1 ? TYPE_FOOTER : TYPE_USER;
+        return position == getItemCount() - 1 && hasMoreItems? TYPE_FOOTER : TYPE_USER;
     }
 
 
@@ -63,10 +61,13 @@ public class UsersPresenter extends MVPAbstractPresenterRecycler<String> {
             public void onSuccess(List<IRecyclerItem> o) {
                 if (o.size() > 20) {
                     addEmptyElement(o);
+                    hasMoreItems = true;
+                }else {
+                    hasMoreItems = false;
                 }
                 if (getItemCount() > 0) {
                     ((MVPModelRecycler) mModel).remove(((MVPModelRecycler) mModel).getItemCount() - 1);
-                    ((SubjectTimelineFragment) getView()).notifyItemRemoved(((MVPModelRecycler) mModel).getItemCount() - 1);
+                    ((MVPViewBaseFragment) getView()).notifyItemRemoved(((MVPModelRecycler) mModel).getItemCount() - 1);
                     addMoreToRecyclerView(o);
                 } else {
                     populateRecyclerView(o);
@@ -127,7 +128,7 @@ public class UsersPresenter extends MVPAbstractPresenterRecycler<String> {
         RecyclerOnClickListener clickListener = new RecyclerOnClickListener();
         OnClickStrategy strategy = view -> {
             Bundle bundle = new Bundle();
-            bundle.putInt(UsersOnlineModel.USERS_START, getItemCount() - 1);
+            bundle.putString(UsersOnlineModel.USERS_START, String.valueOf(getItemCount() - 1));
             DaggerApplication application = (DaggerApplication) getAppContext();
             bundle.putString(AUTH_STRING, application.getAuthString());
             loadData(bundle);
@@ -164,7 +165,6 @@ public class UsersPresenter extends MVPAbstractPresenterRecycler<String> {
                 Glide.with(getActivityContext())
                         .load(HttpFactory.LOAD_PHOTO_URL + item.getCode() + Constants.IMAGE_FORMAT)
                         .into(aHolder.getProfileImage());
-                item.setBitmap(((BitmapDrawable) aHolder.getProfileImage().getDrawable()).getBitmap());
             } else {
                 aHolder.getProfileImage().setImageBitmap(item.getBitmap());
             }

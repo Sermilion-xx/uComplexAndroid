@@ -16,6 +16,7 @@ import org.ucomplex.ucomplex.Modules.Users.UserItem;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.ucomplex.ucomplex.CommonDependencies.Constants.AUTH_STRING;
@@ -37,10 +38,14 @@ public class UsersOnlineModel extends MVPAbstractModelRecycler<String, List<IRec
     @Override
     public void loadData(MVPCallback<List<IRecyclerItem>> mvpCallback, Bundle... bundle) {
         String encodedAuth = bundle[0].getString(AUTH_STRING);
+        HashMap<String, String> params = new HashMap<>();
+        if(bundle[0].containsKey(USERS_START)){
+            params.put(USERS_START, bundle[0].getString(USERS_START));
+        }
         HttpFactory.getInstance().httpVolley(HttpFactory.ONLINE_USERS_URL,
                 encodedAuth,
                 mContext,
-                null,
+                params,
                 new MVPCallback<String>() {
                     @Override
                     public void onSuccess(String s) {
