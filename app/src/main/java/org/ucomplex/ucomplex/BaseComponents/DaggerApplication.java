@@ -21,7 +21,9 @@ import org.ucomplex.ucomplex.Modules.Subject.SubjectDagger.SubjectMaterialsDiCom
 import org.ucomplex.ucomplex.Modules.Subject.SubjectDagger.SubjectTimelineDiComponent;
 import org.ucomplex.ucomplex.Modules.SubjectsList.SubjectsListDagger.DaggerSubjectsListDiComponent;
 import org.ucomplex.ucomplex.Modules.SubjectsList.SubjectsListDagger.SubjectsListDiComponent;
+import org.ucomplex.ucomplex.Modules.Users.UsersDagger.DaggerUsersDiComponent;
 import org.ucomplex.ucomplex.Modules.Users.UsersDagger.DaggerUsersOnlineDiComponent;
+import org.ucomplex.ucomplex.Modules.Users.UsersDagger.UsersDiComponent;
 import org.ucomplex.ucomplex.Modules.Users.UsersDagger.UsersOnlineDiComponent;
 
 import java.security.KeyManagementException;
@@ -56,6 +58,8 @@ public class DaggerApplication extends Application{
     private MaterialsDiComponent materialsDiComponent;
     private UsersOnlineDiComponent usersOnlineDiComponent;
 
+    private UsersDiComponent usersDiComponent;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -69,6 +73,7 @@ public class DaggerApplication extends Application{
         subjectTimelineDiComponent  = DaggerSubjectTimelineDiComponent.builder().build();
         materialsDiComponent        = DaggerMaterialsDiComponent.builder().build();
         usersOnlineDiComponent      = DaggerUsersOnlineDiComponent.builder().build();
+        usersDiComponent            = DaggerUsersDiComponent.builder().build();
         configureConnectionTrust();
     }
 
@@ -119,6 +124,10 @@ public class DaggerApplication extends Application{
 
     public UsersOnlineDiComponent getUsersOnlineDiComponent() {
         return usersOnlineDiComponent;
+    }
+
+    public UsersDiComponent getUsersDiComponent() {
+        return usersDiComponent;
     }
 
     public UserInterface getSharedUser() {

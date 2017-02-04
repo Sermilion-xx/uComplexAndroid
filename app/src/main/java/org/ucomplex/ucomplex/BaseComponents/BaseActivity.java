@@ -177,6 +177,27 @@ public class BaseActivity extends MVPBaseActivity{
         return this;
     }
 
+    protected IFragment setupFragment(MVPView mvpView,
+                                      Bundle savedInstanceState,
+                                      Bundle bundle,
+                                      int fragmentLayout,
+                                      int recyclerViewId,
+                                      int progressBarId,
+                                      int containerId) {
+
+        IFragment mFragment = setupRecyclerFragment(savedInstanceState,
+                MVPBaseRecyclerFragment.class.getName(),
+                mPresenter,
+                fragmentLayout,
+                recyclerViewId, containerId);
+        mFragment.setProgressViewId(progressBarId);
+        mFragment.setOnFragmentLoadedListener(views -> {
+            setupMVP(mvpView, BaseActivity.class, bundle);
+        });
+        return mFragment;
+    }
+
+
 }
 
 

@@ -1,4 +1,4 @@
-package org.ucomplex.ucomplex.Modules.Users.UsersOnline;
+package org.ucomplex.ucomplex.Modules.Users;
 
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -16,6 +16,7 @@ import net.oneread.aghanim.components.utility.MVPCallback;
 import net.oneread.aghanim.components.utility.OnClickStrategy;
 import net.oneread.aghanim.components.utility.RecyclerOnClickListener;
 import net.oneread.aghanim.mvp.abstractmvp.MVPAbstractPresenterRecycler;
+import net.oneread.aghanim.mvp.basemvp.MVPView;
 import net.oneread.aghanim.mvp.recyclermvp.MVPModelRecycler;
 
 import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
@@ -25,8 +26,7 @@ import org.ucomplex.ucomplex.CommonDependencies.FacadeMedia;
 import org.ucomplex.ucomplex.CommonDependencies.MVPUtility;
 import org.ucomplex.ucomplex.CommonDependencies.Network.HttpFactory;
 import org.ucomplex.ucomplex.Modules.Subject.SubjectTimeline.SubjectTimelineFragment;
-import org.ucomplex.ucomplex.Modules.Users.UserItem;
-import org.ucomplex.ucomplex.Modules.Users.UserViewHolder;
+import org.ucomplex.ucomplex.Modules.Users.UsersOnline.UsersOnlineModel;
 import org.ucomplex.ucomplex.R;
 
 import java.util.List;
@@ -43,15 +43,17 @@ import static org.ucomplex.ucomplex.CommonDependencies.Constants.AUTH_STRING;
  * ---------------------------------------------------
  */
 
-public class UsersOnlinePresenter extends MVPAbstractPresenterRecycler<String> {
+public class UsersPresenter extends MVPAbstractPresenterRecycler<String> {
 
     public static final int TYPE_USER = 0;
     public static final int TYPE_FOOTER = 1;
+
 
     @Override
     public int getItemViewType(int position) {
         return position == getItemCount() - 1 ? TYPE_FOOTER : TYPE_USER;
     }
+
 
     @Override
     public void loadData(Bundle... bundle) {

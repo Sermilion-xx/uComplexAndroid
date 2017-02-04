@@ -1,5 +1,14 @@
 package org.ucomplex.ucomplex.Modules.Users.UsersBlackList;
 
+import android.app.Activity;
+
+import net.oneread.aghanim.components.base.MVPViewBaseFragment;
+import net.oneread.aghanim.components.utility.IRecyclerItem;
+
+import org.ucomplex.ucomplex.Modules.Users.UsersLecturers.UsersLecturersFragment;
+
+import java.util.List;
+
 /**
  * ---------------------------------------------------
  * Created by Sermilion on 03/02/2017.
@@ -10,5 +19,12 @@ package org.ucomplex.ucomplex.Modules.Users.UsersBlackList;
  * ---------------------------------------------------
  */
 
-public class UsersBlackListFragment {
+public class UsersBlackListFragment extends MVPViewBaseFragment<String, List<IRecyclerItem>> {
+
+    public static UsersBlackListFragment getInstance(Activity mContext) {
+        UsersBlackListFragment fragment = new UsersBlackListFragment();
+        fragment.setContext(mContext);
+        return fragment;
+    }
+
 }

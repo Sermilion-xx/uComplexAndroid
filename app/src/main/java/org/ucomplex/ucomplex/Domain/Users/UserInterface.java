@@ -26,14 +26,13 @@ public interface UserInterface {
     void setCode(String code);
     void setBitmapUriString(String uri);
     String getBitmapUriStringFromUri(Uri uri);
-    Uri getBitmapUriFromUriString();
-    String getBitmapUriString();
     String getName();
     void setName(String name);
     int getId();
     void setId(int id);
     void setType(int type);
     int getPerson();
+    void setPerson(int person);
 
 
 

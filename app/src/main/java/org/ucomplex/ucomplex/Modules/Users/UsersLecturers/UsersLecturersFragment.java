@@ -1,5 +1,14 @@
 package org.ucomplex.ucomplex.Modules.Users.UsersLecturers;
 
+import android.app.Activity;
+
+import net.oneread.aghanim.components.base.MVPViewBaseFragment;
+import net.oneread.aghanim.components.utility.IRecyclerItem;
+
+import org.ucomplex.ucomplex.Modules.Users.UsersGroup.UsersGroupFragment;
+
+import java.util.List;
+
 /**
  * ---------------------------------------------------
  * Created by Sermilion on 03/02/2017.
@@ -10,5 +19,12 @@ package org.ucomplex.ucomplex.Modules.Users.UsersLecturers;
  * ---------------------------------------------------
  */
 
-public class UsersLecturersFragment {
+public class UsersLecturersFragment extends MVPViewBaseFragment<String, List<IRecyclerItem>> {
+
+    public static UsersLecturersFragment getInstance(Activity mContext) {
+        UsersLecturersFragment fragment = new UsersLecturersFragment();
+        fragment.setContext(mContext);
+        return fragment;
+    }
+
 }

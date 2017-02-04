@@ -95,6 +95,10 @@
     <string name="share">Поделиться</string>
     <string name="error">Ошибка</string>
     <string name="support">Техподдержка</string>
+    <string name="online">Онлайн</string>
+    <string name="friends">Друзья</string>
+    <string name="group">Группа</string>
+    <string name="blacklist">Черный список</string>
 
 
 </resources>

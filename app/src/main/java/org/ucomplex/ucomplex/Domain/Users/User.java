@@ -208,10 +208,6 @@ public class User implements UserInterface, Parcelable{
         this.photoBitmap = photoBitmap;
     }
 
-    @Override
-    public String getBitmapUriString() {
-        return bitmapUriString;
-    }
 
     @Override
     public void setBitmapUriString(String bitmapUriString) {

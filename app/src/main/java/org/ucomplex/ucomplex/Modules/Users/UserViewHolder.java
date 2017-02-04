@@ -7,7 +7,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.ucomplex.ucomplex.Interfaces.IViewHolder;
-import org.ucomplex.ucomplex.Modules.Users.UsersOnline.UsersOnlinePresenter;
 import org.ucomplex.ucomplex.R;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -33,13 +32,13 @@ public class UserViewHolder extends RecyclerView.ViewHolder implements IViewHold
 
     public UserViewHolder(View itemView, int viewType) {
         super(itemView);
-        if(viewType == UsersOnlinePresenter.TYPE_USER){
+        if(viewType == UsersPresenter.TYPE_USER){
             mProfileImage = (CircleImageView) itemView.findViewById(R.id.profileImage);
             mName = (TextView) itemView.findViewById(R.id.name);
             mType = (TextView) itemView.findViewById(R.id.type);
             mMenuButton = (Button) itemView.findViewById(R.id.menu_button);
             mClickArea = (RelativeLayout) itemView.findViewById(R.id.clickArea);
-        }else if(viewType == UsersOnlinePresenter.TYPE_FOOTER) {
+        }else if(viewType == UsersPresenter.TYPE_FOOTER) {
             mLoadMore = (Button) itemView.findViewById(R.id.loadMoreButton);
         }
     }

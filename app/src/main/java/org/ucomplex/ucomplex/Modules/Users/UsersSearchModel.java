@@ -1,4 +1,4 @@
-package org.ucomplex.ucomplex.Modules.Users.UsersOnline;
+package org.ucomplex.ucomplex.Modules.Users;
 
 import android.os.Bundle;
 
@@ -8,21 +8,17 @@ import net.oneread.aghanim.components.utility.IRecyclerItem;
 import net.oneread.aghanim.components.utility.MVPCallback;
 import net.oneread.aghanim.mvp.abstractmvp.MVPAbstractModelRecycler;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.ucomplex.ucomplex.CommonDependencies.Network.HttpFactory;
-import org.ucomplex.ucomplex.Modules.Users.UserItem;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.ucomplex.ucomplex.CommonDependencies.Constants.AUTH_STRING;
 
 /**
  * ---------------------------------------------------
- * Created by Sermilion on 03/02/2017.
+ * Created by Sermilion on 04/02/2017.
  * Project: uComplex_v_2
  * ---------------------------------------------------
  * <a href="http://www.ucomplex.org">ucomplex.org</a>
@@ -30,17 +26,20 @@ import static org.ucomplex.ucomplex.CommonDependencies.Constants.AUTH_STRING;
  * ---------------------------------------------------
  */
 
-public class UsersOnlineModel extends MVPAbstractModelRecycler<String, List<IRecyclerItem>> {
+public class UsersSearchModel extends MVPAbstractModelRecycler<String, List<IRecyclerItem>> {
 
-    public static final String USERS_START = "start";
+    public static final String EXTRA_KEY_NAME = "name";
 
     @Override
     public void loadData(MVPCallback<List<IRecyclerItem>> mvpCallback, Bundle... bundle) {
         String encodedAuth = bundle[0].getString(AUTH_STRING);
-        HttpFactory.getInstance().httpVolley(HttpFactory.ONLINE_USERS_URL,
+        HashMap<String, String> params = new HashMap<>();
+        params.put(EXTRA_KEY_NAME, Integer.toString(bundle[0].getInt(EXTRA_KEY_NAME)));
+
+        HttpFactory.getInstance().httpVolley(HttpFactory.USERS_SEARCH_URL,
                 encodedAuth,
                 mContext,
-                null,
+                params,
                 new MVPCallback<String>() {
                     @Override
                     public void onSuccess(String s) {
@@ -58,13 +57,7 @@ public class UsersOnlineModel extends MVPAbstractModelRecycler<String, List<IRec
     @Override
     public List<IRecyclerItem> processJson(String s) {
         Gson gson = new Gson();
-        try {
-            JSONArray jsonObject = new JSONObject(s).getJSONArray("users");
-            UserItem[] users = gson.fromJson(jsonObject.toString(), UserItem[].class);
-            return new ArrayList<>(Arrays.asList(users));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return null;
+        UserItem[] users = gson.fromJson(s,  UserItem[].class);
+        return Arrays.asList(users);
     }
 }

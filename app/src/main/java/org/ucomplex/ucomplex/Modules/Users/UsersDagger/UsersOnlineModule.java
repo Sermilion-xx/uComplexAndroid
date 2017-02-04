@@ -5,7 +5,7 @@ import net.oneread.aghanim.mvp.recyclermvp.MVPModelRecycler;
 import net.oneread.aghanim.mvp.recyclermvp.MVPPresenterRecycler;
 
 import org.ucomplex.ucomplex.Modules.Users.UsersOnline.UsersOnlineModel;
-import org.ucomplex.ucomplex.Modules.Users.UsersOnline.UsersOnlinePresenter;
+import org.ucomplex.ucomplex.Modules.Users.UsersPresenter;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class UsersOnlineModule {
 
     @Provides
     MVPPresenterRecycler<String, List<IRecyclerItem>> getUsersOnlinePresenter(){
-        return new UsersOnlinePresenter();
+        return new UsersPresenter();
     }
 
     @Provides
