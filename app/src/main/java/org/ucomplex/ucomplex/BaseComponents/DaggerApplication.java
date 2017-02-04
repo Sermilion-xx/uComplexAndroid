@@ -22,8 +22,10 @@ import org.ucomplex.ucomplex.Modules.Subject.SubjectDagger.SubjectTimelineDiComp
 import org.ucomplex.ucomplex.Modules.SubjectsList.SubjectsListDagger.DaggerSubjectsListDiComponent;
 import org.ucomplex.ucomplex.Modules.SubjectsList.SubjectsListDagger.SubjectsListDiComponent;
 import org.ucomplex.ucomplex.Modules.Users.UsersDagger.DaggerUsersDiComponent;
+import org.ucomplex.ucomplex.Modules.Users.UsersDagger.DaggerUsersFriendsDiComponent;
 import org.ucomplex.ucomplex.Modules.Users.UsersDagger.DaggerUsersOnlineDiComponent;
 import org.ucomplex.ucomplex.Modules.Users.UsersDagger.UsersDiComponent;
+import org.ucomplex.ucomplex.Modules.Users.UsersDagger.UsersFriendsDiComponent;
 import org.ucomplex.ucomplex.Modules.Users.UsersDagger.UsersOnlineDiComponent;
 
 import java.security.KeyManagementException;
@@ -57,6 +59,7 @@ public class DaggerApplication extends Application{
     private SubjectTimelineDiComponent subjectTimelineDiComponent;
     private MaterialsDiComponent materialsDiComponent;
     private UsersOnlineDiComponent usersOnlineDiComponent;
+    private UsersFriendsDiComponent usersFriendsDiComponent;
 
     private UsersDiComponent usersDiComponent;
 
@@ -73,7 +76,9 @@ public class DaggerApplication extends Application{
         subjectTimelineDiComponent  = DaggerSubjectTimelineDiComponent.builder().build();
         materialsDiComponent        = DaggerMaterialsDiComponent.builder().build();
         usersOnlineDiComponent      = DaggerUsersOnlineDiComponent.builder().build();
+        usersFriendsDiComponent     = DaggerUsersFriendsDiComponent.builder().build();
         usersDiComponent            = DaggerUsersDiComponent.builder().build();
+
         configureConnectionTrust();
     }
 
@@ -124,6 +129,10 @@ public class DaggerApplication extends Application{
 
     public UsersOnlineDiComponent getUsersOnlineDiComponent() {
         return usersOnlineDiComponent;
+    }
+
+    public UsersFriendsDiComponent getUsersFriendsDiComponent() {
+        return usersFriendsDiComponent;
     }
 
     public UsersDiComponent getUsersDiComponent() {

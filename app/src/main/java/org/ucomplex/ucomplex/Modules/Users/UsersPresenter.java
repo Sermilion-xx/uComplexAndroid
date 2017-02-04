@@ -60,11 +60,11 @@ public class UsersPresenter extends MVPAbstractPresenterRecycler<String> {
             @Override
             public void onSuccess(List<IRecyclerItem> o) {
                 if (o.size() > 20) {
-                    addEmptyElement(o);
                     hasMoreItems = true;
                 }else {
                     hasMoreItems = false;
                 }
+                addEmptyElement(o);
                 if (getItemCount() > 0) {
                     ((MVPModelRecycler) mModel).remove(((MVPModelRecycler) mModel).getItemCount() - 1);
                     ((MVPViewBaseFragment) getView()).notifyItemRemoved(((MVPModelRecycler) mModel).getItemCount() - 1);
@@ -82,6 +82,7 @@ public class UsersPresenter extends MVPAbstractPresenterRecycler<String> {
                 ((MVPViewBaseFragment) getView()).hideProgress();
             }
 
+            //load more element
             void addEmptyElement(List<IRecyclerItem> o) {
                 o.add(new IRecyclerItem() {
                     @Override

@@ -1,5 +1,11 @@
 package org.ucomplex.ucomplex.Modules.Users.UsersDagger;
 
+import org.ucomplex.ucomplex.Modules.Users.UsersFriends.UsersFriendsFragment;
+
+import javax.inject.Singleton;
+
+import dagger.Component;
+
 /**
  * ---------------------------------------------------
  * Created by Sermilion on 03/02/2017.
@@ -10,5 +16,8 @@ package org.ucomplex.ucomplex.Modules.Users.UsersDagger;
  * ---------------------------------------------------
  */
 
-public class UsersFriendsDiComponent {
+@Singleton
+@Component(modules = {UsersOnlineModule.class})
+public interface UsersFriendsDiComponent {
+    void inject(UsersFriendsFragment fragment);
 }

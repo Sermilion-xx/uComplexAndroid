@@ -1,13 +1,19 @@
 package org.ucomplex.ucomplex.Modules.Users.UsersFriends;
 
 import android.app.Activity;
+import android.os.Bundle;
 
 import net.oneread.aghanim.components.base.MVPViewBaseFragment;
 import net.oneread.aghanim.components.utility.IRecyclerItem;
+import net.oneread.aghanim.mvp.recyclermvp.MVPModelRecycler;
+import net.oneread.aghanim.mvp.recyclermvp.MVPPresenterRecycler;
 
-import org.ucomplex.ucomplex.Modules.Users.UsersOnline.UsersOnlineFragment;
+import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
+import org.ucomplex.ucomplex.R;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 /**
  * ---------------------------------------------------
@@ -21,10 +27,31 @@ import java.util.List;
 
 public class UsersFriendsFragment extends MVPViewBaseFragment<String, List<IRecyclerItem>> {
 
+    @Inject
+    MVPModelRecycler<String, List<IRecyclerItem>> mModel;
+
+    @Inject
+    @Override
+    public void setPresenter(MVPPresenterRecycler<String, List<IRecyclerItem>> presenter) {
+        presenter.setView(this);
+        super.setPresenter(presenter);
+    }
+
     public static UsersFriendsFragment getInstance(Activity mContext) {
         UsersFriendsFragment fragment = new UsersFriendsFragment();
         fragment.setContext(mContext);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+        this.mFragmentLayout = R.layout.fragment_recycler;
+        this.mRecyclerViewId = R.id.recyclerView;
+        this.mProgressViewId = R.id.progressBar;
+        ((DaggerApplication) mContext.getApplication()).getUsersFriendsDiComponent().inject(this);
+        this.setOnFragmentLoadedListener(views -> mPresenter.setModel(mModel, getArguments()));
     }
 
 }

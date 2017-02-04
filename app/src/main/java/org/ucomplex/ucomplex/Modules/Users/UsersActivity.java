@@ -9,28 +9,15 @@ import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuInflater;
 
-import net.oneread.aghanim.components.base.MVPViewBaseFragment;
-import net.oneread.aghanim.components.utility.IRecyclerItem;
-import net.oneread.aghanim.mvp.recyclermvp.MVPPresenterRecycler;
-
 import org.ucomplex.ucomplex.BaseComponents.BaseActivity;
 import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
 import org.ucomplex.ucomplex.CommonDependencies.ViewPagerAdapter;
 import org.ucomplex.ucomplex.Modules.Users.UsersBlackList.UsersBlackListFragment;
-import org.ucomplex.ucomplex.Modules.Users.UsersBlackList.UsersBlackListModel;
 import org.ucomplex.ucomplex.Modules.Users.UsersFriends.UsersFriendsFragment;
-import org.ucomplex.ucomplex.Modules.Users.UsersFriends.UsersFriendsModel;
 import org.ucomplex.ucomplex.Modules.Users.UsersGroup.UsersGroupFragment;
-import org.ucomplex.ucomplex.Modules.Users.UsersGroup.UsersGroupModel;
 import org.ucomplex.ucomplex.Modules.Users.UsersLecturers.UsersLecturersFragment;
-import org.ucomplex.ucomplex.Modules.Users.UsersLecturers.UsersLecturersModel;
 import org.ucomplex.ucomplex.Modules.Users.UsersOnline.UsersOnlineFragment;
-import org.ucomplex.ucomplex.Modules.Users.UsersOnline.UsersOnlineModel;
 import org.ucomplex.ucomplex.R;
-
-import java.util.List;
-
-import javax.inject.Inject;
 
 import static org.ucomplex.ucomplex.CommonDependencies.Constants.AUTH_STRING;
 
@@ -46,29 +33,17 @@ import static org.ucomplex.ucomplex.CommonDependencies.Constants.AUTH_STRING;
 
 public class UsersActivity extends BaseActivity {
 
+    public static final String USER_TYPE = "type";
     UsersOnlineFragment mOnlineFragment;
     UsersFriendsFragment mFriendsFragment;
     UsersGroupFragment mGroupFragment;
     UsersLecturersFragment mLecturersFragment;
     UsersBlackListFragment mBlackListFragment;
 
-    @Inject
-    UsersOnlineModel mUserOnlineModel;
-    @Inject
-    UsersFriendsModel mUserFriendsModel;
-    @Inject
-    UsersGroupModel mUserGroupModel;
-    @Inject
-    UsersLecturersModel mUserLecturersModel;
-    @Inject
-    UsersBlackListModel mUserBlackListModel;
-    @Inject
-    MVPPresenterRecycler<String, List<IRecyclerItem>> mPresenter;
-
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         getFragmentManager().putFragment(outState, "mOnlineFragment", mOnlineFragment);
-//        getFragmentManager().putFragment(outState, "mFriendsFragment", mFriendsFragment);
+        getFragmentManager().putFragment(outState, "mFriendsFragment", mFriendsFragment);
 //        getFragmentManager().putFragment(outState, "mGroupFragment", mGroupFragment);
 //        getFragmentManager().putFragment(outState, "mLecturersFragment", mLecturersFragment);
 //        getFragmentManager().putFragment(outState, "mBlackListFragment", mBlackListFragment);
@@ -93,11 +68,10 @@ public class UsersActivity extends BaseActivity {
         if (savedInstanceState != null) {
             restoreFragments(savedInstanceState);
         } else {
-            Bundle bundle = new Bundle();
-            bundle.putString(AUTH_STRING, application.getAuthString());
-            initFragments(bundle);
+
+            initFragments(application.getAuthString());
             viewPagerAdapter.addFragment(mOnlineFragment, getString(R.string.online));
-//            viewPagerAdapter.addFragment(mFriendsFragment, getString(R.string.friends));
+            viewPagerAdapter.addFragment(mFriendsFragment, getString(R.string.friends));
 //            viewPagerAdapter.addFragment(mGroupFragment, getString(R.string.group));
 //            viewPagerAdapter.addFragment(mLecturersFragment, getString(R.string.lecturers));
 //            viewPagerAdapter.addFragment(mLecturersFragment, getString(R.string.blacklist));
@@ -105,18 +79,30 @@ public class UsersActivity extends BaseActivity {
         }
     }
 
-    private void initFragments(Bundle bundle) {
+    private void initFragments(String authString) {
         mOnlineFragment    = UsersOnlineFragment.getInstance(this);
-        mFriendsFragment   =  UsersFriendsFragment.getInstance(this);
-        mGroupFragment     =  UsersGroupFragment.getInstance(this);
-        mLecturersFragment =  UsersLecturersFragment.getInstance(this);
-        mBlackListFragment =  UsersBlackListFragment.getInstance(this);
+        mFriendsFragment   = UsersFriendsFragment.getInstance(this);
+        mGroupFragment     = UsersGroupFragment.getInstance(this);
+        mLecturersFragment = UsersLecturersFragment.getInstance(this);
+        mBlackListFragment = UsersBlackListFragment.getInstance(this);
 
+        Bundle bundle = initFragmentArgument(0, authString);
         mOnlineFragment.setArguments(bundle);
-        mFriendsFragment.setArguments(bundle);
-        mGroupFragment.setArguments(bundle);
-        mLecturersFragment.setArguments(bundle);
-        mBlackListFragment.setArguments(bundle);
+        Bundle bundle1 = initFragmentArgument(1, authString);
+        mFriendsFragment.setArguments(bundle1);
+        Bundle bundle2 = initFragmentArgument(2, authString);
+        mGroupFragment.setArguments(bundle2);
+        Bundle bundle3 = initFragmentArgument(3, authString);
+        mLecturersFragment.setArguments(bundle3);
+        Bundle bundle4 = initFragmentArgument(4, authString);
+        mBlackListFragment.setArguments(bundle4);
+    }
+
+    private Bundle initFragmentArgument(int type, String authString){
+        Bundle bundle = new Bundle();
+        bundle.putString(AUTH_STRING, authString);
+        bundle.putInt(USER_TYPE, type);
+        return bundle;
     }
 
     private void restoreFragments(Bundle savedInstanceState) {

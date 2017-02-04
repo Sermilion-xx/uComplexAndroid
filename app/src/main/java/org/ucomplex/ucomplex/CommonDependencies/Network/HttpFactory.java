@@ -65,9 +65,12 @@ public class HttpFactory {
     public static final String DELETE_FILE_URL = BASE_URL + "student/my_files/delete_file?mobile=1";
     public static final String RENAME_FILE_URL = BASE_URL + "student/my_files/rename_file?mobile=1";
     public static final String GET_FILE_ACCESS_URL = BASE_URL + "teacher/my_files/get_access?mobile=1";
-    public static final String ONLINE_USERS_URL = BASE_URL + "student/online?mobile=1";
+    public static final String USERS_ONLINE_URL = BASE_URL + "student/online?mobile=1";
     public static final String USERS_SEARCH_URL = BASE_URL + "user/user_search/action";
-
+    public static final String USERS_FRIENDS_URL = BASE_URL + "user/friends?mobile=1";
+    public static final String USERS_GROUP_URL = BASE_URL + "student/ajax/my_group?mobile=1";
+    public static final String USERS_LECTURERS_URL = BASE_URL + "student/ajax/my_teachers?mobile=1";
+    public static final String USERS_BLACKLIST_URL = BASE_URL + "user/blacklist?mobile=1";
 
     public static String encodeLoginData(String loginData) {
         byte[] authBytes;

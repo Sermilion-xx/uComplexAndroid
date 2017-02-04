@@ -155,9 +155,7 @@ public class EventsPresenter extends MVPAbstractPresenterRecycler<String> {
             public void onSuccess(List<IRecyclerItem> o) {
                 if (o.size() < 10) {
                     hasMoreEvents = false;
-                } else {
-                    addEmptyItem(o);
-                }
+                }addEmptyItem(o);
                 if (!EventsModel.INITIAL_EVENTS_LOADED) {
                     EventsModel.INITIAL_EVENTS_LOADED = true;
                     hasMoreEvents = true;

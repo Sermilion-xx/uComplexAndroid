@@ -13,6 +13,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.ucomplex.ucomplex.CommonDependencies.Network.HttpFactory;
 import org.ucomplex.ucomplex.Modules.Users.UserItem;
+import org.ucomplex.ucomplex.Modules.Users.UsersActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,15 +35,33 @@ import static org.ucomplex.ucomplex.CommonDependencies.Constants.AUTH_STRING;
 public class UsersOnlineModel extends MVPAbstractModelRecycler<String, List<IRecyclerItem>> {
 
     public static final String USERS_START = "start";
+    private static final String JSON_KET_FRIENDS = "friends";
+    private static final String JSON_KEY_USERS = "users";
 
     @Override
     public void loadData(MVPCallback<List<IRecyclerItem>> mvpCallback, Bundle... bundle) {
         String encodedAuth = bundle[0].getString(AUTH_STRING);
+        int userType = bundle[0].getInt(UsersActivity.USER_TYPE);
         HashMap<String, String> params = new HashMap<>();
-        if(bundle[0].containsKey(USERS_START)){
+        if (bundle[0].containsKey(USERS_START)) {
             params.put(USERS_START, bundle[0].getString(USERS_START));
         }
-        HttpFactory.getInstance().httpVolley(HttpFactory.ONLINE_USERS_URL,
+        String url = HttpFactory.USERS_ONLINE_URL;
+        switch (userType) {
+            case 1:
+                url = HttpFactory.USERS_FRIENDS_URL;
+                break;
+            case 2:
+                url = HttpFactory.USERS_GROUP_URL;
+                break;
+            case 3:
+                url = HttpFactory.USERS_LECTURERS_URL;
+                break;
+            case 4:
+                url = HttpFactory.USERS_BLACKLIST_URL;
+                break;
+        }
+        HttpFactory.getInstance().httpVolley(url,
                 encodedAuth,
                 mContext,
                 params,
@@ -64,8 +83,10 @@ public class UsersOnlineModel extends MVPAbstractModelRecycler<String, List<IRec
     public List<IRecyclerItem> processJson(String s) {
         Gson gson = new Gson();
         try {
-            JSONArray jsonObject = new JSONObject(s).getJSONArray("users");
-            UserItem[] users = gson.fromJson(jsonObject.toString(), UserItem[].class);
+            JSONObject jsonObject = new JSONObject(s);
+            String key = jsonObject.has(JSON_KET_FRIENDS)?JSON_KET_FRIENDS:JSON_KEY_USERS;
+            JSONArray usersArray = jsonObject.getJSONArray(key);
+            UserItem[] users = gson.fromJson(usersArray.toString(), UserItem[].class);
             return new ArrayList<>(Arrays.asList(users));
         } catch (JSONException e) {
             e.printStackTrace();
