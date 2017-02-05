@@ -51,10 +51,6 @@ public class UsersOnlineFragment extends MVPViewBaseFragment<String, List<IRecyc
         this.mRecyclerViewId = R.id.recyclerView;
         this.mProgressViewId = R.id.progressBar;
         ((DaggerApplication)mContext.getApplication()).getUsersOnlineDiComponent().inject(this);
-        this.setOnFragmentLoadedListener(views -> {
-            if(mPresenter.getModel()==null){
-                mPresenter.setModel(mModel, getArguments());
-            }
-        });
+        this.setOnFragmentLoadedListener(views -> mPresenter.setModel(mModel, getArguments()));
     }
 }

@@ -9,15 +9,28 @@ import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuInflater;
 
+import net.oneread.aghanim.components.base.MVPViewBaseFragment;
+import net.oneread.aghanim.components.utility.IRecyclerItem;
+import net.oneread.aghanim.mvp.recyclermvp.MVPPresenterRecycler;
+
 import org.ucomplex.ucomplex.BaseComponents.BaseActivity;
 import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
 import org.ucomplex.ucomplex.CommonDependencies.ViewPagerAdapter;
 import org.ucomplex.ucomplex.Modules.Users.UsersBlackList.UsersBlackListFragment;
+import org.ucomplex.ucomplex.Modules.Users.UsersBlackList.UsersBlackListModel;
 import org.ucomplex.ucomplex.Modules.Users.UsersFriends.UsersFriendsFragment;
+import org.ucomplex.ucomplex.Modules.Users.UsersFriends.UsersFriendsModel;
 import org.ucomplex.ucomplex.Modules.Users.UsersGroup.UsersGroupFragment;
+import org.ucomplex.ucomplex.Modules.Users.UsersGroup.UsersGroupModel;
 import org.ucomplex.ucomplex.Modules.Users.UsersLecturers.UsersLecturersFragment;
+import org.ucomplex.ucomplex.Modules.Users.UsersLecturers.UsersLecturersModel;
 import org.ucomplex.ucomplex.Modules.Users.UsersOnline.UsersOnlineFragment;
+import org.ucomplex.ucomplex.Modules.Users.UsersOnline.UsersOnlineModel;
 import org.ucomplex.ucomplex.R;
+
+import java.util.List;
+
+import javax.inject.Inject;
 
 import static org.ucomplex.ucomplex.CommonDependencies.Constants.AUTH_STRING;
 
@@ -86,19 +99,19 @@ public class UsersActivity extends BaseActivity {
         mLecturersFragment = UsersLecturersFragment.getInstance(this);
         mBlackListFragment = UsersBlackListFragment.getInstance(this);
 
-        Bundle bundle = initFragmentArgument(0, authString);
+        Bundle bundle = initFragmentArgumenta(0, authString);
         mOnlineFragment.setArguments(bundle);
-        Bundle bundle1 = initFragmentArgument(1, authString);
+        Bundle bundle1 = initFragmentArgumenta(1, authString);
         mFriendsFragment.setArguments(bundle1);
-        Bundle bundle2 = initFragmentArgument(2, authString);
+        Bundle bundle2 = initFragmentArgumenta(2, authString);
         mGroupFragment.setArguments(bundle2);
-        Bundle bundle3 = initFragmentArgument(3, authString);
+        Bundle bundle3 = initFragmentArgumenta(3, authString);
         mLecturersFragment.setArguments(bundle3);
-        Bundle bundle4 = initFragmentArgument(4, authString);
+        Bundle bundle4 = initFragmentArgumenta(4, authString);
         mBlackListFragment.setArguments(bundle4);
     }
 
-    private Bundle initFragmentArgument(int type, String authString){
+    private Bundle initFragmentArgumenta(int type, String authString){
         Bundle bundle = new Bundle();
         bundle.putString(AUTH_STRING, authString);
         bundle.putInt(USER_TYPE, type);

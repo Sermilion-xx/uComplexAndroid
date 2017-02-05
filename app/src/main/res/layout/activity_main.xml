@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context="org.ucomplex.ucomplex.Modules.Events.EventsActivity">
 
-    <include layout="@layout/toolbar"/>
+
 
     <ProgressBar
         android:id="@+id/progressBar"

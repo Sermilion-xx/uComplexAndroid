@@ -32,6 +32,7 @@
         <activity android:name=".BaseComponents.BaseRecyclerActivity" />
         <activity android:name=".Modules.Subject.SubjectActivity" />
         <activity android:name=".Modules.Users.UsersActivity" />
+        <activity android:name=".Modules.Materials.MaterialsActivity" />
 
         <service android:name=".Modules.Subject.SubjectMaterials.NotificationService" />
 
@@ -44,8 +45,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
-
-        <activity android:name=".Modules.Materials.MaterialsActivity"></activity>
     </application>
 
 </manifest>

@@ -60,6 +60,7 @@ public class MVPUtility {
         return emptyList;
     }
 
+
     public interface LayoutResolveStrategy{
         int resolve(int viewType);
     }

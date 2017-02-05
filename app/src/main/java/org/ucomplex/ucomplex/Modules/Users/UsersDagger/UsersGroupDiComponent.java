@@ -1,5 +1,12 @@
 package org.ucomplex.ucomplex.Modules.Users.UsersDagger;
 
+import org.ucomplex.ucomplex.Modules.Users.UsersBlackList.UsersBlackListFragment;
+import org.ucomplex.ucomplex.Modules.Users.UsersGroup.UsersGroupFragment;
+
+import javax.inject.Singleton;
+
+import dagger.Component;
+
 /**
  * ---------------------------------------------------
  * Created by Sermilion on 03/02/2017.
@@ -10,5 +17,8 @@ package org.ucomplex.ucomplex.Modules.Users.UsersDagger;
  * ---------------------------------------------------
  */
 
-public class UsersGroupDiComponent {
+@Singleton
+@Component(modules = {UsersGroupModule.class})
+public interface UsersGroupDiComponent {
+    void inject(UsersGroupFragment fragment);
 }

@@ -201,8 +201,12 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
             mModel.loadData(new MVPCallback<List<IRecyclerItem>>() {
                 @Override
                 public void onSuccess(List<IRecyclerItem> o) {
-                    populateRecyclerView(o);
-                    addHistory(o);
+                    if(o.size()>0){
+                        populateRecyclerView(o);
+                        addHistory(o);
+                    }else{
+                        populateRecyclerView(MVPUtility.initNoContent());
+                    }
                     pageUp();
                 }
 
