@@ -3,7 +3,7 @@ package org.ucomplex.ucomplex.LoginModuleTests;
 import net.oneread.aghanim.components.utility.IRecyclerItem;
 
 import org.junit.Test;
-import org.ucomplex.ucomplex.Modules.Users.UsersOnline.UsersOnlineModel;
+import org.ucomplex.ucomplex.Modules.Users.UsersModel;
 
 import java.util.List;
 
@@ -61,7 +61,7 @@ public class ModelTest {
 
     @Test
     public void usersProcessingTest(){
-        UsersOnlineModel model = new UsersOnlineModel();
+        UsersModel model = new UsersModel();
         List<IRecyclerItem> list = model.processJson(usersString);
         assertThat("Количество полученных пользователей меньше трех.", list.size()==3);
     }

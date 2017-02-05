@@ -1,6 +1,6 @@
 package org.ucomplex.ucomplex.Modules.Users.UsersDagger;
 
-import org.ucomplex.ucomplex.Modules.Users.UsersFriends.UsersFriendsFragment;
+import org.ucomplex.ucomplex.Modules.Users.UsersFragments.UsersFriendsFragment;
 
 import javax.inject.Singleton;
 

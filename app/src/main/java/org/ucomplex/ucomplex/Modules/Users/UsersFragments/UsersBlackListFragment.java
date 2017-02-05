@@ -1,11 +1,9 @@
-package org.ucomplex.ucomplex.Modules.Users.UsersLecturers;
+package org.ucomplex.ucomplex.Modules.Users.UsersFragments;
 
 import android.app.Activity;
 
 import net.oneread.aghanim.components.base.MVPViewBaseFragment;
 import net.oneread.aghanim.components.utility.IRecyclerItem;
-
-import org.ucomplex.ucomplex.Modules.Users.UsersGroup.UsersGroupFragment;
 
 import java.util.List;
 
@@ -19,10 +17,10 @@ import java.util.List;
  * ---------------------------------------------------
  */
 
-public class UsersLecturersFragment extends MVPViewBaseFragment<String, List<IRecyclerItem>> {
+public class UsersBlackListFragment extends MVPViewBaseFragment<String, List<IRecyclerItem>> {
 
-    public static UsersLecturersFragment getInstance(Activity mContext) {
-        UsersLecturersFragment fragment = new UsersLecturersFragment();
+    public static UsersBlackListFragment getInstance(Activity mContext) {
+        UsersBlackListFragment fragment = new UsersBlackListFragment();
         fragment.setContext(mContext);
         return fragment;
     }

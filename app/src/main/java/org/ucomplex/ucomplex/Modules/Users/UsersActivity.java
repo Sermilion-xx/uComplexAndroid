@@ -9,28 +9,15 @@ import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuInflater;
 
-import net.oneread.aghanim.components.base.MVPViewBaseFragment;
-import net.oneread.aghanim.components.utility.IRecyclerItem;
-import net.oneread.aghanim.mvp.recyclermvp.MVPPresenterRecycler;
-
 import org.ucomplex.ucomplex.BaseComponents.BaseActivity;
 import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
 import org.ucomplex.ucomplex.CommonDependencies.ViewPagerAdapter;
-import org.ucomplex.ucomplex.Modules.Users.UsersBlackList.UsersBlackListFragment;
-import org.ucomplex.ucomplex.Modules.Users.UsersBlackList.UsersBlackListModel;
-import org.ucomplex.ucomplex.Modules.Users.UsersFriends.UsersFriendsFragment;
-import org.ucomplex.ucomplex.Modules.Users.UsersFriends.UsersFriendsModel;
-import org.ucomplex.ucomplex.Modules.Users.UsersGroup.UsersGroupFragment;
-import org.ucomplex.ucomplex.Modules.Users.UsersGroup.UsersGroupModel;
-import org.ucomplex.ucomplex.Modules.Users.UsersLecturers.UsersLecturersFragment;
-import org.ucomplex.ucomplex.Modules.Users.UsersLecturers.UsersLecturersModel;
-import org.ucomplex.ucomplex.Modules.Users.UsersOnline.UsersOnlineFragment;
-import org.ucomplex.ucomplex.Modules.Users.UsersOnline.UsersOnlineModel;
+import org.ucomplex.ucomplex.Modules.Users.UsersFragments.UsersBlackListFragment;
+import org.ucomplex.ucomplex.Modules.Users.UsersFragments.UsersFriendsFragment;
+import org.ucomplex.ucomplex.Modules.Users.UsersFragments.UsersGroupFragment;
+import org.ucomplex.ucomplex.Modules.Users.UsersFragments.UsersLecturersFragment;
+import org.ucomplex.ucomplex.Modules.Users.UsersFragments.UsersOnlineFragment;
 import org.ucomplex.ucomplex.R;
-
-import java.util.List;
-
-import javax.inject.Inject;
 
 import static org.ucomplex.ucomplex.CommonDependencies.Constants.AUTH_STRING;
 
@@ -67,7 +54,6 @@ public class UsersActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         DaggerApplication application = (DaggerApplication) getAppContext();
-        application.getUsersDiComponent().inject(this);
         setContentViewWithNavDrawer(R.layout.activity_users);
         setupDrawer();
 
@@ -85,8 +71,8 @@ public class UsersActivity extends BaseActivity {
             initFragments(application.getAuthString());
             viewPagerAdapter.addFragment(mOnlineFragment, getString(R.string.online));
             viewPagerAdapter.addFragment(mFriendsFragment, getString(R.string.friends));
-//            viewPagerAdapter.addFragment(mGroupFragment, getString(R.string.group));
-//            viewPagerAdapter.addFragment(mLecturersFragment, getString(R.string.lecturers));
+            viewPagerAdapter.addFragment(mGroupFragment, getString(R.string.group));
+            viewPagerAdapter.addFragment(mLecturersFragment, getString(R.string.lecturers));
 //            viewPagerAdapter.addFragment(mLecturersFragment, getString(R.string.blacklist));
             viewPager.setAdapter(viewPagerAdapter);
         }

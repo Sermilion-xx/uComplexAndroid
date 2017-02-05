@@ -4,7 +4,7 @@ import net.oneread.aghanim.components.utility.IRecyclerItem;
 import net.oneread.aghanim.mvp.recyclermvp.MVPModelRecycler;
 import net.oneread.aghanim.mvp.recyclermvp.MVPPresenterRecycler;
 
-import org.ucomplex.ucomplex.Modules.Users.UsersOnline.UsersOnlineModel;
+import org.ucomplex.ucomplex.Modules.Users.UsersModel;
 import org.ucomplex.ucomplex.Modules.Users.UsersPresenter;
 
 import java.util.List;
@@ -31,7 +31,7 @@ public class UsersOnlineModule {
 
     @Provides
     MVPModelRecycler<String, List<IRecyclerItem>> getUsersOnlineModel(){
-        return new UsersOnlineModel();
+        return new UsersModel();
     }
 
 }

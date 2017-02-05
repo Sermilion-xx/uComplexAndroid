@@ -1,4 +1,4 @@
-package org.ucomplex.ucomplex.Modules.Users.UsersFriends;
+package org.ucomplex.ucomplex.Modules.Users.UsersFragments;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -25,7 +25,7 @@ import javax.inject.Inject;
  * ---------------------------------------------------
  */
 
-public class UsersFriendsFragment extends MVPViewBaseFragment<String, List<IRecyclerItem>> {
+public class UsersLecturersFragment extends MVPViewBaseFragment<String, List<IRecyclerItem>> {
 
     @Inject
     MVPModelRecycler<String, List<IRecyclerItem>> mModel;
@@ -37,8 +37,8 @@ public class UsersFriendsFragment extends MVPViewBaseFragment<String, List<IRecy
         super.setPresenter(presenter);
     }
 
-    public static UsersFriendsFragment getInstance(Activity mContext) {
-        UsersFriendsFragment fragment = new UsersFriendsFragment();
+    public static UsersLecturersFragment getInstance(Activity mContext) {
+        UsersLecturersFragment fragment = new UsersLecturersFragment();
         fragment.setContext(mContext);
         return fragment;
     }
@@ -50,7 +50,7 @@ public class UsersFriendsFragment extends MVPViewBaseFragment<String, List<IRecy
         this.mFragmentLayout = R.layout.fragment_recycler;
         this.mRecyclerViewId = R.id.recyclerView;
         this.mProgressViewId = R.id.progressBar;
-        ((DaggerApplication) mContext.getApplication()).getUsersFriendsDiComponent().inject(this);
+        ((DaggerApplication) mContext.getApplication()).getUsersLecturersDiComponent().inject(this);
         this.setOnFragmentLoadedListener(views -> mPresenter.setModel(mModel, getArguments()));
     }
 

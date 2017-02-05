@@ -23,7 +23,6 @@ import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeMedia;
 import org.ucomplex.ucomplex.CommonDependencies.MVPUtility;
 import org.ucomplex.ucomplex.CommonDependencies.Network.HttpFactory;
-import org.ucomplex.ucomplex.Modules.Users.UsersOnline.UsersOnlineModel;
 import org.ucomplex.ucomplex.R;
 
 import java.util.List;
@@ -51,7 +50,6 @@ public class UsersPresenter extends MVPAbstractPresenterRecycler<String> {
     public int getItemViewType(int position) {
         return position == getItemCount() - 1 && hasMoreItems? TYPE_FOOTER : TYPE_USER;
     }
-
 
     @Override
     public void loadData(Bundle... bundle) {
@@ -129,7 +127,7 @@ public class UsersPresenter extends MVPAbstractPresenterRecycler<String> {
         RecyclerOnClickListener clickListener = new RecyclerOnClickListener();
         OnClickStrategy strategy = view -> {
             Bundle bundle = new Bundle();
-            bundle.putString(UsersOnlineModel.USERS_START, String.valueOf(getItemCount() - 1));
+            bundle.putString(UsersModel.USERS_START, String.valueOf(getItemCount() - 1));
             DaggerApplication application = (DaggerApplication) getAppContext();
             bundle.putString(AUTH_STRING, application.getAuthString());
             loadData(bundle);

@@ -1,4 +1,4 @@
-package org.ucomplex.ucomplex.Modules.Users.UsersGroup;
+package org.ucomplex.ucomplex.Modules.Users.UsersFragments;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -9,7 +9,6 @@ import net.oneread.aghanim.mvp.recyclermvp.MVPModelRecycler;
 import net.oneread.aghanim.mvp.recyclermvp.MVPPresenterRecycler;
 
 import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
-import org.ucomplex.ucomplex.Modules.Users.UsersFriends.UsersFriendsFragment;
 import org.ucomplex.ucomplex.R;
 
 import java.util.List;
@@ -26,7 +25,7 @@ import javax.inject.Inject;
  * ---------------------------------------------------
  */
 
-public class UsersGroupFragment extends MVPViewBaseFragment<String, List<IRecyclerItem>> {
+public class UsersOnlineFragment extends MVPViewBaseFragment<String, List<IRecyclerItem>> {
 
     @Inject
     MVPModelRecycler<String, List<IRecyclerItem>> mModel;
@@ -37,8 +36,8 @@ public class UsersGroupFragment extends MVPViewBaseFragment<String, List<IRecycl
         super.setPresenter(presenter);
     }
 
-    public static UsersGroupFragment getInstance(Activity mContext) {
-        UsersGroupFragment fragment = new UsersGroupFragment();
+    public static UsersOnlineFragment getInstance(Activity mContext) {
+        UsersOnlineFragment fragment = new UsersOnlineFragment();
         fragment.setContext(mContext);
         return fragment;
     }
@@ -50,8 +49,7 @@ public class UsersGroupFragment extends MVPViewBaseFragment<String, List<IRecycl
         this.mFragmentLayout = R.layout.fragment_recycler;
         this.mRecyclerViewId = R.id.recyclerView;
         this.mProgressViewId = R.id.progressBar;
-        ((DaggerApplication)mContext.getApplication()).getUsersGroupDiComponent().inject(this);
+        ((DaggerApplication)mContext.getApplication()).getUsersOnlineDiComponent().inject(this);
         this.setOnFragmentLoadedListener(views -> mPresenter.setModel(mModel, getArguments()));
     }
-
 }

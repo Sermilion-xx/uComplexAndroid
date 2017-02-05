@@ -1,7 +1,6 @@
 package org.ucomplex.ucomplex.Modules.Users.UsersDagger;
 
-import org.ucomplex.ucomplex.Modules.Users.UsersBlackList.UsersBlackListFragment;
-import org.ucomplex.ucomplex.Modules.Users.UsersGroup.UsersGroupFragment;
+import org.ucomplex.ucomplex.Modules.Users.UsersFragments.UsersGroupFragment;
 
 import javax.inject.Singleton;
 
@@ -18,7 +17,7 @@ import dagger.Component;
  */
 
 @Singleton
-@Component(modules = {UsersGroupModule.class})
+@Component(modules = {UsersOnlineModule.class})
 public interface UsersGroupDiComponent {
     void inject(UsersGroupFragment fragment);
 }
