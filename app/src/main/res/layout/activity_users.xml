@@ -11,14 +11,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <android.support.design.widget.TabLayout
+        <com.astuetz.PagerSlidingTabStrip
             android:id="@+id/tabs"
+            app:pstsShouldExpand="true"
+            app:pstsIndicatorHeight="5dp"
+            android:textColor="@color/colorWhite"
+            app:pstsDividerColor="@color/colorAccent"
+            android:scrollbarSize="1dp"
+            app:pstsIndicatorColor="@color/colorWhite"
+            app:pstsUnderlineColor="@color/colorAccent"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
-            app:tabMode="fixed"
-            app:tabGravity="fill"
-            app:tabTextColor="@color/colorWhite"
-            app:tabIndicatorColor="@color/colorWhite"/>
+            android:layout_height="48dp" />
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.view.ViewPager

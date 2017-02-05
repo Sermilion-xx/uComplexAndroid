@@ -51,7 +51,11 @@ public class UsersFriendsFragment extends MVPViewBaseFragment<String, List<IRecy
         this.mRecyclerViewId = R.id.recyclerView;
         this.mProgressViewId = R.id.progressBar;
         ((DaggerApplication) mContext.getApplication()).getUsersFriendsDiComponent().inject(this);
-        this.setOnFragmentLoadedListener(views -> mPresenter.setModel(mModel, getArguments()));
+        this.setOnFragmentLoadedListener(views -> {
+            if (mPresenter.getModel() == null) {
+                mPresenter.setModel(mModel, getArguments());
+            }
+        });
     }
 
 }

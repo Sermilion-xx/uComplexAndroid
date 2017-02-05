@@ -161,7 +161,7 @@ public class UsersPresenter extends MVPAbstractPresenterRecycler<String> {
             aHolder.getProfileImage().setImageDrawable(textDrawable);
         } else {
             if (item.getBitmap() == null) {
-                Glide.with(getActivityContext())
+                Glide.with(getAppContext())
                         .load(HttpFactory.LOAD_PHOTO_URL + item.getCode() + Constants.IMAGE_FORMAT)
                         .into(aHolder.getProfileImage());
             } else {
@@ -169,4 +169,5 @@ public class UsersPresenter extends MVPAbstractPresenterRecycler<String> {
             }
         }
     }
+
 }

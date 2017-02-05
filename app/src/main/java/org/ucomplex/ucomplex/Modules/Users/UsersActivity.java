@@ -1,18 +1,23 @@
 package org.ucomplex.ucomplex.Modules.Users;
 
+import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuInflater;
 
+import com.astuetz.PagerSlidingTabStrip;
+
+import net.oneread.aghanim.components.base.MVPViewBaseFragment;
+
 import org.ucomplex.ucomplex.BaseComponents.BaseActivity;
 import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
 import org.ucomplex.ucomplex.CommonDependencies.ViewPagerAdapter;
 import org.ucomplex.ucomplex.Modules.Users.UsersFragments.UsersBlackListFragment;
+import org.ucomplex.ucomplex.Modules.Users.UsersFragments.UsersFragmentFactory;
 import org.ucomplex.ucomplex.Modules.Users.UsersFragments.UsersFriendsFragment;
 import org.ucomplex.ucomplex.Modules.Users.UsersFragments.UsersGroupFragment;
 import org.ucomplex.ucomplex.Modules.Users.UsersFragments.UsersLecturersFragment;
@@ -34,6 +39,11 @@ import static org.ucomplex.ucomplex.CommonDependencies.Constants.AUTH_STRING;
 public class UsersActivity extends BaseActivity {
 
     public static final String USER_TYPE = "type";
+    private static final String TAG_ONLINE_FRAGMENT = "mOnlineFragment";
+    private static final String TAG_FRIENDS_FRAGMENT = "mFriendsFragment";
+    private static final String TAG_GROUP_FRAGMENT = "mGroupFragment";
+    private static final String TAG_LECTURERS_FRAGMENT = "mLecturersFragment";
+    private static final String TAG_BLACKLIST_FRAGMENT = "mBlackListFragment";
     UsersOnlineFragment mOnlineFragment;
     UsersFriendsFragment mFriendsFragment;
     UsersGroupFragment mGroupFragment;
@@ -42,11 +52,21 @@ public class UsersActivity extends BaseActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        getFragmentManager().putFragment(outState, "mOnlineFragment", mOnlineFragment);
-        getFragmentManager().putFragment(outState, "mFriendsFragment", mFriendsFragment);
-//        getFragmentManager().putFragment(outState, "mGroupFragment", mGroupFragment);
-//        getFragmentManager().putFragment(outState, "mLecturersFragment", mLecturersFragment);
-//        getFragmentManager().putFragment(outState, "mBlackListFragment", mBlackListFragment);
+        if (mOnlineFragment.isAdded()) {
+            getFragmentManager().putFragment(outState, TAG_ONLINE_FRAGMENT, mOnlineFragment);
+        }
+        if (mFriendsFragment.isAdded()) {
+            getFragmentManager().putFragment(outState, TAG_FRIENDS_FRAGMENT, mFriendsFragment);
+        }
+        if (mGroupFragment.isAdded()) {
+            getFragmentManager().putFragment(outState, TAG_GROUP_FRAGMENT, mGroupFragment);
+        }
+        if (mLecturersFragment.isAdded()) {
+            getFragmentManager().putFragment(outState, TAG_LECTURERS_FRAGMENT, mLecturersFragment);
+        }
+        if (mBlackListFragment.isAdded()) {
+            getFragmentManager().putFragment(outState, TAG_BLACKLIST_FRAGMENT, mBlackListFragment);
+        }
         super.onSaveInstanceState(outState);
     }
 
@@ -55,27 +75,27 @@ public class UsersActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         DaggerApplication application = (DaggerApplication) getAppContext();
         setContentViewWithNavDrawer(R.layout.activity_users);
+        setupToolbar(getString(R.string.users));
         setupDrawer();
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setAdapter(new ViewPagerAdapter(getFragmentManager()));
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getFragmentManager());
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        viewPager.setOffscreenPageLimit(2);
-        tabLayout.setupWithViewPager(viewPager);
+        PagerSlidingTabStrip tabLayout = (PagerSlidingTabStrip) findViewById(R.id.tabs);
 
         if (savedInstanceState != null) {
             restoreFragments(savedInstanceState);
         } else {
-
             initFragments(application.getAuthString());
-            viewPagerAdapter.addFragment(mOnlineFragment, getString(R.string.online));
-            viewPagerAdapter.addFragment(mFriendsFragment, getString(R.string.friends));
-            viewPagerAdapter.addFragment(mGroupFragment, getString(R.string.group));
-            viewPagerAdapter.addFragment(mLecturersFragment, getString(R.string.lecturers));
-//            viewPagerAdapter.addFragment(mLecturersFragment, getString(R.string.blacklist));
-            viewPager.setAdapter(viewPagerAdapter);
         }
+        viewPagerAdapter.addFragment(mOnlineFragment, getString(R.string.online));
+        viewPagerAdapter.addFragment(mFriendsFragment, getString(R.string.friends));
+        viewPagerAdapter.addFragment(mGroupFragment, getString(R.string.group));
+        viewPagerAdapter.addFragment(mLecturersFragment, getString(R.string.lecturers));
+        viewPagerAdapter.addFragment(mBlackListFragment, getString(R.string.blacklist));
+        viewPager.setAdapter(viewPagerAdapter);
+        viewPager.setOffscreenPageLimit(3);
+        tabLayout.setViewPager(viewPager);
     }
 
     private void initFragments(String authString) {
@@ -85,36 +105,42 @@ public class UsersActivity extends BaseActivity {
         mLecturersFragment = UsersLecturersFragment.getInstance(this);
         mBlackListFragment = UsersBlackListFragment.getInstance(this);
 
-        Bundle bundle = initFragmentArgumenta(0, authString);
+        Bundle bundle = initFragmentArgument(0, authString);
         mOnlineFragment.setArguments(bundle);
-        Bundle bundle1 = initFragmentArgumenta(1, authString);
+        Bundle bundle1 = initFragmentArgument(1, authString);
         mFriendsFragment.setArguments(bundle1);
-        Bundle bundle2 = initFragmentArgumenta(2, authString);
+        Bundle bundle2 = initFragmentArgument(2, authString);
         mGroupFragment.setArguments(bundle2);
-        Bundle bundle3 = initFragmentArgumenta(3, authString);
+        Bundle bundle3 = initFragmentArgument(3, authString);
         mLecturersFragment.setArguments(bundle3);
-        Bundle bundle4 = initFragmentArgumenta(4, authString);
+        Bundle bundle4 = initFragmentArgument(4, authString);
         mBlackListFragment.setArguments(bundle4);
     }
 
-    private Bundle initFragmentArgumenta(int type, String authString){
+    private Bundle initFragmentArgument(int type, String authString){
         Bundle bundle = new Bundle();
         bundle.putString(AUTH_STRING, authString);
         bundle.putInt(USER_TYPE, type);
         return bundle;
     }
 
+
+    private MVPViewBaseFragment restoreFragment(int type, String tag, Bundle savedInstanceState, Activity context){
+        String authString = ((DaggerApplication) getAppContext()).getAuthString();
+        MVPViewBaseFragment fragment = (MVPViewBaseFragment) getFragmentManager().getFragment(savedInstanceState, tag);
+        if(fragment == null){
+            Bundle bundle = initFragmentArgument(type, authString);
+            return UsersFragmentFactory.getUsersFragment(type, context, bundle);
+        }
+        return fragment;
+    }
+
     private void restoreFragments(Bundle savedInstanceState) {
-        mOnlineFragment = (UsersOnlineFragment) getFragmentManager().getFragment(savedInstanceState, "mOnlineFragment");
-        mOnlineFragment.setContext(this);
-        mFriendsFragment = (UsersFriendsFragment) getFragmentManager().getFragment(savedInstanceState, "mFriendsFragment");
-        mFriendsFragment.setContext(this);
-        mGroupFragment = (UsersGroupFragment) getFragmentManager().getFragment(savedInstanceState, "mGroupFragment");
-        mGroupFragment.setContext(this);
-        mLecturersFragment = (UsersLecturersFragment) getFragmentManager().getFragment(savedInstanceState, "mLecturersFragment");
-        mLecturersFragment.setContext(this);
-        mBlackListFragment = (UsersBlackListFragment) getFragmentManager().getFragment(savedInstanceState, "mBlackListFragment");
-        mBlackListFragment.setContext(this);
+        mOnlineFragment    = (UsersOnlineFragment) restoreFragment(0, TAG_ONLINE_FRAGMENT, savedInstanceState, this);
+        mFriendsFragment   = (UsersFriendsFragment) restoreFragment(1, TAG_FRIENDS_FRAGMENT, savedInstanceState, this);
+        mGroupFragment     = (UsersGroupFragment) restoreFragment(2, TAG_GROUP_FRAGMENT, savedInstanceState, this);
+        mLecturersFragment = (UsersLecturersFragment) restoreFragment(3, TAG_LECTURERS_FRAGMENT, savedInstanceState, this);
+        mBlackListFragment = (UsersBlackListFragment) restoreFragment(4, TAG_BLACKLIST_FRAGMENT, savedInstanceState, this);
     }
 
     @Override

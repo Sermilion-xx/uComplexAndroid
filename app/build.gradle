@@ -66,8 +66,7 @@ dependencies {
     compile 'com.android.volley:volley:1.0.0'
     compile(name:'aghanim', ext:'aar')
     compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
-
-
+    compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
 }
 
 allprojects {

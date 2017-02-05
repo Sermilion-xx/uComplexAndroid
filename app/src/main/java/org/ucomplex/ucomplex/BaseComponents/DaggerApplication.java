@@ -21,10 +21,12 @@ import org.ucomplex.ucomplex.Modules.Subject.SubjectDagger.SubjectMaterialsDiCom
 import org.ucomplex.ucomplex.Modules.Subject.SubjectDagger.SubjectTimelineDiComponent;
 import org.ucomplex.ucomplex.Modules.SubjectsList.SubjectsListDagger.DaggerSubjectsListDiComponent;
 import org.ucomplex.ucomplex.Modules.SubjectsList.SubjectsListDagger.SubjectsListDiComponent;
+import org.ucomplex.ucomplex.Modules.Users.UsersDagger.DaggerUsersBlackListDiComponent;
 import org.ucomplex.ucomplex.Modules.Users.UsersDagger.DaggerUsersFriendsDiComponent;
 import org.ucomplex.ucomplex.Modules.Users.UsersDagger.DaggerUsersGroupDiComponent;
 import org.ucomplex.ucomplex.Modules.Users.UsersDagger.DaggerUsersLecturersDiComponent;
 import org.ucomplex.ucomplex.Modules.Users.UsersDagger.DaggerUsersOnlineDiComponent;
+import org.ucomplex.ucomplex.Modules.Users.UsersDagger.UsersBlackListDiComponent;
 import org.ucomplex.ucomplex.Modules.Users.UsersDagger.UsersFriendsDiComponent;
 import org.ucomplex.ucomplex.Modules.Users.UsersDagger.UsersGroupDiComponent;
 import org.ucomplex.ucomplex.Modules.Users.UsersDagger.UsersLecturersDiComponent;
@@ -64,6 +66,7 @@ public class DaggerApplication extends Application{
     private UsersFriendsDiComponent usersFriendsDiComponent;
     private UsersGroupDiComponent usersGroupDiComponent;
     private UsersLecturersDiComponent usersLecturersDiComponent;
+    private UsersBlackListDiComponent usersBlackListDiComponent;
 
 
     @Override
@@ -82,6 +85,7 @@ public class DaggerApplication extends Application{
         usersFriendsDiComponent     = DaggerUsersFriendsDiComponent.builder().build();
         usersGroupDiComponent       = DaggerUsersGroupDiComponent.builder().build();
         usersLecturersDiComponent   = DaggerUsersLecturersDiComponent.builder().build();
+        usersBlackListDiComponent   = DaggerUsersBlackListDiComponent.builder().build();
         configureConnectionTrust();
     }
 
@@ -146,15 +150,19 @@ public class DaggerApplication extends Application{
         return usersGroupDiComponent;
     }
 
+    public void setSharedUser(UserInterface sharedUser) {
+        this.sharedUser = sharedUser;
+    }
+
+    public UsersBlackListDiComponent getUsersBlackListDiComponent() {
+        return usersBlackListDiComponent;
+    }
+
     public UserInterface getSharedUser() {
         if(sharedUser == null){
             sharedUser = FacadePreferences.getUserDataFromPref(this);
         }
         return sharedUser;
-    }
-
-    public void setSharedUser(UserInterface sharedUser) {
-        this.sharedUser = sharedUser;
     }
 
     public String getAuthString() {

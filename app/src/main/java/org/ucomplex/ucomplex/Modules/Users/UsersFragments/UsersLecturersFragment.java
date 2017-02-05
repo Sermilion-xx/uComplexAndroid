@@ -51,7 +51,11 @@ public class UsersLecturersFragment extends MVPViewBaseFragment<String, List<IRe
         this.mRecyclerViewId = R.id.recyclerView;
         this.mProgressViewId = R.id.progressBar;
         ((DaggerApplication) mContext.getApplication()).getUsersLecturersDiComponent().inject(this);
-        this.setOnFragmentLoadedListener(views -> mPresenter.setModel(mModel, getArguments()));
+        this.setOnFragmentLoadedListener(views -> {
+            if (mPresenter.getModel() == null) {
+                mPresenter.setModel(mModel, getArguments());
+            }
+        });
     }
 
 }
