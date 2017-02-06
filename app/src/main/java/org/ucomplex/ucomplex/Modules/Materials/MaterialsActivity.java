@@ -23,7 +23,6 @@ import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeMedia;
 import org.ucomplex.ucomplex.CommonDependencies.FragmentFactory;
-import org.ucomplex.ucomplex.CommonDependencies.Network.HttpFactory;
 import org.ucomplex.ucomplex.Modules.Subject.SubjectMaterials.SubjectMaterialsFragment;
 import org.ucomplex.ucomplex.Modules.Subject.SubjectMaterials.SubjectMaterialsPresenter;
 import org.ucomplex.ucomplex.R;
@@ -93,9 +92,7 @@ public class MaterialsActivity extends BaseRecyclerActivity {
                 return true;
             case R.id.my_files_add_file:
                 if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (!Settings.System.canWrite(mPresenter.getActivityContext())) {
-                        FacadeCommon.checkPermissions(this);
-                    } else {
+                    if(FacadeCommon.checkStoragePermissions(this)){
                         pickImage();
                     }
                 } else {
@@ -136,7 +133,7 @@ public class MaterialsActivity extends BaseRecyclerActivity {
         }
         if (originalUri != null) {
             if (FacadeCommon.isNetworkConnected(this)) {
-                ((SubjectMaterialsPresenter)mPresenter).uploadFile(authString, originalUri);
+                ((SubjectMaterialsPresenter)subjectMaterialsFragment.getPresenter()).uploadFile(authString, originalUri);
             } else {
                 Toast.makeText(this, "Проверте интернет соединение", Toast.LENGTH_LONG).show();
             }
@@ -152,7 +149,7 @@ public class MaterialsActivity extends BaseRecyclerActivity {
         switch (requestCode) {
             case REQUEST_EXTERNAL_STORAGE: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
+                    pickImage();
                 } else {
                     Toast.makeText(this, "Вы не разрешили доступ к пямяти. Выгрузка файлов будет не возможна.", Toast.LENGTH_LONG).show();
                 }

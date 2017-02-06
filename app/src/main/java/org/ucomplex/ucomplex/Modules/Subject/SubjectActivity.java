@@ -96,7 +96,7 @@ public class SubjectActivity extends BaseActivity {
         viewPagerAdapter.addFragment(subjectTimelineFragment, "Лента");
         viewPager.setAdapter(viewPagerAdapter);
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            FacadeCommon.checkPermissions(this);
+            FacadeCommon.checkStoragePermissions(this);
         }
     }
 

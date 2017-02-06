@@ -1,11 +1,9 @@
 package org.ucomplex.ucomplex.CommonDependencies.Network;
 
-import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.util.Base64;
-import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -147,17 +145,16 @@ public class HttpFactory {
 
     public static void uploadFile(String authString,
                                   Uri fileUri,
-                                  Context context, MVPCallback<Response<ResponseBody>> mvpCallback) {
+                                  Context context,
+                                  MVPCallback<ResponseBody> mvpCallback) {
         FileUploadService service =
                 ServiceGenerator.createService(FileUploadService.class, authString);
         String filePath = FacadeMedia.getPath(context, fileUri);
         if (filePath != null) {
             File uploadFile = new File(filePath);
-            RequestBody requestFile =
-                    RequestBody.create(
+            RequestBody requestFile = RequestBody.create(
                             MediaType.parse(context.getContentResolver().getType(fileUri)),
-                            uploadFile
-                    );
+                            uploadFile);
             MultipartBody.Part body =
                     MultipartBody.Part.createFormData("file", uploadFile.getName(), requestFile);
             String content_disposition = "file; filename=\"" + uploadFile.getName() + "\"";
@@ -166,7 +163,12 @@ public class HttpFactory {
                 @Override
                 public void onResponse(Call<ResponseBody> call,
                                        Response<ResponseBody> response) {
-                    mvpCallback.onSuccess(response);
+                    if(response.isSuccessful()){
+                        mvpCallback.onSuccess(response.body());
+                    }else {
+                        mvpCallback.onError(new Throwable(response.errorBody().toString()));
+                    }
+
                 }
 
                 @Override

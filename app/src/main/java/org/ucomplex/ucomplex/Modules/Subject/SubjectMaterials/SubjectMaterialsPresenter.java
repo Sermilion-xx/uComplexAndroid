@@ -29,6 +29,7 @@ import net.oneread.aghanim.components.utility.RecyclerOnClickListener;
 import net.oneread.aghanim.mvp.abstractmvp.MVPAbstractPresenterRecycler;
 import net.oneread.aghanim.mvp.basemvp.MVPModel;
 import net.oneread.aghanim.mvp.recyclermvp.MVPModelRecycler;
+import net.oneread.aghanim.mvp.recyclermvp.MVPViewRecycler;
 
 import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
@@ -40,8 +41,6 @@ import org.ucomplex.ucomplex.R;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.List;
-
-import okhttp3.ResponseBody;
 
 import static org.ucomplex.ucomplex.CommonDependencies.Constants.AUTH_STRING;
 import static org.ucomplex.ucomplex.CommonDependencies.Constants.UC_ACTION_DOWNLOAD_COMPLETE;
@@ -151,16 +150,16 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
     }
 
     public void uploadFile(String authString, Uri uri) {
-        HttpFactory.uploadFile(authString, uri, getActivityContext(), new MVPCallback<retrofit2.Response<ResponseBody>>() {
+        ((SubjectMaterialsModel) mModel).uploadFile(authString, uri, new MVPCallback<List<IRecyclerItem>>() {
             @Override
-            public void onSuccess(retrofit2.Response<ResponseBody> responseBodyResponse) {
-                Toast.makeText(getActivityContext(), getActivityContext().getString(R.string.file_uploaded), Toast.LENGTH_LONG).show();
+            public void onSuccess(List<IRecyclerItem> o) {
+                ((SubjectMaterialsModel) mModel).addAll(o);
+                ((MVPViewRecycler) getView()).notifyItemInserted(((SubjectMaterialsModel) mModel).getItemCount());
             }
 
             @Override
             public void onError(Throwable throwable) {
                 throwable.printStackTrace();
-                Toast.makeText(getActivityContext(), getActivityContext().getString(R.string.file_uploaded), Toast.LENGTH_LONG).show();Toast.makeText(getActivityContext(), getActivityContext().getString(R.string.error_file_upload), Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -209,6 +208,7 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
 
     @Override
     public void loadData(Bundle... bundle) {
+        ((SubjectMaterialsFragment) getView()).showProgress();
         mMyFiles = bundle[0].getBoolean(EXTRA_KEY_MY_MATERIALS);
         if (bundle.length > 0 &&
                 !bundle[0].containsKey(EXTRA_KEY_GET_FOLDER) &&
@@ -216,8 +216,10 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
             populateRecyclerView(((SubjectMaterialsModel) mModel).getHistory(getItemCount()));
         } else {
             mModel.loadData(new MVPCallback<List<IRecyclerItem>>() {
+
                 @Override
                 public void onSuccess(List<IRecyclerItem> o) {
+                    ((SubjectMaterialsFragment) getView()).hideProgress();
                     if (o.size() > 0) {
                         populateRecyclerView(o);
                         addHistory(o);
@@ -244,7 +246,12 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
         if (!holder.allNullElements() && item instanceof SubjectMaterialsItem) {
             SubjectMaterialsItem mItem = (SubjectMaterialsItem) item;
             holder.mFileName.setText(mItem.getName());
-            holder.mFileTime.setText(FacadeCommon.makeDate(mItem.getTime()));
+            if(mItem.getTime()!=null){
+                holder.mFileTime.setText(FacadeCommon.makeDate(mItem.getTime()));
+            }else {
+                holder.mFileTime.setText(getActivityContext().getString(R.string.just_now));
+            }
+
             switch (getItemViewType(position)) {
                 case TYPE_FILE:
                     holder.mSize.setText(FacadeCommon.readableFileSize(mItem.getSize(), false));

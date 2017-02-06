@@ -44,6 +44,11 @@ public class SubjectMaterialsFragment extends MVPViewBaseFragment<String, List<I
         mPresenter = presenter;
     }
 
+    @Override
+    public MVPPresenterRecycler getPresenter() {
+        return super.getPresenter();
+    }
+
     @Inject
     public void setModel(MVPModelRecycler<String, List<IRecyclerItem>> mModel) {
         this.mPresenter.setModel(mModel);
@@ -97,6 +102,14 @@ public class SubjectMaterialsFragment extends MVPViewBaseFragment<String, List<I
             MenuInflater inflater = getActivity().getMenuInflater();
             inflater.inflate(R.menu.menu_my_files_files, menu);
         }
+    }
+
+    public void showProgress(){
+        mProgressView.setVisibility(View.VISIBLE);
+    }
+
+    public void hideProgress(){
+        mProgressView.setVisibility(View.GONE);
     }
 
 

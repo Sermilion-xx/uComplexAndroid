@@ -1,9 +1,7 @@
 package org.ucomplex.ucomplex.Modules.Subject.SubjectMaterials;
 
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Pair;
-
-import com.google.gson.Gson;
 
 import net.oneread.aghanim.components.utility.IRecyclerItem;
 import net.oneread.aghanim.components.utility.MVPCallback;
@@ -17,10 +15,13 @@ import org.ucomplex.ucomplex.CommonDependencies.Network.HttpFactory;
 import org.ucomplex.ucomplex.Domain.Materials.MaterialItem;
 import org.ucomplex.ucomplex.Modules.Subject.SubjectModel;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import okhttp3.ResponseBody;
 
 import static org.ucomplex.ucomplex.CommonDependencies.Constants.AUTH_STRING;
 import static org.ucomplex.ucomplex.Modules.Subject.SubjectMaterials.SubjectMaterialsPresenter.EXTRA_KEY_FOLDER;
@@ -129,6 +130,27 @@ public class SubjectMaterialsModel extends MVPAbstractModelRecycler<String, List
         }
     }
 
+    public void uploadFile(String authString, Uri uri, MVPCallback<List<IRecyclerItem>> mvpCallback){
+        HttpFactory.uploadFile(authString, uri, mContext, new MVPCallback<ResponseBody>() {
+
+            @Override
+            public void onSuccess(ResponseBody responseBodyResponse) {
+                List<IRecyclerItem> list;
+                try {
+                    list = processJson(responseBodyResponse.string());
+                    mvpCallback.onSuccess(list);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                mvpCallback.onError(throwable);
+            }
+        });
+    }
+
     @Override
     public List<IRecyclerItem> processJson(String s) {
         List<IRecyclerItem> files = new ArrayList<>();
@@ -140,9 +162,13 @@ public class SubjectMaterialsModel extends MVPAbstractModelRecycler<String, List
                 file.setId(jsonFile.getString("id"));
                 file.setName(jsonFile.getString("name"));
                 file.setAddress(jsonFile.getString("address"));
-                file.setTime(jsonFile.getString("data"));
+                if(jsonFile.has("data")){
+                    file.setTime(jsonFile.getString("data"));
+                }
                 file.setSize(jsonFile.getInt("size"));
-                file.setTime(jsonFile.getString("time"));
+                if(jsonFile.has("time")){
+                    file.setTime(jsonFile.getString("time"));
+                }
                 file.setType(jsonFile.getString("type"));
                 file.setOwnersId(jsonFile.getInt("owner"));
                 files.add(file);
@@ -154,7 +180,7 @@ public class SubjectMaterialsModel extends MVPAbstractModelRecycler<String, List
         return files;
     }
 
-    public void deleteFile(String auth, String file, MVPCallback<String> mvpCallback) {
+    void deleteFile(String auth, String file, MVPCallback<String> mvpCallback) {
         HashMap<String, String> params = new HashMap<>();
         params.put(EXTRA_KEY_FILE, file);
         HttpFactory.getInstance().httpVolley(HttpFactory.DELETE_FILE_URL,
@@ -175,7 +201,7 @@ public class SubjectMaterialsModel extends MVPAbstractModelRecycler<String, List
                 });
     }
 
-    public void renameFile(String auth, String file, String name, MVPCallback<String> mvpCallback) {
+    void renameFile(String auth, String file, String name, MVPCallback<String> mvpCallback) {
         HashMap<String, String> params = new HashMap<>();
         params.put(EXTRA_KEY_FILE, file);
         params.put(EXTRA_KEY_FILENAME, name);

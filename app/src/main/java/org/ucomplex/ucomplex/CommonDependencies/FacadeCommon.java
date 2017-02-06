@@ -245,7 +245,7 @@ public class FacadeCommon {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
-    public static boolean checkPermissions(Activity activity) {
+    public static boolean checkStoragePermissions(Activity activity) {
         int result;
         List<String> listPermissionsNeeded = new ArrayList<>();
         for (String p : PERMISSIONS_STORAGE) {

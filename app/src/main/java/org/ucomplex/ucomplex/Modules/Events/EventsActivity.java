@@ -53,7 +53,7 @@ public class EventsActivity extends BaseRecyclerActivity {
         ((DaggerApplication) getApplication()).getEventsDiComponent().inject(this);
         super.onCreate(savedInstanceState);
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            FacadeCommon.checkPermissions(this);
+            FacadeCommon.checkStoragePermissions(this);
         }
         setContentViewWithNavDrawer(R.layout.activity_main);
 
