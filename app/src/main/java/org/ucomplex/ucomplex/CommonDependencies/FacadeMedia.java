@@ -207,7 +207,7 @@ public class FacadeMedia {
         }
     }
 
-    public static String getPath(final Activity context, final Uri uri) {
+    public static String getPath(final Context context, final Uri uri) {
         final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
@@ -269,7 +269,7 @@ public class FacadeMedia {
     }
 
     @Nullable
-    private static String getDataColumn(Activity context, Uri uri, String selection,
+    private static String getDataColumn(Context context, Uri uri, String selection,
                                         String[] selectionArgs) {
         Cursor cursor = null;
         final String column = COLUMN_DATA;
@@ -277,12 +277,7 @@ public class FacadeMedia {
         try {
             context.grantUriPermission(PACKAGE, uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (!Settings.System.canWrite(context)) {
-                    context.requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                            Manifest.permission.READ_EXTERNAL_STORAGE}, 2909);
-                } else {
-                    cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
-                }
+                cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
             } else {
                 cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
             }

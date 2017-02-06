@@ -101,6 +101,8 @@
     <string name="blacklist">Черный список</string>
     <string name="pick_image">Выберите фотографи</string>
     <string name="pick_document">Выберите документы</string>
+    <string name="file_uploaded">Выгрузка файла завершена</string>
+    <string name="error_file_upload">Ошибка при выгрузке файла</string>
 
 
 </resources>

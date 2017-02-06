@@ -3,6 +3,7 @@ package org.ucomplex.ucomplex.CommonDependencies.Network.Retrifit;
 import org.ucomplex.ucomplex.CommonDependencies.Network.HttpFactory;
 
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -20,8 +21,6 @@ import static org.ucomplex.ucomplex.CommonDependencies.Network.HttpFactory.BASE_
 
 public class ServiceGenerator {
 
-
-
     private static Retrofit retrofit;
 
     private static Retrofit.Builder builder =
@@ -32,8 +31,14 @@ public class ServiceGenerator {
     private static OkHttpClient.Builder httpClient =
             new OkHttpClient.Builder();
 
-    public static <S> S createService(
-            Class<S> serviceClass) {
+    public static <S> S createService(Class<S> serviceClass, String authString) {
+        httpClient.addInterceptor(chain -> {
+            Request request = chain.request()
+                    .newBuilder()
+                    .addHeader("Authorization", " Basic "+authString).build();
+            return chain.proceed(request);
+        });
+        retrofit = builder.client(httpClient.build()).build();
         return retrofit.create(serviceClass);
     }
 }

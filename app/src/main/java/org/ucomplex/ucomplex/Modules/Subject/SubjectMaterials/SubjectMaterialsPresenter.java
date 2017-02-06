@@ -41,6 +41,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.List;
 
+import okhttp3.ResponseBody;
+
 import static org.ucomplex.ucomplex.CommonDependencies.Constants.AUTH_STRING;
 import static org.ucomplex.ucomplex.CommonDependencies.Constants.UC_ACTION_DOWNLOAD_COMPLETE;
 import static org.ucomplex.ucomplex.Modules.Subject.SubjectMaterials.NotificationService.DOWNLOAD_COMPLETE;
@@ -148,6 +150,21 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
         getActivityContext().startService(notificationIntent);
     }
 
+    public void uploadFile(String authString, Uri uri) {
+        HttpFactory.uploadFile(authString, uri, getActivityContext(), new MVPCallback<retrofit2.Response<ResponseBody>>() {
+            @Override
+            public void onSuccess(retrofit2.Response<ResponseBody> responseBodyResponse) {
+                Toast.makeText(getActivityContext(), getActivityContext().getString(R.string.file_uploaded), Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                throwable.printStackTrace();
+                Toast.makeText(getActivityContext(), getActivityContext().getString(R.string.file_uploaded), Toast.LENGTH_LONG).show();Toast.makeText(getActivityContext(), getActivityContext().getString(R.string.error_file_upload), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
 
     @Override
     public SubjectMaterialsViewHolder createViewHolder(ViewGroup parent, int viewType) {
@@ -201,10 +218,10 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
             mModel.loadData(new MVPCallback<List<IRecyclerItem>>() {
                 @Override
                 public void onSuccess(List<IRecyclerItem> o) {
-                    if(o.size()>0){
+                    if (o.size() > 0) {
                         populateRecyclerView(o);
                         addHistory(o);
-                    }else{
+                    } else {
                         populateRecyclerView(MVPUtility.initNoContent());
                     }
                     pageUp();

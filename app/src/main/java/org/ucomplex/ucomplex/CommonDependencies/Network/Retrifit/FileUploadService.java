@@ -1,5 +1,7 @@
 package org.ucomplex.ucomplex.CommonDependencies.Network.Retrifit;
 
+import org.ucomplex.ucomplex.CommonDependencies.Network.HttpFactory;
+
 import java.util.Map;
 
 import okhttp3.MultipartBody;
@@ -10,10 +12,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Body;
+import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.PartMap;
+import retrofit2.http.QueryMap;
 
 /**
  * ---------------------------------------------------
@@ -28,9 +33,9 @@ import retrofit2.http.PartMap;
 public interface FileUploadService {
 
     @Multipart
-    @POST("student/my_files/add_files?mobile=1")
-    Call<ResponseBody> uploadFileWithPartMap(
-            @PartMap() Map<String, RequestBody> partMap,
-            @Part MultipartBody.Part file
+    @POST(HttpFactory.UPLOAD_FILE_URL)
+    Call<ResponseBody> upload(
+            @Part MultipartBody.Part file,
+            @Header("Content-Disposition") String content_disposition
     );
 }
