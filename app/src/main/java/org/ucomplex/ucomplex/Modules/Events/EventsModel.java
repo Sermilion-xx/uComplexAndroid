@@ -54,8 +54,15 @@ public class EventsModel extends MVPAbstractModelRecycler<String, List<IRecycler
     private static final String EVENT_SEMESTER = "semester";
     private static final String EVENT_YEAR = "year";
     static final String EVENTS_START = "start";
-    public static boolean INITIAL_EVENTS_LOADED = false;
+    private boolean initialEventsLoaded = false;
 
+    public boolean isInitialEventsLoaded() {
+        return initialEventsLoaded;
+    }
+
+    public void setInitialEventsLoaded(boolean initialEventsLoaded) {
+        this.initialEventsLoaded = initialEventsLoaded;
+    }
 
     @Override
     public void loadData(MVPCallback<List<IRecyclerItem>> mvpCallback, Bundle... bundle) {

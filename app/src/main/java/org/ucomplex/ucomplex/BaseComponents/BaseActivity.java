@@ -27,10 +27,9 @@ import org.javatuples.Pair;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
 import org.ucomplex.ucomplex.Domain.Users.UserInterface;
 import org.ucomplex.ucomplex.CommonDependencies.FragmentFactory;
-import org.ucomplex.ucomplex.Modules.Events.EventsActivity;
-import org.ucomplex.ucomplex.NavDrawer.DrawerAdapter;
-import org.ucomplex.ucomplex.NavDrawer.DrawerListItem;
-import org.ucomplex.ucomplex.NavDrawer.FacadeDrawer;
+import org.ucomplex.ucomplex.CommonDependencies.NavDrawer.DrawerAdapter;
+import org.ucomplex.ucomplex.CommonDependencies.NavDrawer.DrawerListItem;
+import org.ucomplex.ucomplex.CommonDependencies.NavDrawer.FacadeDrawer;
 import org.ucomplex.ucomplex.R;
 
 import java.util.ArrayList;

@@ -124,7 +124,6 @@ public class UsersActivity extends BaseActivity {
         return bundle;
     }
 
-
     private MVPViewBaseFragment restoreFragment(int type, String tag, Bundle savedInstanceState, Activity context){
         String authString = ((DaggerApplication) getAppContext()).getAuthString();
         MVPViewBaseFragment fragment = (MVPViewBaseFragment) getFragmentManager().getFragment(savedInstanceState, tag);

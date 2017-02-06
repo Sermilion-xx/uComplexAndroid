@@ -1,4 +1,4 @@
-package org.ucomplex.ucomplex.NavDrawer;
+package org.ucomplex.ucomplex.CommonDependencies.NavDrawer;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -124,7 +124,6 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
             } else if (position == 0) {
                 //TODO: go to profile
             } else if (position == 1) {
-                EventsModel.INITIAL_EVENTS_LOADED = true;
                 onDrawerItemPressed(EventsActivity.class);
                 Intent intent = new Intent(Constants.EVENTS_REFRESH_BROADCAST);
                 intent.putExtra(EventsActivity.ACTION_RELOAD_EVENTS, true);

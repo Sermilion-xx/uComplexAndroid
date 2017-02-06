@@ -2,7 +2,10 @@ package org.ucomplex.ucomplex.CommonDependencies.Network;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.util.Base64;
+import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -12,9 +15,33 @@ import com.android.volley.toolbox.Volley;
 
 import net.oneread.aghanim.components.utility.MVPCallback;
 
+import org.ucomplex.ucomplex.CommonDependencies.Network.Retrifit.FileUploadService;
+import org.ucomplex.ucomplex.CommonDependencies.Network.Retrifit.ServiceGenerator;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * ---------------------------------------------------
@@ -30,11 +57,6 @@ public class HttpFactory {
     private StringRequest stringRequest;
     private static HttpFactory mInstance;
 
-    private HttpFactory() {
-
-    }
-
-
     public static HttpFactory getInstance() {
         if (mInstance == null) {
             mInstance = new HttpFactory();
@@ -48,7 +70,7 @@ public class HttpFactory {
     }
 
     private static final String SCHEMA = "https://";
-    private static final String BASE_URL = SCHEMA + "ucomplex.org/";
+    public static final String BASE_URL = SCHEMA + "ucomplex.org/";
     public static final String USER_EVENTS_URL = BASE_URL + "user/events?mobile=1";
     public static final String PROFILE_IMAGE_URL = BASE_URL + "files/photos/";
     public static final String AUTHENTICATIO_URL = BASE_URL + "auth?mobile=1";
@@ -71,6 +93,7 @@ public class HttpFactory {
     public static final String USERS_GROUP_URL = BASE_URL + "student/ajax/my_group?mobile=1";
     public static final String USERS_LECTURERS_URL = BASE_URL + "student/ajax/my_teachers?mobile=1";
     public static final String USERS_BLACKLIST_URL = BASE_URL + "user/blacklist?mobile=1";
+    private static final String UPLOAD_FILE_URL =  BASE_URL + "student/my_files/add_files?mobile=1";
 
     public static String encodeLoginData(String loginData) {
         byte[] authBytes;
@@ -113,9 +136,7 @@ public class HttpFactory {
             callback.onError(error);
             error.printStackTrace();
 
-        }) {
-
-            @Override
+        }) {@Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 return finalParams;
             }
@@ -132,5 +153,50 @@ public class HttpFactory {
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(stringRequest);
+    }
+
+    public static void uploadFile(String filename, Uri fileUri, Context context) {
+        MultipartBody.Part body = prepareFilePart("material", fileUri, context);
+        RequestBody filenameBody = createPartFromString(filename);
+
+        HashMap<String, RequestBody> map = new HashMap<>();
+        map.put("file", filenameBody);
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        Retrofit.Builder builder =
+                new Retrofit.Builder()
+                        .baseUrl(BASE_URL)
+                        .addConverterFactory(GsonConverterFactory.create());
+        Retrofit retrofit = builder.client(httpClient.build()).build();
+        FileUploadService client =  retrofit.create(FileUploadService.class);
+        Call<ResponseBody> call = client.uploadFileWithPartMap(map, body);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call,
+                                   Response<ResponseBody> response) {
+                Log.v("Upload", "success");
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("Upload error:", t.getMessage());
+            }
+        });
+    }
+
+    @NonNull
+    private static RequestBody createPartFromString(String string){
+        return RequestBody.create(okhttp3.MultipartBody.FORM, string);
+    }
+
+    @NonNull
+    private static MultipartBody.Part prepareFilePart(String partName, Uri fileUri, Context context) {
+        File file = new File(fileUri.getPath());
+        RequestBody requestFile =
+                RequestBody.create(
+                        MediaType.parse(context.getContentResolver().getType(fileUri)),
+                        file
+                );
+        return MultipartBody.Part.createFormData(partName, file.getName(), requestFile);
     }
 }

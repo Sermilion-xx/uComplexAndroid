@@ -157,8 +157,8 @@ public class EventsPresenter extends MVPAbstractPresenterRecycler<String> {
                     hasMoreEvents = false;
                 }
                 addEmptyItem(o);
-                if (!EventsModel.INITIAL_EVENTS_LOADED) {
-                    EventsModel.INITIAL_EVENTS_LOADED = true;
+                if (!((EventsModel)mModel).isInitialEventsLoaded()) {
+                    ((EventsModel)mModel).setInitialEventsLoaded(true);
                     hasMoreEvents = true;
                     populateRecyclerView(o);
                     ((EventsActivity) getView()).hideProgress();

@@ -99,6 +99,8 @@
     <string name="friends">Друзья</string>
     <string name="group">Группа</string>
     <string name="blacklist">Черный список</string>
+    <string name="pick_image">Выберите фотографи</string>
+    <string name="pick_document">Выберите документы</string>
 
 
 </resources>

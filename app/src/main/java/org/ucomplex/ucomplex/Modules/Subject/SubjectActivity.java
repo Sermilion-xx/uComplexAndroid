@@ -26,6 +26,9 @@ import static org.ucomplex.ucomplex.CommonDependencies.FacadeCommon.REQUEST_EXTE
 public class SubjectActivity extends BaseActivity {
 
     private static final String EXTRA_KEY_COURSE_NAME = "courseName";
+    private static final String TAG_MATERIALS_FRAGMENT = "subjectMaterialsFragment";
+    private static final String TAG_DETAILS_FRAGMENT = "subjectDetailsFragment";
+    private static final String TAG_TIMELINE_FRAGMENT = "subjectTimelineFragment";
     private SubjectMaterialsFragment subjectMaterialsFragment;
     private SubjectDetailsFragment subjectDetailsFragment;
     private SubjectTimelineFragment subjectTimelineFragment;
@@ -43,9 +46,9 @@ public class SubjectActivity extends BaseActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        getFragmentManager().putFragment(outState, "subjectMaterialsFragment", subjectMaterialsFragment);
-        getFragmentManager().putFragment(outState, "subjectDetailsFragment", subjectDetailsFragment);
-        getFragmentManager().putFragment(outState, "subjectTimelineFragment", subjectTimelineFragment);
+        getFragmentManager().putFragment(outState, TAG_MATERIALS_FRAGMENT, subjectMaterialsFragment);
+        getFragmentManager().putFragment(outState, TAG_DETAILS_FRAGMENT, subjectDetailsFragment);
+        getFragmentManager().putFragment(outState, TAG_TIMELINE_FRAGMENT, subjectTimelineFragment);
         super.onSaveInstanceState(outState);
     }
 
@@ -68,11 +71,11 @@ public class SubjectActivity extends BaseActivity {
         tabLayout.setupWithViewPager(viewPager);
 
         if (savedInstanceState != null) {
-            subjectDetailsFragment = (SubjectDetailsFragment) getFragmentManager().getFragment(savedInstanceState, "subjectDetailsFragment");
+            subjectDetailsFragment = (SubjectDetailsFragment) getFragmentManager().getFragment(savedInstanceState, TAG_DETAILS_FRAGMENT);
             subjectDetailsFragment.setContext(this);
-            subjectMaterialsFragment = (SubjectMaterialsFragment) getFragmentManager().getFragment(savedInstanceState, "subjectMaterialsFragment");
+            subjectMaterialsFragment = (SubjectMaterialsFragment) getFragmentManager().getFragment(savedInstanceState, TAG_MATERIALS_FRAGMENT);
             subjectMaterialsFragment.setContext(this);
-            subjectTimelineFragment = (SubjectTimelineFragment) getFragmentManager().getFragment(savedInstanceState, "subjectTimelineFragment");
+            subjectTimelineFragment = (SubjectTimelineFragment) getFragmentManager().getFragment(savedInstanceState, TAG_TIMELINE_FRAGMENT);
             subjectTimelineFragment.setContext(this);
         } else {
             subjectDetailsFragment = SubjectDetailsFragment.getInstance(this);

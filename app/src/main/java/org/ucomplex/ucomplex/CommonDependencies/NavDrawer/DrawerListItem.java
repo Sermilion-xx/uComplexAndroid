@@ -1,4 +1,4 @@
-package org.ucomplex.ucomplex.NavDrawer;
+package org.ucomplex.ucomplex.CommonDependencies.NavDrawer;
 
 /**
  * Created by Sermilion on 02/11/2016.

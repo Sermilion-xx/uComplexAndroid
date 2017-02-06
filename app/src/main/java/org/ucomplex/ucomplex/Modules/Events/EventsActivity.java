@@ -109,7 +109,7 @@ public class EventsActivity extends BaseRecyclerActivity {
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(Constants.EVENTS_REFRESH_BROADCAST)) {
                 if (intent.hasExtra(ACTION_RELOAD_EVENTS)) {
-                    EventsModel.INITIAL_EVENTS_LOADED = false;
+                    ((EventsModel)mPresenter.getModel()).setInitialEventsLoaded(false);
                 }
                 DaggerApplication application = (DaggerApplication) getAppContext();
                 Bundle bundle = new Bundle();

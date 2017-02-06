@@ -1,4 +1,4 @@
-package org.ucomplex.ucomplex.NavDrawer;
+package org.ucomplex.ucomplex.CommonDependencies.NavDrawer;
 
 import android.content.Context;
 
