@@ -7,13 +7,19 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.IBinder;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.NotificationCompat;
 
+import org.ucomplex.ucomplex.CommonDependencies.FacadeMedia;
 import org.ucomplex.ucomplex.Modules.Subject.SubjectActivity;
 import org.ucomplex.ucomplex.R;
+
+import java.io.IOException;
 
 import static org.ucomplex.ucomplex.CommonDependencies.Constants.PREFIX;
 import static org.ucomplex.ucomplex.CommonDependencies.Constants.UC_ACTION_DOWNLOAD_CLICKED;
@@ -35,15 +41,23 @@ public class NotificationService extends Service {
     public static final String EXTRA_BODY = "notification_body";
     private static final int NOTIFY_ID = 1;
     public static final String ACTION_NOTIFY = PREFIX + "Notify";
-    public static final String EXTRA_URI = "uriString";
-    public static final String DOWNLOAD_COMPLETE = "downloadComplete";
-
+    public static final String EXTRA_LARGE_ICON = "smallIcon";
 
     public int onStartCommand(Intent intent, int flags, int startId) {
         String mTitle = intent.getStringExtra(EXTRA_TITLE);
         String mMessage = intent.getStringExtra(EXTRA_BODY);
+        Bitmap largeIcon = null;
+        if(intent.hasExtra(EXTRA_LARGE_ICON)) {
+            try {
+                Uri largeIconUri = intent.getParcelableExtra(EXTRA_LARGE_ICON);
+//                largeIcon = MediaStore.Images.Media.getBitmap(this.getContentResolver(), largeIconUri);
+                largeIcon = FacadeMedia.getThumbnail(largeIconUri,this, 100);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         Notification notification;
-        notification = downloadStartedNotification(mTitle, mMessage);
+        notification = downloadStartedNotification(mTitle, mMessage, largeIcon);
         startForeground(NOTIFY_ID, notification);
         return START_STICKY;
     }
@@ -69,13 +83,16 @@ public class NotificationService extends Service {
         return null;
     }
 
-    private Notification downloadStartedNotification(String title, String message) {
+    private Notification downloadStartedNotification(String title, String message, Bitmap largeIcon) {
         Intent intent = new Intent(this, SubjectActivity.class);
         intent.setAction(ACTION_NOTIFY);
         intent.putExtra(EXTRA_TITLE, title);
         intent.putExtra(EXTRA_BODY, message);
         NotificationCompat.Builder builder = initBasicBuilder(title, message, intent);
-        builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_u));
+        if(largeIcon==null){
+            largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_u);
+        }
+        builder.setLargeIcon(largeIcon);
         return builder.build();
     }
 

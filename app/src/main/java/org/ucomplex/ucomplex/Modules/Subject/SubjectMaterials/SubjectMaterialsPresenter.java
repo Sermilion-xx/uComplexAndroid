@@ -44,10 +44,9 @@ import java.util.List;
 
 import static org.ucomplex.ucomplex.CommonDependencies.Constants.AUTH_STRING;
 import static org.ucomplex.ucomplex.CommonDependencies.Constants.UC_ACTION_DOWNLOAD_COMPLETE;
-import static org.ucomplex.ucomplex.Modules.Subject.SubjectMaterials.NotificationService.DOWNLOAD_COMPLETE;
 import static org.ucomplex.ucomplex.Modules.Subject.SubjectMaterials.NotificationService.EXTRA_BODY;
+import static org.ucomplex.ucomplex.Modules.Subject.SubjectMaterials.NotificationService.EXTRA_LARGE_ICON;
 import static org.ucomplex.ucomplex.Modules.Subject.SubjectMaterials.NotificationService.EXTRA_TITLE;
-import static org.ucomplex.ucomplex.Modules.Subject.SubjectMaterials.NotificationService.EXTRA_URI;
 import static org.ucomplex.ucomplex.Modules.Subject.SubjectMaterials.SubjectMaterialsModel.EXTRA_KEY_MY_MATERIALS;
 
 /**
@@ -117,7 +116,7 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
                     }
                     Toast.makeText(getActivityContext(), getActivityContext().getString(R.string.file_download_started), Toast.LENGTH_SHORT).show();
                     filename = item.getAddress() + "." + item.getType();
-                    startNotificationService(filename, "Загрузка файла началась.", false, null);
+                    startNotificationService(filename, "Загрузка файла началась.", null);
                     String mUrl = HttpFactory.DOWNLOAD_MATERIAL_URL;
                     mUrl = mUrl + item.getOwnersId() + "/" + filename;
                     request = new InputStreamVolleyRequest(Request.Method.GET, mUrl, this, this, null);
@@ -138,32 +137,19 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
         holder.mClickArea.setOnClickListener(clickListener);
     }
 
-    private void startNotificationService(String filename, String message, boolean downloadComplete, Uri fileUri) {
+    private void startNotificationService(String filename, String message, Uri largeIcon) {
         Intent notificationIntent = new Intent(getActivityContext(), NotificationService.class);
         notificationIntent.putExtra(EXTRA_TITLE, filename);
         notificationIntent.putExtra(EXTRA_BODY, message);
-        if (downloadComplete) {
-            notificationIntent.putExtra(DOWNLOAD_COMPLETE, true);
-            notificationIntent.putExtra(EXTRA_URI, fileUri);
+        if(largeIcon!=null) {
+            notificationIntent.putExtra(EXTRA_LARGE_ICON, largeIcon);
         }
         getActivityContext().startService(notificationIntent);
     }
 
-    public void uploadFile(String authString, Uri uri) {
-        ((SubjectMaterialsModel) mModel).uploadFile(authString, uri, new MVPCallback<List<IRecyclerItem>>() {
-            @Override
-            public void onSuccess(List<IRecyclerItem> o) {
-                ((SubjectMaterialsModel) mModel).addAll(o);
-                ((MVPViewRecycler) getView()).notifyItemInserted(((SubjectMaterialsModel) mModel).getItemCount());
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-                throwable.printStackTrace();
-            }
-        });
+    private void showToast(String text){
+        Toast.makeText(getActivityContext(), text, Toast.LENGTH_LONG).show();
     }
-
 
     @Override
     public SubjectMaterialsViewHolder createViewHolder(ViewGroup parent, int viewType) {
@@ -352,20 +338,7 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
                     showRenameDialog(code, name, position);
                     break;
                 case 1:
-                    ((SubjectMaterialsModel) mModel).deleteFile(this.authString, code, new MVPCallback<String>() {
-                        @Override
-                        public void onSuccess(String s) {
-                            ((SubjectMaterialsModel) mModel).remove(position);
-                            ((SubjectMaterialsFragment) getView()).notifyItemRemoved(position);
-                            Toast.makeText(getActivityContext(), getActivityContext().getString(R.string.file_was_deleted), Toast.LENGTH_LONG).show();
-                        }
-
-                        @Override
-                        public void onError(Throwable throwable) {
-                            Toast.makeText(getActivityContext(), getActivityContext().getString(R.string.error_deleting_file), Toast.LENGTH_LONG).show();
-                            throwable.printStackTrace();
-                        }
-                    });
+                    deleteFile(code, position);
                     break;
                 case 2:
                     ((SubjectMaterialsModel) mModel).shareFile(this.authString, code, null);
@@ -373,5 +346,50 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
             }
         });
         return build;
+    }
+
+    private void deleteFile(String code, final int position) {
+        ((SubjectMaterialsFragment) getView()).showProgress();
+        ((SubjectMaterialsModel) mModel).deleteFile(this.authString, code, new MVPCallback<String>() {
+            @Override
+            public void onSuccess(String s) {
+                ((SubjectMaterialsModel) mModel).remove(position);
+                ((SubjectMaterialsFragment) getView()).notifyItemRemoved(position);
+                Toast.makeText(getActivityContext(), getActivityContext().getString(R.string.file_was_deleted), Toast.LENGTH_LONG).show();
+                ((SubjectMaterialsFragment) getView()).hideProgress();
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                ((SubjectMaterialsFragment) getView()).hideProgress();
+                Toast.makeText(getActivityContext(), getActivityContext().getString(R.string.error_deleting_file), Toast.LENGTH_LONG).show();
+                throwable.printStackTrace();
+            }
+        });
+    }
+
+    public void uploadFile(String authString, Uri uri) {
+        Intent intent = new Intent();
+        intent.setAction(UC_ACTION_DOWNLOAD_COMPLETE);
+
+        File file = new File(uri.getPath());
+        startNotificationService(file.getName(),getActivityContext().getString(R.string.upload_started), uri);
+        ((SubjectMaterialsModel) mModel).uploadFile(authString, uri, new MVPCallback<List<IRecyclerItem>>() {
+
+            @Override
+            public void onSuccess(List<IRecyclerItem> o) {
+                ((SubjectMaterialsModel) mModel).addAll(o);
+                ((MVPViewRecycler) getView()).notifyItemInserted(((SubjectMaterialsModel) mModel).getItemCount());
+                showToast(getActivityContext().getString(R.string.file_uploaded));
+                getActivityContext().sendBroadcast(intent);
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                throwable.printStackTrace();
+                showToast(getActivityContext().getString(R.string.error_file_upload));
+                getActivityContext().sendBroadcast(intent);
+            }
+        });
     }
 }

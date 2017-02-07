@@ -83,7 +83,7 @@ public class FacadeMedia {
             return k;
     }
 
-    public static Bitmap getThumbnail(Uri uri, Activity activity, int ...thumbnail_size) throws IOException {
+    public static Bitmap getThumbnail(Uri uri, Context activity, int ...thumbnail_size) throws IOException {
         if(uri!=null) {
 
             if (thumbnail_size.length == 0) {
