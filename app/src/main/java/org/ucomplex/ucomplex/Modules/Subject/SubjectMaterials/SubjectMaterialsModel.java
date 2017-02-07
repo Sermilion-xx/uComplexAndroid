@@ -73,7 +73,11 @@ public class SubjectMaterialsModel extends MVPAbstractModelRecycler<String, List
     }
 
     Pair<List<IRecyclerItem>,String> getHistory(int index) {
-        return this.mPageHistory.get(index);
+        if(index<this.mPageHistory.size()){
+            return this.mPageHistory.get(index);
+        }else {
+            return null;
+        }
     }
 
     int getHistoryCount(){
