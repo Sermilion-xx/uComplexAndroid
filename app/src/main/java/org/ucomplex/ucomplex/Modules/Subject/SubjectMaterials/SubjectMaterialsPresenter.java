@@ -9,6 +9,7 @@ import android.os.Environment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,7 +64,7 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
 
     static final int TYPE_FILE = 0;
     static final int TYPE_FOLDER = 1;
-    static final String EXTRA_KEY_FOLDER = "folder";
+    public static final String EXTRA_KEY_FOLDER = "folder";
     private static final String EXTRA_KEY_GET_FOLDER = "get_folder";
     private String filename;
     private InputStreamVolleyRequest request;
@@ -73,24 +74,29 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
     private String[] studentMenuActions;
     private String[] teacherMenuActions;
 
+    public void setMyFiles(boolean mMyFiles) {
+        this.mMyFiles = mMyFiles;
+    }
+
     private void pageUp() {
         ((SubjectMaterialsModel) mModel).pageUp();
     }
 
     void pageDown() {
         ((SubjectMaterialsModel) mModel).pageDown();
-        populateRecyclerView(getHistory(((SubjectMaterialsModel) mModel).getCurrentPage()));
+        Pair<List<IRecyclerItem>,String> history = getHistory(((SubjectMaterialsModel) mModel).getCurrentPage());
+        populateRecyclerView(history.first);
     }
 
     int getCurrentPage() {
         return ((SubjectMaterialsModel) mModel).getCurrentPage();
     }
 
-    private void addHistory(List<IRecyclerItem> list) {
+    private void addHistory(Pair<List<IRecyclerItem>,String> list) {
         ((SubjectMaterialsModel) mModel).addHistory(list);
     }
 
-    private List<IRecyclerItem> getHistory(int index) {
+    private Pair<List<IRecyclerItem>,String> getHistory(int index) {
         return ((SubjectMaterialsModel) mModel).getHistory(index);
     }
 
@@ -128,7 +134,7 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
                     bundle.putString(AUTH_STRING, authString);
                     bundle.putString(EXTRA_KEY_FOLDER, item.getAddress());
                     bundle.putBoolean(EXTRA_KEY_GET_FOLDER, true);
-                    bundle.putBoolean(EXTRA_KEY_MY_MATERIALS, false);
+                    bundle.putBoolean(EXTRA_KEY_MY_MATERIALS, mMyFiles);
                     loadData(bundle);
                 }
             }
@@ -195,11 +201,11 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
     @Override
     public void loadData(Bundle... bundle) {
         ((SubjectMaterialsFragment) getView()).showProgress();
-        mMyFiles = bundle[0].getBoolean(EXTRA_KEY_MY_MATERIALS);
         if (bundle.length > 0 &&
                 !bundle[0].containsKey(EXTRA_KEY_GET_FOLDER) &&
-                !mMyFiles && ((SubjectMaterialsModel) mModel).getHistoryCount() > 0) {
-            populateRecyclerView(((SubjectMaterialsModel) mModel).getHistory(getItemCount()));
+                !mMyFiles
+                && ((SubjectMaterialsModel) mModel).getHistoryCount() > 0) {
+            populateRecyclerView(((SubjectMaterialsModel) mModel).getHistory(getItemCount()).first);
         } else {
             mModel.loadData(new MVPCallback<List<IRecyclerItem>>() {
 
@@ -208,8 +214,11 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
                     ((SubjectMaterialsFragment) getView()).hideProgress();
                     if (o.size() > 0) {
                         populateRecyclerView(o);
-                        addHistory(o);
+                        addHistory(new Pair<>(o, bundle[0].getString(EXTRA_KEY_FOLDER)));
                     } else {
+                        int end = ((MVPModelRecycler)mModel).getItemCount();
+                        ((MVPModelRecycler)mModel).clear();
+                        ((SubjectMaterialsFragment) getView()).notifyItemRangeRemoved(0,end);
                         populateRecyclerView(MVPUtility.initNoContent());
                     }
                     pageUp();
@@ -368,7 +377,7 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
         });
     }
 
-    public void uploadFile(String authString, Uri uri) {
+    public void uploadFile(Uri uri) {
         Intent intent = new Intent();
         intent.setAction(UC_ACTION_DOWNLOAD_COMPLETE);
 
@@ -389,6 +398,30 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
                 throwable.printStackTrace();
                 showToast(getActivityContext().getString(R.string.error_file_upload));
                 getActivityContext().sendBroadcast(intent);
+            }
+        });
+    }
+
+    public void createFolder(String folderName){
+        ((SubjectMaterialsFragment)getView()).showProgress();
+        ((SubjectMaterialsModel) mModel).createFolder(authString, folderName, new MVPCallback<List<IRecyclerItem>>() {
+
+            @Override
+            public void onSuccess(List<IRecyclerItem> o) {
+                if(o!=null) {
+                    ((SubjectMaterialsModel) mModel).addAll(o);
+                    getHistory(getCurrentPage()).first.addAll(o);
+                    ((MVPViewRecycler) getView()).notifyItemInserted(((SubjectMaterialsModel) mModel).getItemCount());
+                }
+                ((SubjectMaterialsFragment)getView()).hideProgress();
+                showToast(getActivityContext().getString(R.string.folder_created));
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                throwable.printStackTrace();
+                ((SubjectMaterialsFragment)getView()).hideProgress();
+                showToast(getActivityContext().getString(R.string.error_creating_folder));
             }
         });
     }

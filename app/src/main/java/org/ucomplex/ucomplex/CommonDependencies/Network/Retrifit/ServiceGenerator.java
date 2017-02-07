@@ -28,10 +28,10 @@ public class ServiceGenerator {
                     .baseUrl(BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create());
 
-    private static OkHttpClient.Builder httpClient =
-            new OkHttpClient.Builder();
+    private static OkHttpClient.Builder httpClient;
 
     public static <S> S createService(Class<S> serviceClass, String authString) {
+        httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(chain -> {
             Request request = chain.request()
                     .newBuilder()

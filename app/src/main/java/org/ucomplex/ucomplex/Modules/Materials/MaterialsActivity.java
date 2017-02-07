@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -11,12 +13,18 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import net.oneread.aghanim.components.base.MVPBaseRecyclerFragment;
 import net.oneread.aghanim.components.utility.IFragment;
+import net.oneread.aghanim.components.utility.OnFragmentLoadedListener;
 
 import org.ucomplex.ucomplex.BaseComponents.BaseRecyclerActivity;
 import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
@@ -45,13 +53,11 @@ public class MaterialsActivity extends BaseRecyclerActivity {
         setContentViewWithNavDrawer(R.layout.activity_materials);
         setupToolbar(getString(R.string.portfolio));
 
-        Bundle bundle = new Bundle();
-        DaggerApplication application = (DaggerApplication) getAppContext();
-        authString = application.getAuthString();
-        bundle.putString(AUTH_STRING, authString);
-        bundle.putBoolean(EXTRA_KEY_MY_MATERIALS, true);
+        subjectMaterialsFragment = (SubjectMaterialsFragment) setupRecyclerFragment(
+                savedInstanceState,
+                SubjectMaterialsFragment.class.getName(),
+                R.id.container);
 
-        subjectMaterialsFragment = (SubjectMaterialsFragment) setupRecyclerFragment(savedInstanceState, SubjectMaterialsFragment.class.getName(), R.id.container);
         setupDrawer();
     }
 
@@ -75,8 +81,10 @@ public class MaterialsActivity extends BaseRecyclerActivity {
             fragment = FragmentFactory.getFragmentWithName(name, this);
             if (fragment != null) {
                 ((SubjectMaterialsFragment) fragment).setContext(this);
-                fragment.setOnFragmentLoadedListener(
-                        views -> subjectMaterialsFragment.onFragmentVisible(true)
+                fragment.setOnFragmentLoadedListener(views -> {
+                    ((SubjectMaterialsPresenter)subjectMaterialsFragment.getPresenter()).setMyFiles(true);
+                    subjectMaterialsFragment.onFragmentVisible(true);
+                }
                 );
                 transaction.add(containerId, (Fragment) fragment, name);
                 transaction.commit();
@@ -100,10 +108,33 @@ public class MaterialsActivity extends BaseRecyclerActivity {
                 }
                 return true;
             case R.id.my_files_add_folder:
+                showCreateFolderDialog();
                 return true;
 
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    protected void showCreateFolderDialog() {
+        LayoutInflater layoutInflater = LayoutInflater.from(this);
+        View promptView = layoutInflater.inflate(R.layout.dialog_input, null);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setView(promptView);
+        final EditText editText = (EditText) promptView.findViewById(R.id.edittext);
+        editText.setTextColor(ContextCompat.getColor(this, R.color.color_uc_ListTextColorPrimary));
+        alertDialogBuilder.setCancelable(false)
+                .setPositiveButton(MaterialsActivity.this.getString(R.string.ok), (dialog, id) -> {
+                    if (FacadeCommon.isNetworkConnected(MaterialsActivity.this)) {
+                        String folderName = editText.getText().toString();
+                        ((SubjectMaterialsPresenter)subjectMaterialsFragment.getPresenter()).createFolder(folderName);
+                    } else {
+                        Toast.makeText(MaterialsActivity.this, MaterialsActivity.this.getString(R.string.error_check_internet), Toast.LENGTH_LONG).show();
+                    }
+                })
+                .setNegativeButton(MaterialsActivity.this.getString(R.string.cancel),
+                        (dialog, id) -> dialog.cancel());
+        AlertDialog alert = alertDialogBuilder.create();
+        alert.show();
     }
 
     private void pickImage() {
@@ -133,7 +164,7 @@ public class MaterialsActivity extends BaseRecyclerActivity {
         }
         if (originalUri != null) {
             if (FacadeCommon.isNetworkConnected(this)) {
-                ((SubjectMaterialsPresenter)subjectMaterialsFragment.getPresenter()).uploadFile(authString, originalUri);
+                ((SubjectMaterialsPresenter)subjectMaterialsFragment.getPresenter()).uploadFile(originalUri);
             } else {
                 Toast.makeText(this, "Проверте интернет соединение", Toast.LENGTH_LONG).show();
             }

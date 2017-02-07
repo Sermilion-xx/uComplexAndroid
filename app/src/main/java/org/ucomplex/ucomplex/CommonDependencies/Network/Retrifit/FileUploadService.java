@@ -18,6 +18,7 @@ import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.PartMap;
+import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 
 /**
@@ -36,6 +37,6 @@ public interface FileUploadService {
     @POST(HttpFactory.UPLOAD_FILE_URL)
     Call<ResponseBody> upload(
             @Part MultipartBody.Part file,
-            @Header("Content-Disposition") String content_disposition
+            @Query("folder") String folder
     );
 }

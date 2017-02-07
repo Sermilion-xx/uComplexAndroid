@@ -3,7 +3,9 @@ package org.ucomplex.ucomplex.CommonDependencies.Network;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.Base64;
+import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -18,6 +20,7 @@ import org.ucomplex.ucomplex.CommonDependencies.Network.Retrifit.FileUploadServi
 import org.ucomplex.ucomplex.CommonDependencies.Network.Retrifit.ServiceGenerator;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,6 +32,10 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static org.ucomplex.ucomplex.CommonDependencies.Constants.AUTH_STRING;
+import static org.ucomplex.ucomplex.Modules.Subject.SubjectMaterials.SubjectMaterialsModel.FILE_URI;
+import static org.ucomplex.ucomplex.Modules.Subject.SubjectMaterials.SubjectMaterialsPresenter.EXTRA_KEY_FOLDER;
 
 /**
  * ---------------------------------------------------
@@ -81,7 +88,7 @@ public class HttpFactory {
     public static final String USERS_LECTURERS_URL = BASE_URL + "student/ajax/my_teachers?mobile=1";
     public static final String USERS_BLACKLIST_URL = BASE_URL + "user/blacklist?mobile=1";
     public static final String UPLOAD_FILE_URL = BASE_URL + "student/my_files/add_files?mobile=1";
-
+    public static final String CREATE_FOLDER_URL = BASE_URL + "student/my_files/create_folder?mobile=1";
     public static String encodeLoginData(String loginData) {
         byte[] authBytes;
         try {
@@ -102,13 +109,13 @@ public class HttpFactory {
     public void httpVolley(String url,
                            final String encodedAuth,
                            Context context,
-                           HashMap<String, String> params,
+                           Map<String, String> params,
                            MVPCallback<String> callback) {
         if (params == null) {
             params = new HashMap<>();
         }
 
-        final HashMap<String, String> finalParams = params;
+        final Map<String, String> finalParams = params;
         RequestQueue queue = Volley.newRequestQueue(context);
         stringRequest = new StringRequest(com.android.volley.Request.Method.POST, url,
                 response -> {
@@ -143,10 +150,15 @@ public class HttpFactory {
         queue.add(stringRequest);
     }
 
-    public static void uploadFile(String authString,
-                                  Uri fileUri,
+    public static void uploadFile(Bundle bundle,
                                   Context context,
                                   MVPCallback<ResponseBody> mvpCallback) {
+        String authString = bundle.getString(AUTH_STRING);
+        Uri fileUri = bundle.getParcelable(FILE_URI);
+        String folder = null;
+        if(bundle.get(EXTRA_KEY_FOLDER)!=null){
+            folder = bundle.getString(EXTRA_KEY_FOLDER);
+        }
         FileUploadService service =
                 ServiceGenerator.createService(FileUploadService.class, authString);
         String filePath = FacadeMedia.getPath(context, fileUri);
@@ -157,8 +169,8 @@ public class HttpFactory {
                             uploadFile);
             MultipartBody.Part body =
                     MultipartBody.Part.createFormData("file", uploadFile.getName(), requestFile);
-            String content_disposition = "file; filename=\"" + uploadFile.getName() + "\"";
-            Call<ResponseBody> call = service.upload(body, content_disposition);
+
+            Call<ResponseBody> call = service.upload(body, folder);
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call,
@@ -166,6 +178,11 @@ public class HttpFactory {
                     if(response.isSuccessful()){
                         mvpCallback.onSuccess(response.body());
                     }else {
+                        try {
+                            Log.e("Bad request: ", response.errorBody().string());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                         mvpCallback.onError(new Throwable(response.errorBody().toString()));
                     }
 

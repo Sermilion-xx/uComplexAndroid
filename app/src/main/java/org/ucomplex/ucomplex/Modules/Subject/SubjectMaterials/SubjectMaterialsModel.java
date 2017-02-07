@@ -2,6 +2,7 @@ package org.ucomplex.ucomplex.Modules.Subject.SubjectMaterials;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Pair;
 
 import net.oneread.aghanim.components.utility.IRecyclerItem;
 import net.oneread.aghanim.components.utility.MVPCallback;
@@ -40,9 +41,11 @@ public class SubjectMaterialsModel extends MVPAbstractModelRecycler<String, List
 
     public static final String EXTRA_KEY_MY_MATERIALS = "myMaterials";
     public static final String EXTRA_KEY_FILE = "file";
-    public static final String EXTRA_KEY_FILENAME = "name";
-    private List<List<IRecyclerItem>> mPageHistory;
+    public static final String EXTRA_KEY_NAME = "name";
+    public static final String FILE_URI = "file_uri";
+    private List<Pair<List<IRecyclerItem>,String>> mPageHistory;
     private int currentPage = -1;
+    private String currentFolder = null;
 
     public int getCurrentPage() {
         return currentPage;
@@ -54,9 +57,14 @@ public class SubjectMaterialsModel extends MVPAbstractModelRecycler<String, List
 
     public void pageDown() {
         currentPage--;
+        if(currentPage<1){
+            currentFolder = "null";
+        }else {
+            currentFolder = getHistory(currentPage).second;
+        }
     }
 
-    void addHistory(List<IRecyclerItem> list) {
+    void addHistory(Pair<List<IRecyclerItem>,String> list) {
         this.mPageHistory.add(list);
     }
 
@@ -64,7 +72,7 @@ public class SubjectMaterialsModel extends MVPAbstractModelRecycler<String, List
         mPageHistory = new ArrayList<>();
     }
 
-    List<IRecyclerItem> getHistory(int index) {
+    Pair<List<IRecyclerItem>,String> getHistory(int index) {
         return this.mPageHistory.get(index);
     }
 
@@ -106,9 +114,11 @@ public class SubjectMaterialsModel extends MVPAbstractModelRecycler<String, List
             String url = HttpFactory.TEACHERS_FILES_URL;
             if (myMaterials) {
                 url = HttpFactory.STUDENTS_FILES_URL;
-            } else {
+            }
+            if(bundles[0].get(EXTRA_KEY_FOLDER)!=null){
                 params.put(EXTRA_KEY_FOLDER, bundles[0].getString(EXTRA_KEY_FOLDER));
             }
+
             HttpFactory.getInstance().httpVolley(url,
                     encodedAuth,
                     mContext,
@@ -119,6 +129,7 @@ public class SubjectMaterialsModel extends MVPAbstractModelRecycler<String, List
                             if (s != null && !s.equals("null")) {
                                 List<IRecyclerItem> newItems = processJson(s);
                                 mvpCallback.onSuccess(newItems);
+                                currentFolder = bundles[0].getString(EXTRA_KEY_FOLDER);
                             }
                         }
 
@@ -131,7 +142,13 @@ public class SubjectMaterialsModel extends MVPAbstractModelRecycler<String, List
     }
 
     public void uploadFile(String authString, Uri uri, MVPCallback<List<IRecyclerItem>> mvpCallback){
-        HttpFactory.uploadFile(authString, uri, mContext, new MVPCallback<ResponseBody>() {
+        Bundle bundle = new Bundle();
+        bundle.putString(AUTH_STRING, authString);
+        bundle.putParcelable(FILE_URI, uri);
+        if(!getHistory(getCurrentPage()).second.equals("null")){
+            bundle.putString(EXTRA_KEY_FOLDER, getHistory(getCurrentPage()).second);
+        }
+        HttpFactory.uploadFile(bundle, mContext, new MVPCallback<ResponseBody>() {
 
             @Override
             public void onSuccess(ResponseBody responseBodyResponse) {
@@ -165,7 +182,9 @@ public class SubjectMaterialsModel extends MVPAbstractModelRecycler<String, List
                 if(jsonFile.has("data")){
                     file.setTime(jsonFile.getString("data"));
                 }
-                file.setSize(jsonFile.getInt("size"));
+                if(!jsonFile.isNull("size")){
+                    file.setSize(jsonFile.getInt("size"));
+                }
                 if(jsonFile.has("time")){
                     file.setTime(jsonFile.getString("time"));
                 }
@@ -181,7 +200,7 @@ public class SubjectMaterialsModel extends MVPAbstractModelRecycler<String, List
     }
 
     void deleteFile(String auth, String file, MVPCallback<String> mvpCallback) {
-        HashMap<String, String> params = new HashMap<>();
+        Map<String, String> params = new HashMap<>();
         params.put(EXTRA_KEY_FILE, file);
         HttpFactory.getInstance().httpVolley(HttpFactory.DELETE_FILE_URL,
                 auth,
@@ -202,9 +221,9 @@ public class SubjectMaterialsModel extends MVPAbstractModelRecycler<String, List
     }
 
     void renameFile(String auth, String file, String name, MVPCallback<String> mvpCallback) {
-        HashMap<String, String> params = new HashMap<>();
+        Map<String, String> params = new HashMap<>();
         params.put(EXTRA_KEY_FILE, file);
-        params.put(EXTRA_KEY_FILENAME, name);
+        params.put(EXTRA_KEY_NAME, name);
         HttpFactory.getInstance().httpVolley(HttpFactory.RENAME_FILE_URL,
                 auth,
                 mContext,
@@ -251,5 +270,33 @@ public class SubjectMaterialsModel extends MVPAbstractModelRecycler<String, List
             e.printStackTrace();
         }
         return keys;
+    }
+
+    void createFolder(String authString, String folderName, MVPCallback<List<IRecyclerItem>> mvpCallback) {
+        String url = HttpFactory.CREATE_FOLDER_URL;
+        Map<String, String> params = new HashMap<>();
+        params.put(EXTRA_KEY_NAME, folderName);
+        if(currentPage>0){
+            params.put(EXTRA_KEY_FOLDER, currentFolder);
+        }
+
+        HttpFactory.getInstance().httpVolley(url,
+                authString,
+                mContext,
+                params,
+                new MVPCallback<String>() {
+                    @Override
+                    public void onSuccess(String s) {
+                        if (s != null && !s.equals("null")) {
+                            List<IRecyclerItem> newItems = processJson(s);
+                            mvpCallback.onSuccess(newItems);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        mvpCallback.onError(throwable);
+                    }
+                });
     }
 }
