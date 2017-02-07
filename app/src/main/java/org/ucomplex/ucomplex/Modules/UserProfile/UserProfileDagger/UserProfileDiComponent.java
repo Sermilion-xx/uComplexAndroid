@@ -1,15 +1,14 @@
-package org.ucomplex.ucomplex.Modules.Events.EventsDagger;
+package org.ucomplex.ucomplex.Modules.UserProfile.UserProfileDagger;
 
-import org.ucomplex.ucomplex.Modules.Events.EventsActivity;
+import org.ucomplex.ucomplex.Modules.UserProfile.UserProfileActivity;
 
 import javax.inject.Singleton;
 
 import dagger.Component;
-import dagger.Provides;
 
 /**
  * ---------------------------------------------------
- * Created by Sermilion on 10/11/2016.
+ * Created by Sermilion on 07/02/2017.
  * Project: uComplex_v_2
  * ---------------------------------------------------
  * <a href="http://www.ucomplex.org">ucomplex.org</a>
@@ -17,7 +16,7 @@ import dagger.Provides;
  * ---------------------------------------------------
  */
 @Singleton
-@Component(modules = {EventsModule.class})
-public interface EventsDiComponent {
-    void inject(EventsActivity activity);
+@Component(modules = {UserProfileModule.class})
+public interface UserProfileDiComponent {
+    void inject(UserProfileActivity activity);
 }

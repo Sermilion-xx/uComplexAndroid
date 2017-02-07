@@ -90,6 +90,8 @@ public class HttpFactory {
     public static final String USERS_BLACKLIST_URL = BASE_URL + "user/blacklist?mobile=1";
     public static final String UPLOAD_FILE_URL = BASE_URL + "student/my_files/add_files?mobile=1";
     public static final String CREATE_FOLDER_URL = BASE_URL + "student/my_files/create_folder?mobile=1";
+    public static final String GET_USER_URL = BASE_URL + "user/person/";
+
     public static String encodeLoginData(String loginData) {
         byte[] authBytes;
         try {

@@ -27,6 +27,7 @@ public class Teacher extends User implements Parcelable {
     private int rank;
     private int degree;
     private String bio;
+    private String phone_work;
     private int plan;
     private int fact;
     private int fails;
@@ -43,10 +44,10 @@ public class Teacher extends User implements Parcelable {
     private String documentDate;
     private String documentDepart;
     private String documentDepartCode;
-    private int academicDegree;
-    private int academicRank;
+    private int academic_degree;
+    private int academic_rank;
     private String statuses;
-    private String academicAwards;
+    private String academic_awards;
     private String upqualification;
     private int rate;
     private int section;
@@ -56,8 +57,36 @@ public class Teacher extends User implements Parcelable {
     private String facultyName;
     private ArrayList<TimetableEntryItem> timetableEntries;
 
-    public Teacher(){
+    public String getPhone_work() {
+        return phone_work;
+    }
 
+    public void setPhone_work(String phone_work) {
+        this.phone_work = phone_work;
+    }
+
+    public int getAcademic_degree() {
+        return academic_degree;
+    }
+
+    public void setAcademic_degree(int academic_degree) {
+        this.academic_degree = academic_degree;
+    }
+
+    public int getAcademic_rank() {
+        return academic_rank;
+    }
+
+    public void setAcademic_rank(int academic_rank) {
+        this.academic_rank = academic_rank;
+    }
+
+    public String getAcademic_awards() {
+        return academic_awards;
+    }
+
+    public void setAcademic_awards(String academic_awards) {
+        this.academic_awards = academic_awards;
     }
 
     public int getPost() {
@@ -245,19 +274,19 @@ public class Teacher extends User implements Parcelable {
     }
 
     public int getAcademicDegree() {
-        return academicDegree;
+        return academic_degree;
     }
 
     public void setAcademicDegree(int academicDegree) {
-        this.academicDegree = academicDegree;
+        this.academic_degree = academicDegree;
     }
 
     public int getAcademicRank() {
-        return academicRank;
+        return academic_rank;
     }
 
     public void setAcademicRank(int academicRank) {
-        this.academicRank = academicRank;
+        this.academic_rank = academicRank;
     }
 
     public String getStatuses() {
@@ -269,11 +298,11 @@ public class Teacher extends User implements Parcelable {
     }
 
     public String getAcademicAwards() {
-        return academicAwards;
+        return academic_awards;
     }
 
-    public void setAcademicAwards(String academicAwards) {
-        this.academicAwards = academicAwards;
+    public void setAcademicAwards(String academic_awards) {
+        this.academic_awards = academic_awards;
     }
 
     public String getUpqualification() {

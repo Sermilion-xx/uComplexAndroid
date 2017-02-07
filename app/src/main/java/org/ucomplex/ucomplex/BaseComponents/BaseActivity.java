@@ -179,6 +179,7 @@ public class BaseActivity extends MVPBaseActivity{
     }
 
     protected IFragment setupFragment(MVPView mvpView,
+                                      String name,
                                       Bundle savedInstanceState,
                                       Bundle bundle,
                                       int fragmentLayout,

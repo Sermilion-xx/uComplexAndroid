@@ -16,6 +16,7 @@ import org.ucomplex.ucomplex.R;
 public class BaseRecyclerActivity extends BaseActivity implements MVPBaseRecyclerActivity {
 
     protected IFragment setupFragment(MVPView mvpView,
+                                      String name,
                                       Bundle savedInstanceState,
                                       Bundle bundle,
                                       int fragmentLayout,

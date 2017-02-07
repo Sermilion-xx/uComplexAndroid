@@ -1,5 +1,6 @@
 package org.ucomplex.ucomplex.Modules.Events;
 
+import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
+
+import net.oneread.aghanim.components.base.MVPBaseRecyclerFragment;
 
 import org.ucomplex.ucomplex.BaseComponents.BaseActivity;
 import org.ucomplex.ucomplex.BaseComponents.BaseRecyclerActivity;
@@ -26,6 +29,7 @@ import static org.ucomplex.ucomplex.CommonDependencies.FacadeCommon.REQUEST_EXTE
 
 public class EventsActivity extends BaseRecyclerActivity {
 
+    private static final String TAG_MATERIALS_FRAGMENT = MVPBaseRecyclerFragment.class.getName();
     public static final String ACTION_RELOAD_EVENTS = Constants.PREFIX + "refresh_events";
     private MediaPlayer mAlert;
     private Boolean updateEventsReceiverRegistered = false;
@@ -44,6 +48,7 @@ public class EventsActivity extends BaseRecyclerActivity {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        getFragmentManager().putFragment(outState, TAG_MATERIALS_FRAGMENT, (Fragment) mFragment);
         outState.putBoolean("updateEventsReceiverRegistered", updateEventsReceiverRegistered);
         super.onSaveInstanceState(outState);
     }
@@ -69,6 +74,7 @@ public class EventsActivity extends BaseRecyclerActivity {
         bundle.putString(AUTH_STRING, application.getAuthString());
 
         mFragment = setupFragment(this,
+                TAG_MATERIALS_FRAGMENT,
                 savedInstanceState,
                 bundle,
                 R.layout.fragment_recycler,

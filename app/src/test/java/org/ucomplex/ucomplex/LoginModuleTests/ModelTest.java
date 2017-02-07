@@ -3,6 +3,7 @@ package org.ucomplex.ucomplex.LoginModuleTests;
 import net.oneread.aghanim.components.utility.IRecyclerItem;
 
 import org.junit.Test;
+import org.ucomplex.ucomplex.Modules.UserProfile.UserProfileModel;
 import org.ucomplex.ucomplex.Modules.Users.UsersModel;
 
 import java.util.List;
@@ -64,5 +65,51 @@ public class ModelTest {
         UsersModel model = new UsersModel();
         List<IRecyclerItem> list = model.processJson(usersString);
         assertThat("Количество полученных пользователей меньше трех.", list.size()==3);
+    }
+
+    String userProfile = "{\n" +
+            "  \"id\": \"26198\",\n" +
+            "  \"name\": \"Лорсункаева Радима Альвиевна\",\n" +
+            "  \"email\": \"\",\n" +
+            "  \"code\": \"e1ee716032d4ea1d\",\n" +
+            "  \"photo\": \"1\",\n" +
+            "  \"statuses\": null,\n" +
+            "  \"academic_awards\": \"\",\n" +
+            "  \"academic_rank\": \"0\",\n" +
+            "  \"academic_degree\": \"0\",\n" +
+            "  \"upqualification\": \"\",\n" +
+            "  \"phone_work\": \"\",\n" +
+            "  \"bio\": \"\",\n" +
+            "  \"roles\": [\n" +
+            "    {\n" +
+            "      \"id\": \"26198\",\n" +
+            "      \"role\": \"26198\",\n" +
+            "      \"person\": \"26198\",\n" +
+            "      \"type\": \"4\",\n" +
+            "      \"name\": \"Лорсункаева Радима Альвиевна\",\n" +
+            "      \"group\": \"1463\",\n" +
+            "      \"position\": \"1463\",\n" +
+            "      \"major\": \"29\",\n" +
+            "      \"study\": \"1\",\n" +
+            "      \"year\": \"2013\",\n" +
+            "      \"payment\": \"1\",\n" +
+            "      \"contract_year\": \"2013\",\n" +
+            "      \"position_name\": \"Налоги и налогообложение\"\n" +
+            "    }\n" +
+            "  ],\n" +
+            "  \"black\": {\n" +
+            "    \"me_black\": false,\n" +
+            "    \"is_black\": false\n" +
+            "  },\n" +
+            "  \"friends\": {\n" +
+            "    \"is_friend\": false,\n" +
+            "    \"req_sent\": true\n" +
+            "  }\n" +
+            "}";
+
+    @Test
+    public void profileUserModelTest(){
+        UserProfileModel model = new UserProfileModel();
+        model.processJson(userProfile);
     }
 }

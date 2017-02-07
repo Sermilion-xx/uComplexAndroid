@@ -21,6 +21,8 @@ import org.ucomplex.ucomplex.Modules.Subject.SubjectDagger.SubjectMaterialsDiCom
 import org.ucomplex.ucomplex.Modules.Subject.SubjectDagger.SubjectTimelineDiComponent;
 import org.ucomplex.ucomplex.Modules.SubjectsList.SubjectsListDagger.DaggerSubjectsListDiComponent;
 import org.ucomplex.ucomplex.Modules.SubjectsList.SubjectsListDagger.SubjectsListDiComponent;
+import org.ucomplex.ucomplex.Modules.UserProfile.UserProfileDagger.DaggerUserProfileDiComponent;
+import org.ucomplex.ucomplex.Modules.UserProfile.UserProfileDagger.UserProfileDiComponent;
 import org.ucomplex.ucomplex.Modules.Users.UsersDagger.DaggerUsersBlackListDiComponent;
 import org.ucomplex.ucomplex.Modules.Users.UsersDagger.DaggerUsersFriendsDiComponent;
 import org.ucomplex.ucomplex.Modules.Users.UsersDagger.DaggerUsersGroupDiComponent;
@@ -67,6 +69,7 @@ public class DaggerApplication extends Application{
     private UsersGroupDiComponent usersGroupDiComponent;
     private UsersLecturersDiComponent usersLecturersDiComponent;
     private UsersBlackListDiComponent usersBlackListDiComponent;
+    private UserProfileDiComponent userProfileDiComponent;
 
 
     @Override
@@ -86,6 +89,7 @@ public class DaggerApplication extends Application{
         usersGroupDiComponent       = DaggerUsersGroupDiComponent.builder().build();
         usersLecturersDiComponent   = DaggerUsersLecturersDiComponent.builder().build();
         usersBlackListDiComponent   = DaggerUsersBlackListDiComponent.builder().build();
+        userProfileDiComponent      = DaggerUserProfileDiComponent.builder().build();
         configureConnectionTrust();
     }
 
@@ -156,6 +160,10 @@ public class DaggerApplication extends Application{
 
     public UsersBlackListDiComponent getUsersBlackListDiComponent() {
         return usersBlackListDiComponent;
+    }
+
+    public UserProfileDiComponent getUserProfileDiComponent() {
+        return userProfileDiComponent;
     }
 
     public UserInterface getSharedUser() {

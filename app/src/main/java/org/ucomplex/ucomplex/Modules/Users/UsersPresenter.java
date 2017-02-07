@@ -41,8 +41,8 @@ import static org.ucomplex.ucomplex.CommonDependencies.Constants.AUTH_STRING;
 
 public class UsersPresenter extends MVPAbstractPresenterRecycler<String> {
 
-    public static final int TYPE_USER = 0;
-    public static final int TYPE_FOOTER = 1;
+    static final int TYPE_USER = 0;
+    static final int TYPE_FOOTER = 1;
     private boolean hasMoreItems;
 
 
@@ -57,11 +57,7 @@ public class UsersPresenter extends MVPAbstractPresenterRecycler<String> {
         mModel.loadData(new MVPCallback<List<IRecyclerItem>>() {
             @Override
             public void onSuccess(List<IRecyclerItem> o) {
-                if (o.size() > 20) {
-                    hasMoreItems = true;
-                }else {
-                    hasMoreItems = false;
-                }
+                hasMoreItems = o.size() > 20;
                 addEmptyElement(o);
                 if (getItemCount() > 0) {
                     ((MVPModelRecycler) mModel).remove(((MVPModelRecycler) mModel).getItemCount() - 1);
