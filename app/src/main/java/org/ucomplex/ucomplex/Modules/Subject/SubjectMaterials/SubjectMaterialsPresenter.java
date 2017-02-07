@@ -84,7 +84,7 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
 
     void pageDown() {
         ((SubjectMaterialsModel) mModel).pageDown();
-        Pair<List<IRecyclerItem>,String> history = getHistory(((SubjectMaterialsModel) mModel).getCurrentPage());
+        Pair<List<IRecyclerItem>, String> history = getHistory(((SubjectMaterialsModel) mModel).getCurrentPage());
         populateRecyclerView(history.first);
     }
 
@@ -92,11 +92,11 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
         return ((SubjectMaterialsModel) mModel).getCurrentPage();
     }
 
-    private void addHistory(Pair<List<IRecyclerItem>,String> list) {
+    private void addHistory(Pair<List<IRecyclerItem>, String> list) {
         ((SubjectMaterialsModel) mModel).addHistory(list);
     }
 
-    private Pair<List<IRecyclerItem>,String> getHistory(int index) {
+    private Pair<List<IRecyclerItem>, String> getHistory(int index) {
         return ((SubjectMaterialsModel) mModel).getHistory(index);
     }
 
@@ -147,13 +147,13 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
         Intent notificationIntent = new Intent(getActivityContext(), NotificationService.class);
         notificationIntent.putExtra(EXTRA_TITLE, filename);
         notificationIntent.putExtra(EXTRA_BODY, message);
-        if(largeIcon!=null) {
+        if (largeIcon != null) {
             notificationIntent.putExtra(EXTRA_LARGE_ICON, largeIcon);
         }
         getActivityContext().startService(notificationIntent);
     }
 
-    private void showToast(String text){
+    private void showToast(String text) {
         Toast.makeText(getActivityContext(), text, Toast.LENGTH_LONG).show();
     }
 
@@ -186,10 +186,13 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
                 holder.mMenuButton.setVisibility(View.VISIBLE);
                 holder.mMenuButton.setOnClickListener(view -> {
                     int position = holder.getAdapterPosition();
-                    SubjectMaterialsItem item = (SubjectMaterialsItem) ((MVPModelRecycler) mModel).getItem(position);
-                    String[] menuItems;
-                    menuItems = ((DaggerApplication) getAppContext()).getSharedUser().getType() == 3 ? teacherMenuActions : studentMenuActions;
-                    createItemMenu(item.getAddress(), item.getName(), position, menuItems).show();
+                    SubjectMaterialsItem item;
+                    if (position > -1) {
+                        item = (SubjectMaterialsItem) ((MVPModelRecycler) mModel).getItem(position);
+                        String[] menuItems;
+                        menuItems = ((DaggerApplication) getAppContext()).getSharedUser().getType() == 3 ? teacherMenuActions : studentMenuActions;
+                        createItemMenu(item.getAddress(), item.getName(), position, menuItems).show();
+                    }
                 });
             } else {
                 holder.mMenuButton.setVisibility(View.GONE);
@@ -216,10 +219,12 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
                         populateRecyclerView(o);
                         addHistory(new Pair<>(o, bundle[0].getString(EXTRA_KEY_FOLDER)));
                     } else {
-                        int end = ((MVPModelRecycler)mModel).getItemCount();
-                        ((MVPModelRecycler)mModel).clear();
-                        ((SubjectMaterialsFragment) getView()).notifyItemRangeRemoved(0,end);
-                        populateRecyclerView(MVPUtility.initNoContent());
+                        ((MVPModelRecycler) mModel).clear();
+                        ((SubjectMaterialsFragment) getView()).notifyDataSetChanged();
+//                        int end = ((MVPModelRecycler)mModel).getItemCount();
+//                        ((MVPModelRecycler)mModel).clear();
+//                        ((SubjectMaterialsFragment) getView()).notifyItemRangeRemoved(0,end);
+//                        populateRecyclerView(MVPUtility.initNoContent());
                     }
                     pageUp();
                 }
@@ -241,9 +246,9 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
         if (!holder.allNullElements() && item instanceof SubjectMaterialsItem) {
             SubjectMaterialsItem mItem = (SubjectMaterialsItem) item;
             holder.mFileName.setText(mItem.getName());
-            if(mItem.getTime()!=null){
+            if (mItem.getTime() != null) {
                 holder.mFileTime.setText(FacadeCommon.makeDate(mItem.getTime()));
-            }else {
+            } else {
                 holder.mFileTime.setText(getActivityContext().getString(R.string.just_now));
             }
 
@@ -363,6 +368,9 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
             @Override
             public void onSuccess(String s) {
                 ((SubjectMaterialsModel) mModel).remove(position);
+                if(getCurrentPage()<=((SubjectMaterialsModel) mModel).getHistoryCount()){
+                    getHistory(getCurrentPage()).first.remove(position);
+                }
                 ((SubjectMaterialsFragment) getView()).notifyItemRemoved(position);
                 Toast.makeText(getActivityContext(), getActivityContext().getString(R.string.file_was_deleted), Toast.LENGTH_LONG).show();
                 ((SubjectMaterialsFragment) getView()).hideProgress();
@@ -382,7 +390,7 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
         intent.setAction(UC_ACTION_DOWNLOAD_COMPLETE);
 
         File file = new File(uri.getPath());
-        startNotificationService(file.getName(),getActivityContext().getString(R.string.upload_started), uri);
+        startNotificationService(file.getName(), getActivityContext().getString(R.string.upload_started), uri);
         ((SubjectMaterialsModel) mModel).uploadFile(authString, uri, new MVPCallback<List<IRecyclerItem>>() {
 
             @Override
@@ -402,25 +410,27 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
         });
     }
 
-    public void createFolder(String folderName){
-        ((SubjectMaterialsFragment)getView()).showProgress();
+    public void createFolder(String folderName) {
+        ((SubjectMaterialsFragment) getView()).showProgress();
         ((SubjectMaterialsModel) mModel).createFolder(authString, folderName, new MVPCallback<List<IRecyclerItem>>() {
 
             @Override
             public void onSuccess(List<IRecyclerItem> o) {
-                if(o!=null) {
+                if (o != null) {
                     ((SubjectMaterialsModel) mModel).addAll(o);
-                    getHistory(getCurrentPage()).first.addAll(o);
+                    if(getCurrentPage()<((SubjectMaterialsModel)mModel).getHistoryCount()){
+                        getHistory(getCurrentPage()).first.addAll(o);
+                    }
                     ((MVPViewRecycler) getView()).notifyItemInserted(((SubjectMaterialsModel) mModel).getItemCount());
                 }
-                ((SubjectMaterialsFragment)getView()).hideProgress();
+                ((SubjectMaterialsFragment) getView()).hideProgress();
                 showToast(getActivityContext().getString(R.string.folder_created));
             }
 
             @Override
             public void onError(Throwable throwable) {
                 throwable.printStackTrace();
-                ((SubjectMaterialsFragment)getView()).hideProgress();
+                ((SubjectMaterialsFragment) getView()).hideProgress();
                 showToast(getActivityContext().getString(R.string.error_creating_folder));
             }
         });
