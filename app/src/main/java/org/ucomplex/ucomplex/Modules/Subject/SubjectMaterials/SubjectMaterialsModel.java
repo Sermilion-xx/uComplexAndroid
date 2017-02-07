@@ -145,9 +145,7 @@ public class SubjectMaterialsModel extends MVPAbstractModelRecycler<String, List
         Bundle bundle = new Bundle();
         bundle.putString(AUTH_STRING, authString);
         bundle.putParcelable(FILE_URI, uri);
-        if(!getHistory(getCurrentPage()).second.equals("null")){
-            bundle.putString(EXTRA_KEY_FOLDER, getHistory(getCurrentPage()).second);
-        }
+        bundle.putString(EXTRA_KEY_FOLDER, currentFolder);
         HttpFactory.uploadFile(bundle, mContext, new MVPCallback<ResponseBody>() {
 
             @Override

@@ -396,6 +396,9 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
             @Override
             public void onSuccess(List<IRecyclerItem> o) {
                 ((SubjectMaterialsModel) mModel).addAll(o);
+                if(getCurrentPage()<((SubjectMaterialsModel)mModel).getHistoryCount()){
+                    getHistory(getCurrentPage()).first.addAll(o);
+                }
                 ((MVPViewRecycler) getView()).notifyItemInserted(((SubjectMaterialsModel) mModel).getItemCount());
                 showToast(getActivityContext().getString(R.string.file_uploaded));
                 getActivityContext().sendBroadcast(intent);

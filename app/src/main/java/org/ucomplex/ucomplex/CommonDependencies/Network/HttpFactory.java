@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Base64;
 import android.util.Log;
 
@@ -155,10 +156,12 @@ public class HttpFactory {
                                   MVPCallback<ResponseBody> mvpCallback) {
         String authString = bundle.getString(AUTH_STRING);
         Uri fileUri = bundle.getParcelable(FILE_URI);
-        String folder = null;
+        HashMap<String, RequestBody> params = new HashMap<>();
         if(bundle.get(EXTRA_KEY_FOLDER)!=null){
-            folder = bundle.getString(EXTRA_KEY_FOLDER);
+            RequestBody folder = createPartFromString(bundle.getString(EXTRA_KEY_FOLDER));
+            params.put("folder", folder);
         }
+
         FileUploadService service =
                 ServiceGenerator.createService(FileUploadService.class, authString);
         String filePath = FacadeMedia.getPath(context, fileUri);
@@ -170,7 +173,7 @@ public class HttpFactory {
             MultipartBody.Part body =
                     MultipartBody.Part.createFormData("file", uploadFile.getName(), requestFile);
 
-            Call<ResponseBody> call = service.upload(body, folder);
+            Call<ResponseBody> call = service.upload(body, params);
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call,
@@ -194,6 +197,12 @@ public class HttpFactory {
                 }
             });
         }
+    }
+
+    @NonNull
+    private static RequestBody createPartFromString(String descriptionString) {
+        return RequestBody.create(
+                okhttp3.MultipartBody.FORM, descriptionString);
     }
 
 }

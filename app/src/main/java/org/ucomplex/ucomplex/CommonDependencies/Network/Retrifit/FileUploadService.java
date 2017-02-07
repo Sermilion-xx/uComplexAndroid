@@ -2,6 +2,7 @@ package org.ucomplex.ucomplex.CommonDependencies.Network.Retrifit;
 
 import org.ucomplex.ucomplex.CommonDependencies.Network.HttpFactory;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import okhttp3.MultipartBody;
@@ -37,6 +38,6 @@ public interface FileUploadService {
     @POST(HttpFactory.UPLOAD_FILE_URL)
     Call<ResponseBody> upload(
             @Part MultipartBody.Part file,
-            @Query("folder") String folder
+            @PartMap() HashMap<String, RequestBody> folder
     );
 }
