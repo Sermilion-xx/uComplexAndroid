@@ -4,14 +4,11 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -24,10 +21,8 @@ import android.widget.Toast;
 
 import net.oneread.aghanim.components.base.MVPBaseRecyclerFragment;
 import net.oneread.aghanim.components.utility.IFragment;
-import net.oneread.aghanim.components.utility.OnFragmentLoadedListener;
 
 import org.ucomplex.ucomplex.BaseComponents.BaseRecyclerActivity;
-import org.ucomplex.ucomplex.BaseComponents.DaggerApplication;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeCommon;
 import org.ucomplex.ucomplex.CommonDependencies.FacadeMedia;
 import org.ucomplex.ucomplex.CommonDependencies.FragmentFactory;
@@ -35,15 +30,13 @@ import org.ucomplex.ucomplex.Modules.Subject.SubjectMaterials.SubjectMaterialsFr
 import org.ucomplex.ucomplex.Modules.Subject.SubjectMaterials.SubjectMaterialsPresenter;
 import org.ucomplex.ucomplex.R;
 
-import static org.ucomplex.ucomplex.CommonDependencies.Constants.AUTH_STRING;
 import static org.ucomplex.ucomplex.CommonDependencies.FacadeCommon.REQUEST_EXTERNAL_STORAGE;
-import static org.ucomplex.ucomplex.Modules.Subject.SubjectMaterials.SubjectMaterialsModel.EXTRA_KEY_MY_MATERIALS;
 
 public class MaterialsActivity extends BaseRecyclerActivity {
 
     private static final int GALLERY_KITKAT_INTENT_CALLED = 0;
     private static final int GALLERY_INTENT_CALLED = 1;
-    private String authString;
+    private static final String TAG_MATERIALS_FRAGMENT = SubjectMaterialsFragment.class.getName();
 
     private SubjectMaterialsFragment subjectMaterialsFragment;
 
@@ -55,7 +48,7 @@ public class MaterialsActivity extends BaseRecyclerActivity {
 
         subjectMaterialsFragment = (SubjectMaterialsFragment) setupRecyclerFragment(
                 savedInstanceState,
-                SubjectMaterialsFragment.class.getName(),
+                TAG_MATERIALS_FRAGMENT,
                 R.id.container);
 
         setupDrawer();
@@ -70,6 +63,11 @@ public class MaterialsActivity extends BaseRecyclerActivity {
         }
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        getFragmentManager().putFragment(outState, TAG_MATERIALS_FRAGMENT, subjectMaterialsFragment);
+        super.onSaveInstanceState(outState);
+    }
 
     protected IFragment setupRecyclerFragment(Bundle inState, String name, int containerId) {
         IFragment fragment;
@@ -82,9 +80,9 @@ public class MaterialsActivity extends BaseRecyclerActivity {
             if (fragment != null) {
                 ((SubjectMaterialsFragment) fragment).setContext(this);
                 fragment.setOnFragmentLoadedListener(views -> {
-                    ((SubjectMaterialsPresenter)subjectMaterialsFragment.getPresenter()).setMyFiles(true);
-                    subjectMaterialsFragment.onFragmentVisible(true);
-                }
+                            ((SubjectMaterialsPresenter) subjectMaterialsFragment.getPresenter()).setMyFiles(true);
+                            subjectMaterialsFragment.onFragmentVisible(true);
+                        }
                 );
                 transaction.add(containerId, (Fragment) fragment, name);
                 transaction.commit();
@@ -100,7 +98,7 @@ public class MaterialsActivity extends BaseRecyclerActivity {
                 return true;
             case R.id.my_files_add_file:
                 if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if(FacadeCommon.checkStoragePermissions(this)){
+                    if (FacadeCommon.checkStoragePermissions(this)) {
                         pickImage();
                     }
                 } else {
@@ -126,7 +124,9 @@ public class MaterialsActivity extends BaseRecyclerActivity {
                 .setPositiveButton(MaterialsActivity.this.getString(R.string.ok), (dialog, id) -> {
                     if (FacadeCommon.isNetworkConnected(MaterialsActivity.this)) {
                         String folderName = editText.getText().toString();
-                        ((SubjectMaterialsPresenter)subjectMaterialsFragment.getPresenter()).createFolder(folderName);
+                        if (subjectMaterialsFragment != null) {
+                            ((SubjectMaterialsPresenter) subjectMaterialsFragment.getPresenter()).createFolder(folderName);
+                        }
                     } else {
                         Toast.makeText(MaterialsActivity.this, MaterialsActivity.this.getString(R.string.error_check_internet), Toast.LENGTH_LONG).show();
                     }
@@ -164,7 +164,7 @@ public class MaterialsActivity extends BaseRecyclerActivity {
         }
         if (originalUri != null) {
             if (FacadeCommon.isNetworkConnected(this)) {
-                ((SubjectMaterialsPresenter)subjectMaterialsFragment.getPresenter()).uploadFile(originalUri);
+                ((SubjectMaterialsPresenter) subjectMaterialsFragment.getPresenter()).uploadFile(originalUri);
             } else {
                 Toast.makeText(this, "Проверте интернет соединение", Toast.LENGTH_LONG).show();
             }

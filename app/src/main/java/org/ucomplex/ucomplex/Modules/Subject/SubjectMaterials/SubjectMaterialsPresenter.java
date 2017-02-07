@@ -367,12 +367,14 @@ public class SubjectMaterialsPresenter extends MVPAbstractPresenterRecycler<Stri
         ((SubjectMaterialsModel) mModel).deleteFile(this.authString, code, new MVPCallback<String>() {
             @Override
             public void onSuccess(String s) {
-                ((SubjectMaterialsModel) mModel).remove(position);
-                if(getCurrentPage()<=((SubjectMaterialsModel) mModel).getHistoryCount()){
-                    getHistory(getCurrentPage()).first.remove(position);
+                if(((SubjectMaterialsModel) mModel).getItemCount()>position) {
+                    ((SubjectMaterialsModel) mModel).remove(position);
+                    if (getCurrentPage() <= ((SubjectMaterialsModel) mModel).getHistoryCount()) {
+                        getHistory(getCurrentPage()).first.remove(position);
+                    }
+                    ((SubjectMaterialsFragment) getView()).notifyItemRemoved(position);
+                    Toast.makeText(getActivityContext(), getActivityContext().getString(R.string.file_was_deleted), Toast.LENGTH_LONG).show();
                 }
-                ((SubjectMaterialsFragment) getView()).notifyItemRemoved(position);
-                Toast.makeText(getActivityContext(), getActivityContext().getString(R.string.file_was_deleted), Toast.LENGTH_LONG).show();
                 ((SubjectMaterialsFragment) getView()).hideProgress();
             }
 

@@ -114,15 +114,17 @@ public class BaseActivity extends MVPBaseActivity{
 
     private void setupDrawerItemListForUser(UserInterface user) {
         Pair<int[], String[]> iconsAndItems;
-        if (user.getType() == 0) {
-            iconsAndItems = FacadeDrawer.getInstance(this).getDrawerItemsUser0();
-        }else if(user.getType() == 4){
-            iconsAndItems = FacadeDrawer.getInstance(this).getDrawerItemsUser4();
-        }else{
-            iconsAndItems = FacadeDrawer.getInstance(this).getDrawerItemsUser0();
+        if(user!=null) {
+            if (user.getType() == 0) {
+                iconsAndItems = FacadeDrawer.getInstance(this).getDrawerItemsUser0();
+            } else if (user.getType() == 4) {
+                iconsAndItems = FacadeDrawer.getInstance(this).getDrawerItemsUser4();
+            } else {
+                iconsAndItems = FacadeDrawer.getInstance(this).getDrawerItemsUser0();
+            }
+            mDrawerIcons = iconsAndItems.getValue0();
+            mDrawerTitles = iconsAndItems.getValue1();
         }
-        mDrawerIcons = iconsAndItems.getValue0();
-        mDrawerTitles = iconsAndItems.getValue1();
     }
 
     private void setupDrawerView(ArrayList<DrawerListItem> drawerListItems) {
